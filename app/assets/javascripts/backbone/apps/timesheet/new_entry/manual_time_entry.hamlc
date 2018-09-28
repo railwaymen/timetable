@@ -1,0 +1,30 @@
+.ui.segment
+  .field
+    .desc
+      .ui.transparent.input
+        %textarea{placeholder: @t('apps.timesheet.what_have_you_done'), type: "text", name: 'body', class:'description auto-focus'}
+        %a.easter-egg{href: _.shuffle(eat)[0], target: '_blank'}
+          %img{src: _.shuffle(eat)[0]}
+      .task-url.ui.transparent.input
+        %input.task{placeholder: @t('apps.timesheet.task_url'), type: "text", name: 'task'}
+
+    .projects
+      .project-dropdown
+
+    .time
+      .ui.transparent.input
+        %input#start{type: 'text', class: 'auto-focus', value: @formattedStartTime()}
+      %span -
+      .ui.transparent.input
+        %input#end{type: 'text', class: 'auto-focus', value: @formattedEndTime()}
+
+    .duration.manual
+      %span#duration=@formattedDuration()
+
+    .date
+      .ui.transparent.input
+        %input#date{type: 'text'}
+        %input#date-view{type: 'text'}
+
+    .action
+      %button.btn-start.ui.button.fluid= @t 'common.save'

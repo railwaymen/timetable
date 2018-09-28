@@ -1,0 +1,23 @@
+%form
+  - if App.currentUser.isAdmin()
+    %div.form-group
+      %input.form-control{type: 'text', name: 'name', placeholder: @t('common.name'), autofocus: true}
+    %div.form-group
+      %label{for: "leader"}= @t('apps.projects.leader')
+      %select#leader.form-control{type: 'text', name: 'leader_id'}
+        %option{value: ''}
+        - _.each @users, (user) =>
+          %option{value: user.id, selected: @leader_id == user.id} #{user.first_name} #{user.last_name}
+
+  %div.form-group
+  %input{ type: 'color', name: 'project[color]', value: "##{@color}" }
+  - if App.currentUser.isAdmin()
+    .form-group
+      %label= @t 'apps.projects.active'
+        %input{type: 'checkbox', name: 'active'}
+  %div.form-group
+    %label= @t 'apps.projects.work_times_allows_task'
+      %input{type: 'checkbox', name: 'work_times_allows_task'}
+
+%a.btn.btn-default{href: "/projects/list", data: {navigate: true}}= @t 'common.cancel'
+%button.btn.btn-primary{:type => "button"}= @t 'common.save'

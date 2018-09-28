@@ -1,0 +1,8 @@
+%header
+  .date-container
+    %span.title
+      =@title
+    %span.super
+      =@totalTimeTracked
+
+.time-entries-list-container

@@ -1,0 +1,151 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "eonasdan-bootstrap-datetimepicker";
+@import "jquery.tokenize";
+@import "semantic-ui";
+
+@import 'timesheet/*';
+@import 'timesheet/blocks/*';
+@import '*';
+
+.bootbox.ui.modal.fade.bootbox-confirm {
+  opacity: 1;
+}
+
+.clearfix {
+  clear: both
+}
+
+div.Tokenize ul.TokensContainer {
+  min-height: 30px;
+  min-width: 800px;
+  height: auto;
+}
+
+.current-month {
+  width: 240px;
+  margin: 0 20px 20px 20px;
+  text-align: center;
+}
+
+.timesheet .row.summary:hover .actions *, .timesheet .item:hover .actions * {
+  visibility: visible !important;
+}
+
+.timesheet .col-sd-12.item {
+  overflow: hidden;
+}
+
+.timesheet .row {
+  line-height: 40px;
+}
+
+.timesheet .summary {
+  border-bottom: 1px solid #ddd;
+}
+
+.timesheet .created-by-admin {
+  width: 10px;
+  height: 29px;
+  display: block;
+  margin-top: 7px;
+  float: right;
+}
+
+.history .changed {
+  color: green;
+}
+
+.history-modal .modal-dialog { width: 70%; }
+
+body {
+  background: #f5f5f5
+}
+
+.vert-offset-bottom {
+  margin-bottom: 20px;
+}
+
+.card {
+  background-color: #EDE8E1;
+  border-radius: 5px;
+  margin: 14px 10px;
+  border: 1px solid #D6D0C1;
+  box-sizing: border-box;
+  .person {
+    margin: 15px 0;
+  }
+  ul {
+    li {
+      list-style: none;
+      .badge {
+        float: right;
+      }
+    }
+  }
+  .center {
+    text-align: center;
+  }
+  .badge {
+    float: right;
+  }
+  .title {
+    padding: 12px;
+  }
+}
+
+ol.projects {
+    list-style-type: none;
+
+    margin-top: 20px;
+    margin-left: 3em;
+    padding: 0;
+
+    counter-reset: li-counter;
+}
+ol.projects > li {
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 0.5em;
+    min-height: 3em;
+    border-left: 2px solid #CCCCCC;
+}
+
+ol.projects > li:before {
+  position: absolute;
+  top: 0;
+  left: -1.5em;
+  width: 0.8em;
+
+  font-size: 2em;
+  line-height: 1;
+  text-align: right;
+  color: #464646;
+  font-size: 3em;
+  font-weight: bold;
+
+  content: counter(li-counter);
+  counter-increment: li-counter;
+}
+
+ol.projects .score {
+  text-align: center;
+  font-size: 2em;
+}
+
+ol.projects .dl-horizontal dt {
+  font-weight: normal;
+}
+
+ol.projects .dl-horizontal dd {
+  width: 100%
+}
+
+ol.projects .dl-horizontal {
+  font-size: 0.9em;
+}
+
+.disabled-button-wrapper {
+  display: inline-block;
+  cursor: not-allowed;
+}

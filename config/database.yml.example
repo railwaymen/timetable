@@ -1,0 +1,15 @@
+global: &global
+  adapter: postgresql
+  min_messages: warning
+  encoding: utf8
+  host: <%= ENV['DB_HOST'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: "<%= ENV['DB_PASSWORD'] %>"
+
+development:
+  database: <%= ENV['DB_DATABASE'] %>
+  <<: *global
+
+test:
+  database: <%= ENV['DB_DATABASE'] %>
+  <<: *global

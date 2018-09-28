@@ -1,0 +1,186 @@
+.project-pill,
+.new-entry .dropdown > .text
+  background: #882988
+  color: #FFF
+  font-weight: bold
+  border-radius: 4px
+  padding: 0px 5px
+  text-transform: uppercase
+  text-shadow: 0 1px 0 rgba(70,70,70,.4)
+  box-shadow: 0 1px 1px rgba(128,128,128,.5)
+  font-size: 11px
+  line-height: 19px
+  display: inline-block
+  cursor: pointer
+
+.time-entries-list > li.entry
+  display: -webkit-box
+  display: -moz-box
+  display: -webkit-flexbox
+  display: -ms-flexbox
+  display: -webkit-flex
+  display: flex
+  display: -ms-flex-box
+  min-height: 52px
+  font-size: 14px
+  border-bottom: 1px solid #e6e6e6
+  position: relative
+  border-right: 3px solid transparent
+  padding-right: 7px
+
+  &.updated
+    border-right-color: #FF9A9A
+
+  > div
+    -webkit-box-flex: 0
+    -moz-box-flex: 0
+    -webkit-flex: 0 0 auto
+    -ms-flex: 0 0 auto
+    flex: 0 0 auto
+    flex-basis: main-size
+    vertical-align: middle
+
+  &:hover:not(.edit-mode)
+    .action-container
+      display: block
+
+  .action-container
+    position: absolute
+    left: -20px
+    font-size: 17px
+    padding-top: 7px
+    display: none
+
+    div
+      cursor: pointer
+
+    .history
+      margin-top: 9px
+
+    .destroy + .history
+      margin-top: 0
+  .task-edit-container
+    display: none
+
+  .description-container
+    -webkit-box-flex: 0
+    -moz-box-flex: 0
+    -webkit-flex: 0 1 auto
+    -ms-flex: 0 1 auto
+    flex: 0 1 auto
+    display: -ms-flexbox
+    min-width: 0
+    cursor: pointer
+    padding-left: 13px
+    max-width: 700px
+    position: relative
+
+    span
+      margin-right: 20px
+      margin-top: 15px
+      display: block
+      margin-bottom: 11px
+
+    textarea
+      position: absolute
+      top: 7px
+      left: 8px
+      display: none
+      width: 500px
+      color: #000 !important
+
+  .project-container
+    overflow: hidden
+    max-width: 600px
+    -webkit-box-flex: 1
+    -moz-box-flex: 1
+    -webkit-flex: 0 1 auto
+    -ms-flex: 0 1 auto
+    flex: 0 1 auto
+    padding: 16px 0
+
+  .task-container
+    overflow: hidden
+    max-width: 300px
+    -webkit-box-flex: 1
+    -moz-box-flex: 1
+    -webkit-flex: 0 1 auto
+    -ms-flex: 0 1 auto
+    flex: 0 1 auto
+    padding: 16px 0
+
+  .continue-container
+    line-height: 51px
+    text-align: right
+    width: 33px
+    -webkit-box-flex: 1
+    -moz-box-flex: 1
+    -webkit-flex: 1 1 auto
+    -ms-flex: 1 1 auto
+    flex: 1 1 auto
+
+  .duration-container
+    width: 100px
+    line-height: 51px
+    text-align: right
+
+  .time-container
+    width: 144px
+    cursor: pointer
+    font-size: 11px
+    color: #888
+    line-height: 51px
+    text-align: right!important
+
+  .edit-time
+    position: absolute
+    top: 2px
+    right: 10px
+    display: none
+
+    input
+      width: 75px
+      font-size: 15px
+      text-align: center
+      &#date
+        width: 115px
+
+
+  .projects-region
+    position: absolute
+    top: 8px
+
+    > div
+      background-color: #fff
+      min-width: 280px
+
+      .menu
+        width: 100%
+
+      .text
+        padding: 8px 15px
+
+  .duration, .time
+    color: #888
+    font-size: 14px
+
+.entry.edit-mode
+
+  &:before
+    content: ''
+    display: block
+    width: 100%
+    height: 100%
+    position: absolute
+    background-color: #e6e6e6
+    opacity: .75
+
+  .project-pill
+    display: none
+
+  .projects-region
+    display: block
+
+  .task-edit-container,
+  .task-edit-container input
+    display: block !important

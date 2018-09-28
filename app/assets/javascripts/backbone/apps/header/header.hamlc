@@ -1,0 +1,43 @@
+- if @currentUser.isAdmin()
+  .ui.secondary.menu
+    %a.item.users{href: "/users", data: {navigate: true}}= @t 'common.people'
+    %a.item.projects{href: "/projects", data: {navigate: true}}= @t 'common.projects'
+    %a.item.reports{href: "/reports/work_times/by_projects", data: {navigate: true}}= @t 'common.reports'
+    %a.item.accounting_periods{href: "/accounting_periods", data: {navigate: true}}= @t 'common.accounting_periods'
+    %a.item.timesheet{href: "/timesheet", data: {navigate: true}}= @t 'common.timesheet'
+    .right.menu
+      .item
+        %a.item.user{href: "users/edit/#{@currentUser.id}", data: {navigate: true}}= @user
+        %a.sign_out.ui.button{href: "#"}= @t 'common.sign_out'
+
+- else if @currentUser.isManager()
+  .ui.secondary.menu
+    %a.item.projects{href: "/projects", data: {navigate: true}}= @t 'common.projects'
+    %a.item.reports{href: "/reports/work_times/by_projects", data: {navigate: true}}= @t 'common.reports'
+    %a.item.accounting_periods{href: "/accounting_periods", data: {navigate: true}}= @t 'common.accounting_periods'
+    %a.item.timesheet{href: "/timesheet", data: {navigate: true}}= @t 'common.timesheet'
+    .right.menu
+      .item
+        %a.item.user{href: "users/edit/#{@currentUser.id}", data: {navigate: true}}= @user
+        %a.sign_out.ui.button{href: "#"}= @t 'common.sign_out'
+
+- else if @currentUser.isLeader()
+  .ui.secondary.menu
+    %a.item.projects{href: "/projects", data: {navigate: true}}= @t 'common.projects'
+    %a.item.reports{href: "/reports/work_times/by_projects", data: {navigate: true}}= @t 'common.reports'
+    %a.item.accounting_periods{href: "/accounting_periods", data: {navigate: true}}= @t 'common.accounting_periods'
+    %a.item.timesheet{href: "/timesheet", data: {navigate: true}}= @t 'common.timesheet'
+    .right.menu
+      .item
+        %a.item.user{href: "users/edit/#{@currentUser.id}", data: {navigate: true}}= @user
+        %a.sign_out.ui.button{href: "#"}= @t 'common.sign_out'
+
+- else
+  .ui.secondary.menu
+    %a.item.projects{href: "/projects", data: {navigate: true}}= @t 'common.projects'
+    %a.item.accounting_periods{href: "/accounting_periods", data: {navigate: true}}= @t 'common.accounting_periods'
+    %a.item.timesheet{href: "/timesheet", data: {navigate: true}}= @t 'common.timesheet'
+    .right.menu
+      .item
+        %a.item.user{href: "users/edit/#{@currentUser.id}", data: {navigate: true}}= @user
+        %a.sign_out.ui.button{href: "#"}= @t 'common.sign_out'

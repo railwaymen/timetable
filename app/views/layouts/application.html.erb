@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TimeTable</title>
+  <%= favicon_link_tag Rails.application.secrets.favicon if Rails.application.secrets.favicon.present?  %>
+  <%= stylesheet_link_tag    "application", media: "all" %>
+  <%= stylesheet_link_tag    "//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", media: "all" %>
+  <%= javascript_include_tag "application" %>
+  <% if Rails.application.secrets.raven_url.present? %>
+    <script src='https://cdn.ravenjs.com/3.25.2/raven.min.js' crossorigin='anonymous'/>
+    <script>
+      Raven.config('<%= Rails.application.secrets.raven_url %>').install();
+    </script>
+  <% end %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<%= yield %>
+
+</body>
+</html>

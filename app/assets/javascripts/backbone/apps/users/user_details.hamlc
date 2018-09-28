@@ -1,0 +1,12 @@
+%h3 #{@first_name} #{@last_name}
+.form-group
+  = @email
+- if @phone
+  .form-group
+    #{@t('apps.users.phone')}: #{@phone}
+%h6 Projects:
+%div.form-group
+  %ul.list-unstyled
+    - _.each @leaderProjectNames, (projectName) ->
+      %li = projectName
+        %span (leader)

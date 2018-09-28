@@ -1,0 +1,104 @@
+en:
+  apps:
+    header:
+      login: Login
+      username: Username
+      password: Password
+      forgot_password: Forgot password
+    projects:
+      last: 'Last'
+      days: 'days'
+      name: Nazwa
+      leader: Lider
+      project: Project
+      tests_count: Tests count
+      tests_duration: Tests duration
+      update: Update
+      urls: Urls
+      urls_comma_separated: Urls (comma separated)
+      leader: leader
+      developers: Developers
+      testers: Testers
+      color: Color
+      active: Active
+      filter_active: Active
+      filter_inactive: Inactive
+      filter_all: Wszystkie
+      filter_active_label: Show only
+      work_times_allows_task: Allow for adding task urls
+    reports:
+      by_projects: By projects
+      by_people: By users
+      filter: Filter
+    accounting_periods:
+      add: Add accounting period
+      note: Note
+      full_time: Fulltime
+      closed: Closed
+      generate_periods: Generate monthly periods
+      recount_periods: Recount periods
+      generate_accounting_periods: Generate accounting periods
+      generate: Generate
+      starting_from_month: starting from month
+      periods_count: periods count
+      recounting: Recounting...
+    timesheet:
+      overall_work_time: Total worktime in selected period
+      what_have_you_done: What have you done ?
+      task_url: Task url
+      select_month: Select month
+      select_project: Select project
+      required_duration_until_end_of_day: Required work duration until end of day (only applies to full time employees)
+      required_duration_until_end_of_month: Required work duration until end of month (only applies to full time employees)
+      use_timer: Use timer
+      add_manually: Add manually
+      work_time: Worktime
+      unsaved_changes: You have unsaved changes!
+    users:
+      user_active: 'Active'
+      active: Active
+      all: All
+      inactive: Inactive
+      add: Add new account
+      first_name: First name
+      last_name: Last name
+      contract_id: Contract ID
+      phone: Phone
+      button_disabled_tooltip: Account creation disabled. Automatic creation with LDAP login.
+      email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
+  common:
+    rank: 'Rank'
+    add: Add
+    save: Save
+    cancel: Cancel
+    edit: Edit
+    destroy: Delete
+    from: From
+    to: To
+    position: Position
+    person: Person
+    duration: Duration
+    sign_out: Sign out
+    sign_in: Sign in
+    projects: Projects
+    people: People
+    reports: Reports
+    accounting_periods: Accounting Periods
+    timesheet: Timesheet
+    all: All
+    today: Today
+    yesterday: Testerday
+    confirm: Are you sure ?
+    sum: Sum
+    name: Name
+
+  activerecord:
+    errors:
+      models:
+        work_time:
+          attributes:
+            starts_at:
+              overlap: There is another task overlapping the specified time
+
+            duration:
+              greater_than: Duration should be greater than zero

@@ -1,0 +1,27 @@
+.ui.grid
+  .sixteen.wide.column
+    .btn-group.pull-right
+      %a.btn.btn-default.active{href: 'projects', data: { navigate: true }}= @t 'common.rank'
+      %a.btn.btn-default{href: 'projects/list', data: { navigate: true }}= @t 'common.all'
+    .pull-left
+      %select#filter.form-control
+        %option{ value: 30, selected: @params.range == '30' } #{@t('apps.projects.last')} 30 #{@t('apps.projects.days')}
+        %option{ value: 60, selected: @params.range == '60' } #{@t('apps.projects.last')} 60 #{@t('apps.projects.days')}
+        %option{ value: 90, selected: @params.range == '90' } #{@t('apps.projects.last')} 90 #{@t('apps.projects.days')}
+    %div{ style: 'clear:both' }
+
+.ui.grid
+  - _.each @collection, (records, projectName) =>
+    .five.wide.column.card
+      - projectData = records[0]
+      .title
+        %h3
+          = projectName
+          .badge{ style: "background-color: ##{projectData.color}; width: 18px; height: 18px; display: block;" }
+        %p.center
+          - if projectData.leader
+            %b #{projectData.leader.name}
+      %ul
+      - _.each records, (record, key) =>
+        %li.person
+          %span #{record.user.name}

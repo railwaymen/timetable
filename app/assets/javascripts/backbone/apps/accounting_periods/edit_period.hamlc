@@ -1,0 +1,30 @@
+%form
+  %div.form-group
+    %select#user.form-control{type: 'text', name: 'user_id'}
+      - _.each @users, (user) =>
+        %option{value: user.id} #{user.first_name} #{user.last_name}
+  .col-md-6.form-group
+    %input.form-control{type: 'text', name: 'starts_at', placeholder: @t('common.from')}
+  .col-md-6.form-group
+    %input.form-control{type: 'text', name: 'ends_at', placeholder: @t('common.to')}
+  %div.form-group
+    %textarea.form-control{name: 'note', placeholder: @t('apps.accounting_periods.note')}
+  %label= @t 'common.duration'
+  %div.form-group.input-group
+    %input.form-control{type: 'text', name: 'hours'}
+    .input-group-addon h
+    %input.form-control{type: 'text', name: 'minutes'}
+    .input-group-addon m
+  %div.form-group
+    %label= @t 'apps.accounting_periods.closed'
+    ?
+      %input{type: 'checkbox', name: 'closed'}
+  %div.form-group
+    %label= @t 'apps.accounting_periods.full_time'
+    ?
+      %input{type: 'checkbox', name: 'full_time'}
+  %div.form-group
+    %label= @t 'common.position'
+    %input.form-control{type: 'number', name: 'position'}
+%a.btn.btn-default{href: "/accounting_periods", data: {navigate: true}}= @t 'common.cancel'
+%button.btn.btn-primary{:type => "button"}= @t 'common.save'

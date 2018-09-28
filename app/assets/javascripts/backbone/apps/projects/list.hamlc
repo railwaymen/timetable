@@ -1,0 +1,25 @@
+%form.form-inline
+  %a.btn.btn-default{href: '/projects/new', data: {navigate: true}} = @t 'common.add'
+  .form-group{ style: 'float: left' }
+    %label{for: 'filter'}= @t 'apps.projects.filter_active_label'
+    %select#filter.form-control
+      %option{value: 'active'}= @t 'apps.projects.filter_active'
+      %option{value: 'inactive', selected: @params.display == 'inactive'}= @t 'apps.projects.filter_inactive'
+      %option{value: 'all', selected: @params.display == 'all'}= @t 'apps.projects.filter_all'
+
+  .btn-group.pull-right
+    %a.btn.btn-default{href: 'projects', data: { navigate: true }}= @t 'common.rank'
+    %a.btn.btn-default.active{href: 'projects/list', data: { navigate: true }}= @t 'common.all'
+
+  %div{ style: 'clear: both;' }
+
+%table.table.table-striped
+  %thead
+    %th
+    %th
+    %th
+      = @t 'apps.projects.name'
+    %th
+      = @t 'apps.projects.leader'
+    %th
+  %tbody

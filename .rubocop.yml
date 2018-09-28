@@ -1,0 +1,34 @@
+Documentation:
+  Enabled: false
+
+LineLength:
+  Enabled: false
+
+CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Rails:
+  Enabled: true
+
+Bundler/OrderedGems:
+  Enabled: false
+
+BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+AllCops:
+  TargetRubyVersion: 2.2
+  Exclude:
+    - bin/**/*
+    - db/**/*
+    - vendor/**/*
+    - config/boot.rb
+    - config.ru
+  CacheRootDirectory: tmp/

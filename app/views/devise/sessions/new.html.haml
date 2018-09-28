@@ -1,0 +1,20 @@
+.ui.middle.center.aligned.grid
+  .column
+    .h2
+      = t('apps.header.login')
+    = form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'ui large form' }) do
+      .ui.stacked.segment
+        .field
+          - flash.each do |name, msg|
+            = content_tag :div, msg
+        .field
+          %input.form-control{type: 'text', name: 'user[email]', placeholder: t('apps.header.username'), autofocus: true}
+        .field
+          %input.form-control{type: 'password', name: 'user[password]', placeholder: t('apps.header.password')}
+        - if Rails.application.secrets.ldap && Rails.application.secrets.ldap[:enabled] == false
+          .field
+            %a{href: '/users/password/new'}= t('apps.header.forgot_password')
+        .actions
+          %button.ui.green.right.labeled.icon.button{type: :submit}
+            = t('common.sign_in')
+            %i.sign.in.icon

@@ -1,0 +1,104 @@
+pl:
+  apps:
+    header:
+      login: Logowanie
+      username: Użytkownik
+      password: Hasło
+      forgot_password: Zapomniałem hasła
+    projects:
+      last: 'Ostatnie'
+      days: 'dni'
+      name: Nazwa
+      leader: Lider
+      project: Projekt
+      tests_count: Liczba testów
+      tests_duration: Czas trwania testów
+      update: Aktualizacja
+      urls: Adresy
+      urls_comma_separated: Adresy (rozdzielone przecinkami)
+      leader: lider
+      developers: Deweloperzy
+      testers: Testerzy
+      color: Kolor
+      active: Aktywny
+      filter_active: Aktywne
+      filter_inactive: Nieaktywne
+      filter_all: Wszystkie
+      filter_active_label: Pokaż tylko
+      work_times_allows_task: Zezwalaj na dodawanie urli do zadań
+    reports:
+      by_projects: Wg projektów
+      by_people: Wg osób
+      filter: Filtruj
+    accounting_periods:
+      add: Dodaj okres rozliczeniowy
+      note: Notatka
+      full_time: Etat
+      closed: Zamknięty
+      generate_periods: Generuj okresy miesięczne
+      recount_periods: Przelicz okresy
+      generate_accounting_periods: Generuj okresy rozliczeniowe
+      generate: Generuj
+      starting_from_month: zaczynając od miesiąca
+      periods_count: liczbę okresów
+      recounting: Przeliczam...
+    timesheet:
+      overall_work_time: Łączny czas pracy w wybranym okresie
+      what_have_you_done: Nad czym pracowałeś ?
+      task_url: Url taska
+      select_month: Wybierz miesiąc
+      select_project: Wybierz projekt
+      required_duration_until_end_of_day: Wymagany czas pracy do końca dnia (dotyczy tylko pracowników etatowych)
+      required_duration_until_end_of_month: Wymagany czas pracy do końca miesiąca (dotyczy tylko pracowników etatowych)
+      use_timer: Użyj stopera
+      add_manually: Dodaj ręcznie
+      work_time: Czas pracy
+      unsaved_changes: Masz niezapisane zmiany!
+    users:
+      user_active: Aktywny
+      active: Aktywne
+      all: Wszystkie
+      inactive: Nieaktywne
+      add: Dodaj nowe konto
+      first_name: Imie
+      last_name: Nazwisko
+      contract_id: ID pracownika
+      phone: Telefon
+      button_disabled_tooltip: Tworzenie kont zablokowane. Automatyczne tworzenie poprzez logowanie LDAP.
+      email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
+  common:
+    rank: 'Ranking'
+    add: Dodaj
+    save: Zapisz
+    cancel: Anuluj
+    edit: Edytuj
+    destroy: Usuń
+    from: Od
+    to: Do
+    position: Pozycja
+    person: Osoba
+    duration: Czas trwania
+    sign_out: Wyloguj
+    sign_in: Zaloguj
+    projects: Projekty
+    people: Osoby
+    reports: Raporty
+    accounting_periods: Okresy rozliczeniowe
+    timesheet: Czas pracy
+    all: Wszystkie
+    today: Dzisiaj
+    yesterday: Wczoraj
+    confirm: Jesteś pewien ?
+    sum: Suma
+    name: Nazwa
+
+  activerecord:
+    errors:
+      models:
+        work_time:
+          attributes:
+            starts_at:
+              overlap: Istnieje inne zadanie o pokrywającym się czasie wykonania
+
+            duration:
+              greater_than: Czas trwania musi być większy od zera

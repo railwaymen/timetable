@@ -1,0 +1,23 @@
+%i.close.icon
+.header= @t 'apps.accounting_periods.generate_accounting_periods'
+.content
+  %form.ui.form
+    .ui.error.message.hidden
+      %p
+    .inline.fields
+      .field
+        %label= @t 'apps.accounting_periods.generate'
+        %input{type: 'number', name: 'periods_count', placeholder: @t('apps.accounting_periods.periods_count')}
+      .field
+        %label= @t 'apps.accounting_periods.starting_from_month'
+        %select#month.ui.dropdown{type: 'text', name: 'month'}
+          - _.each [1..12], (month) =>
+            %option{value: month} #{month}
+      .field
+        %select#year.ui.dropdown{type: 'text', name: 'year'}
+          - _.each @years, (year) =>
+            %option{value: year} #{year}
+.actions
+  %button.ui.green.right.labeled.icon.button#generate{type: 'button'}
+    = @t 'apps.accounting_periods.generate'
+    %i.icon.angle.double.right

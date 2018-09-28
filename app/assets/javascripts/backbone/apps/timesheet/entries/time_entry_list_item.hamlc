@@ -1,0 +1,36 @@
+.action-container
+  - if @canRemove
+    .destroy
+      %i.trash.icon.red
+  .history
+    %i.wait.icon
+
+- if @task
+  .task-container
+    %span.description-text
+      %a{href: @task, target: '_blank'}= _.last(@task.split('/'))
+
+.description-container
+  %span.description-text!= @body
+  %textarea.description-input{type: 'text'}
+
+  - if @projectAllowTask
+    .task-edit-container
+      %input.task-input{value: @task}
+
+.project-container
+  %span.project-pill{style: 'background: #' + @projectColor}
+    = @project
+  .projects-region
+.continue-container
+.duration-container
+  .duration
+    = @duration
+.time-container
+  .time
+    = @date
+  .edit-time
+    %input.start-input{type: 'text'}
+    %input.end-input{type: 'text'}
+    .edit-date.ui.input
+      %input#date{type: 'text'}

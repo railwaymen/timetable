@@ -1,0 +1,7 @@
+.ui.fluid.dropdown.search
+  %input{type: "hidden", name: "project", value: @projectId}
+  .text.default
+    %span
+      %i.plus.icon
+      Project
+  .menu

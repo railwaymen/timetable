@@ -1,0 +1,34 @@
+- if @currentUser.isAdmin()
+  %form
+    .form-group
+      - if App.config.ldap
+        %input.form-control{type: 'text', name: 'email', placeholder: 'Email', disabled: true, data-toggle: "tooltip", data-placement: "right", title: @t('apps.users.email_edit_disabled'), autofocus: true}
+      - else
+        %input.form-control{type: 'text', name: 'email', placeholder: 'Email', autofocus: true}
+    .form-group
+      %input.form-control{type: 'text', name: 'first_name', placeholder: @t('apps.users.first_name')}
+    .form-group
+      %input.form-control{type: 'text', name: 'last_name', placeholder: @t('apps.users.last_name')}
+    .form-group
+      %input.form-control{type: 'text', name: 'contract_name', placeholder: @t('apps.users.contract_id')}
+    .form-group
+      %input.form-control{type: 'text', name: 'phone', placeholder: @t('apps.users.phone')}
+    .form-group
+      %label
+        = @t('apps.users.user_active')
+        %input{ type: 'checkbox', name: 'active' }
+  %a.btn.btn-default{href: '#back', onclick: 'window.history.back(); return false;'}= @t 'common.cancel'
+  %button.btn.btn-primary{:type => "button"}= @t 'common.save'
+- else
+  %form
+    .form-group
+      %input.form-control{type: 'text', name: 'first_name', placeholder: @t('apps.users.first_name'), autofocus: true}
+    .form-group
+      %input.form-control{type: 'text', name: 'last_name', placeholder: @t('apps.users.last_name')}
+    .form-group
+      %select.form-control{name: 'lang'}
+        %option{value: 'pl'}= "pl"
+        %option{value: 'en'}= "en"
+
+  %a.btn.btn-default{href: '#back', onclick: 'window.history.back(); return false;'}= @t 'common.cancel'
+  %button.btn.btn-primary{:type => "button"}= @t 'common.save'
