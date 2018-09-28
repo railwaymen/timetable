@@ -150,11 +150,14 @@ App.Timesheet.TimeEntryView = Backbone.Marionette.LayoutView.extend
         @endEditProject(data)
 
     @projectsRegion.show projectView
-    @openEditMode()
 
-    $(document).on 'mouseup.timeEntryView', (e) =>
+    _this = @
+    $(document).on 'mouseup.timeEntryView', (e) ->
       if e.target.className != 'item' && !e.target.classList.contains('menu')
-        @endEditProject({})
+        _this.endEditProject({}, null)
+        $(@).off()
+
+    @openEditMode()
 
   startEditDescription: ->
     @openEditMode()
