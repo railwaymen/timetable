@@ -1,0 +1,15 @@
+language: ruby
+cache: bundler
+rvm:
+  - 2.4.1
+
+env:
+  - DB_USERNAME=postgres DB_DATABASE=timetable_ci DB_HOST=localhost DB_PASSWORD=''
+
+addons:
+  postgresql: "9.6"
+
+before_script:
+  - cp config/secrets.yml.example config/secrets.yml
+  - cp config/database.yml.example config/database.yml
+  - bundle exec rake db:create
