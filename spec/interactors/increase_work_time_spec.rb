@@ -8,24 +8,24 @@ describe IncreaseWorkTime do
   end
 
   it 'does nothing when there is no matching period' do
-    expect { increase_work_time(Time.new(2015, 9, 1, 8, 0).in_time_zone, Time.new(2015, 9, 1, 10, 0).in_time_zone) }.not_to raise_error
+    expect { increase_work_time(Time.zone.parse('2015-09-01 08:00:00'), Time.zone.parse('2015-09-01 10:00:00')) }.not_to raise_error
   end
 
   context 'full-time' do
     it 'adds time to matching period' do
-      params = { full_time: true, starts_at: Time.new(2015, 9, 1).in_time_zone, ends_at: Time.new(2015, 9, 30).in_time_zone, duration: 168.hours, user: user, position: 1 }
+      params = { full_time: true, starts_at: Time.zone.parse('2015-09-01'), ends_at: Time.zone.parse('2015-09-30'), duration: 168.hours, user: user, position: 1 }
       period = create :accounting_period, params
 
-      increase_work_time(Time.new(2015, 9, 1, 8, 0).in_time_zone, Time.new(2015, 9, 1, 10, 0).in_time_zone)
+      increase_work_time(Time.zone.parse('2015-09-01 08:00:00'), Time.zone.parse('2015-09-01 10:00:00'))
 
       expect(period.reload.counted_duration).to eql(2.hours.to_i)
     end
 
     it 'adds overtime to matching period' do
-      params = { full_time: true, starts_at: Time.new(2015, 9, 1).in_time_zone, ends_at: Time.new(2015, 9, 30).in_time_zone, counted_duration: 160.hours, duration: 168.hours, user: user, position: 1 }
+      params = { full_time: true, starts_at: Time.zone.parse('2015-09-01'), ends_at: Time.zone.parse('2015-09-30'), counted_duration: 160.hours, duration: 168.hours, user: user, position: 1 }
       period = create :accounting_period, params
 
-      increase_work_time(Time.new(2015, 9, 1, 8, 0).in_time_zone, Time.new(2015, 9, 1, 18, 0).in_time_zone)
+      increase_work_time(Time.zone.parse('2015-09-01 08:00:00'), Time.zone.parse('2015-09-01 18:00:00'))
 
       expect(period.reload.counted_duration).to eql(170.hours.to_i)
     end
@@ -36,7 +36,7 @@ describe IncreaseWorkTime do
       params = { duration: 20.hours, user: user, position: 1 }
       period = create :accounting_period, params
 
-      increase_work_time(Time.new(2015, 9, 1, 8, 0).in_time_zone, Time.new(2015, 9, 1, 10, 0).in_time_zone)
+      increase_work_time(Time.zone.parse('2015-09-01 08:00:00'), Time.zone.parse('2015-09-01 10:00:00'))
 
       expect(period.reload.counted_duration).to eql(2.hours.to_i)
     end
@@ -45,7 +45,7 @@ describe IncreaseWorkTime do
       period1 = create :accounting_period, duration: 6.hours, user: user, position: 1
       period2 = create :accounting_period, duration: 10.hours, user: user, position: 2
 
-      increase_work_time(Time.new(2015, 9, 1, 8, 0).in_time_zone, Time.new(2015, 9, 1, 16, 0).in_time_zone)
+      increase_work_time(Time.zone.parse('2015-09-01 08:00:00'), Time.zone.parse('2015-09-01 16:00:00'))
 
       expect(period1.reload.counted_duration).to eql(6.hours.to_i)
       expect(period1.closed).to eql(true)

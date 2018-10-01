@@ -5,7 +5,8 @@ describe RecountAccountingPeriods do
   before do
     2.times { create :accounting_period, user: user, duration: 10.hours }
     6.times do |i|
-      starts_at = Time.new(2016, 3, 12, i * 2).in_time_zone
+      hour = format('%02d', i * 2)
+      starts_at = Time.zone.parse("2016-03-12 #{hour}:00:00")
       create :work_time, user: user, starts_at: starts_at,
                          ends_at: starts_at + 2.hours
     end
