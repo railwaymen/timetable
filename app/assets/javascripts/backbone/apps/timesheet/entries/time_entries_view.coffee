@@ -150,14 +150,13 @@ App.Timesheet.TimeEntryView = Backbone.Marionette.LayoutView.extend
         @endEditProject(data)
 
     @projectsRegion.show projectView
-
-    _this = @
-    $(document).on 'mouseup.timeEntryView', (e) ->
-      if e.target.className != 'item' && !e.target.classList.contains('menu')
-        _this.endEditProject({}, null)
-        $(@).off()
-
     @openEditMode()
+
+    $(document).on 'mouseup.timeEntryView', (e) =>
+      if e.target.className != 'item' &&
+         !e.target.classList.contains('menu')
+
+        @endEditProject(@model.get('project_id'))
 
   startEditDescription: ->
     @openEditMode()
@@ -249,16 +248,18 @@ App.Timesheet.TimeEntryView = Backbone.Marionette.LayoutView.extend
     changed = _.any data, (val, key) =>
       @model.get(key) != val
 
-    if changed && data.project_id
-      @model.save(data, { wait: true })
-        .error (response) =>
-          @model.fetch()
-          errors = response.responseJSON.errors
-          firstErrorKey = _.keys(errors)[0]
-          alert "#{firstErrorKey} : #{errors[firstErrorKey][0]}"
-        .success () =>
-          if callback && typeof callback == 'function'
-            callback(@model)
+    if !changed
+      return
+
+    @model.save(data, { wait: true })
+      .error (response) =>
+        @model.fetch()
+        errors = response.responseJSON.errors
+        firstErrorKey = _.keys(errors)[0]
+        alert "#{firstErrorKey} : #{errors[firstErrorKey][0]}"
+      .success () =>
+        if callback && typeof callback == 'function'
+          callback(@model)
 
 App.Timesheet.TimeEntriesView = Backbone.Marionette.CollectionView.extend
   childView: App.Timesheet.TimeEntryView
