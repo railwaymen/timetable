@@ -30,6 +30,7 @@ describe CheckJobExist do
   end
 
   it 'returns false because there is job in queue' do
+    expect(Sidekiq).to receive(:redis).at_least(:once).and_return([])
     check_job_exist = CheckJobExist.new(RecountAccountingPeriodsWorker, user_id: user.id.to_s)
     expect(check_job_exist.call).to eq(false)
     expect(check_job_exist.jid).to eq(nil)

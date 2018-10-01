@@ -9,6 +9,7 @@ RSpec.describe Api::AccountingPeriodsController do
   let(:note) { SecureRandom.hex }
   let(:starts_at) { Time.zone.now.beginning_of_day + 2.hours }
   let(:ends_at) { Time.zone.now.beginning_of_day + 4.hours }
+  let(:accounting_periods_manager) { instance_double(AccountingPeriodsManager) }
 
   def accounting_period_response(accounting_period)
     accounting_period.attributes.slice('id', 'user_id', 'starts_at', 'ends_at', 'counted_duration', 'duration', 'closed', 'note', 'position', 'full_time', 'protected')
@@ -23,6 +24,8 @@ RSpec.describe Api::AccountingPeriodsController do
     it 'returns user account periods' do
       sign_in(user)
       accounting_period = create(:accounting_period, user: user)
+      expect(AccountingPeriodsManager).to receive(:new).with(user_id: nil).and_return(accounting_periods_manager)
+      expect(accounting_periods_manager).to receive(:job_exist?).and_return(false)
       get :index, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql({ accounting_periods: [accounting_period_response(accounting_period)], total_count: 1, recounting: false }.to_json)
@@ -31,6 +34,8 @@ RSpec.describe Api::AccountingPeriodsController do
     it 'returns all account periods as admin' do
       sign_in(admin)
       accounting_period = create(:accounting_period)
+      expect(AccountingPeriodsManager).to receive(:new).with(user_id: nil).and_return(accounting_periods_manager)
+      expect(accounting_periods_manager).to receive(:job_exist?).and_return(false)
       get :index, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql({ accounting_periods: [accounting_period_response(accounting_period)], total_count: 1, recounting: false }.to_json)
@@ -39,6 +44,8 @@ RSpec.describe Api::AccountingPeriodsController do
     it 'filters by user_id as admin' do
       sign_in(admin)
       accounting_period = create(:accounting_period, user: user)
+      expect(AccountingPeriodsManager).to receive(:new).with(user_id: user.id.to_s).and_return(accounting_periods_manager)
+      expect(accounting_periods_manager).to receive(:job_exist?).and_return(false)
       get :index, params: { user_id: user.id }, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql({ accounting_periods: [accounting_period_response(accounting_period)], total_count: 1, recounting: false }.to_json)
@@ -228,7 +235,8 @@ RSpec.describe Api::AccountingPeriodsController do
     it 'queue RecountAccountingPeriodsWorker' do
       sign_in(admin)
       user = create(:user)
-      expect(RecountAccountingPeriodsWorker).to receive(:perform_async).with(user_id: user.id.to_s).and_return('155470')
+      expect(AccountingPeriodsManager).to receive(:new).with(user_id: user.id.to_s).and_return(accounting_periods_manager)
+      expect(accounting_periods_manager).to receive(:perform_async_once).and_return('155470')
       post :recount, params: { user_id: user.id }, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to eql({ jid: '155470' }.to_json)

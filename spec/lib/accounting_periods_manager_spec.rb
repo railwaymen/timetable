@@ -11,10 +11,9 @@ describe AccountingPeriodsManager do
     expect(check_job_exist).to receive(:jid).and_return('26w')
 
     manager = AccountingPeriodsManager.new(user_id: user.id)
+    expect(RecountAccountingPeriodsWorker).to receive(:perform_async).with(user_id: user.id)
 
-    expect do
-      manager.perform_async_once
-    end.to change { RecountAccountingPeriodsWorker.jobs.size }.by(1)
+    manager.perform_async_once
     expect(manager.job_jid).to eq('26w')
   end
 
@@ -25,10 +24,8 @@ describe AccountingPeriodsManager do
 
     manager = AccountingPeriodsManager.new(user_id: user.id)
 
-    RecountAccountingPeriodsWorker.perform_async(user_id: user.id)
-    expect do
-      manager.perform_async_once
-    end.to change { RecountAccountingPeriodsWorker.jobs.size }.by(0)
+    expect(RecountAccountingPeriodsWorker).not_to receive(:perform_async)
+    manager.perform_async_once
     expect(manager.job_jid).to eq('26w')
   end
 end
