@@ -15,6 +15,11 @@ App.Users.EditUserView = Backbone.Marionette.ItemView.extend
     @stickit()
     @oldLang = @model.get('lang')
 
+  templateHelpers: ->
+    {
+      isSelfEdit: @model.get('id') == App.currentUser.id
+    }
+
   save: ->
     @model.save {},
       success: (model, response) =>
