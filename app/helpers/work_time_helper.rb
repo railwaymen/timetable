@@ -1,5 +1,6 @@
 module WorkTimeHelper
   def task_preview_helper(task)
-    /([aA-zZ1-9]+)$/.match(task).to_s
+    return if task.blank?
+    URI.parse(task).path.to_s.split('/').last
   end
 end

@@ -2,7 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::WorkTimesController do
+RSpec.describe Api::WorkTimesController, type: :controller do
+  include WorkTimeHelper
   render_views
   let(:user) { create(:user) }
   let(:admin) { create(:admin) }
@@ -10,11 +11,10 @@ RSpec.describe Api::WorkTimesController do
   let(:body) { SecureRandom.hex }
   let(:starts_at) { Time.zone.now.beginning_of_day + 2.hours }
   let(:ends_at) { Time.zone.now.beginning_of_day + 4.hours }
-  # let(:sum_duration) { 1400 }
 
   def work_time_response(work_time)
     work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'user_id')
-             .merge(task_preview: /([aA-zZ1-9]+)$/.match(work_time.task).to_s)
+             .merge(task_preview: task_preview_helper(work_time.task))
              .merge(date: work_time.starts_at.to_date, project: { name: work_time.project.name, color: work_time.project.color })
   end
 
@@ -59,7 +59,7 @@ RSpec.describe Api::WorkTimesController do
             duration: work_time.duration,
             body: work_time.body,
             task: work_time.task,
-            task_preview: /([aA-zZ1-9]+)$/.match(work_time.task).to_s,
+            task_preview: task_preview_helper(work_time.task),
             user_id: work_time.user_id,
             project: {
               name: work_time.project.name,
@@ -91,7 +91,7 @@ RSpec.describe Api::WorkTimesController do
             duration: user_work_time.duration,
             body: user_work_time.body,
             task: user_work_time.task,
-            task_preview: /([aA-zZ1-9]+)$/.match(work_time.task).to_s,
+            task_preview: task_preview_helper(work_time.task),
             user_id: user_work_time.user_id,
             project: {
               name: user_work_time.project.name,
