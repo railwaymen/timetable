@@ -96,9 +96,16 @@ pl:
     errors:
       models:
         work_time:
+          base:
+            validates_date: 'Nie można utworzyć wpisu który kończy się następnego dnia'
+            validates_time: 'Nie można utworzyć lub edytować wpisu'
+            validates_body: 'Musisz wypełnić opis lub url taska'
           attributes:
+            task:
+              invalid_uri: 'URL Taska nie jest poprawny'
+            ends_at:
+              validates_ends_at: 'Nie można utworzyć wpisu z wyprzedzeniem o miesiąc'
             starts_at:
               overlap: Istnieje inne zadanie o pokrywającym się czasie wykonania
-
             duration:
               greater_than: Czas trwania musi być większy od zera

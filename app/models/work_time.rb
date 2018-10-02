@@ -32,7 +32,7 @@ class WorkTime < ApplicationRecord
     return if task.blank?
     URI.parse(task)
   rescue URI::InvalidURIError
-    errors.add(:task, 'Invalid URI')
+    errors.add(:task, I18n.t('activerecord.errors.models.work_time.attributes.task.invalid_uri'))
   end
 
   def assign_duration
@@ -52,18 +52,18 @@ class WorkTime < ApplicationRecord
   end
 
   def validates_date
-    errors.add(:base, 'Can not create work times that ends in next day') if starts_at.to_date != ends_at.to_date
+    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_date')) if starts_at.to_date != ends_at.to_date
   end
 
   def validates_ends_at
-    errors.add(:ends_at, 'Can not create work times that starts more than 1 month from now') if starts_at && starts_at > 1.month.from_now
+    errors.add(:ends_at, I18n.t('activerecord.errors.models.work_time.attributes.ends_at.validates_ends_at')) if starts_at && starts_at > 1.month.from_now
   end
 
   def validates_time
-    errors.add(:base, 'Can not create or update past work times') if starts_at < 3.business_days.ago.beginning_of_day || ends_at < 3.business_days.ago.beginning_of_day
+    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_time')) if starts_at < 3.business_days.ago.beginning_of_day || ends_at < 3.business_days.ago.beginning_of_day
   end
 
   def validates_body
-    errors.add(:base, 'You need fill description or task url') if (body.presence.nil? && task.presence.nil?) && !body_optional?
+    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_body')) if (body.presence.nil? && task.presence.nil?) && !body_optional?
   end
 end

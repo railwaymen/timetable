@@ -96,7 +96,15 @@ en:
     errors:
       models:
         work_time:
+          base:
+            validates_date: 'Can not create work times that ends in next day'
+            validates_time: 'Can not create or update past work times'
+            validates_body: 'You need fill description or task url'
           attributes:
+            task:
+              invalid_uri: 'Task URL is not valid'
+            ends_at:
+              validates_ends_at: 'Can not create work times that starts more than 1 month from now'
             starts_at:
               overlap: There is another task overlapping the specified time
 
