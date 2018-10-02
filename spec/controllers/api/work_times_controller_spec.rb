@@ -14,6 +14,7 @@ RSpec.describe Api::WorkTimesController do
 
   def work_time_response(work_time)
     work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'user_id')
+             .merge(task_preview: /([aA-zZ1-9]+)$/.match(work_time.task).to_s)
              .merge(date: work_time.starts_at.to_date, project: { name: work_time.project.name, color: work_time.project.color })
   end
 
@@ -58,6 +59,7 @@ RSpec.describe Api::WorkTimesController do
             duration: work_time.duration,
             body: work_time.body,
             task: work_time.task,
+            task_preview: /([aA-zZ1-9]+)$/.match(work_time.task).to_s,
             user_id: work_time.user_id,
             project: {
               name: work_time.project.name,
@@ -89,6 +91,7 @@ RSpec.describe Api::WorkTimesController do
             duration: user_work_time.duration,
             body: user_work_time.body,
             task: user_work_time.task,
+            task_preview: /([aA-zZ1-9]+)$/.match(work_time.task).to_s,
             user_id: user_work_time.user_id,
             project: {
               name: user_work_time.project.name,

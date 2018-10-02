@@ -44,6 +44,7 @@ App.Timesheet.TimeEntryView = Backbone.Marionette.LayoutView.extend
     {
       body: @formatBody()
       task: @model.get('task')
+      taskPreview: @model.get('task_preview')
       project: project.get('name')
       projectColor: project.getColor()
       date: @formatDate()
