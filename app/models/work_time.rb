@@ -16,6 +16,7 @@ class WorkTime < ApplicationRecord
   validate :validates_date
   validate :validates_ends_at
   validate :validates_body
+  validate :task_url
 
   scope :active, -> { where(active: true) }
 
@@ -25,6 +26,13 @@ class WorkTime < ApplicationRecord
 
   def project_zero?
     project.try(:count_duration?) == false
+  end
+
+  def task_url
+    return if task.blank?
+    URI.parse(task)
+  rescue URI::InvalidURIError
+    errors.add(:task, 'Invalid URI')
   end
 
   def assign_duration
