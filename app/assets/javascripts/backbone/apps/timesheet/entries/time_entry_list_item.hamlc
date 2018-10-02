@@ -8,7 +8,7 @@
 - if @task
   .task-container
     %span.description-text
-      %a{href: @task, target: '_blank'}= _.last(@task.split('/'))
+      %a{href: @task, target: '_blank'}= @taskPreview
 
 .description-container
   %span.description-text!= @body
