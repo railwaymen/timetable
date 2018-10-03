@@ -29,6 +29,11 @@ RSpec.describe WorkTime, type: :model do
       allow(@work_time).to receive(:assign_duration)
     end
 
+    it 'should validate task url' do
+      @work_time.task = 'abcde fgh ijk'
+      expect(@work_time).to_not be_valid
+    end
+
     it 'should validate presence of project_id' do
       @work_time.project_id = nil
       expect(@work_time).to_not be_valid
