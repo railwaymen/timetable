@@ -12,7 +12,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     within('#new_user') do
       fill_in 'user[email]', with: user.email
       fill_in 'user[password]', with: 'password'
-      click_button 'Sign in'
+      click_button 'sign_in'
     end
   end
 
@@ -98,6 +98,6 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     expect(page).to have_selector('input')
 
     click_link('Sign out')
-    expect(page).to have_content('Login')
+    expect(page).to have_content('Zaloguj')
   end
 end
