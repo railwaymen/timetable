@@ -1,6 +1,7 @@
 require 'rails/all'
 require 'factory_girl_rails'
 require 'shoulda/matchers'
+require 'capybara/rspec'
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
