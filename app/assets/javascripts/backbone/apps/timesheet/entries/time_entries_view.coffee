@@ -229,15 +229,15 @@ App.Timesheet.TimeEntryView = Backbone.Marionette.LayoutView.extend
     @closeEditMode()
     $(document).off('.timeEntryView')
 
+    if (ref = @projectsRegion) != null
+      ref.reset()
+      ref.destroy()
+
     if !@model || @model && data.id == @model.get('project_id')
       return
 
     @saveEntry
       project_id: data.id
-
-    if (ref = @projectsRegion) != null
-      ref.reset()
-      ref.destroy()
 
   initDatetimeInput: ->
     @$(@ui.date).datetimepicker
