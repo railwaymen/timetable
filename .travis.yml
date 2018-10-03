@@ -6,8 +6,10 @@ rvm:
 env:
   - DB_USERNAME=postgres DB_DATABASE=timetable_ci DB_HOST=localhost DB_PASSWORD=''
 
+sudo: required
 addons:
   postgresql: "9.6"
+  chrome: stable
 
 before_script:
   - cp config/secrets.yml.example config/secrets.yml
