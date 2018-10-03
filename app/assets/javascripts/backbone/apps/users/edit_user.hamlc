@@ -13,10 +13,17 @@
       %input.form-control{type: 'text', name: 'contract_name', placeholder: @t('apps.users.contract_id')}
     .form-group
       %input.form-control{type: 'text', name: 'phone', placeholder: @t('apps.users.phone')}
-    .form-group
-      %label
-        = @t('apps.users.user_active')
-        %input{ type: 'checkbox', name: 'active' }
+    - if !@isSelfEdit
+      .form-group
+        %label
+          = @t('apps.users.user_active')
+          %input{ type: 'checkbox', name: 'active' }
+    - else
+      .form-group
+        %select.form-control{name: 'lang'}
+          %option{value: 'pl'}= "pl"
+          %option{value: 'en'}= "en"
+
   %a.btn.btn-default{href: '#back', onclick: 'window.history.back(); return false;'}= @t 'common.cancel'
   %button.btn.btn-primary{:type => "button"}= @t 'common.save'
 - else
