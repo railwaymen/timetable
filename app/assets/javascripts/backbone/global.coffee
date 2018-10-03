@@ -4,6 +4,8 @@ $ ->
     if !$(@).hasClass('description')
       $(@).select()
 
+  moment.locale(App.currentUser.lang || 'en')
+
 window.eat = [
   'https://media2.giphy.com/media/RXJthjm1pofte/200.gif'
   'https://media3.giphy.com/media/JDYaNuLNsFQ0o/200.gif'
