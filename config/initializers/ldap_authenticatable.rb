@@ -1,4 +1,5 @@
 # rubocop:disable MethodLength
+
 require 'net/ldap'
 require 'devise/strategies/authenticatable'
 
@@ -9,6 +10,7 @@ module Devise
 
       def authenticate!
         return false unless params[:user]
+
         ldap = Net::LDAP.new(host: Rails.application.secrets.ldap[:host], port: Rails.application.secrets.ldap[:port],
                              auth: { method: :simple, username: "uid=#{email},#{Rails.application.secrets.ldap[:base]}", password: password })
 
@@ -46,3 +48,5 @@ module Devise
 end
 
 Warden::Strategies.add(:ldap_authenticatable, Devise::Strategies::LdapAuthenticatable)
+
+# rubocop:enable MethodLength

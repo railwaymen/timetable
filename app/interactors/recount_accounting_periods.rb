@@ -15,4 +15,5 @@ class RecountAccountingPeriods < IncreaseWorkTime
                             ends_at: work_time.ends_at, date: work_time.date.to_date)
     end
   end
+  # rubocop:enable SkipsModelValidations
 end

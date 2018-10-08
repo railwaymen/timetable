@@ -22,6 +22,14 @@ Bundler/OrderedGems:
 BlockLength:
   Exclude:
     - 'spec/**/*.rb'
+    - 'config/routes.rb'
+
+Style/ExpandPathArguments:
+  Exclude:
+    - 'Rakefile'
+    - 'spec/rails_helper.rb'
+    - 'config/environment.rb'
+    - 'config/application.rb'
 
 AllCops:
   TargetRubyVersion: 2.2
@@ -31,4 +39,5 @@ AllCops:
     - vendor/**/*
     - config/boot.rb
     - config.ru
+    - config/application.rb
   CacheRootDirectory: tmp/

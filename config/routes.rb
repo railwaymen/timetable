@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 require 'sidekiq/web'
 require 'sidekiq-status/web'
 

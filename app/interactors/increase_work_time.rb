@@ -12,7 +12,7 @@ class IncreaseWorkTime
 
   def add_duration_to_full_time_period
     full_time_period = user.accounting_periods.full_time.where('starts_at <= ? AND ends_at >= ?', Time.zone.parse(date.to_s), Time.zone.parse(date.to_s)).first
-    full_time_period.update_attributes(counted_duration: full_time_period.counted_duration + duration) if full_time_period
+    full_time_period.update(counted_duration: full_time_period.counted_duration + duration) if full_time_period
   end
 
   # rubocop:disable MethodLength
@@ -21,6 +21,7 @@ class IncreaseWorkTime
     while remaning_duration > 0
       period = user.accounting_periods.contract.where(closed: false).order('position').first
       break if period.nil?
+
       if period.counted_duration + remaning_duration > period.duration
         remaning_duration -= period.duration - period.counted_duration
         period_ends_at = starts_at + duration - remaning_duration
@@ -29,9 +30,10 @@ class IncreaseWorkTime
         remaning_duration -= period.duration - period.counted_duration
         period.update!(counted_duration: period.duration, closed: true, ends_at: ends_at)
       else
-        period.update_attributes(counted_duration: period.counted_duration + remaning_duration)
+        period.update(counted_duration: period.counted_duration + remaning_duration)
         remaning_duration = 0
       end
     end
   end
+  # rubocop:enable MethodLength
 end
