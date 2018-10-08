@@ -3,6 +3,7 @@ $ ->
   $('body').on 'click', '.auto-focus', ->
     if !$(@).hasClass('description')
       $(@).select()
+  moment.locale(App.currentUser.get('lang'))
 
 window.eat = [
   'https://media2.giphy.com/media/RXJthjm1pofte/200.gif'
