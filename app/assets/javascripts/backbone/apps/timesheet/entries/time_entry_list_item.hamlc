@@ -14,7 +14,7 @@
   %span.description-text!= @body
   %textarea.description-input{type: 'text'}
 
-  - if @projectAllowTask
+  - if @projectAllowTask || @task
     .task-edit-container
       %input.task-input{value: @task}
 

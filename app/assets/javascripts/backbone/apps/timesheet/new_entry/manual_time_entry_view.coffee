@@ -84,6 +84,11 @@ App.Timesheet.ManualTimeEntryView = App.Timesheet.BaseNewTimeEntryView.extend
         ends_at: newStop.format()
         project_id: newProject
 
+  toggleTaskUrl: () ->
+    if !@model.allowsTask()
+      @$('input[name="task"]').val('')
+    @ui.taskUrl.toggle(@model.allowsTask())
+
   setTimeEntry: (model) ->
     @listenTo model, 'change:duration change:starts_at change:ends_at', =>
       @setPeriodValues() if @model.isNew()
@@ -105,7 +110,7 @@ App.Timesheet.ManualTimeEntryView = App.Timesheet.BaseNewTimeEntryView.extend
     @listenTo model, 'change:project_id', =>
       project = @model.project()
       @$('.ui.dropdown').dropdown 'set selected', @model.get('project_id')
-      @ui.taskUrl.toggle(@model.allowsTask())
+      @toggleTaskUrl()
 
       if project.isAutofill() && @model.isNew()
         start = @model.startDate()
