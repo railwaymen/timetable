@@ -21,6 +21,7 @@ App.Timesheet.TimeEntryView = Backbone.Marionette.LayoutView.extend
     destroy: '.destroy'
     history: '.history'
     date: '#date'
+    copy: '.copy'
 
   events:
     'click @ui.descriptionContainer': 'clickEditDescription'
@@ -30,6 +31,7 @@ App.Timesheet.TimeEntryView = Backbone.Marionette.LayoutView.extend
     'blur @ui.timeEndInput': 'onBlurPeriod'
     'click @ui.destroy': 'destroyItem'
     'click @ui.history': 'renderHistory'
+    'click @ui.copy': 'copyItem'
     'keypress textarea, input': 'onKeypress'
 
   regions:
@@ -60,6 +62,12 @@ App.Timesheet.TimeEntryView = Backbone.Marionette.LayoutView.extend
 
   highlight: ->
     @$el.transition('flash', 2000)
+
+  copyItem: ->
+    alert(window.newEntry.$('textarea[name="body"]').length)
+    window.newEntry.$('textarea[name="body"]').val(@model.get('body'))
+    window.newEntry.$('input[name="task"]').val(@model.get('task'))
+    window.newEntry.model.set({ project_id: @model.get('project_id') })
 
   destroyItem: ->
     alert = confirm(i18next.t('common.confirm'))
