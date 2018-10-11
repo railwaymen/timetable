@@ -30,6 +30,7 @@ class WorkTime < ApplicationRecord
 
   def task_url
     return if task.blank?
+
     URI.parse(task)
   rescue URI::InvalidURIError
     errors.add(:task, I18n.t('activerecord.errors.models.work_time.attributes.task.invalid_uri'))

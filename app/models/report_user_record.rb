@@ -18,5 +18,5 @@ class ReportUserRecord
     @last_name      = last_name
     raise(RecordError, errors) unless valid?
   end
-  # rubocop:enable Metrics/ParameterList
+  # rubocop:enable Metrics/ParameterLists
 end

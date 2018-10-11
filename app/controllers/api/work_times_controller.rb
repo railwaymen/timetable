@@ -48,8 +48,8 @@ module Api
 
     def destroy
       @work_time = find_work_time
-      @work_time.update_attributes(updated_by_admin: true) if @work_time.user_id != current_user.id
-      @work_time.update_attributes(active: false)
+      @work_time.update(updated_by_admin: true) if @work_time.user_id != current_user.id
+      @work_time.update(active: false)
       decrease_work_time(@work_time, @work_time.duration)
       respond_with @work_time
     end
@@ -59,22 +59,22 @@ module Api
     def permitted_search_params
       if current_user.admin? || current_user.manager?
         {
-          project_id: (params[:project_id] if params[:project_id].present?),
+          project_id: params[:project_id].presence,
           starts_at: (Time.zone.parse(params[:from])..Time.zone.parse(params[:to]) if params[:from] && params[:to]),
-          user_id: (params[:user_id].present? ? params[:user_id] : current_user.id)
+          user_id: params[:user_id].presence || current_user.id
         }
       elsif current_user.leader?
-        filter_id = (params[:user_id].present? ? params[:user_id] : current_user.id)
+        filter_id = params[:user_id].presence || current_user.id
         filter_project_id = filter_id == current_user.id ? params[:project_id] : (params[:project_id].to_i.presence_in(current_user.projects.pluck(:id)) || 0)
 
         {
-          project_id: (filter_project_id if filter_project_id.present?),
+          project_id: filter_project_id.presence,
           starts_at: (Time.zone.parse(params[:from])..Time.zone.parse(params[:to]) if params[:from].present? && params[:to].present?),
           user_id: filter_id
         }
       else
         {
-          project_id: (params[:project_id] if params[:project_id].present?),
+          project_id: params[:project_id].presence,
           starts_at: (Time.zone.parse(params[:from])..Time.zone.parse(params[:to]) if params[:from].present? && params[:to].present?),
           user_id: current_user.id
         }
@@ -114,3 +114,5 @@ module Api
     end
   end
 end
+
+# rubocop:enable MethodLength

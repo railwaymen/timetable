@@ -10,6 +10,7 @@ class CheckJobExist
 
   def jid
     return if job.blank?
+
     @jid ||= job['jid']
   end
 
@@ -17,6 +18,7 @@ class CheckJobExist
 
   def jobs
     return @jobs if @jobs.present?
+
     @jobs = []
     namespace_jids = Sidekiq.redis { |conn| conn.keys('sidekiq:status:*') }
     jids = namespace_jids.map { |id_namespace| id_namespace.split(':').last }

@@ -8,8 +8,8 @@ class User < ApplicationRecord
 
   has_many :work_times, dependent: :destroy
   has_many :accounting_periods, dependent: :destroy
-  has_many :accounting_periods_recounts
-  has_many :projects, foreign_key: :leader_id
+  has_many :accounting_periods_recounts, dependent: :destroy
+  has_many :projects, foreign_key: :leader_id, dependent: :nullify, inverse_of: :leader
   validates :first_name, :last_name, presence: true
 
   scope :active, -> { where(active: true) }

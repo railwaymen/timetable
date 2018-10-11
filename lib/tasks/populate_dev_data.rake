@@ -1,6 +1,6 @@
-
 task populate_dev_data: :environment do
   raise('Only works in development environment') unless Rails.env.development?
+
   require 'ffaker'
 
   10.times do |i|

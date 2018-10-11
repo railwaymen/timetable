@@ -19,4 +19,5 @@ class AccountingPeriodsGenerator
       end
     end
   end
+  # rubocop:enable MethodLength
 end
