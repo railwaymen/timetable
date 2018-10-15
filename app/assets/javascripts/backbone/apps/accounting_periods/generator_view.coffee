@@ -1,6 +1,6 @@
 App.AccountingPeriods.PeriodsGeneratorView = Backbone.Marionette.ItemView.extend
   template: 'apps/accounting_periods/generator'
-  className: 'ui modal'
+  className: 'ui centered-modal modal'
   events:
     'click #generate': 'generate'
 
