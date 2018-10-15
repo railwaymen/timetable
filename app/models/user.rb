@@ -45,7 +45,8 @@ class User < ApplicationRecord
       last_name: last_name,
       is_leader: leader?,
       admin: admin,
-      manager: manager
+      manager: manager,
+      lang: lang
     }
   end
 

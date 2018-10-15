@@ -23,7 +23,7 @@ en:
       active: Active
       filter_active: Active
       filter_inactive: Inactive
-      filter_all: Wszystkie
+      filter_all: All
       filter_active_label: Show only
       work_times_allows_task: Allow for adding task urls
     reports:
@@ -87,7 +87,7 @@ en:
     timesheet: Timesheet
     all: All
     today: Today
-    yesterday: Testerday
+    yesterday: Yesterday
     confirm: Are you sure ?
     sum: Sum
     name: Name

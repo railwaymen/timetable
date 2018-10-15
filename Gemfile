@@ -62,8 +62,13 @@ group :test do
 end
 
 group :development, :test do
+  gem 'puma'
   gem 'ffaker', require: false
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'shoulda-matchers'
+  gem 'capybara'
+  gem 'selenium-webdriver'
+  gem 'capybara-selenium'
+  gem 'chromedriver-helper'
 end

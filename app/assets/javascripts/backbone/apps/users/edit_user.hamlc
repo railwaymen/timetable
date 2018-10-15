@@ -37,5 +37,5 @@
         %option{value: 'pl'}= "pl"
         %option{value: 'en'}= "en"
 
-  %a.btn.btn-default{href: '#back', onclick: 'window.history.back(); return false;'}= @t 'common.cancel'
-  %button.btn.btn-primary{:type => "button"}= @t 'common.save'
+    %a.btn.btn-default{href: '#back', onclick: 'window.history.back(); return false;'}= @t 'common.cancel'
+    %button.btn.btn-primary{:type => "button"}= @t 'common.save'
