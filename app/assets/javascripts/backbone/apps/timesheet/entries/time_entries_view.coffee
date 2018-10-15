@@ -64,7 +64,6 @@ App.Timesheet.TimeEntryView = Backbone.Marionette.LayoutView.extend
     @$el.transition('flash', 2000)
 
   copyItem: ->
-    alert(window.newEntry.$('textarea[name="body"]').length)
     window.newEntry.$('textarea[name="body"]').val(@model.get('body'))
     window.newEntry.$('input[name="task"]').val(@model.get('task'))
     window.newEntry.model.set({ project_id: @model.get('project_id') })
