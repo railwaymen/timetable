@@ -22,7 +22,9 @@
   %span.project-pill{style: 'background: #' + @projectColor}
     = @project
   .projects-region
-.continue-container
+.continue-container.copy-action
+  .copy
+    %i.glyphicon.glyphicon-open-file
 .duration-container
   .duration
     = @duration

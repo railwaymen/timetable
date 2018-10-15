@@ -6,7 +6,7 @@ App.Timesheet.MainPageView = Marionette.LayoutView.extend
     newEntryRegion: '.new-entry'
 
   onBeforeShow: ->
-    newEntry = new App.Timesheet.ManualTimeEntryView(collection: window.timeEntries)
+    window.newEntry = new App.Timesheet.ManualTimeEntryView(collection: window.timeEntries)
     @newEntryRegion.show(newEntry)
 
     @renderTimeEntriesRegion()
