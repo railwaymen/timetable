@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/railwaymen/timetable.svg?branch=master)](https://travis-ci.com/railwaymen/timetable)
 
-Time tracking web application with reports & basic accounting functionality. Used internally by our company to track developers time on client projects.
+Time tracking web application with reports & basic accounting functionality. Used internally by Railwaymen company to track developers time on client projects.
 
 ## Functionalities
 
