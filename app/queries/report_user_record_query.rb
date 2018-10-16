@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class ReportUserRecordQuery
-  def initialize(from:, to:, project_ids:)
-    @from        = from
-    @to          = to
-    @project_ids = project_ids
+  def initialize(from:, to:, user:, action: :self)
+    @from   = from
+    @to     = to
+    @user   = user
+    @action = (action || :self).to_sym
   end
 
   def results
@@ -12,6 +13,13 @@ class ReportUserRecordQuery
   end
 
   private
+
+  def valid_actions
+    if @user.admin? || @user.manager? then %i[self all leader]
+    elsif @user.leader? then %i[self leader]
+    else %i[self]
+    end
+  end
 
   def assign_to_class(row)
     ReportUserRecord.new(row.symbolize_keys)
@@ -22,7 +30,20 @@ class ReportUserRecordQuery
   end
 
   def projects_access
-    ActiveRecord::Base.send(:sanitize_sql_array, ['AND projects.id IN (?)', @project_ids]) if @project_ids
+    case @action.presence_in(valid_actions)
+    when :all    then ''
+    when :leader then leader_access
+    when :self   then user_access
+    else user_access
+    end
+  end
+
+  def user_access
+    ActiveRecord::Base.send(:sanitize_sql_array, ['AND work_times.user_id = ?', @user.id])
+  end
+
+  def leader_access
+    ActiveRecord::Base.send(:sanitize_sql_array, ['AND projects.id IN (?)', @user.project_ids])
   end
 
   # rubocop:disable Metrics/MethodLength

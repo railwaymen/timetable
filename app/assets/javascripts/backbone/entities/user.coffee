@@ -6,6 +6,9 @@ App.Entities.User = Backbone.Model.extend
     @listenTo @, 'change:id', @triggerChangedLoginState
     @listenTo @, 'change:admin', @triggerChangedAdminState
 
+  isWithSpecialRoles: ->
+    @isAdmin() || @isLeader() || @isManager()
+
   isAdmin: ->
     !!@get('admin')
 

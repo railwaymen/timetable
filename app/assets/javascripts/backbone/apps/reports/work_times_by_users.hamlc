@@ -1,12 +1,22 @@
+- if App.currentUser.isWithSpecialRoles()
+  .pull-left
+    %select#filter-list.form-control
+      - if App.currentUser.isAdmin() || App.currentUser.isManager()
+        %option{ value: 'all', selected: @list == 'all' } (All)
+      - if App.currentUser.isLeader()
+        %option{ value: 'leader', selected: @list == 'leader' } (My projects)
+      %option{ value: 'self', selected: @list == 'self' } (Mine)
+
 %h3.text-muted.clearfix.col-md-offset-4
   %a.glyphicon.glyphicon-chevron-left.previous.pull-left{href: "reports/work_times/by_users?#{$.param(@previousParams)}", data: {navigate: true}}
   .current-month.pull-left
     = @monthName
     = @yearNumber
   %a.glyphicon.glyphicon-chevron-right.next.pull-left{href: "reports/work_times/by_users?#{$.param(@nextParams)}", data: {navigate: true}}
-  .btn-group.pull-right
-    %a.btn.btn-default{href: '/reports/work_times/by_projects', data: {navigate: true}}= @t 'apps.reports.by_projects'
-    %a.btn.btn-default.active{href: 'reports/work_times/by_users', data: {navigate: true}}= @t 'apps.reports.by_people'
+  - if App.currentUser.isWithSpecialRoles()
+    .btn-group.pull-right
+      %a.btn.btn-default{href: '/reports/work_times/by_projects', data: {navigate: true}}= @t 'apps.reports.by_projects'
+      %a.btn.btn-default.active{href: 'reports/work_times/by_users', data: {navigate: true}}= @t 'apps.reports.by_people'
   .clearfix
     .col-xs-3
       %input.form-control{type: 'text', name: 'from', placeholder: @t('common.from'), value: @from}
@@ -20,10 +30,14 @@
       .panel-heading
         %h4
           %i.glyphicon.glyphicon-user
-          %a{href: "/timesheet?user_id=#{items[0].user_id}", data: {navigate: true}}
-            #{userName}
-          %a{href: "/reports/project.csv?from=#{@from}&to=#{@to}&user_id=#{items[0].user_id}", target: "_blank"}
-            %i.calendar.icon
+          - if @list == 'self'
+            %a{ href: "/timesheet", data: { navigate: true } }
+              #{userName}
+          - else
+            %a{ href: "/timesheet?user_id=#{items[0].user_id}", data: { navigate: true } }
+              #{userName}
+              %a{ href: "/reports/project.csv?from=#{@from}&to=#{@to}&user_id=#{items[0].user_id}", target: "_blank" }
+                %i.calendar.icon
 
       %ul.list-group
         - _.each items, (item) =>

@@ -23,12 +23,23 @@ ReportsController = Marionette.Controller.extend
   indexByUsers: (params = {}) ->
     dateFrom = if params.from then moment params.from else moment().startOf 'month'
     dateTo = if params.to then moment params.to else moment().endOf 'month'
+    list = @prepareListParam(params.list)
 
     @byUserWorkTimes.params.from = dateFrom.format()
     @byUserWorkTimes.params.to = dateTo.format()
+    @byUserWorkTimes.params.list = list
     @byUserWorkTimes.fetch().done =>
-      view = new App.Reports.WorkTimesByUsersView(collection: @byUserWorkTimes, dateFrom: dateFrom, dateTo: dateTo)
+      view = new App.Reports.WorkTimesByUsersView(collection: @byUserWorkTimes, dateFrom: dateFrom, dateTo: dateTo, list: list)
       App.rootView.getRegion('content').show(view)
+
+  prepareListParam: (list) ->
+    return list if list
+    if App.currentUser.isAdmin()
+      return 'all'
+    else if App.currentUser.isLeader()
+      return 'leader'
+    else
+      return 'self'
 
 Router = Marionette.AppRouter.extend
   onRoute: -> App.vent.trigger('route', 'reports')
