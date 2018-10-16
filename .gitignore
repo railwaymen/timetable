@@ -21,4 +21,12 @@ vendor/gems
 public/assets
 .DS_Store
 ._.DS_Store
+<<<<<<< HEAD
 .env
+=======
+/public/packs
+/public/packs-test
+/node_modules
+yarn-debug.log*
+.yarn-integrity
+>>>>>>> Removed backbone, added webpack & react

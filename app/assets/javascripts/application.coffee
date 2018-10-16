@@ -1,3 +1,6 @@
+#= require react
+#= require react_ujs
+#= require rails-ujs
 #= require jquery
 #= require jquery_ujs
 #= require URIjs
@@ -9,6 +12,4 @@
 #= require semantic-ui
 #= require timer.jquery
 #= require lodash
-#= require backbone/app
-#= require backbone.paginator
 #= require i18next

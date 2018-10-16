@@ -37,6 +37,9 @@ gem 'haml'
 gem 'redis-namespace'
 gem 'dotenv-rails'
 gem 'jwt', require: false
+gem 'webpacker'
+gem 'react-rails'
+gem 'rails-ujs'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-marionette', '2.4.4'
