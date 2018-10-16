@@ -7,9 +7,18 @@ class Projects extends React.Component {
     super(props);
   }
 
+  apiData (params) {
+    return []
+  }
+
   render () {
     return (
-      <div></div>
+      <div>
+        Projects component
+      </div>
     )
   }
 }
+
+
+export default Projects;
