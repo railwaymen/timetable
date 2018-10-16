@@ -113,15 +113,25 @@
     flex: 0 1 auto
     padding: 16px 0
 
-  .continue-container
-    line-height: 51px
-    text-align: right
-    width: 33px
+  .actions-container
+    display: flex
     -webkit-box-flex: 1
     -moz-box-flex: 1
     -webkit-flex: 1 1 auto
     -ms-flex: 1 1 auto
     flex: 1 1 auto
+    flex-direction: row-reverse
+    padding-left: 13px
+    text-align: right
+    .action-item
+      margin: 0 4px
+      display: inline-block
+      cursor: pointer
+      line-height: 52px
+      display: inline-block
+      opacity: 0
+    &:hover .action-item
+      opacity: 1
 
   .duration-container
     width: 100px
