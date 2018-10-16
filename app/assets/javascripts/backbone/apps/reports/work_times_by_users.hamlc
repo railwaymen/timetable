@@ -40,10 +40,18 @@
                 %i.calendar.icon
 
       %ul.list-group
-        - _.each items, (item) =>
-          %li.list-group-item
-            %a{href: "timesheet?from=#{@from}&to=#{@to}&user_id=#{item.user_id}&project_id=#{item.project_id}", data: {navigate: true}}
-              = item.project_name
-            = "(#{Math.round((item.time_worked / item.user_work_time) * 100)}%)"
-            %span.badge #{@formatDuration(item.time_worked)}
+        - if App.currentUser.isWithSpecialRoles()
+          - _.each items, (item) =>
+            %li.list-group-item
+              %a{href: "timesheet?from=#{@from}&to=#{@to}&user_id=#{item.user_id}&project_id=#{item.project_id}", data: {navigate: true}}
+                = item.project_name
+              = "(#{Math.round((item.time_worked / item.user_work_time) * 100)}%)"
+              %span.badge #{@formatDuration(item.time_worked)}
+        - else
+          - _.each items, (item) =>
+            %li.list-group-item
+              %a{href: "timesheet?from=#{@from}&to=#{@to}&project_id=#{item.project_id}", data: {navigate: true}}
+                = item.project_name
+              = "(#{Math.round((item.time_worked / item.user_work_time) * 100)}%)"
+              %span.badge #{@formatDuration(item.time_worked)}
   .col-mid-offset-1
