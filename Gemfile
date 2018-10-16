@@ -65,6 +65,7 @@ group :development, :test do
   gem 'puma'
   gem 'ffaker', require: false
   gem 'rspec-rails'
+  gem 'rails-controller-testing'
   gem 'factory_girl_rails'
   gem 'shoulda-matchers'
   gem 'capybara'

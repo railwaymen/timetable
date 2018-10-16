@@ -35,6 +35,7 @@
 - else
   .ui.secondary.menu
     %a.item.projects{href: "/projects", data: {navigate: true}}= @t 'common.projects'
+    %a.item.reports{href: "/reports/work_times/by_users", data: {navigate: true}}= @t 'common.reports'
     %a.item.accounting_periods{href: "/accounting_periods", data: {navigate: true}}= @t 'common.accounting_periods'
     %a.item.timesheet{href: "/timesheet", data: {navigate: true}}= @t 'common.timesheet'
     .right.menu
