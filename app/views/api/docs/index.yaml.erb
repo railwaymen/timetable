@@ -1,0 +1,394 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Api"
+host: <%= request.host_with_port %>
+basePath: "/api"
+schemes:
+- "http"
+securityDefinitions:
+  authentication:
+    type: apiKey
+    name: token
+    in: header
+
+paths:
+  /users/sign_in:
+    post:
+      tags:
+       - 'Session'
+      operationId: 'signIn'
+      summary: 'Token'
+      consumes:
+      - 'application/json'
+      produces:
+      - 'application/json'
+      parameters:
+      - in: 'body'
+        name: 'body'
+        description: 'email and password'
+        required: true
+        schema:
+          type: 'object'
+          properties:
+            email:
+              type: 'string'
+            password:
+              type: 'string'
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+  /projects:
+    get:
+      tags:
+      - 'Projects'
+      description: 'Projects stats list'
+      operationId: 'Get projects stats list'
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      security:
+        - authentication: []
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+
+    post:
+      tags:
+      - 'Projects'
+      security:
+        - authentication: []
+      parameters:
+      - in: 'body'
+        name: 'body'
+        description: 'Project data'
+        required: true
+        schema:
+          type: 'object'
+          properties:
+            project:
+              type: 'object'
+              properties:
+                name:
+                  type: 'string'
+                leader_id:
+                  type: 'integer'
+                color:
+                  type: 'string'
+                active:
+                  type: 'boolean'
+                work_times_allows_task:
+                  type: 'boolean'
+
+      description: 'Create project'
+      operationId: 'create'
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+  /projects/{id}:
+    put:
+      tags:
+      - 'Projects'
+      security:
+        - authentication: []
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "project id"
+      - in: 'body'
+        name: 'body'
+        description: 'Only color and work_times_allows_task for leaders'
+        required: true
+        schema:
+          type: 'object'
+          properties:
+            project:
+              type: 'object'
+              properties:
+                name:
+                  type: 'string'
+                leader_id:
+                  type: 'integer'
+                color:
+                  type: 'string'
+                active:
+                  type: 'boolean'
+                work_times_allows_task:
+                  type: 'boolean'
+      description: 'Update project'
+      operationId: 'update_project'
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+
+  /projects/list:
+    get:
+      tags:
+      - 'Projects'
+      description: 'Projects list'
+      operationId: 'Get projects list'
+      security:
+        - authentication: []
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+  /projects/simple:
+    get:
+      tags:
+      - 'Projects'
+      security:
+        - authentication: []
+      description: 'Projects list'
+      operationId: 'Get short info projects list'
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+
+  /work_times:
+    get:
+      tags:
+      - 'Work times'
+      description: ''
+      operationId: 'Get work times info'
+      security:
+        - authentication: []
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+      parameters:
+      - name: "user_id"
+        in: "query"
+        description: "user_id (admin leader or manager)"
+        type: "integer"
+        format: "int64"
+      - name: "project_id"
+        in: "query"
+        description: "project_id (admin leader or manager)"
+        type: "integer"
+        format: "int64"
+      - name: "starts_at"
+        in: "query"
+        description: "starts_at date (admin leader or manager)"
+        type: "string"
+        format: "int64"
+    post:
+      tags:
+      - 'Work times'
+      summary: 'create work time as user(user_id optional for admin)'
+      description: ''
+      consumes:
+      - "application/json"
+      produces:
+      - "application/xml"
+      security:
+        - authentication: []
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+        401:
+          description: 'Unauth'
+      parameters:
+      - in: 'body'
+        name: 'body'
+        description: '1'
+        required: true
+        schema:
+          type: 'object'
+          properties:
+            work_time:
+              type: 'object'
+              properties:
+                user_id:
+                  type: 'integer'
+                project_id:
+                  type: 'integer'
+                body:
+                  type: 'string'
+                task:
+                  type: 'string'
+                starts_at:
+                  type: 'string'
+                ends_at:
+                  type: 'string'
+  /work_times/{id}:
+    get:
+      tags:
+      - 'Work times'
+      description: ''
+      operationId: 'Show work time'
+      security:
+        - authentication: []
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "work_time id"
+    put:
+      tags:
+      - 'Work times'
+      summary: 'edit work time as user(user_id optional for admin)'
+      description: ''
+      consumes:
+      - "application/json"
+      produces:
+      - "application/xml"
+      security:
+        - authentication: []
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+        401:
+          description: 'Unauth'
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "work_time id"
+      - in: 'body'
+        name: 'body'
+        description: '1'
+        required: true
+        schema:
+          type: 'object'
+          properties:
+            work_time:
+              type: 'object'
+              properties:
+                user_id:
+                  type: 'integer'
+                project_id:
+                  type: 'integer'
+                body:
+                  type: 'string'
+                task:
+                  type: 'string'
+                starts_at:
+                  type: 'string'
+                ends_at:
+                  type: 'string'
+    delete:
+      tags:
+      - 'Work times'
+      description: ''
+      operationId: 'Remove work time'
+      security:
+        - authentication: []
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "work_time id"
+  /users/{id}:
+    get:
+      tags:
+      - 'User'
+      description: ''
+      operationId: 'User info'
+      security:
+        - authentication: []
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "user id"
+
+    put:
+      tags:
+      - 'User'
+      description: ''
+      operationId: 'User update'
+      security:
+        - authentication: []
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: 'Success'
+        422:
+          description: 'Unprocessable'
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "user_id (admin leader or manager)"
+        type: "integer"
+        format: "int64"
+      - in: 'body'
+        name: 'body'
+        description: '1'
+        required: true
+        schema:
+          type: 'object'
+          properties:
+            user:
+              type: 'object'
+              properties:
+                first_name:
+                  type: 'string'
+                last_name:
+                  type: 'string'
+                lang:
+                  type: 'string'
