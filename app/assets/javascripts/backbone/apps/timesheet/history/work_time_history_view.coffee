@@ -1,6 +1,6 @@
 App.Timesheet.WorkTimeHistoryView = Backbone.Marionette.ItemView.extend
   template: 'apps/timesheet/history/work_time_history'
-  className: 'ui modal'
+  className: 'ui centered-modal modal'
 
   templateHelpers: ->
     if @options.userId
