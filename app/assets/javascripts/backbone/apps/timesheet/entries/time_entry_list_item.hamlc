@@ -1,10 +1,3 @@
-.action-container
-  - if @canRemove
-    .destroy
-      %i.trash.icon.red
-  .history
-    %i.wait.icon
-
 - if @task
   .task-container
     %span.description-text
@@ -22,9 +15,14 @@
   %span.project-pill{style: 'background: #' + @projectColor}
     = @project
   .projects-region
-.continue-container.copy-action
-  .copy
-    %i.glyphicon.glyphicon-open-file
+.actions-container
+  - if @canRemove
+    .destroy.action-item
+      %i.trash.icon.red
+  .history.action-item
+    %i.wait.icon
+  .copy.action-item
+    %i.glyphicon.glyphicon-paste
 .duration-container
   .duration
     = @duration

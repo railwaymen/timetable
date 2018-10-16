@@ -53,7 +53,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   def delete_task
     find('.time-entries-list-container .entry:first-child').hover
     accept_alert do
-      page.execute_script('$(".action-container .destroy i").first().click()')
+      page.execute_script('$(".actions-container .destroy i").first().click()')
     end
   end
 
