@@ -1,7 +1,7 @@
 # rubocop:disable MethodLength
 
 module Api
-  class WorkTimesController < AuthenticatedController
+  class WorkTimesController < Api::BaseController
     respond_to :json
 
     def index

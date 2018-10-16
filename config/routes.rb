@@ -7,6 +7,9 @@ TimeTable::Application.routes.draw do
   devise_for :users
 
   namespace :api do
+    devise_for :users, controllers: { sessions: 'api/sessions' }
+
+    resources :docs, only: :index
     namespace :public do
       resources :metrics
     end

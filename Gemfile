@@ -11,7 +11,7 @@ gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'jbuilder'
 gem 'semantic-ui-sass', github: 'doabit/semantic-ui-sass'
-gem 'devise', github: 'plataformatec/devise'
+gem 'devise'
 gem 'devise-i18n'
 gem 'awesome_print'
 gem 'paper_trail'
@@ -36,6 +36,7 @@ gem 'net-ldap'
 gem 'haml'
 gem 'redis-namespace'
 gem 'dotenv-rails'
+gem 'jwt', require: false
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-marionette', '2.4.4'

@@ -1,5 +1,5 @@
 module Api
-  class UsersController < AuthenticatedController
+  class UsersController < Api::BaseController
     before_action :authenticate_notself, only: [:update]
     before_action :authenticate_admin!, except: %i[index show update]
     before_action :authenticate_admin_or_manager_or_leader!, only: [:index]

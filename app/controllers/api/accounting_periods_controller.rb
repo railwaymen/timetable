@@ -1,5 +1,5 @@
 module Api
-  class AccountingPeriodsController < AuthenticatedController
+  class AccountingPeriodsController < Api::BaseController
     before_action :authenticate_admin!, except: %i[index matching_fulltime]
     respond_to :json
 
