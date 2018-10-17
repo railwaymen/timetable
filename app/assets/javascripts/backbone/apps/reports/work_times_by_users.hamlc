@@ -1,11 +1,11 @@
 - if App.currentUser.isWithSpecialRoles()
   .pull-left
-    %select#filter-list.form-control
+    %select#filter-list.form-control{ name: 'filter' }
       - if App.currentUser.isAdmin() || App.currentUser.isManager()
-        %option{ value: 'all', selected: @list == 'all' } (All)
+        %option{ value: 'all', selected: @list == 'all' }= @t('apps.reports.all')
       - if App.currentUser.isLeader()
-        %option{ value: 'leader', selected: @list == 'leader' } (My projects)
-      %option{ value: 'self', selected: @list == 'self' } (Mine)
+        %option{ value: 'leader', selected: @list == 'leader' }= @t('apps.reports.my_projects')
+      %option{ value: 'self', selected: @list == 'self' }= @t('apps.reports.my_work_hours')
 
 %h3.text-muted.clearfix.col-md-offset-4
   %a.glyphicon.glyphicon-chevron-left.previous.pull-left{href: "reports/work_times/by_users?#{$.param(@previousParams)}", data: {navigate: true}}
@@ -34,10 +34,13 @@
             %a{ href: "/timesheet", data: { navigate: true } }
               #{userName}
           - else
-            %a{ href: "/timesheet?user_id=#{items[0].user_id}", data: { navigate: true } }
+            - if App.currentUser.isAdmin()
+              %a{ href: "/timesheet?user_id=#{items[0].user_id}", data: { navigate: true } }
+                #{userName}
+                %a{ href: "/reports/project.csv?from=#{@from}&to=#{@to}&user_id=#{items[0].user_id}", target: "_blank" }
+                  %i.calendar.icon
+            - else
               #{userName}
-              %a{ href: "/reports/project.csv?from=#{@from}&to=#{@to}&user_id=#{items[0].user_id}", target: "_blank" }
-                %i.calendar.icon
 
       %ul.list-group
         - if App.currentUser.isWithSpecialRoles()

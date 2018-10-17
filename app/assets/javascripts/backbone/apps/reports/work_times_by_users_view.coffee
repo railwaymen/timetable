@@ -10,10 +10,12 @@ App.Reports.WorkTimesByUsersView = Backbone.Marionette.ItemView.extend
     previousParams =
       from: @options.dateFrom.clone().subtract(1, 'month').startOf('month').format()
       to: @options.dateFrom.clone().subtract(1, 'month').endOf('month').format()
+      list: @options.list
 
     nextParams =
       from: @options.dateFrom.clone().add(1, 'month').startOf('month').format()
       to: @options.dateFrom.clone().add(1, 'month').endOf('month').format()
+      list: @options.list
 
     {
       monthName: @options.dateFrom.format('MMMM')
@@ -37,7 +39,9 @@ App.Reports.WorkTimesByUsersView = Backbone.Marionette.ItemView.extend
 
   filterByList: (e) ->
     params =
-      list: e.target.value
+      list: e.target.value,
+      from: @$('[name=from]').val()
+      to: @$('[name=to]').val()
 
     Backbone.history.navigate("reports/work_times/by_users?#{$.param(params)}", { trigger: true })
 
@@ -45,5 +49,6 @@ App.Reports.WorkTimesByUsersView = Backbone.Marionette.ItemView.extend
     params =
       from: @$('[name=from]').val()
       to: @$('[name=to]').val()
+      list: @$('#filter-list').val()
 
     Backbone.history.navigate("reports/work_times/by_users?#{$.param(params)}", {trigger: true})

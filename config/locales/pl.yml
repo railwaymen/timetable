@@ -30,6 +30,9 @@ pl:
       by_projects: Wg projektów
       by_people: Wg osób
       filter: Filtruj
+      all: 'Wszystkie'
+      my_projects: 'Moje projekty'
+      my_work_hours: 'Moje godziny pracy'
     accounting_periods:
       add: Dodaj okres rozliczeniowy
       note: Notatka
