@@ -33,14 +33,13 @@
           - if @list == 'self'
             %a{ href: "/timesheet", data: { navigate: true } }
               #{userName}
-          - else
-            - if App.currentUser.isAdmin()
-              %a{ href: "/timesheet?user_id=#{items[0].user_id}", data: { navigate: true } }
-                #{userName}
-                %a{ href: "/reports/project.csv?from=#{@from}&to=#{@to}&user_id=#{items[0].user_id}", target: "_blank" }
-                  %i.calendar.icon
-            - else
+          - else if (App.currentUser.isAdmin() || App.currentUser.isManager()) && @list == 'all'
+            %a{ href: "/timesheet?user_id=#{items[0].user_id}", data: { navigate: true } }
               #{userName}
+              %a{ href: "/reports/project.csv?from=#{@from}&to=#{@to}&user_id=#{items[0].user_id}", target: "_blank" }
+                %i.calendar.icon
+          - else
+            #{userName}
 
       %ul.list-group
         - if App.currentUser.isWithSpecialRoles()
