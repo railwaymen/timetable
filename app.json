@@ -3,6 +3,6 @@
   "description": "Time tracking web application with reports & basic accounting functionality.",
   "repository": "https://github.com/railwaymen/timetable",
   "scripts": {
-    "postdeploy": "bundle exec rake db:create db:migrate db:seed"
+    "postdeploy": "bundle exec rake db:create db:schema:load db:migrate db:seed"
   }
 }
