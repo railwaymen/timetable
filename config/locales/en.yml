@@ -30,6 +30,9 @@ en:
       by_projects: By projects
       by_people: By users
       filter: Filter
+      all: 'All'
+      my_projects: 'My projects'
+      my_work_hours: 'My work hours'
     accounting_periods:
       add: Add accounting period
       note: Note

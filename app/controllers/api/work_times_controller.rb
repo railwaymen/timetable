@@ -64,7 +64,7 @@ module Api
           user_id: params[:user_id].presence || current_user.id
         }
       elsif current_user.leader?
-        filter_id = params[:user_id].presence || current_user.id
+        filter_id = (params[:user_id].presence || current_user.id).to_i
         filter_project_id = filter_id == current_user.id ? params[:project_id] : (params[:project_id].to_i.presence_in(current_user.projects.pluck(:id)) || 0)
 
         {
