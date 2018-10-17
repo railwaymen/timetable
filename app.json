@@ -1,5 +1,5 @@
 {
   "name": "Timetable",
-  "description": "Time tracking web application with reports & basic accounting functionality. Used internally by Railwaymen company to track developers time on client projects.",
+  "description": "Time tracking web application with reports & basic accounting functionality.",
   "repository": "https://github.com/railwaymen/timetable"
 }
