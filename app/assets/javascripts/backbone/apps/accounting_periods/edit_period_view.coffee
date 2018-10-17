@@ -46,7 +46,13 @@ App.AccountingPeriods.EditAccountingPeriodView = Backbone.Marionette.ItemView.ex
 
     @model.save({}
       success: (model, response) =>
-        Backbone.history.navigate("accounting_periods?user_id=#{model.get('user_id')}", {trigger: true})
+        userId = if model.get('user_id') then model.get('user_id') else @model.get('user_id')
+        if userId
+          href = "accounting_periods?user_id=#{userId}"
+        else
+          href = "accounting_periods"
+
+        Backbone.history.navigate(href, {trigger: true})
 
       error: (model, response) =>
         @$('.form-group').removeClass('has-error')
