@@ -17,11 +17,11 @@
     .input-group-addon m
   %div.form-group
     %label= @t 'apps.accounting_periods.closed'
-    ?
+      ?
       %input{type: 'checkbox', name: 'closed'}
   %div.form-group
-    %label= @t 'apps.accounting_periods.full_time'
-    ?
+    %label= @t('apps.accounting_periods.full_time')
+      ?
       %input{type: 'checkbox', name: 'full_time'}
   %div.form-group
     %label= @t 'common.position'
