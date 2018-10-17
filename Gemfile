@@ -35,6 +35,7 @@ gem 'validates_overlap'
 gem 'net-ldap'
 gem 'haml'
 gem 'redis-namespace'
+gem 'dotenv-rails'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-marionette', '2.4.4'
