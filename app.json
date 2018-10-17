@@ -1,5 +1,8 @@
 {
   "name": "Timetable",
   "description": "Time tracking web application with reports & basic accounting functionality.",
-  "repository": "https://github.com/railwaymen/timetable"
+  "repository": "https://github.com/railwaymen/timetable",
+  "scripts": {
+    "postdeploy": "bundle exec rake db:schema:load db:migrate db:seed"
+  }
 }

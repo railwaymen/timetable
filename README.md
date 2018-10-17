@@ -48,8 +48,7 @@ To get it running locally run the following after cloning the repository:
 
 ```
 bundle install
-cp config/secrets.yml.example config/secrets.yml
-cp config/database.yml.example config/database.yml
+cp env.yml.example env.yml
 bundle exec rake db:create
 bundle exec rake db:seed
 bundle exec rails s

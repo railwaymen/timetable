@@ -18,8 +18,7 @@ coverage
 *~
 public/images
 vendor/gems
-config/database.yml
-config/secrets.yml
 public/assets
 .DS_Store
 ._.DS_Store
+.env
