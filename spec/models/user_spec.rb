@@ -20,7 +20,7 @@ RSpec.describe User, type: :model do
 
   it '#to_s returns joined first_name and last_name' do
     user = build :user, first_name: 'John', last_name: 'Smith'
-    expect(user.to_s).to eq 'John Smith'
+    expect(user.to_s).to eq 'Smith John'
   end
 
   it '#destroy changes active to false' do

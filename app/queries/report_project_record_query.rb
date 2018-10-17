@@ -34,7 +34,7 @@ class ReportProjectRecordQuery
         work_times.user_id AS user_id,
         SUM(work_times.duration) OVER(PARTITION BY projects.id, work_times.user_id) AS duration,
         SUM(work_times.duration) OVER(PARTITION BY projects.id) AS project_duration,
-        CONCAT(users.first_name, ' ', users.last_name) AS user_name
+        CONCAT(users.last_name, ' ', users.first_name) AS user_name
       FROM projects
       INNER JOIN work_times ON projects.id = work_times.project_id
       INNER JOIN users ON users.id = work_times.user_id
