@@ -30,7 +30,7 @@ module Api
 
     def update
       @accounting_period = AccountingPeriod.find(params[:id])
-      @accounting_period.update(accounting_period_params)
+      @accounting_period.update(edit_accounting_period_params)
       respond_with @accounting_period
     end
 
@@ -76,6 +76,10 @@ module Api
 
     def accounting_period_params
       params.require(:accounting_period).permit(:user_id, :starts_at, :ends_at, :duration, :note, :closed, :position, :full_time)
+    end
+
+    def edit_accounting_period_params
+      params.require(:accounting_period).permit(:starts_at, :ends_at, :duration, :note, :closed, :position, :full_time)
     end
 
     def recounting

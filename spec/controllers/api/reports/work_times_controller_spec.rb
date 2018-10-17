@@ -89,14 +89,14 @@ RSpec.describe Api::Reports::WorkTimesController do
 
         expected_reports = [
           {
-            user_name: "#{user.first_name} #{user.last_name}",
+            user_name: "#{user.last_name} #{user.first_name}",
             project_id: project.id,
             user_id: user.id,
             project_name: project.name,
             time_worked: 1200,
             user_work_time: 2100
           }, {
-            user_name: "#{user.first_name} #{user.last_name}",
+            user_name: "#{user.last_name} #{user.first_name}",
             project_id: project2.id,
             user_id: user.id,
             project_name: project2.name,
@@ -133,14 +133,14 @@ RSpec.describe Api::Reports::WorkTimesController do
 
         expected_reports = [
           {
-            user_name: "#{user.first_name} #{user.last_name}",
+            user_name: "#{user.last_name} #{user.first_name}",
             project_id: project.id,
             user_id: user.id,
             project_name: project.name,
             time_worked: 1200,
             user_work_time: 2100
           }, {
-            user_name: "#{user.first_name} #{user.last_name}",
+            user_name: "#{user.last_name} #{user.first_name}",
             project_id: project2.id,
             user_id: user.id,
             project_name: project2.name,
@@ -179,14 +179,14 @@ RSpec.describe Api::Reports::WorkTimesController do
 
         expected_reports = [
           {
-            user_name: "#{admin.first_name} #{admin.last_name}",
+            user_name: "#{admin.last_name} #{admin.first_name}",
             project_id: project.id,
             user_id: admin.id,
             project_name: project.name,
             time_worked: 1200,
             user_work_time: 2100
           }, {
-            user_name: "#{admin.first_name} #{admin.last_name}",
+            user_name: "#{admin.last_name} #{admin.first_name}",
             project_id: project2.id,
             user_id: admin.id,
             project_name: project2.name,
@@ -223,28 +223,28 @@ RSpec.describe Api::Reports::WorkTimesController do
 
         expected_reports = [
           {
-            user_name: "#{admin.first_name} #{admin.last_name}",
+            user_name: "#{admin.last_name} #{admin.first_name}",
             project_id: project.id,
             user_id: admin.id,
             project_name: project.name,
             time_worked: 1200,
             user_work_time: 2100
           }, {
-            user_name: "#{admin.first_name} #{admin.last_name}",
+            user_name: "#{admin.last_name} #{admin.first_name}",
             project_id: project2.id,
             user_id: admin.id,
             project_name: project2.name,
             time_worked: 900,
             user_work_time: 2100
           }, {
-            user_name: "#{other_user.first_name} #{other_user.last_name}",
+            user_name: "#{other_user.last_name} #{other_user.first_name}",
             project_id: project.id,
             user_id: other_user.id,
             project_name: project.name,
             time_worked: 1200,
             user_work_time: 2100
           }, {
-            user_name: "#{other_user.first_name} #{other_user.last_name}",
+            user_name: "#{other_user.last_name} #{other_user.first_name}",
             project_id: project2.id,
             user_id: other_user.id,
             project_name: project2.name,
@@ -283,14 +283,14 @@ RSpec.describe Api::Reports::WorkTimesController do
 
         expected_reports = [
           {
-            user_name: "#{user.first_name} #{user.last_name}",
+            user_name: "#{user.last_name} #{user.first_name}",
             project_id: project.id,
             user_id: user.id,
             project_name: project.name,
             time_worked: 1200,
             user_work_time: 2100
           }, {
-            user_name: "#{user.first_name} #{user.last_name}",
+            user_name: "#{user.last_name} #{user.first_name}",
             project_id: project2.id,
             user_id: user.id,
             project_name: project2.name,
@@ -327,14 +327,14 @@ RSpec.describe Api::Reports::WorkTimesController do
 
         expected_reports = [
           {
-            user_name: "#{user.first_name} #{user.last_name}",
+            user_name: "#{user.last_name} #{user.first_name}",
             project_id: project.id,
             user_id: user.id,
             project_name: project.name,
             time_worked: 1200,
             user_work_time: 1200
           }, {
-            user_name: "#{other_user.first_name} #{other_user.last_name}",
+            user_name: "#{other_user.last_name} #{other_user.first_name}",
             project_id: project.id,
             user_id: other_user.id,
             project_name: project.name,

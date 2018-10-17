@@ -50,7 +50,7 @@ class ReportUserRecordQuery
   def raw
     %(
       SELECT DISTINCT
-        CONCAT(users.first_name, ' ', users.last_name) AS user_name,
+        CONCAT(users.last_name, ' ', users.first_name) AS user_name,
         projects.id AS project_id,
         users.id AS user_id,
         projects.name AS project_name,

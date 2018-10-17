@@ -35,7 +35,7 @@ class User < ApplicationRecord
   end
 
   def to_s
-    [first_name, last_name].join(' ')
+    [last_name, first_name].join(' ')
   end
 
   def as_json(_options = {})

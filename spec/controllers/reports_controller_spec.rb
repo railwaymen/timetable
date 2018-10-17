@@ -32,10 +32,10 @@ RSpec.describe ReportsController do
       require 'csv'
       csv = CSV.parse(response.body)
       expect(csv[0]).to eql(['Developer', 'Date', 'Task URL', 'Description', 'Duration'])
-      expect(csv[1]).to eql([user.to_s, '2016-01-05', 'http://example.com/task/24', work_time1.body, '02:00'])
-      expect(csv[2]).to eql([user.to_s, '2016-01-05', 'http://example.com/task/24', work_time2.body, '01:00'])
-      expect(csv[3]).to eql([user.to_s, nil, nil, nil, '03:00'])
-      expect(csv[4]).to eql([user.to_s, '2016-01-05', nil, work_time3.body, '02:00'])
+      expect(csv[1]).to eql(["#{user.first_name} #{user.last_name}", '2016-01-05', 'http://example.com/task/24', work_time1.body, '02:00'])
+      expect(csv[2]).to eql(["#{user.first_name} #{user.last_name}", '2016-01-05', 'http://example.com/task/24', work_time2.body, '01:00'])
+      expect(csv[3]).to eql(["#{user.first_name} #{user.last_name}", nil, nil, nil, '03:00'])
+      expect(csv[4]).to eql(["#{user.first_name} #{user.last_name}", '2016-01-05', nil, work_time3.body, '02:00'])
       expect(csv[5]).to eql(['Developer Total', nil, nil, nil, '05:00'])
     end
 

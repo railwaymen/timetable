@@ -35,10 +35,12 @@ App.AccountingPeriods.EditAccountingPeriodView = Backbone.Marionette.ItemView.ex
 
   save: ->
     duration = @model.get('hours') * 3600 + @model.get('minutes') * 60
+    starts_at = if $('input[name=starts_at]').val() then moment(@$('input[name=starts_at]').val()).format('YYYY-MM-DD HH:mm') else ''
+    ends_at = if $('input[name=ends_at]').val() then moment(@$('input[name=ends_at]').val()).format('YYYY-MM-DD HH:mm') else ''
     @model.set
       user_id: @$('select[name=user_id]').val()
-      starts_at: moment(@$('input[name=starts_at]').val()).format('YYYY-MM-DD HH:mm')
-      ends_at: moment(@$('input[name=ends_at]').val()).format('YYYY-MM-DD HH:mm')
+      starts_at: starts_at
+      ends_at: ends_at
       duration: duration
       position: parseInt(@$('input[name=position]').val())
 
