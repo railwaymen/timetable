@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
   def current_user
     @current_user ||= begin
       return unless session['warden.user.user.key'] || request.headers['token']
+
       if session['warden.user.user.key']
         User.find session['warden.user.user.key'][0][0]
       else
