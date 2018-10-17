@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   end
 
   def use_user_locale(&block)
-    I18n.with_locale(current_user.try(:lang) || :pl, &block)
+    I18n.with_locale(current_user.try(:lang), &block)
   end
 
   def authenticate_admin_or_manager_or_leader!

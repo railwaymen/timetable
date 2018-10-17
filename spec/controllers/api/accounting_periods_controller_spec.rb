@@ -216,7 +216,7 @@ RSpec.describe Api::AccountingPeriodsController do
       expect(accounting_periods_generator).to receive(:generate).and_raise(ActiveRecord::RecordInvalid.new(AccountingPeriod.new))
       post :generate, params: { user_id: user.id, periods_count: 4, start_on: starts_at }, format: :json
       expect(response.code).to eql('422')
-      expect(response.body).to be_json_eql({ errors: 'translation missing: pl.activerecord.errors.messages.record_invalid' }.to_json)
+      expect(response.body).to be_json_eql({ errors: 'Validation failed: ' }.to_json)
     end
   end
 

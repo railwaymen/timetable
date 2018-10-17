@@ -88,7 +88,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     select_2_months_ago_tasks(work_time)
 
     click_link('Sign out')
-    expect(page).to have_content('Zaloguj')
+    expect(page).to have_content('Login')
   end
 
   it 'Accounting Periods' do
