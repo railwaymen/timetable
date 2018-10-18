@@ -1,6 +1,7 @@
 # Timetable
 
 [![Build Status](https://travis-ci.com/railwaymen/timetable.svg?branch=master)](https://travis-ci.com/railwaymen/timetable)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/railwaymen/timetable/tree/master)
 
 Time tracking web application with reports & basic accounting functionality. Used internally by Railwaymen company to track developers time on client projects.
 
