@@ -2,7 +2,7 @@ require 'jwt'
 
 class JwtService
   SECRET    = ENV['JWT_SECRET']
-  ALGORITHM = 'HS256'
+  ALGORITHM = 'HS256'.freeze
 
   def self.encode(payload:)
     JWT.encode(payload, SECRET, ALGORITHM)
