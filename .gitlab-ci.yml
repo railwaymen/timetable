@@ -9,7 +9,8 @@ test:
   script:
     - bundle exec rake
 
-deploy:
+production:
+  stage: deploy
   only:
     - master
   script:
