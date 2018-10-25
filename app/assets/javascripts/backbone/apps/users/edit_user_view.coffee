@@ -8,7 +8,15 @@ App.Users.EditUserView = Backbone.Marionette.ItemView.extend
     '[name=last_name]': 'last_name'
     '[name=phone]': 'phone'
     '[name=contract_name]': 'contract_name'
-    '[name=lang]': 'lang'
+    '[name=lang]': {
+      observe:  'lang',
+      selectOptions: {
+        collection: {
+          pl: 'pl',
+          en: 'en'
+        }
+      }
+    }
     '[name=active]': 'active'
 
   onRender: ->
