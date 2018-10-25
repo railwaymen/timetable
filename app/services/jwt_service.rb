@@ -1,8 +1,8 @@
 require 'jwt'
 
 class JwtService
-  SECRET    = Rails.application.secrets.jwt[:secret]
-  ALGORITHM = Rails.application.secrets.jwt[:algorithm]
+  SECRET    = ENV['JWT_SECRET']
+  ALGORITHM = 'HS256'
 
   def self.encode(payload:)
     JWT.encode(payload, SECRET, ALGORITHM)
