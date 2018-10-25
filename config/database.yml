@@ -18,3 +18,4 @@ production:
 
 test:
   <<: *global
+  database: timetable_test
