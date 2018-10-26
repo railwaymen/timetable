@@ -16,8 +16,9 @@ ReportsController = Marionette.Controller.extend
 
     @workTimes.params.from = dateFrom.format()
     @workTimes.params.to = dateTo.format()
+    @workTimes.params.sort = params.sort
     @workTimes.fetch().done =>
-      view = new App.Reports.WorkTimesView(collection: @workTimes, dateFrom: dateFrom, dateTo: dateTo)
+      view = new App.Reports.WorkTimesView(collection: @workTimes, dateFrom: dateFrom, dateTo: dateTo, sort: params.sort)
       App.rootView.getRegion('content').show(view)
 
   indexByUsers: (params = {}) ->

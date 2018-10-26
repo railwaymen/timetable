@@ -27,6 +27,9 @@ pl:
       filter_active_label: Pokaż tylko
       work_times_allows_task: Zezwalaj na dodawanie urli do zadań
     reports:
+      sort_by: Sortuj po
+      hours: Godzinach
+      last_name: Nazwisku
       by_projects: Wg projektów
       by_people: Wg osób
       filter: Filtruj

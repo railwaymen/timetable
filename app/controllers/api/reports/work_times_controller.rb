@@ -8,7 +8,7 @@ module Api
         from = Time.zone.parse(params[:from])
         to   = Time.zone.parse(params[:to])
 
-        @report = ReportProjectRecordQuery.new(from: from, to: to, project_ids: projects_accessibility).results
+        @report = ReportProjectRecordQuery.new(from: from, to: to, project_ids: projects_accessibility, sort: params[:sort]).results
       end
 
       def by_users

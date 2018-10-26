@@ -4,6 +4,7 @@ App.Reports.WorkTimesView = Backbone.Marionette.ItemView.extend
   events:
     'click .btn-group': 'switchActiveButton'
     'click .filter': 'filterByCustomDates'
+    'change #filter-list': 'reportsFilter'
 
   templateHelpers: ->
     previousParams =
@@ -22,6 +23,7 @@ App.Reports.WorkTimesView = Backbone.Marionette.ItemView.extend
       from: encodeURIComponent @options.dateFrom.format()
       to: encodeURIComponent @options.dateTo.format()
       entries: _.groupBy(@collection.toJSON(), 'project_name')
+      sort: @options.sort
     }
 
   switchActiveButton: (e) ->
@@ -37,5 +39,14 @@ App.Reports.WorkTimesView = Backbone.Marionette.ItemView.extend
     params =
       from: moment(@$('[name=from]').val()).startOf('day').format()
       to: moment(@$('[name=to]').val()).endOf('day').format()
+      sort: @$('[name=reports-sort]').val()
+
+    Backbone.history.navigate("reports/work_times/by_projects?#{$.param(params)}", {trigger: true})
+
+  reportsFilter: ->
+    params =
+      from: moment(@$('[name=from]').val()).startOf('day').format()
+      to: moment(@$('[name=to]').val()).endOf('day').format()
+      sort: @$('[name=reports-sort]').val()
 
     Backbone.history.navigate("reports/work_times/by_projects?#{$.param(params)}", {trigger: true})

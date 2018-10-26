@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class ReportProjectRecordQuery
-  def initialize(from:, to:, project_ids:)
+  def initialize(from:, to:, project_ids:, sort:)
     @from        = from
     @to          = to
     @project_ids = project_ids
+    @sort        = sort
   end
 
   def results
@@ -12,6 +13,10 @@ class ReportProjectRecordQuery
   end
 
   private
+
+  def assign_sort
+    (@sort.presence_in(%w[duration last_name]) || 'duration') == 'last_name' ? 'last_name ASC' : 'duration DESC'
+  end
 
   def assign_to_class(row)
     ReportProjectRecord.new(row.symbolize_keys)
@@ -34,6 +39,7 @@ class ReportProjectRecordQuery
         work_times.user_id AS user_id,
         SUM(work_times.duration) OVER(PARTITION BY projects.id, work_times.user_id) AS duration,
         SUM(work_times.duration) OVER(PARTITION BY projects.id) AS project_duration,
+        users.last_name AS last_name,
         CONCAT(users.last_name, ' ', users.first_name) AS user_name
       FROM projects
       INNER JOIN work_times ON projects.id = work_times.project_id
@@ -42,7 +48,7 @@ class ReportProjectRecordQuery
         AND work_times.ends_at <= ?
         AND work_times.active = 't'
         #{projects_access}
-      ORDER BY project_name ASC, duration DESC
+      ORDER BY project_name ASC, #{assign_sort}
     )
   end
   # rubocop:enable Metrics/MethodLength
