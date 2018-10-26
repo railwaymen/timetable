@@ -16,3 +16,11 @@ production:
   script:
     - bundle exec cap production_1 deploy
     - bundle exec cap production_2 deploy
+
+
+staging:
+  stage: deploy
+  only:
+    - api
+  script:
+    - bundle exec cap staging deploy
