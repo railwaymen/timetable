@@ -1,6 +1,6 @@
 - if App.currentUser.isWithSpecialRoles()
   .pull-left
-    = @t('apps.reports.sort_by')
+    %p{ style: 'padding: 6px' }= "#{@t('apps.reports.sort_by')}:"
   .pull-left
     %select#filter-list.form-control{ name: 'reports-sort' }
       %option{ value: 'duration', selected: @sort == 'duration' }= @t('apps.reports.hours')
