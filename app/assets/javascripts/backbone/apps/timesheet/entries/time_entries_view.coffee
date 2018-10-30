@@ -169,7 +169,7 @@ App.Timesheet.TimeEntryView = Backbone.Marionette.LayoutView.extend
   startEditDescription: ->
     @openEditMode()
 
-    description = @model.get('body')
+    description = _.unescape(@model.get('body'))
     @ui.descriptionInput.val(description).show().focus()
 
     $(document).on 'mouseup.timeEntryView', (e) =>
