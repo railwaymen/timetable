@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import User from './user.js';
+import { NavLink } from 'react-router-dom';
 
 class Users extends React.Component {
   constructor (props) {
@@ -9,6 +10,10 @@ class Users extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.getUsers = this.getUsers.bind(this);
+  }
+
+  componentDidMount () {
+    this.getUsers();
   }
 
   static propTypes = {
@@ -21,7 +26,7 @@ class Users extends React.Component {
   }
 
   getUsers () {
-    fetch('/api/users', { visible: this.state.visible })
+    fetch(`/api/users?filter=${this.state.visible}`)
       .then((response) => { return response.json(); })
       .then((data) => {
         this.setState({ users: data });
@@ -41,7 +46,7 @@ class Users extends React.Component {
       <div>
         <div className="actions pull-left">
           <div className="disabled-button-wrapper" data-toggle="tooltip" data-placement="right" title="button_disabled_tooltip">
-            <a className="button btn-default" href="/users/new">Add</a>
+            <NavLink className="btn btn-default" to="/users/new">Add</NavLink>
           </div>
         </div>
         <div className="pull-left">

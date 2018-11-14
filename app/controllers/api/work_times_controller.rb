@@ -5,7 +5,7 @@ module Api
     respond_to :json
 
     def index
-      @work_times = WorkTime.active.includes(:project).order(:starts_at).where(permitted_search_params)
+      @work_times = WorkTime.active.includes(:project).order(starts_at: :desc).where(permitted_search_params)
 
       respond_with @work_times
     end

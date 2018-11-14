@@ -8,5 +8,5 @@ json.body sanitize(work_time.body)
 json.task sanitize(work_time.task)
 json.task_preview sanitize(task_preview_helper(work_time.task))
 json.user_id work_time.user_id
-json.project work_time.project, :name, :color
+json.project work_time.project, :id, :name, :color, :work_times_allows_task
 json.date work_time.starts_at.to_date

@@ -1,18 +1,2 @@
-<div class="container">
-  <div class="header clearfix">
-    <nav></nav>
-  </div>
-  <div id="content"></div>
-</div>
-<%= react_component 'time_table' %>
-<div id="modal"></div>
-
-<script type="text/javascript">
-
-  // <% if current_user %>
-  //   App.currentUser = new App.Entities.User(<%= raw current_user.to_json() %>);
-  // <% else %>
-  //   App.currentUser = new App.Entities.User();
-  // <% end %>
-  // App.start({ locales: <%= raw I18n.backend.send(:translations)[I18n.locale].to_json %>, config: <%= raw({ ldap: Rails.application.secrets.ldap[:enabled] }.to_json) %>})
-</script>
+<div class="header clearfix"></div>
+<%= react_component 'time_table', currentUser: current_user %>

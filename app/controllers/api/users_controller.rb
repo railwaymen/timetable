@@ -12,7 +12,7 @@ module Api
     end
 
     def show
-      @user = User.find(params[:id])
+      @user = User.with_next_and_previous_user_id.find(params[:id])
       respond_with @user
     end
 

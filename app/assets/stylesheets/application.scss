@@ -7,6 +7,7 @@
 @import 'timesheet/*';
 @import 'timesheet/blocks/*';
 @import '*';
+@import 'react-datepicker/dist/react-datepicker.css';
 
 .bootbox.ui.modal.fade.bootbox-confirm {
   opacity: 1;
@@ -14,6 +15,57 @@
 
 .clearfix {
   clear: both
+}
+
+div.react-datepicker__input-container {
+  width: 100%;
+}
+
+.react-datepicker-popper {
+  z-index: 19;
+}
+
+.error-tooltip {
+  position: absolute;
+  display: inline-block;
+  width: 100%;
+  padding: 8px 5px;
+  text-align: center;
+  left: 0;
+  box-sizing: border-box;
+  bottom: 100%;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 15px;
+  color: white;
+  transition-duration: 0.3s;
+  background-color: #FF5853;
+  &:before {
+    content:'';
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right:8px solid #FF5853;
+    left: -6px;
+    top:7px;
+  }
+}
+
+.circle {
+  width: 18px;
+  height: 18px;
+  display: block;
+  &.active {
+    background-color: #5DFF51;
+    color: #5DFF51;
+  }
+  &.inactive {
+    background-color: #FF4F48;
+  }
 }
 
 .copy-action {

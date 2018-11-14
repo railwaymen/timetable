@@ -8,14 +8,16 @@ class Navbar extends React.Component {
     return (
       <div className="navbar">
         <div className="ui secondary menu">
-          <NavLink className="item" to="/users">Users</NavLink>
+          { currentUser.admin &&
+            <NavLink className="item" to="/users">Users</NavLink> }
           <NavLink className="item" to="/projects">Projects</NavLink>
           <NavLink className="item" to="/reports/work_times/by_projects">Reports</NavLink>
           <NavLink className="item" to="/accounting_periods">Accounting periods</NavLink>
+          <NavLink className="item" to="/timesheet">Timesheet</NavLink>
           <div className="right menu">
             <div className="item"></div>
-            <NavLink className="item" to="users/edit">Your Name</NavLink>
-            <NavLink className="sign_out ui button" to="users/edit">Log out</NavLink>
+            <NavLink className="item" to={`/users/edit/${currentUser.id}`}>{currentUser.first_name} {currentUser.last_name}</NavLink>
+            <NavLink className="sign_out ui button" to="/users/sign_out" data-method="delete">Log out</NavLink>
           </div>
         </div>
       </div>
