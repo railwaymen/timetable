@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as Api from '../../shared/api.js';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Redirect } from 'react-router-dom';
 
 class EditProject extends React.Component {
   constructor (props) {
@@ -23,7 +23,8 @@ class EditProject extends React.Component {
   state = {
     project: {},
     users: [],
-    projectId: window.location.pathname.match(/[0-9]+/)
+    projectId: window.location.pathname.match(/[0-9]+/),
+    redirectToReferer: undefined
   }
 
   componentDidMount () {
@@ -76,13 +77,25 @@ class EditProject extends React.Component {
 
     if (this.state.projectId) {
       Api.makePutRequest({ url: `/api/projects/${this.state.project.id}`, body: { project: project } })
+         .then(() => {
+           this.setState({
+             redirectToReferer: '/projects/list'
+           })
+         })
     } else {
       Api.makePostRequest({ url: '/api/projects', body: { project: project } })
+         .then(() => {
+           this.setState({
+             redirectToReferer: '/projects/list'
+           })
+         })
     }
   }
 
   render () {
-    const { project, users } = this.state;
+    const { project, users, redirectToReferer } = this.state;
+
+    if (redirectToReferer) return <Redirect to={redirectToReferer} />
 
     return (
       <form>
