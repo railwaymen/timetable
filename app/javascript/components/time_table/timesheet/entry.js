@@ -189,10 +189,14 @@ class Entry extends React.Component {
   }
 
   _renderEasterEgg () {
+    let easters = ['https://media.giphy.com/media/eorpEE4PYJfQQ/giphy.gif',
+                   'https://media.tenor.com/images/cd9b58f5b362c24addbcb904c917ebdb/tenor.gif',
+                   'https://media1.tenor.com/images/c10b4e9e6b6d2835b19f42cbdd276774/tenor.gif?itemid=10644609'];
+
     if (moment().format('d') === '4') {
       return 'https://thumbs.gfycat.com/AngelicFailingAlaskajingle-size_restricted.gif';
     } else {
-      return 'https://media.tenor.com/images/cd9b58f5b362c24addbcb904c917ebdb/tenor.gif';
+      return _.shuffle(easters)[0];
     }
   }
 

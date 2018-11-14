@@ -115,8 +115,6 @@ class EditPeriod extends React.Component {
         body: { accounting_period: { ...period, duration: duration } }
       })
     }
-
-    return promise;
   }
 
   formatTimeMinutes (duration) {
@@ -219,7 +217,7 @@ class EditPeriod extends React.Component {
             </div>
             <div className="form-group">
               <label>Fulltime?
-                <input type="checkbox" name="protected" checked={period.protected} onChange={this.onCheckboxChange} />
+                <input type="checkbox" name="full_time" checked={period.full_time} onChange={this.onCheckboxChange} />
               </label>
             </div>
             <div className="form-group">

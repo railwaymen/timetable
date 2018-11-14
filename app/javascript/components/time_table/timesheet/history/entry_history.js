@@ -23,6 +23,9 @@ class EntryHistory extends React.Component {
     this.onMonthFilter = this.onMonthFilter.bind(this);
     this.formattedDuration = this.formattedDuration.bind(this);
     this._renderFilters = this._renderFilters.bind(this);
+    this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
+    this.onNextUserChange = this.onNextUserChange.bind(this);
+    this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
   }
 
   componentDidMount () {
@@ -38,17 +41,22 @@ class EntryHistory extends React.Component {
       months: months
     })
 
-    const filteredUserId = URI(window.location.href).search(true)['user_id'];
+    const linkParams = URI(window.location.href).search(true);
+    const filteredUserId = linkParams['user_id'];
+
+    let { from, to, project_id } = this.state;
+
+    if (linkParams['from'] && linkParams['to']) {
+      from = linkParams['from'];
+      to = linkParams['to'];
+    }
+
+    if (linkParams['project_id']) project_id = linkParams['project_id'];
 
     if (filteredUserId) {
-      Api.makeGetRequest({ url: `api/users/${filteredUserId}` })
-         .then((response) => {
-           this.setState({ filteredUser: response.data }, () => {
-             this.getWorkHours();
-           })
-         })
+      this.filterWorkHoursByUser(filteredUserId, { from: from,  to: to, project_id: project_id });
     } else {
-      this.getWorkHours();
+      this.getWorkHours({ from: from, to: to, project_id: project_id });
     }
   }
 
@@ -66,6 +74,15 @@ class EntryHistory extends React.Component {
     project_id: undefined,
     from: moment().startOf('month').format(),
     to: moment().endOf('month').format()
+  }
+
+  filterWorkHoursByUser (id, params) {
+    Api.makeGetRequest({ url: `api/users/${id}` })
+       .then((response) => {
+         this.setState({ filteredUser: response.data }, () => {
+           this.getWorkHours(params);
+         })
+       })
   }
 
   decreaseWorkHours (seconds) {
@@ -141,7 +158,7 @@ class EntryHistory extends React.Component {
       let daysKeys = this.state.daysKeys;
 
       if (groupedIndex) {
-        groupedWorkHours[time] = _.sortBy(groupedWorkHours[time].concat([object]), (t) => moment(t.starts_at).format('HHMM')).reverse();
+        groupedWorkHours[time] = _.sortBy(groupedWorkHours[time].concat([object]), (t) => moment(t.starts_at).format('HHmm')).reverse();
       } else {
         groupedWorkHours[time] = [object];
         daysKeys = _.sortBy(this.state.daysKeys.concat([time]), (key) => key).reverse();
@@ -170,14 +187,6 @@ class EntryHistory extends React.Component {
     original.removeSearch('from')
             .removeSearch('to')
 
-    if (!from || !to) {
-      from = this.state.from;
-      to = this.state.to;
-    } else if (!pushHistory && queries['from'] && queries['to']) {
-      from = queries['from'];
-      to = queries['to'];
-    }
-
     const userId = this.state.filteredUser ? this.state.filteredUser.id : null;
     let prepareParams = { from: from, to: to, project_id: project_id, user_id: userId };
 
@@ -199,6 +208,7 @@ class EntryHistory extends React.Component {
                               .removeSearch('from')
                               .removeSearch('to')
                               .removeSearch('project_id')
+                              .removeSearch('user_id')
                               .addSearch(prepareParams);
 
              history.pushState('Timetable', 'Reports', newPath)
@@ -317,6 +327,18 @@ class EntryHistory extends React.Component {
     }
   }
 
+  onPreviousUserChange () {
+    let { from, to, project_id } = this.state;
+
+    this.filterWorkHoursByUser(this.state.filteredUser.prev_id, { from: from, to: to, project_id: project_id, pushHistory: true });
+  }
+
+  onNextUserChange () {
+    let { from, to, project_id } = this.state;
+
+    this.filterWorkHoursByUser(this.state.filteredUser.next_id, { from: from, to: to, project_id: project_id, pushHistory: true });
+  }
+
   _renderVersions () {
     return (
       this.state.info.versions.map((version, i) => (
@@ -390,7 +412,15 @@ class EntryHistory extends React.Component {
 
     return (
       <div className="content-wrapper">
-        { filteredUser ? <h1>{filteredUser.first_name} {filteredUser.last_name}</h1> : null }
+        { (currentUser.admin || currentUser.manager || currentUser.leader) && filteredUser ?
+          <h1 className="active-user-timesheet">
+            { filteredUser.prev_id ?
+              <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" /> : null }
+              {filteredUser.first_name} {filteredUser.last_name}
+            { filteredUser.next_id ?
+              <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" /> : null }
+          </h1>
+         : null }
         <div id="time-entry-list">
           <div className="select-month">
             <h3>{I18n.t('apps.timesheet.overall_work_time')}

@@ -267,14 +267,14 @@ class WorkHours extends React.Component {
       <div className="time-entries-list-container" style={!_.isEmpty(errors) ? { 'background-color': '#FF9177', position: 'relative' } : {}}>
         { errors.map((error, index) => (<ErrorTooltip errors={error} />)) }
         <ul className="time-entries-list">
-          <li className="entry" id={`work-time-${workHours.id}`}>
+          <li className={`entry ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
             <div className="task-container">
               <span className="description-text">
                 <a href={workHours.task} target="_blank">{workHours.task_preview}</a>
               </span>
             </div>
             <div className="description-container" onClick={this.toggleEdit}>
-              <span className="description-text">{workHours.body || '[No description]'}</span>
+              <span className="description-text">{workHours.project.lunch ? 'Omnonmonmonmnomnonmonmn' : (workHours.body || '[No description]')}</span>
               { editing ? this._renderBodyEditable() : null }
             </div>
             <div className="project-container" onClick={this.toggleProjectEdit}>

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as Api from '../../shared/api.js';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Redirect } from 'react-router-dom';
 
 class EditUser extends React.Component {
   constructor (props) {
@@ -34,6 +34,7 @@ class EditUser extends React.Component {
 
   state = {
     user: {},
+    redirectToReferer: undefined,
     userId: window.location.pathname.match(/[0-9]+/)
   }
 
@@ -65,13 +66,21 @@ class EditUser extends React.Component {
 
     if (this.state.userId) {
       Api.makePutRequest({ url: `/api/users/${user.id}`, body: { id: user.id, user: user } })
+         .then(() => {
+           this.setState({ redirectToReferer: '/users' })
+         })
     } else {
       Api.makePostRequest({ url: `/api/users`, body: { user: user } })
+         .then(() => {
+           this.setState({ redirectToReferer: '/users' })
+         })
     }
   }
 
   render () {
-    const user = this.state.user;
+    const { user, redirectToReferer } = this.state;
+
+    if (redirectToReferer) return <Redirect to={redirectToReferer} />
 
     return (
       <form>
