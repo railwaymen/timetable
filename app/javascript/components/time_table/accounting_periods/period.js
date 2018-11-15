@@ -47,8 +47,8 @@ class Period extends React.Component {
         <td>{period.closed ? <i class="glyphicon glyphicon-ok"></i> : ''}</td>
         <td>{period.full_time ? <i class="glyphicon glyphicon-ok"></i> : ''}</td>
         <td>
-          <NavLink to={`/accounting_periods/edit/${period.id}?user_id=${period.user_id}`} className="btn btn-default edit">Edit</NavLink>
-          <div onClick={this.onDelete} className="btn btn-danger delete">Delete</div>
+          <NavLink to={`/accounting_periods/edit/${period.id}?user_id=${period.user_id}`} className="btn btn-default edit">{I18n.t('common.edit')}</NavLink>
+          <div onClick={this.onDelete} className="btn btn-danger delete">{I18n.t('common.destroy')}</div>
         </td>
       </tr>
     )

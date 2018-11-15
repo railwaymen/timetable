@@ -111,8 +111,8 @@ class EditUser extends React.Component {
             <option selected={user.lang === 'en'} value="en">en</option>
           </select>
         </div>
-        <input className="btn btn-default" type="submit" value="Save" onClick={this.onSubmit} />
-        <NavLink className="btn btn-primary" to="/users">Cancel</NavLink>
+        <input className="btn btn-default" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
+        <NavLink className="btn btn-primary" to="/users">{I18n.t('common.cancel')}</NavLink>
       </form>
     )
   }

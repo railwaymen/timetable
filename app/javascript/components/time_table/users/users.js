@@ -46,24 +46,24 @@ class Users extends React.Component {
       <div>
         <div className="actions pull-left">
           <div className="disabled-button-wrapper" data-toggle="tooltip" data-placement="right" title="button_disabled_tooltip">
-            <NavLink className="btn btn-default" to="/users/new">Add</NavLink>
+            <NavLink className="btn btn-default" to="/users/new">{I18n.t('common.add')}</NavLink>
           </div>
         </div>
         <div className="pull-left">
           <select name="visible" id="filter" className="form-control" onChange={this.onChange} defaultSelected={visible}>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="all">All</option>
+            <option value="active">{I18n.t('apps.users.active')}</option>
+            <option value="inactive">{I18n.t('apps.users.inactive')}</option>
+            <option value="all">{I18n.t('apps.users.all')}</option>
           </select>
         </div>
         <table className="table table-striped">
           <thead>
             <th></th>
-            <th>Imie</th>
-            <th>Naziwsko</th>
+            <th>{I18n.t('apps.users.last_name')}</th>
+            <th>{I18n.t('apps.users.first_name')}</th>
             <th>Email</th>
-            <th>Kontrakt id</th>
-            <th>Telefon</th>
+            <th>{I18n.t('apps.users.contract_id')}</th>
+            <th>{I18n.t('apps.users.phone')}</th>
           </thead>
           <tbody>
             { users.map((user, i) =>

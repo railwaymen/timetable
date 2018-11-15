@@ -280,7 +280,7 @@ class Periods extends React.Component {
         <div id="modal" style={{ display: 'none' }}>
           <div className="ui centered-modal modal transition visible active">
             <i className="close icon"></i>
-            <div className="header">Generate accounting periods</div>
+            <div className="header">{I18n.t('apps.accounting_periods.generate_accounting_periods')}</div>
             <div className="content">
               <form className="form ui">
                 <div className="error hidden message ui">
@@ -288,11 +288,11 @@ class Periods extends React.Component {
                 </div>
                 <div className="fields inline">
                   <div className="field">
-                    <label>Generate</label>
+                    <label>{I18n.t('apps.accounting_periods.periods_count')}</label>
                     <input type="number" onChange={this.onGeneratePeriodsChange} value={generatePeriods.periods_count} name="periods_count" placeholder="periods count" />
                   </div>
                   <div className="field">
-                    <label>starting from month</label>
+                    <label>{I18n.t('apps.accounting_periods.starting_from_month')}</label>
                     <select onChange={this.onGeneratePeriodsChange} value={generatePeriods.month} className="dropdown ui" id="month" type="text" name="month">
                       {this._generateMonths()}
                     </select>
@@ -307,7 +307,7 @@ class Periods extends React.Component {
             </div>
             <div className="actions">
               <button onClick={this.onGenerateSubmit} className="button green icon labeled right ui" id="generate" type="button">
-                Generate
+                {I18n.t('apps.accounting_periods.generate')}
                 <i className="angle double icon right"></i>
               </button>
             </div>

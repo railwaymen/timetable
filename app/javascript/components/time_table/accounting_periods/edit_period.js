@@ -203,7 +203,7 @@ class EditPeriod extends React.Component {
             <div className="form-group">
               <textarea className="form-control" name="note" placeholder="Note" onChange={this.onChange} value={period.note}></textarea>
             </div>
-            <label>Duration</label>
+            <label>{I18n.t('common.duration')}</label>
             <div className="form-group input-group">
               <input className="form-control" type="text" name="hours" onChange={this.onChange} value={period.hours} />
               <div className="input-group-addon">h</div>
@@ -211,22 +211,22 @@ class EditPeriod extends React.Component {
               <div className="input-group-addon">m</div>
             </div>
             <div className="form-group">
-              <label>Closed?
+              <label>{I18n.t('apps.accounting_periods.closed')}
                 <input type="checkbox" name="closed" checked={period.closed} onChange={this.onCheckboxChange} />
               </label>
             </div>
             <div className="form-group">
-              <label>Fulltime?
+              <label>{I18n.t('apps.accounting_periods.full_time')}
                 <input type="checkbox" name="full_time" checked={period.full_time} onChange={this.onCheckboxChange} />
               </label>
             </div>
             <div className="form-group">
-              <label>Position</label>
+              <label>{I18n.t('common.position')}</label>
               <input className="form-control" type="number" name="position" value={period.position} onChange={this.onChange} />
             </div>
           </form>
-          <NavLink className="btn btn-default" to="/accounting_periods" data-navigate="">Cancel</NavLink>
-          <button onClick={this.onSubmit} className="btn btn-primary" type="button">Save</button>
+          <NavLink className="btn btn-default" to="/accounting_periods" data-navigate="">{I18n.t('common.cancel')}</NavLink>
+          <button onClick={this.onSubmit} className="btn btn-primary" type="button">{I18n.t('common.save')}</button>
         </div>
       </div>
     )

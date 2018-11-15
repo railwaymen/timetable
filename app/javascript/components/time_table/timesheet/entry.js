@@ -246,7 +246,7 @@ class Entry extends React.Component {
                 <DatePicker value={date} onChange={this.onDateChange} onSelect={this.onDateChange}/>
               </div>
               <div className="action">
-                <button className="btn-start button fluid ui" onClick={this.onSubmit}>Zapisz</button>
+                <button className="btn-start button fluid ui" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
               </div>
             </div>
           </div>

@@ -52,12 +52,12 @@ class ProjectsList extends React.Component {
               <NavLink className="btn btn-default" exact to="/projects">{I18n.t('common.rank')}</NavLink>
               <NavLink className="btn btn-default active" to="/projects/list">{I18n.t('common.all')}</NavLink>
             </div>
-            { currentUser.admin ? <NavLink to="/projects/new" className="btn btn-default pull-left"> Add </NavLink> : null }
+            { currentUser.admin ? <NavLink to="/projects/new" className="btn btn-default pull-left">{I18n.t('common.add')}</NavLink> : null }
             <div className="btn-group pull-left">
               <select name="visible" id="filter" className="form-control" onChange={this.onChange} defaultSelected={visible}>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="all">All</option>
+                <option value="active">{I18n.t('apps.projects.filter_active')}</option>
+                <option value="inactive">{I18n.t('apps.projects.filter_inactive')}</option>
+                <option value="all">{I18n.t('apps.projects.filter_all')}</option>
               </select>
             </div>
           </div>
