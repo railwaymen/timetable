@@ -182,15 +182,10 @@ class Entry extends React.Component {
   }
 
   _renderEasterEgg () {
-    let easters = ['https://media.giphy.com/media/eorpEE4PYJfQQ/giphy.gif',
-                   'https://media.tenor.com/images/cd9b58f5b362c24addbcb904c917ebdb/tenor.gif',
-                   'https://media1.tenor.com/images/c10b4e9e6b6d2835b19f42cbdd276774/tenor.gif?itemid=10644609'];
-
-    if (moment().format('d') === '4') {
-      return 'https://thumbs.gfycat.com/AngelicFailingAlaskajingle-size_restricted.gif';
-    } else {
-      return _.shuffle(easters)[0];
-    }
+    return _.sample(['https://media.tenor.com/images/cd9b58f5b362c24addbcb904c917ebdb/tenor.gif',
+                     'https://media1.tenor.com/images/c10b4e9e6b6d2835b19f42cbdd276774/tenor.gif?itemid=10644609',
+                     'https://78.media.tumblr.com/8873748d59f1b6e9ddd5a3fce67c12b4/tumblr_nt0tdjsWg61tpri36o1_400.gif',
+                     'https://media.giphy.com/media/11LtzfNXmCQQ80/giphy.gif']);
   }
 
   render () {
