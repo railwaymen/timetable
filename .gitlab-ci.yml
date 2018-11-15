@@ -21,6 +21,6 @@ production:
 staging:
   stage: deploy
   only:
-    - api
+    - develop
   script:
     - bundle exec cap staging deploy
