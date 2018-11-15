@@ -1,5 +1,5 @@
 module Api
-  class ProjectsController < AuthenticatedController
+  class ProjectsController < Api::BaseController
     respond_to :json
     wrap_parameters :project
     before_action :authenticate_admin_or_manager_or_leader!, only: %i[show create update]
