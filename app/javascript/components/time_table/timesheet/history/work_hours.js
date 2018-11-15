@@ -232,23 +232,21 @@ class WorkHours extends React.Component {
       url: `/api/work_times/${this.state.workHours.id}`,
       body: { work_time: { ...this.workHoursJsonApi(), starts_at: starts_at, ends_at: ends_at } }
     }).then((response) => {
-      if (parseInt(response.status) === 200) {
-        let data = response.data;
-        let durationDeviation = data.duration - oldDuration;
+      let data = response.data;
+      let durationDeviation = data.duration - oldDuration;
 
-        this.setState({
-          workHours: data,
-          date: moment(data.starts_at).format('DD/MM/YYYY')
-        }, () => {
-          this.props.updateWorkHours(this, durationDeviation);
-        });
-      } else if (parseInt(response.status) === 422) {
-        this.setState({
-          starts_at_hours: formattedStartsAtTime,
-          ends_at_hours: formattedEndsAtTime,
-          errors: Object.values(response.data.errors)
-        })
-      }
+      this.setState({
+        workHours: data,
+        date: moment(data.starts_at).format('DD/MM/YYYY')
+      }, () => {
+        this.props.updateWorkHours(this, durationDeviation);
+      });
+    }).catch((e) => {
+      this.setState({
+        starts_at_hours: formattedStartsAtTime,
+        ends_at_hours: formattedEndsAtTime,
+        errors: Object.values(e.errors)
+      })
     })
   }
 

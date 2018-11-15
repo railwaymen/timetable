@@ -11,10 +11,15 @@ export const makePutRequest = (data) => {
       if (response.statusText === 'No Content') {
         return { data: {}, status: response.status }
       } else {
-        return response.json().then(data => ({
-          data: data,
-          status: response.status
-        }))
+        return response.json().then(data => {
+            if (response.status >= 400 && response.status < 500) {
+              return Promise.reject(data);
+            } else {
+              return {
+                data: data
+              }
+            }
+          })
       }
     }
   )
@@ -29,11 +34,17 @@ export const makePostRequest = (data) => {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     }
-  }).then((response) =>
-    response.json().then(data => ({
-      data: data,
-      status: response.status
-    }))
+  }).then((response) => (
+      response.json().then(data => {
+          if (response.status >= 400 && response.status < 500) {
+            return Promise.reject(data);
+          } else {
+            return {
+              data: data
+            }
+          }
+        })
+    )
   )
 }
 
@@ -49,7 +60,9 @@ export const makeGetRequest = (data) => {
       data: data,
       status: response.status
     }))
-  )
+  ).catch(() => {
+    alert('There was an error trying to get data')
+  })
 }
 
 export const makeDeleteRequest = (data) => {

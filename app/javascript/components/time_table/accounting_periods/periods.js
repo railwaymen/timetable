@@ -55,20 +55,18 @@ class Periods extends React.Component {
     Api.makeGetRequest({
       url: `/api/accounting_periods?user_id=${options.userId}&page=${options.page}`
     }).then((response) => {
-      if (response.status === 200) {
-        let periods = response.data;
+      let periods = response.data;
 
-        Api.makeGetRequest({ url: `/api/users/${options.userId}` })
-           .then((userResponse) => {
-             this.setState({
-               periods: periods,
-               userId: options.userId,
-               user: userResponse.data,
-               page: options.page,
-               recounting: periods.recounting
-             })
+      Api.makeGetRequest({ url: `/api/users/${options.userId}` })
+         .then((userResponse) => {
+           this.setState({
+             periods: periods,
+             userId: options.userId,
+             user: userResponse.data,
+             page: options.page,
+             recounting: periods.recounting
            })
-      }
+         })
     })
   }
 
@@ -119,14 +117,13 @@ class Periods extends React.Component {
       url: `/api/accounting_periods/generate`,
       body: params
     }).then((response) => {
-      if (response.status === 200) {
-        console.log(response.data);
-        this.setState({
-          periods: {
-            accounting_periods: response.data
-          }
-        })
-      }
+      this.setState({
+        periods: {
+          accounting_periods: response.data
+        }
+      })
+    }).catch(() => {
+      alert('There was an error with generate')
     })
   }
 

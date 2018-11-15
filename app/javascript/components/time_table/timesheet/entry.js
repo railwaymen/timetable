@@ -114,24 +114,17 @@ class Entry extends React.Component {
         url: '/api/work_times',
         body: { work_time: entryData }
       }).then((response) => {
-        switch (parseInt(response.status)) {
-          case 200:
-            this.props.pushEntry(response.data);
-            this.setState({
-              starts_at: this.state.ends_at,
-              duration: 0,
-              durationHours: '00:00',
-              body: '',
-              task: ''
-            })
-            break;
-          case 422:
-            alert('There was an error while trying to add work time');
-            break;
-          default:
-            alert('Internal server error');
-        }
-      })
+          this.props.pushEntry(response.data);
+          this.setState({
+            starts_at: this.state.ends_at,
+            duration: 0,
+            durationHours: '00:00',
+            body: '',
+            task: ''
+          })
+        }).catch(() => {
+          alert('There was an error while trying to add work time');
+        })
     }
   }
 

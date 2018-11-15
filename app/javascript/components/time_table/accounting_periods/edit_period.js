@@ -53,20 +53,18 @@ class EditPeriod extends React.Component {
   getPeriod (id) {
     Api.makeGetRequest({ url: `/api/accounting_periods/${id}` })
       .then((response) => {
-        if (response.status === 200) {
-          let data = response.data;
-          let hours = this.formatTimeHours(data.duration);
-          let minutes = this.formatTimeMinutes(data.duration);
+        let data = response.data;
+        let hours = this.formatTimeHours(data.duration);
+        let minutes = this.formatTimeMinutes(data.duration);
 
-          hours = this.formatTimeHours(response.data.duration)
-          this.setState({
-            period: {
-              ...response.data,
-              hours: hours,
-              minutes: minutes
-            }
-          })
-        }
+        hours = this.formatTimeHours(response.data.duration)
+        this.setState({
+          period: {
+            ...response.data,
+            hours: hours,
+            minutes: minutes
+          }
+        })
     })
   }
 
@@ -140,22 +138,13 @@ class EditPeriod extends React.Component {
 
     this.request(period)
         .then((response) => {
-          switch (parseInt(response.status)) {
-            case 200:
-            case 201:
-            case 204:
-              this.setState({
-                redirectToReferer: `/accounting_periods?user_id=${period.user_id}`
-              })
-              break;
-            case 422:
-              this.setState({
-                errors: response.data.errors
-              });
-              break;
-            default:
-              alert('There was an error trying to make a request');
-          }
+          this.setState({
+            redirectToReferer: `/accounting_periods?user_id=${period.user_id}`
+          })
+        }).catch((e) => {
+          this.setState({
+            errors: response.data.errors
+          });
         })
   }
 
