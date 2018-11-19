@@ -4,6 +4,9 @@ TimeTable::Application.configure do
   # Code is not reloaded between requests.
   config.cache_classes = true
 
+  # Verifies that versions and hashed value of the package contents in the project's package.json
+  config.webpacker.check_yarn_integrity = false
+
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both thread web servers
   # and those relying on copy on write to perform better.
