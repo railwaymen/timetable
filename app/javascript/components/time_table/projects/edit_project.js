@@ -1,0 +1,138 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import * as Api from '../../shared/api.js';
+import { NavLink, Redirect } from 'react-router-dom';
+
+class EditProject extends React.Component {
+  constructor (props) {
+    super(props);
+
+    this.getProject = this.getProject.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onCheckboxChange = this.onCheckboxChange.bind(this);
+    this.getUsers = this.getUsers.bind(this);
+  }
+
+  static propTypes = {
+    project: PropTypes.object,
+    users: PropTypes.array
+  }
+
+  state = {
+    project: {},
+    users: [],
+    projectId: window.location.pathname.match(/[0-9]+/),
+    redirectToReferer: undefined
+  }
+
+  componentDidMount () {
+    this.getProject();
+    if (currentUser.admin) {
+      this.getUsers();
+    }
+  }
+
+  getProject () {
+    if (this.state.projectId) {
+      Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}` })
+         .then((response) => {
+           this.setState({ project: response.data });
+         })
+    }
+  }
+
+  getUsers () {
+    Api.makeGetRequest({ url: '/api/users' })
+       .then((response) => {
+         this.setState({ users: response.data });
+       })
+  }
+
+  onChange (e) {
+    this.setState({
+      project: {
+        ...this.state.project,
+        [e.target.name]: e.target.value
+      }
+    })
+  }
+
+  onCheckboxChange (e) {
+    let project = this.state.project;
+
+    this.setState({
+      project: {
+        ...project,
+        [e.target.name]: !project[e.target.name]
+      }
+    })
+  }
+
+  onSubmit (e) {
+    e.preventDefault();
+    let project = this.state.project;
+    project.color = project.color ? project.color.substring(1) : '0c0c0c';
+
+    if (this.state.projectId) {
+      Api.makePutRequest({ url: `/api/projects/${this.state.project.id}`, body: { project: project } })
+         .then(() => {
+           this.setState({
+             redirectToReferer: '/projects/list'
+           })
+         })
+    } else {
+      Api.makePostRequest({ url: '/api/projects', body: { project: project } })
+         .then(() => {
+           this.setState({
+             redirectToReferer: '/projects/list'
+           })
+         })
+    }
+  }
+
+  render () {
+    const { project, users, redirectToReferer } = this.state;
+
+    if (redirectToReferer) return <Redirect to={redirectToReferer} />
+
+    return (
+      <form>
+        { currentUser.admin ?
+          <div>
+            <div className="form-group">
+              <input className="form-control" type="text" name="name" placeholder={I18n.t('common.name')} onChange={this.onChange} value={project.name} autoFocus />
+            </div>
+            <div className="form-group">
+              <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
+              <select name="leader_id" id="leader" className="form-control" value={project.leader_id} onChange={this.onChange}>
+                <option value=""></option>
+                { users.map((user, index) => (
+                  <option key={user.id} value={user.id}>{user.first_name} {user.first_name}</option>
+                )) }
+              </select>
+            </div>
+            <div className="form-group">
+              <label>
+                {I18n.t('apps.projects.active')}
+                <input type="checkbox" name="active" checked={project.active} onChange={this.onCheckboxChange} />
+              </label>
+            </div>
+          </div>
+        : null }
+        <div className="form-group"></div>
+        <input type="color" name="color" value={((project.color && project.color[0] !== '#') ? '#' : '') + project.color} onChange={this.onChange} />
+        <div className="form-group">
+          <label>
+            {I18n.t('apps.projects.work_times_allows_task')}
+            <input type="checkbox" name="work_times_allows_task" checked={project.work_times_allows_task} onChange={this.onCheckboxChange} />
+          </label>
+        </div>
+        <input className="btn btn-default" type="submit" value="Save" onClick={this.onSubmit} />
+        <NavLink className="btn btn-primary" to="/projects/list">Cancel</NavLink>
+      </form>
+    )
+  }
+}
+
+export default EditProject;

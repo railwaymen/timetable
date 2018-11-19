@@ -14,6 +14,18 @@ class User < ApplicationRecord
 
   scope :active, -> { where(active: true) }
 
+  def self.with_next_and_previous_user_id
+    from(%(
+      (
+        SELECT
+          users.*,
+          LEAD(users.id) OVER(ORDER BY id DESC) AS prev_id,
+          LAG(users.id) OVER(ORDER BY id DESC) AS next_id
+        FROM users
+      ) users
+    ))
+  end
+
   def self.filter_by(action)
     case action
     when :active then where(active: true)

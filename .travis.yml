@@ -12,4 +12,5 @@ addons:
   chrome: stable
 
 before_script:
+  - yarn install
   - bundle exec rake db:create

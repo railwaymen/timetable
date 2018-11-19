@@ -13,6 +13,7 @@ gem 'jbuilder'
 gem 'semantic-ui-sass', github: 'doabit/semantic-ui-sass'
 gem 'devise'
 gem 'devise-i18n'
+gem 'i18n-js'
 gem 'awesome_print'
 gem 'paper_trail'
 gem 'business_time'
@@ -37,6 +38,9 @@ gem 'haml'
 gem 'redis-namespace'
 gem 'dotenv-rails'
 gem 'jwt', require: false
+gem 'webpacker'
+gem 'react-rails'
+gem 'rails-ujs'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-marionette', '2.4.4'

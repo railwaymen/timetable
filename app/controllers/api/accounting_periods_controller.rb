@@ -6,16 +6,7 @@ module Api
     helper_method :recounting
 
     def index
-      @accounting_periods = if current_user.admin?
-                              AccountingPeriod.order(position: :desc)
-                            else
-                              current_user.accounting_periods.order(position: :desc)
-                            end
-      @accounting_periods = @accounting_periods.page(params[:page])
-      if params[:user_id].present? && current_user.admin?
-        @accounting_periods.where!(user_id: params[:user_id])
-      end
-      respond_with @accounting_periods
+      respond_with accounting_periods
     end
 
     def show
@@ -49,10 +40,7 @@ module Api
       AccountingPeriodsGenerator.new(user_id: params[:user_id],
                                      periods_count: params[:periods_count].to_i,
                                      start_on: Date.parse(params[:start_on])).generate
-
-      periods = AccountingPeriod.where(user_id: params[:user_id])
-                                .where('starts_at > ?', params[:start_on])
-      render status: :ok, json: periods
+      render json: accounting_periods
     rescue ActiveRecord::RecordInvalid => e
       render status: :unprocessable_entity, json: { errors: e.message }
     end
@@ -73,6 +61,15 @@ module Api
     end
 
     private
+
+    def accounting_periods
+      @accounting_periods ||= begin
+        periods = current_user.admin? ? AccountingPeriod.order(position: :desc) : current_user.accounting_periods.order(position: :desc)
+        periods = periods.page(params[:page])
+        periods.where!(user_id: params[:user_id]) if params[:user_id].present? && current_user.admin?
+        periods
+      end
+    end
 
     def accounting_period_params
       params.require(:accounting_period).permit(:user_id, :starts_at, :ends_at, :duration, :note, :closed, :position, :full_time)

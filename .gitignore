@@ -22,3 +22,8 @@ public/assets
 .DS_Store
 ._.DS_Store
 .env
+/public/packs
+/public/packs-test
+/node_modules
+yarn-debug.log*
+.yarn-integrity
