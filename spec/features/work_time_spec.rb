@@ -14,24 +14,30 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
       fill_in 'user[password]', with: with
       click_button 'sign_in'
     end
-    # save_screenshot('tmp/chrome.png')
-    puts page.driver.browser.manage.logs.get :browser
   end
+
+  # rubocop:disable Metrics/MethodLength
 
   def create_task(message, from, to)
     within('#content') do
       fill_in 'What have you done ?', with: message
+      find('.project-dropdown').click
+      find('.project-dropdown .item:nth-child(1)').click
+      find('#start').click
       fill_in 'start', with: from
+      find('#end').click
       fill_in 'end', with: to
       fill_in 'task', with: 'www.example.com'
     end
 
     find(:css, '.fluid div.text').click
     find(:css, '.menu.visible > .item:last-child').click
-    page.find('.btn-start', text: 'Save').click
+    page.find('#content button.btn-start.button.fluid.ui', text: 'Save').click
 
     expect(page).to have_content message
   end
+
+  # rubocop:enable Metrics/MethodLength
 
   def edit_task_body(message)
     find('.description-container', text: message).click
@@ -42,7 +48,8 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   def edit_task_hours(from, to)
     find('.time-container', text: "#{from} - #{to}").click
     find(:css, 'input.start-input').set('15:00')
-    page.execute_script('$("input.end-input").val("15:30");')
+    find(:css, 'input.end-input').click
+    find(:css, 'input.end-input').set('15:00')
     find('body').click
   end
 
@@ -60,13 +67,14 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   end
 
   def select_2_months_ago_tasks(work_time)
-    find('.select-month').first('.button').click
+    find('#months').click
+    page.execute_script("$('#months .menu').toggle()")
     find('a.item', text: "#{work_time.starts_at.strftime('%b')} #{Time.zone.now.strftime('%y')}").click
   end
 
   it 'Timesheet' do
-    project = Project.create(name: 'test', active: true)
-    Project.create(name: 'another', active: true)
+    project = Project.create(name: 'test', active: true, work_times_allows_task: true)
+    Project.create(name: 'another', active: true, work_times_allows_task: true)
     user = FactoryGirl.create :user, lang: 'en', password: 'password'
 
     work_time = create(:work_time, user: user, project: project, starts_at: 2.months.ago.beginning_of_day, ends_at: 2.months.ago.end_of_day)
@@ -76,7 +84,8 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
     login_user(user)
     click_link('Timesheet')
-    expect(page).to have_content 'Total worktime in selected period :'
+
+    expect(page).to have_content 'Total worktime in selected period'
 
     create_task(message, from, to)
 
@@ -88,7 +97,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
     select_2_months_ago_tasks(work_time)
 
-    click_link('Sign out')
+    find('a.sign_out.ui.button').click
     expect(page).to have_content('Login')
   end
 
@@ -158,6 +167,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   it 'Profile' do
     user = FactoryGirl.create :user, lang: 'en', password: 'password'
     login_user(user)
+
     click_link("#{user.last_name} #{user.first_name}")
     expect(page).to have_selector('input[name="first_name"]')
     expect(page).to have_selector('input[name="last_name"]')

@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as Api from '../../shared/api.js';
 import { NavLink } from 'react-router-dom';
@@ -24,7 +23,7 @@ class ProjectsList extends React.Component {
 
   state = {
     projects: [],
-    visible: 'all'
+    visible: 'active'
   }
 
   getProjects () {

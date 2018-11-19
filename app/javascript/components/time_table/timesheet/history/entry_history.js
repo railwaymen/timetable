@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import WorkHoursDay from './work_hours_day.js';
 import * as Api from '../../../shared/api.js';
@@ -382,7 +381,7 @@ class EntryHistory extends React.Component {
 
     return (
       <div>
-        <div className="button dropdown right floated scrolling teal ui" tabIndex="0">
+        <div id="months" className="button dropdown right floated scrolling teal ui" tabIndex="0">
           <div className="text">{moment(from).format('MMMM') || I18n.t('apps.timesheet.select_month')}</div>
           <i className="dropdown icon"></i>
           <div className="menu" tabIndex="-1">

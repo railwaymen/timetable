@@ -1,17 +1,16 @@
-#= require jquery
-#= require react_ujs
-#= require react
-#= require URIjs
 #= require momentjs
-#= require momentjs/locale/pl
 #= require momentjs-business
-#= require eonasdan-bootstrap-datetimepicker
-#= require bootstrap-sprockets
-#= require semantic-ui
+#= require momentjs/locale/pl
+#= require jquery
 #= require timer.jquery
-#= require lodash
 #= require i18next
 #= require i18n/translations
+#= require URIjs
+#= require bootstrap-sprockets
+#= require semantic-ui
+#= require lodash
+#= require react_ujs
+#= require react
 
 $ ->
   $('body').on 'click', '.icon.wait', ->
@@ -19,6 +18,12 @@ $ ->
 
   $('body').on 'click', '#modal-info .button.cancel', ->
     $('#modal-info').removeClass('active visible')
+
+  $('body').on 'click', (e) ->
+    klass  = $(e.target).attr('class') || ''
+    parent = $(e.target).parent().attr('class') || ''
+    if !(klass.match('dropdown') || klass.match('menu') || parent.match('dropdown'))
+      $('.dropdown .menu').hide()
 
   $('body').on 'click', '.dropdown', ->
     $(this).find('.menu').toggle()

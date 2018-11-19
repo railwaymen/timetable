@@ -77,5 +77,11 @@ export const makeDeleteRequest = (data) => {
 }
 
 const csrfToken = () => {
-  return document.getElementsByName('csrf-token')[0].content
+  let csrf = document.getElementsByName('csrf-token')[0]
+
+  if (csrf) {
+    return document.getElementsByName('csrf-token')[0].content;
+  } else {
+    return ''
+  }
 }

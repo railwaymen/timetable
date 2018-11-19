@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import WorkHours from './work_hours.js';
 import _ from 'lodash';

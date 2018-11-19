@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import ProjectsDropdown from './projects_dropdown.js';
@@ -122,8 +121,9 @@ class Entry extends React.Component {
             body: '',
             task: ''
           })
-        }).catch(() => {
-          alert('There was an error while trying to add work time');
+        }).catch((e) => {
+          console.log(e)
+          // alert('There was an error while trying to add work time');
         })
     }
   }
@@ -192,7 +192,7 @@ class Entry extends React.Component {
     const { duration, body, task, starts_at, ends_at, durationHours, date, errors, project } = this.state;
 
     return (
-      <div className="new-entry">
+      <div className="new-entry" id="content">
         <div className="timer">
           <div className="segment ui">
             <div className="field">
@@ -200,7 +200,7 @@ class Entry extends React.Component {
                 { errors.body ? <ErrorTooltip errors={errors.body} /> : null }
                 <div className="input transparent ui">
                   { project.lunch ?
-                      <div className="easter" style={{ 'background-image': `url(${this._renderEasterEgg()})` }}></div>
+                      <div className="easter" style={{ 'backgroundImage': `url(${this._renderEasterEgg()})` }}></div>
                     : <textarea className="description auto-focus" placeholder={I18n.t('apps.timesheet.what_have_you_done')} name="body" value={body} onChange={this.onChange}></textarea>
                   }
                 </div>

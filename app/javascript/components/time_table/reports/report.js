@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import URI from 'urijs';
 
 class Report extends React.Component {

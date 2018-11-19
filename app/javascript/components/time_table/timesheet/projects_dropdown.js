@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as Api from '../../shared/api.js';
 import ProjectsList from './projects_list.js';

@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Entry from './entry.js';
 import EntryHistory from './history/entry_history.js';
 import PropTypes from 'prop-types';

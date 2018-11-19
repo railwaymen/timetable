@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as Api from '../../shared/api.js';
 import { NavLink, Redirect } from 'react-router-dom';
@@ -67,7 +66,7 @@ class EditUser extends React.Component {
     if (this.state.userId) {
       Api.makePutRequest({ url: `/api/users/${user.id}`, body: { id: user.id, user: user } })
          .then(() => {
-           this.setState({ redirectToReferer: '/users' })
+           this.setState({ redirectToReferer: (currentUser.admin ? '/users' : '/projects') })
          })
     } else {
       Api.makePostRequest({ url: `/api/users`, body: { user: user } })

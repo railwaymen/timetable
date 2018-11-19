@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as Api from '../../../shared/api.js';
 import DatePicker from 'react-datepicker';
@@ -262,8 +261,8 @@ class WorkHours extends React.Component {
     const { workHours, projectEditable, openModal, editing, starts_at_hours, ends_at_hours, errors } = this.state;
 
     return (
-      <div className="time-entries-list-container" style={!_.isEmpty(errors) ? { 'background-color': '#FF9177', position: 'relative' } : {}}>
-        { errors.map((error, index) => (<ErrorTooltip errors={error} />)) }
+      <div className="time-entries-list-container" style={!_.isEmpty(errors) ? { 'backgroundColor': '#FF9177', position: 'relative' } : {}}>
+        { errors.map((error, index) => (<ErrorTooltip key={index} errors={error} />)) }
         <ul className="time-entries-list">
           <li className={`entry ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
             <div className="task-container">
