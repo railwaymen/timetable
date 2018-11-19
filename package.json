@@ -2,6 +2,8 @@
   "dependencies": {
     "@rails/webpacker": "3.5",
     "babel-preset-react": "^6.24.1",
+    "component-webpack-plugin": "^0.2.1",
+    "dotenv": "^6.1.0",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
@@ -9,11 +11,8 @@
     "react-date-picker": "^7.0.0",
     "react-datepicker": "^1.7.0",
     "react-dom": "^16.5.2",
-    "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react_ujs": "^2.4.4",
-    "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0",
     "urijs": "^1.19.1"
   },
   "devDependencies": {

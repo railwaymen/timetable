@@ -74,7 +74,7 @@ class ByProjects extends Report {
         <div className="pull-left">
           <p style={{ padding: '6px'}}>{I18n.t('apps.reports.sort_by')}:</p>
           <div className="pull-left">
-            <select className="form-control" name="order" onChange={this.onOrderChange} defaultSelected={order}>
+            <select className="form-control" name="order" onChange={this.onOrderChange} value={order}>
               <option value="duration">{I18n.t('apps.reports.hours')}</option>
               <option value="last_name">{I18n.t('apps.reports.last_name')}</option>
             </select>

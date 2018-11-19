@@ -12,7 +12,7 @@ RSpec.describe Api::UsersController do
   let(:email) { "#{SecureRandom.hex}@example.com" }
 
   def user_response(user)
-    user.attributes.slice('email', 'first_name', 'last_name', 'active', 'lang')
+    user.attributes.slice('email', 'first_name', 'last_name', 'prev_id', 'next_id', 'active', 'lang')
   end
 
   describe '#index' do
@@ -123,6 +123,7 @@ RSpec.describe Api::UsersController do
     it 'returns user' do
       sign_in(user)
       user = create(:user)
+      user = User.with_next_and_previous_user_id.find(user.id)
       get :show, params: { id: user.id }, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql(user_response(user).to_json)

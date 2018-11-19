@@ -68,10 +68,10 @@ class Projects extends React.Component {
               <NavLink className="btn btn-default" to="/projects/list">{I18n.t('common.all')}</NavLink>
             </div>
             <div className="btn-group pull-left">
-              <select id="range" className="form-control" onChange={this.changeRange}>
-                <option value="30" selected={range === 30}>{I18n.t('apps.projects.last')} 30 {I18n.t('apps.projects.days')} </option>
-                <option value="60" selected={range === 60}>{I18n.t('apps.projects.last')} 60 {I18n.t('apps.projects.days')} </option>
-                <option value="90" selected={range === 90}>{I18n.t('apps.projects.last')} 90 {I18n.t('apps.projects.days')} </option>
+              <select id="range" value={range} className="form-control" onChange={this.changeRange}>
+                <option value="30">{I18n.t('apps.projects.last')} 30 {I18n.t('apps.projects.days')} </option>
+                <option value="60">{I18n.t('apps.projects.last')} 60 {I18n.t('apps.projects.days')} </option>
+                <option value="90">{I18n.t('apps.projects.last')} 90 {I18n.t('apps.projects.days')} </option>
               </select>
             </div>
           </div>

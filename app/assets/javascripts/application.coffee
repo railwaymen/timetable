@@ -1,7 +1,6 @@
 #= require jquery
-#= require react
 #= require react_ujs
-#= require rails-ujs
+#= require react
 #= require URIjs
 #= require momentjs
 #= require momentjs/locale/pl

@@ -67,6 +67,7 @@ module Api
         periods = current_user.admin? ? AccountingPeriod.order(position: :desc) : current_user.accounting_periods.order(position: :desc)
         periods = periods.page(params[:page])
         periods.where!(user_id: params[:user_id]) if params[:user_id].present? && current_user.admin?
+        periods
       end
     end
 

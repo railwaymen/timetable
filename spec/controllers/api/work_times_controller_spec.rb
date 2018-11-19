@@ -15,7 +15,11 @@ RSpec.describe Api::WorkTimesController, type: :controller do
   def work_time_response(work_time)
     work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'user_id')
              .merge(task_preview: task_preview_helper(work_time.task))
-             .merge(date: work_time.starts_at.to_date, project: { name: work_time.project.name, color: work_time.project.color })
+             .merge(date: work_time.starts_at.to_date,
+                    project: { name: work_time.project.name,
+                               color: work_time.project.color,
+                               lunch: work_time.project.lunch,
+                               work_times_allows_task: work_time.project.work_times_allows_task })
   end
 
   def full_work_time_response(work_time)
@@ -62,8 +66,11 @@ RSpec.describe Api::WorkTimesController, type: :controller do
             task_preview: task_preview_helper(work_time.task),
             user_id: work_time.user_id,
             project: {
+              id: work_time.project.id,
               name: work_time.project.name,
-              color: work_time.project.color
+              color: work_time.project.color,
+              work_times_allows_task: work_time.project.work_times_allows_task,
+              lunch: work_time.project.lunch
             },
             date: work_time.date
           }
@@ -94,8 +101,11 @@ RSpec.describe Api::WorkTimesController, type: :controller do
             task_preview: task_preview_helper(work_time.task),
             user_id: user_work_time.user_id,
             project: {
+              id: user_work_time.project.id,
               name: user_work_time.project.name,
-              color: user_work_time.project.color
+              color: user_work_time.project.color,
+              work_times_allows_task: work_time.project.work_times_allows_task,
+              lunch: work_time.project.lunch
             },
             date: user_work_time.date
           }

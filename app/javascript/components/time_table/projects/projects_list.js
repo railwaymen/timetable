@@ -54,7 +54,7 @@ class ProjectsList extends React.Component {
             </div>
             { currentUser.admin ? <NavLink to="/projects/new" className="btn btn-default pull-left">{I18n.t('common.add')}</NavLink> : null }
             <div className="btn-group pull-left">
-              <select name="visible" id="filter" className="form-control" onChange={this.onChange} defaultSelected={visible}>
+              <select name="visible" id="filter" className="form-control" onChange={this.onChange} value={visible}>
                 <option value="active">{I18n.t('apps.projects.filter_active')}</option>
                 <option value="inactive">{I18n.t('apps.projects.filter_inactive')}</option>
                 <option value="all">{I18n.t('apps.projects.filter_all')}</option>

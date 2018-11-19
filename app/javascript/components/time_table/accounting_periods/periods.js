@@ -219,7 +219,7 @@ class Periods extends React.Component {
 
     for (let i = 1; i <= 12; i++) {
       options.push(
-        <option value={i}>{i}</option>
+        <option key={i} value={i}>{i}</option>
       )
     }
 
@@ -233,7 +233,7 @@ class Periods extends React.Component {
 
     for (let i = currentYear; i <= maxYear; i++) {
       options.push(
-        <option value={i}>{i}</option>
+        <option key={i} value={i}>{i}</option>
       )
     }
 
@@ -257,15 +257,17 @@ class Periods extends React.Component {
         </div>
         <table className="table table-striped">
           <thead>
-            <th>{I18n.t('common.position')}</th>
-            <th>{I18n.t('common.person')}</th>
-            <th>{I18n.t('common.from')}</th>
-            <th>{I18n.t('common.to')}</th>
-            <th>{I18n.t('common.duration')}</th>
-            <th>{I18n.t('apps.accounting_periods.note')}</th>
-            <th>{I18n.t('apps.accounting_periods.closed')}</th>
-            <th>{I18n.t('apps.accounting_periods.full_time')}</th>
-            { currentUser.admin ? <th /> : null }
+            <tr>
+              <th>{I18n.t('common.position')}</th>
+              <th>{I18n.t('common.person')}</th>
+              <th>{I18n.t('common.from')}</th>
+              <th>{I18n.t('common.to')}</th>
+              <th>{I18n.t('common.duration')}</th>
+              <th>{I18n.t('apps.accounting_periods.note')}</th>
+              <th>{I18n.t('apps.accounting_periods.closed')}</th>
+              <th>{I18n.t('apps.accounting_periods.full_time')}</th>
+              { currentUser.admin ? <th /> : null }
+            </tr>
           </thead>
           <tbody>
             { periods.accounting_periods.map((period, index) => (

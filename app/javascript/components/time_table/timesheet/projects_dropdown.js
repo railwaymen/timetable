@@ -95,7 +95,7 @@ class ProjectsDropdown extends React.Component {
     const { selectedProject, isExpanded, filter } = this.state;
 
     return (
-      <div className="dropdown fluid search ui" style={{ 'min-width': '90px' }} onClick={this.expandDropdown}>
+      <div className="dropdown fluid search ui" style={{ 'minWidth': '90px' }} onClick={this.expandDropdown}>
         <input type="hidden" name="project" value="12" />
         <input placeholder="Project +" className="search" name="filter" value={filter} autoComplete="off" tabIndex="0" onChange={this.onFilterChange} id="search-input" />
         <div className={`text active ${(isExpanded ? 'hidden' : '')}`} style={{ background: `#${selectedProject.color}` }}>

@@ -14,6 +14,8 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
       fill_in 'user[password]', with: with
       click_button 'sign_in'
     end
+    # save_screenshot('tmp/chrome.png')
+    puts page.driver.browser.manage.logs.get :browser
   end
 
   def create_task(message, from, to)
@@ -73,7 +75,6 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     to = '14:00'
 
     login_user(user)
-
     click_link('Timesheet')
     expect(page).to have_content 'Total worktime in selected period :'
 

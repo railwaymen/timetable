@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
@@ -11,7 +10,7 @@ class Navbar extends React.Component {
           { currentUser.admin &&
             <NavLink className="item" to="/users">Users</NavLink> }
           <NavLink className="item" to="/projects">Projects</NavLink>
-          <NavLink className="item" to="/reports/work_times/by_projects">Reports</NavLink>
+          <NavLink className="item" to={currentUser.admin || currentUser.manager || currentUser.leader ? '/reports/work_times' : '/reports/work_times/by_users'}>Reports</NavLink>
           <NavLink className="item" to="/accounting_periods">Accounting periods</NavLink>
           <NavLink className="item" to="/timesheet">Timesheet</NavLink>
           <div className="right menu">
