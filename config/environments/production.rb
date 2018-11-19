@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/BlockLength
+
 TimeTable::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -94,3 +96,5 @@ TimeTable::Application.configure do
     }
   end
 end
+
+# rubocop:enable Metrics/BlockLength
