@@ -11,7 +11,7 @@ class ProjectStats extends React.Component {
         <div className="title">
           <h3>
             {data.name}
-            <div className="badge" style={{ 'background-color': '#' + data.color, width: '18px', height: '18px', display: 'block' }}></div>
+            <div className="badge" style={{ 'backgroundColor': '#' + data.color, width: '18px', height: '18px', display: 'block' }}></div>
           </h3>
           <p className="center"> {data.leader ? data.leader.name : ''} </p>
           <ul>

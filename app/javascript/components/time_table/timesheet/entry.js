@@ -19,6 +19,7 @@ class Entry extends React.Component {
     this.validate = this.validate.bind(this);
     this.removeErrorsFor = this.removeErrorsFor.bind(this);
     this.paste = this.paste.bind(this);
+    this.onKeyPress = this.onKeyPress.bind(this);
   }
 
   static propTypes = {
@@ -48,6 +49,10 @@ class Entry extends React.Component {
     this.setState({
       [name]: e.target.value
     }, () => { this.removeErrorsFor(name); })
+  }
+
+  onKeyPress (e) {
+    if (e.key === 'Enter') this.onSubmit();
   }
 
   onDateChange (e) {
@@ -122,8 +127,7 @@ class Entry extends React.Component {
             task: ''
           })
         }).catch((e) => {
-          console.log(e)
-          // alert('There was an error while trying to add work time');
+          alert('There was an error while trying to add work time');
         })
     }
   }
@@ -198,7 +202,7 @@ class Entry extends React.Component {
             <div className="field">
               <div className="desc">
                 { errors.body ? <ErrorTooltip errors={errors.body} /> : null }
-                <div className="input transparent ui">
+                <div className="input transparent ui" onKeyPress={this.onKeyPress}>
                   { project.lunch ?
                       <div className="easter" style={{ 'backgroundImage': `url(${this._renderEasterEgg()})` }}></div>
                     : <textarea className="description auto-focus" placeholder={I18n.t('apps.timesheet.what_have_you_done')} name="body" value={body} onChange={this.onChange}></textarea>
@@ -206,7 +210,7 @@ class Entry extends React.Component {
                 </div>
                 { project.work_times_allows_task ?
                   <div className="input task-url transparent ui">
-                    <input className="task" placeholder={I18n.t('apps.timesheet.task_url')} type="text" name="task" onChange={this.onChange} />
+                    <input className="task" placeholder={I18n.t('apps.timesheet.task_url')} type="text" name="task" value={task} onChange={this.onChange} />
                   </div> : null }
               </div>
               <div className="projects">

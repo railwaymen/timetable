@@ -27,7 +27,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
       fill_in 'start', with: from
       find('#end').click
       fill_in 'end', with: to
-      fill_in 'task', with: 'www.example.com'
+      fill_in 'task', with: 'www.example.com/task1'
     end
 
     find(:css, '.fluid div.text').click
@@ -40,6 +40,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   # rubocop:enable Metrics/MethodLength
 
   def edit_task_body(message)
+    page.execute_script("$('.entry').removeClass('new')")
     find('.description-container', text: message).click
     first(:css, '.description-container textarea').send_keys('Another message')
     find('body').click
@@ -68,7 +69,6 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
   def select_2_months_ago_tasks(work_time)
     find('#months').click
-    page.execute_script("$('#months .menu').toggle()")
     find('a.item', text: "#{work_time.starts_at.strftime('%b')} #{Time.zone.now.strftime('%y')}").click
   end
 

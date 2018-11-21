@@ -15,6 +15,12 @@ import EditPeriod from './time_table/accounting_periods/edit_period.js';
 import Timesheet from './time_table/timesheet/timesheet.js';
 
 class TimeTable extends React.Component {
+  constructor (props) {
+    super(props);
+
+    I18n.locale = currentUser.lang;
+  }
+
   render () {
     return (
       <BrowserRouter>

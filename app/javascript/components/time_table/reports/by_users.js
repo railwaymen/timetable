@@ -92,10 +92,11 @@ class ByUsers extends Report {
             </select> : null }
         </div>
         <h3 className="clearfix col-md-offset-4 text-muted">
-          <div className="btn-group pull-right">
-            <NavLink className="btn btn-default" to="/reports/work_times/by_projects">{I18n.t('apps.reports.by_projects')}</NavLink>
-            <div className="btn btn-default active">{I18n.t('apps.reports.by_people')}</div>
-          </div>
+          { (currentUser.admin || currentUser.manager || currentUser.leader) ?
+            <div className="btn-group pull-right">
+              <NavLink className="btn btn-default" to="/reports/work_times/by_projects">{I18n.t('apps.reports.by_projects')}</NavLink>
+              <div className="btn btn-default active">{I18n.t('apps.reports.by_people')}</div>
+            </div> : null }
           <a className="glyphicon glyphicon-chevron-left previous pull-left" href="javascript:void(0)" onClick={this.prevMonth}></a>
           <div className="current-month pull-left">{this.detectMonth(from, to)}</div>
           <a className="glyphicon glyphicon-chevron-right next pull-left" href="javascript:void(0)" onClick={this.nextMonth}></a>

@@ -60,7 +60,13 @@ class ProjectsDropdown extends React.Component {
   expandDropdown () {
     let isExpanded = this.state.isExpanded;
 
-    if (!isExpanded) document.getElementById('search-input').focus();
+    if (!isExpanded) {
+      document.getElementById('search-input').focus();
+      document.addEventListener('click', this.expandDropdown);
+    } else {
+      document.removeEventListener('click', this.expandDropdown);
+    }
+
     this.setState({ isExpanded: !isExpanded, filter: '', filteredProjects: this.props.projects });
   }
 
@@ -87,7 +93,11 @@ class ProjectsDropdown extends React.Component {
   }
 
   _renderProjectsList () {
-    return <ProjectsList projects={this.state.filteredProjects} currentProject={this.state.selectedProject} onChangeProject={this.onChangeProject} />
+    return (
+      <div style={{ marginTop: '15px' }}>
+        <ProjectsList projects={this.state.filteredProjects} currentProject={this.state.selectedProject} onChangeProject={this.onChangeProject} />
+      </div>
+    )
   }
 
   render () {
