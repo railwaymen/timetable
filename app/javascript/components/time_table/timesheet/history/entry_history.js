@@ -47,8 +47,8 @@ class EntryHistory extends React.Component {
     let { from, to, project_id } = this.state;
 
     if (linkParams['from'] && linkParams['to']) {
-      from = linkParams['from'];
-      to = linkParams['to'];
+      from = linkParams['from'].replace(' ', '+');
+      to = linkParams['to'].replace(' ', '+');
     }
 
     if (linkParams['project_id']) project_id = linkParams['project_id'];
