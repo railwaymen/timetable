@@ -22,6 +22,7 @@ class EntryHistory extends React.Component {
     this.onMonthFilter = this.onMonthFilter.bind(this);
     this.formattedDuration = this.formattedDuration.bind(this);
     this._renderFilters = this._renderFilters.bind(this);
+    this._renderPeriodInfo = this._renderPeriodInfo.bind(this);
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
@@ -46,14 +47,14 @@ class EntryHistory extends React.Component {
     let { from, to, project_id } = this.state;
 
     if (linkParams['from'] && linkParams['to']) {
-      from = linkParams['from'];
-      to = linkParams['to'];
+      from = linkParams['from'].replace(' ', '+');
+      to = linkParams['to'].replace(' ', '+');
     }
 
     if (linkParams['project_id']) project_id = linkParams['project_id'];
 
     if (filteredUserId) {
-      this.filterWorkHoursByUser(filteredUserId, { from: from,  to: to, project_id: project_id });
+      this.filterWorkHoursByUser(filteredUserId, { from: from, to: to, project_id: project_id });
     } else {
       this.getWorkHours({ from: from, to: to, project_id: project_id });
     }
@@ -194,30 +195,48 @@ class EntryHistory extends React.Component {
                  .addSearch('to', to)
                  .addSearch(prepareParams)
 
-    Api.makeGetRequest({ url: url })
-       .then((response) => {
-         this.setState({
-           workHours: response.data,
-           project_id: project_id,
-           from: from,
-           to: to
-         }, () => {
-           if (pushHistory) {
-             let newPath = URI(window.location.href)
+    var mandatoryHours = undefined;
+    var shouldWork = undefined;
+
+    Api.makeGetRequest({ url: `/api/accounting_periods/matching_fulltime?date=${moment(from).format('YYYY-MM-DD')}&user_id=${userId || currentUser.id}` })
+      .then((results) => {
+        let period = results.data.period;
+
+        if (period) {
+          let duration = period.duration;
+          let should_worked = results.data.should_worked;
+
+          mandatoryHours = this.formattedDuration(duration);
+          shouldWork =this.formattedDuration(should_worked);
+        }
+      }).then(() => {
+        Api.makeGetRequest({ url: url })
+        .then((response) => {
+          this.setState({
+            workHours: response.data,
+            project_id: project_id,
+            from: from,
+            to: to,
+            shouldWork: shouldWork,
+            mandatoryHours: mandatoryHours
+          }, () => {
+            if (pushHistory) {
+              let newPath = URI(window.location.href)
                               .removeSearch('from')
                               .removeSearch('to')
                               .removeSearch('project_id')
                               .removeSearch('user_id')
                               .addSearch(prepareParams);
 
-             history.pushState('Timetable', 'Reports', newPath)
-           }
+              history.pushState('Timetable', 'Reports', newPath)
+            }
 
-           this.groupWorkHoursPerDay();
-           this.totalWorkHours();
-           this.props.setLastProject((_.first(this.state.workHours) || {}).project);
-         })
-       })
+            this.groupWorkHoursPerDay();
+            this.totalWorkHours();
+            this.props.setLastProject((_.first(this.state.workHours) || {}).project);
+          })
+        })
+      })
   }
 
   _renderGroupedRecords () {
@@ -375,6 +394,32 @@ class EntryHistory extends React.Component {
     )
   }
 
+  _renderPeriodInfo () {
+    const { total, shouldWork, mandatoryHours } = this.state;
+
+    if (mandatoryHours && shouldWork) {
+      return (
+        <div className="duration">
+          <span className="work-time">{total}</span>/
+          {shouldWork}
+          <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_day')}>
+            <i className="circle help icon small"></i>
+          </span>/
+          {mandatoryHours}
+          <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_month')}>
+            <i className="circle help icon small"></i>
+          </span>
+        </div>
+      )
+    } else {
+      return (
+        <div className="duration">
+          <span className="work-time">{total}</span>
+        </div>
+      )
+    }
+  }
+
   _renderFilters () {
     const { projects } = this.props;
     const { months, from, selectedProject } = this.state;
@@ -407,7 +452,7 @@ class EntryHistory extends React.Component {
   }
 
   render () {
-    const { total, info, filteredUser } = this.state;
+    const { info, filteredUser } = this.state;
 
     return (
       <div className="content-wrapper">
@@ -423,9 +468,7 @@ class EntryHistory extends React.Component {
         <div id="time-entry-list">
           <div className="select-month">
             <h3>{I18n.t('apps.timesheet.overall_work_time')}
-              <div className="duration">
-                <span className="work-time">{total}</span>
-              </div>
+              {this._renderPeriodInfo()}
             </h3>
             {this._renderFilters()}
           </div>

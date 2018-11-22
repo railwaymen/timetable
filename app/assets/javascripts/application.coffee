@@ -9,8 +9,6 @@
 #= require bootstrap-sprockets
 #= require semantic-ui
 #= require lodash
-#= require react_ujs
-#= require react
 
 $ ->
   $('body').on 'click', '.icon.wait', ->

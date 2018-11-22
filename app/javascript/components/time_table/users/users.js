@@ -49,7 +49,7 @@ class Users extends React.Component {
           </div>
         </div>
         <div className="pull-left">
-          <select name="visible" id="filter" className="form-control" onChange={this.onChange} defaultSelected={visible}>
+          <select name="visible" id="filter" className="form-control" onChange={this.onChange} value={visible}>
             <option value="active">{I18n.t('apps.users.active')}</option>
             <option value="inactive">{I18n.t('apps.users.inactive')}</option>
             <option value="all">{I18n.t('apps.users.all')}</option>
@@ -57,12 +57,14 @@ class Users extends React.Component {
         </div>
         <table className="table table-striped">
           <thead>
-            <th></th>
-            <th>{I18n.t('apps.users.last_name')}</th>
-            <th>{I18n.t('apps.users.first_name')}</th>
-            <th>Email</th>
-            <th>{I18n.t('apps.users.contract_id')}</th>
-            <th>{I18n.t('apps.users.phone')}</th>
+            <tr>
+              <th></th>
+              <th>{I18n.t('apps.users.last_name')}</th>
+              <th>{I18n.t('apps.users.first_name')}</th>
+              <th>Email</th>
+              <th>{I18n.t('apps.users.contract_id')}</th>
+              <th>{I18n.t('apps.users.phone')}</th>
+            </tr>
           </thead>
           <tbody>
             { users.map((user, i) =>

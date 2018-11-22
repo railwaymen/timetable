@@ -6,8 +6,8 @@
 
 @import 'timesheet/*';
 @import 'timesheet/blocks/*';
-@import '*';
-@import 'react-datepicker/dist/react-datepicker.css';
+@import 'timer';
+@import 'react-datepicker/dist/react-datepicker';
 
 .bootbox.ui.modal.fade.bootbox-confirm {
   opacity: 1;

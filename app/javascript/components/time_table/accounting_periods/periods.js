@@ -190,7 +190,7 @@ class Periods extends React.Component {
 
     for (let i = 1; i < size + 1; i++) {
       li.push(
-        <li className={`page ${parseInt(page) === i ? 'active' : ''}`}>
+        <li key={i} className={`page ${parseInt(page) === i ? 'active' : ''}`}>
           <a onClick={this.onPageChange} className="page" href={`/accounting_periods?user_id=${userId}&page=${i}`}>{i}</a>
         </li>
       )

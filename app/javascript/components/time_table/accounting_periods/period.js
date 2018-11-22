@@ -40,15 +40,18 @@ class Period extends React.Component {
       <tr>
         <td>{period.position}</td>
         <td>{userName}</td>
-        <td>{this.formatDate(period.starts_at)}</td>
-        <td>{this.formatDate(period.ends_at)}</td>
+        <td>{period.starts_at ? this.formatDate(period.starts_at) : ''}</td>
+        <td>{period.ends_at ? this.formatDate(period.ends_at) : ''}</td>
         <td>{this.formatTime(period.counted_duration)}/{this.formatTime(period.duration)}</td>
         <td>{period.note}</td>
-        <td>{period.closed ? <i class="glyphicon glyphicon-ok"></i> : ''}</td>
-        <td>{period.full_time ? <i class="glyphicon glyphicon-ok"></i> : ''}</td>
+        <td>{period.closed ? <i className="glyphicon glyphicon-ok"></i> : ''}</td>
+        <td>{period.full_time ? <i className="glyphicon glyphicon-ok"></i> : ''}</td>
         <td>
-          <NavLink to={`/accounting_periods/edit/${period.id}?user_id=${period.user_id}`} className="btn btn-default edit">{I18n.t('common.edit')}</NavLink>
-          <div onClick={this.onDelete} className="btn btn-danger delete">{I18n.t('common.destroy')}</div>
+          { currentUser.admin ?
+            <span>
+              <NavLink to={`/accounting_periods/edit/${period.id}?user_id=${period.user_id}`} className="btn btn-default edit">{I18n.t('common.edit')}</NavLink>
+              <div onClick={this.onDelete} className="btn btn-danger delete">{I18n.t('common.destroy')}</div>
+            </span> : null }
         </td>
       </tr>
     )

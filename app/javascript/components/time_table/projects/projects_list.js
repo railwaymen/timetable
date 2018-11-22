@@ -29,7 +29,6 @@ class ProjectsList extends React.Component {
   getProjects () {
     Api.makeGetRequest({ url: `/api/projects/list?display=${this.state.visible}` })
        .then((response) => {
-         console.log(response.data);
          this.setState({ projects: response.data });
        })
   }
@@ -62,11 +61,13 @@ class ProjectsList extends React.Component {
           </div>
           <table className="table table-striped">
             <thead>
-              <th></th>
-              <th>{I18n.t('apps.projects.name')}</th>
-              <th>{I18n.t('apps.projects.leader')}</th>
-              <th></th>
-              <th></th>
+              <tr>
+                <th></th>
+                <th>{I18n.t('apps.projects.name')}</th>
+                <th>{I18n.t('apps.projects.leader')}</th>
+                <th></th>
+                <th></th>
+              </tr>
             </thead>
             <tbody>
               { projects.map((project, index) => (

@@ -12,6 +12,9 @@ class EditUser extends React.Component {
     this.saveUser = this.saveUser.bind(this);
     this.onCheckboxChange = this.onCheckboxChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+
+    this._renderAdminFields = this._renderAdminFields.bind(this);
+    this._renderUserFields = this._renderUserFields.bind(this);
   }
 
   componentDidMount () {
@@ -66,7 +69,9 @@ class EditUser extends React.Component {
     if (this.state.userId) {
       Api.makePutRequest({ url: `/api/users/${user.id}`, body: { id: user.id, user: user } })
          .then(() => {
-           this.setState({ redirectToReferer: (currentUser.admin ? '/users' : '/projects') })
+           this.setState({ redirectToReferer: (currentUser.admin ? '/users' : '/projects') }, () => {
+             window.currentUser = { ...currentUser, ...user };
+           })
          })
     } else {
       Api.makePostRequest({ url: `/api/users`, body: { user: user } })
@@ -76,16 +81,13 @@ class EditUser extends React.Component {
     }
   }
 
-  render () {
-    const { user, redirectToReferer } = this.state;
-
-    if (redirectToReferer) return <Redirect to={redirectToReferer} />
-
+  _renderAdminFields (user) {
     return (
-      <form>
+      <div>
         <div className="form-group">
           <input className="form-control" type="text" name="email" placeholder="Email" onChange={this.onChange} value={user.email} />
         </div>
+
         <div className="form-group">
           <input className="form-control" type="text" name="first_name" placeholder={I18n.t('apps.users.first_name')} onChange={this.onChange} value={user.first_name} />
         </div>
@@ -98,18 +100,50 @@ class EditUser extends React.Component {
         <div className="form-group">
           <input className="form-control" type="text" name="phone" placeholder={I18n.t('apps.users.phone')} value={user.phone} onChange={this.onChange} />
         </div>
+        { user.id !== currentUser.id ?
+          <div className="form-group">
+            <label>
+              {I18n.t('apps.users.user_active')}
+              <input type="checkbox" name="active" checked={user.active} onChange={this.onCheckboxChange} />
+            </label>
+          </div> : null }
         <div className="form-group">
-          <label>
-            {I18n.t('apps.users.user_active')}
-            <input type="checkbox" name="active" checked={user.active} onChange={this.onCheckboxChange} />
-          </label>
-        </div>
-        <div className="form-group">
-          <select className="form-control" name="lang">
-            <option selected={user.lang === 'pl'} value="pl">pl</option>
-            <option selected={user.lang === 'en'} value="en">en</option>
+          <select className="form-control" name="lang" onChange={this.onChange} value={user.lang}>
+            <option value="pl">pl</option>
+            <option value="en">en</option>
           </select>
         </div>
+      </div>
+    )
+  }
+
+  _renderUserFields (user) {
+    return (
+      <div>
+        <div className="form-group">
+          <input className="form-control" type="text" name="first_name" placeholder={I18n.t('apps.users.first_name')} onChange={this.onChange} value={user.first_name} />
+        </div>
+        <div className="form-group">
+          <input className="form-control" type="text" name="last_name" placeholder={I18n.t('apps.users.last_name')} value={user.last_name} onChange={this.onChange} />
+        </div>
+        <div className="form-group">
+          <select className="form-control" name="lang" onChange={this.onChange} value={user.lang}>
+            <option value="pl">pl</option>
+            <option value="en">en</option>
+          </select>
+        </div>
+      </div>
+    )
+  }
+
+  render () {
+    const { user, redirectToReferer } = this.state;
+
+    if (redirectToReferer) return <Redirect to={redirectToReferer} />
+
+    return (
+      <form>
+        {currentUser.admin ? this._renderAdminFields(user) : this._renderUserFields(user)}
         <input className="btn btn-default" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
         <NavLink className="btn btn-primary" to="/users">{I18n.t('common.cancel')}</NavLink>
       </form>
