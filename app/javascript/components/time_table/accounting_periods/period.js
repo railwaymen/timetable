@@ -40,8 +40,8 @@ class Period extends React.Component {
       <tr>
         <td>{period.position}</td>
         <td>{userName}</td>
-        <td>{this.formatDate(period.starts_at)}</td>
-        <td>{this.formatDate(period.ends_at)}</td>
+        <td>{period.starts_at ? this.formatDate(period.starts_at) : ''}</td>
+        <td>{period.ends_at ? this.formatDate(period.ends_at) : ''}</td>
         <td>{this.formatTime(period.counted_duration)}/{this.formatTime(period.duration)}</td>
         <td>{period.note}</td>
         <td>{period.closed ? <i className="glyphicon glyphicon-ok"></i> : ''}</td>

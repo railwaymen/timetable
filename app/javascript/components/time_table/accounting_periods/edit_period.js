@@ -25,7 +25,12 @@ class EditPeriod extends React.Component {
   }
 
   state = {
-    period: {},
+    period: {
+      ends_at: moment(),
+      starts_at: moment(),
+      hours: '168',
+      minutes: '00'
+    },
     users: [],
     redirectToReferer: undefined
   }
@@ -39,6 +44,7 @@ class EditPeriod extends React.Component {
 
     this.setState({
       period: {
+        ...this.state.period,
         user_id: userId
       }
     }, () => {
@@ -141,9 +147,9 @@ class EditPeriod extends React.Component {
           this.setState({
             redirectToReferer: `/accounting_periods?user_id=${period.user_id}`
           })
-        }).catch((e) => {
+        }).catch((results) => {
           this.setState({
-            errors: response.data.errors
+            errors: results.errors
           });
         })
   }
@@ -184,10 +190,10 @@ class EditPeriod extends React.Component {
               </select>
             </div>
             <div className="col-md-6 form-group">
-              <DatePicker dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={moment(period.starts_at)} name="starts_at" placeholder="From" onChange={this.onStartsAtChange} />
+              <DatePicker dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at} name="starts_at" placeholder="From" onChange={this.onStartsAtChange} />
             </div>
             <div className="col-md-6 form-group">
-              <DatePicker dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={moment(period.ends_at)} name="ends_at" placeholder="To" onChange={this.onEndsAtChange} />
+              <DatePicker dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.ends_at} name="ends_at" placeholder="To" onChange={this.onEndsAtChange} />
             </div>
             <div className="form-group">
               <textarea className="form-control" name="note" placeholder="Note" onChange={this.onChange} value={period.note}></textarea>

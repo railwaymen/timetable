@@ -20,7 +20,14 @@ class EditProject extends React.Component {
   }
 
   state = {
-    project: {},
+    project: {
+      id: undefined,
+      name: undefined,
+      color: '0c0c0c',
+      leader_id: '',
+      work_times_allows_task: true,
+      active: true
+    },
     users: [],
     projectId: window.location.pathname.match(/[0-9]+/),
     redirectToReferer: undefined
@@ -28,6 +35,7 @@ class EditProject extends React.Component {
 
   componentDidMount () {
     this.getProject();
+
     if (currentUser.admin) {
       this.getUsers();
     }
@@ -37,7 +45,10 @@ class EditProject extends React.Component {
     if (this.state.projectId) {
       Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}` })
          .then((response) => {
-           this.setState({ project: response.data });
+           let project = response.data;
+           if (!project.leader_id) project.leader_id = undefined;
+
+           this.setState({ project: project });
          })
     }
   }
