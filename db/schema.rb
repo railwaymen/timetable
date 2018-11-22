@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180927095305) do
+ActiveRecord::Schema.define(version: 20181122094509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20180927095305) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "internal", default: false, null: false
-    t.string "color"
+    t.string "color", default: "000000", null: false
     t.boolean "active", default: true, null: false
     t.boolean "work_times_allows_task", default: false, null: false
     t.bigint "leader_id"
