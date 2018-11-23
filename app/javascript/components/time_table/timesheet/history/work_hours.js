@@ -101,12 +101,13 @@ class WorkHours extends React.Component {
           project_id: projectId
         }
       }, () => {
-        this.setState({ projectEditable: false });
-        this.props.updateWorkHours(this, 0);
-        Api.makePutRequest({
-          url: `/api/work_times/${this.state.workHours.id}`,
-          body: this.workHoursJsonApi()
-        })
+        // this.setState({ projectEditable: false });
+        // this.props.updateWorkHours(this, 0);
+        this.saveWorkHours();
+        // Api.makePutRequest({
+        //   url: `/api/work_times/${this.state.workHours.id}`,
+        //   body: this.workHoursJsonApi()
+        // })
       })
     }
   }
@@ -184,12 +185,6 @@ class WorkHours extends React.Component {
       }, () => {
         if (!this.state.editing) {
           this.saveWorkHours();
-          let event = new CustomEvent(
-            'edit-entry',
-            { detail: { id: this.state.workHours.id } }
-          )
-
-          document.dispatchEvent(event);
         }
       })
     }
@@ -236,9 +231,16 @@ class WorkHours extends React.Component {
 
       this.setState({
         workHours: data,
-        date: moment(data.starts_at).format('DD/MM/YYYY')
+        date: moment(data.starts_at).format('DD/MM/YYYY'),
+        errors: []
       }, () => {
         this.props.updateWorkHours(this, durationDeviation);
+        let event = new CustomEvent(
+          'edit-entry',
+          { detail: { id: workHours.id } }
+        )
+
+        document.dispatchEvent(event);
       });
     }).catch((e) => {
       this.setState({

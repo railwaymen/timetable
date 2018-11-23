@@ -70,7 +70,10 @@ class EditUser extends React.Component {
       Api.makePutRequest({ url: `/api/users/${user.id}`, body: { id: user.id, user: user } })
          .then(() => {
            this.setState({ redirectToReferer: (currentUser.admin ? '/users' : '/projects') }, () => {
-             window.currentUser = { ...currentUser, ...user };
+             if (currentUser.id === user.id) {
+               if (user.lang !== currentUser.lang) window.location.reload()
+               window.currentUser = { ...currentUser, ...user };
+             }
            })
          })
     } else {

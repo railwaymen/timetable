@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>TimeTable</title>
-  <!-- <script>var process = { env: { NODE_ENV: '<%= Rails.env.production? ? 'production' : 'development' %>' } };</script> -->
+  <%= csrf_meta_tags %>
   <%= favicon_link_tag Rails.application.secrets.favicon if Rails.application.secrets.favicon.present?  %>
   <%= stylesheet_link_tag    "application", media: "all" %>
   <%= stylesheet_link_tag    "//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", media: "all" %>
@@ -15,7 +15,6 @@
       Raven.config('<%= Rails.application.secrets.raven_url %>').install();
     </script>
   <% end %>
-  <%= csrf_meta_tags %>
 </head>
 <body>
   <script>window.currentUser = JSON.parse('<%= raw current_user.to_json %>')</script>
