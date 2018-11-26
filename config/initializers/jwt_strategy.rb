@@ -12,6 +12,8 @@ module Devise
       def authenticate!
         payload = JwtService.decode token: token
         success! User.find payload['id']
+      rescue JWT::DecodeError
+        fail! 'incorrect token'
       end
 
       def token
