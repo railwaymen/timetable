@@ -19,18 +19,4 @@ class ApplicationController < ActionController::Base
     authenticate_user!
     return head(:forbidden) unless current_user.admin? || current_user.manager? || current_user.leader?
   end
-
-  private
-
-  def current_user
-    @current_user ||= begin
-      return unless session['warden.user.user.key'] || request.headers['token']
-
-      if session['warden.user.user.key']
-        User.find session['warden.user.user.key'][0][0]
-      else
-        User.find JwtService.decode(token: request.headers['token'])['id']
-      end
-    end
-  end
 end

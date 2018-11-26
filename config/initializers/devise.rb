@@ -244,7 +244,11 @@ Devise.setup do |config|
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
   #
-  config.warden { |manager| manager.default_strategies(scope: :user).unshift :ldap_authenticatable } if Rails.application.secrets.ldap[:enabled]
+  config.warden do |manager|
+    manager.strategies.add(:jwt_strategy, Devise::Strategies::JwtStrategy)
+    manager.default_strategies(scope: :user).unshift :jwt_strategy
+    manager.default_strategies(scope: :user).unshift :ldap_authenticatable if Rails.application.secrets.ldap[:enabled]
+  end
   # ==> Mountable engine configurations
   # When using Devise inside an engine, let's call it `MyEngine`, and this engine
   # is mountable, there are some extra configurations to be taken into account.

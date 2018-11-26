@@ -16,7 +16,7 @@ RSpec.describe ApplicationController, type: :controller do
     context 'as session' do
       it 'correctly select current user' do
         user = FactoryGirl.create :user
-        session['warden.user.user.key'] = [[user.id], 'blah']
+        sign_in user
 
         expect(controller.send(:current_user).id).to eq user.id
       end
