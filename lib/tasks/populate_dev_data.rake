@@ -3,6 +3,8 @@ task populate_dev_data: :environment do
 
   require 'ffaker'
 
+  PaperTrail.request.whodunnit = User.where(email: 'admin@example.com').first!.id
+
   10.times do |i|
     index = i + 1
     User.where(id: index).first_or_create! email: "user#{index}@example.com", first_name: FFaker::Name.first_name, last_name: FFaker::Name.last_name, password: 'password'
