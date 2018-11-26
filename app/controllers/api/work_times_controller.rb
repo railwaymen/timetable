@@ -20,15 +20,13 @@ module Api
     def create
       if current_user.admin?
         @work_time = WorkTime.new(work_time_create_params)
-        @work_time.creator = current_user
         @work_time.updated_by_admin = true if @work_time.user_id != current_user.id
-        @work_time.save
       else
         @work_time = current_user.work_times.build(work_time_params)
-        @work_time.creator = current_user
-        @work_time.save(context: :user)
       end
-      increase_work_time(@work_time, @work_time.duration) if @work_time.valid?
+      @work_time.creator = current_user
+      @work_time.save(work_hours_save_params)
+      increase_work_time(@work_time, @work_time.duration) if @work_time.valid?(context)
       respond_with @work_time
     end
 
@@ -38,11 +36,9 @@ module Api
       duration_was = @work_time.duration
       if current_user.admin?
         @work_time.updated_by_admin = true if @work_time.user_id != current_user.id
-        @work_time.save
-      else
-        @work_time.save(context: :user)
       end
-      increase_or_decrease_work_time(@work_time, duration_was) if @work_time.valid?
+      @work_time.save(work_hours_save_params)
+      increase_or_decrease_work_time(@work_time, duration_was) if @work_time.valid?(context)
       respond_with @work_time
     end
 
@@ -55,6 +51,14 @@ module Api
     end
 
     private
+
+    def context
+      :user unless current_user.admin?
+    end
+
+    def work_hours_save_params
+      current_user.admin? ? {} : { context: :user }
+    end
 
     def permitted_search_params
       if current_user.admin? || current_user.manager?

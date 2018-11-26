@@ -5,8 +5,9 @@ export const makePutRequest = (data) => {
     headers: {
       'X-CSRF-Token': csrfToken(),
       'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    }
+      'Content-Type': 'application/json'
+    },
+    'credentials': 'same-origin'
   }).then((response) => {
       if (response.statusText === 'No Content') {
         return { data: {}, status: response.status }
@@ -32,8 +33,9 @@ export const makePostRequest = (data) => {
     headers: {
       'X-CSRF-Token': csrfToken(),
       'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    }
+      'Content-Type': 'application/json'
+    },
+    'credentials': 'same-origin'
   }).then((response) => (
       response.json().then(data => {
           if (response.status >= 400 && response.status < 500) {
@@ -53,8 +55,9 @@ export const makeGetRequest = (data) => {
     headers: {
       'X-CSRF-Token': csrfToken(),
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
+    'credentials': 'same-origin'
   }).then((response) =>
     response.json().then(data => ({
       data: data,
@@ -72,7 +75,8 @@ export const makeDeleteRequest = (data) => {
       'X-CSRF-Token': csrfToken(),
       'Accept': 'application/json',
       'Content-Type': 'application/json'
-    }
+    },
+    'credentials': 'same-origin'
   })
 }
 
@@ -80,7 +84,7 @@ const csrfToken = () => {
   let csrf = document.getElementsByName('csrf-token')[0]
 
   if (csrf) {
-    return document.getElementsByName('csrf-token')[0].content;
+    return csrf.content;
   } else {
     return ''
   }

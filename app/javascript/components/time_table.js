@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 import Navbar from './shared/navbar.js';
 
 import Projects from './time_table/projects/projects.js';
@@ -22,9 +22,11 @@ class TimeTable extends React.Component {
   }
 
   render () {
+
     return (
       <BrowserRouter>
         <div className="app container">
+          { window.location.pathname === '/' ? <Redirect to="/timesheet" /> : null }
           <Navbar />
           <div className="content">
             <Route path='/users' exact component={Users} />
@@ -40,7 +42,6 @@ class TimeTable extends React.Component {
             <Route path='/accounting_periods/edit/:id' exact component={EditPeriod} />
             <Route path='/accounting_periods/new' component={EditPeriod} />
             <Route path='/timesheet' component={Timesheet} />
-            <Route path='/' exact component={Timesheet} />
           </div>
         </div>
       </BrowserRouter>

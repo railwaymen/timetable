@@ -19,6 +19,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
                     project: { name: work_time.project.name,
                                color: work_time.project.color,
                                lunch: work_time.project.lunch,
+                               count_duration: work_time.project.count_duration,
                                work_times_allows_task: work_time.project.work_times_allows_task })
   end
 
@@ -70,7 +71,8 @@ RSpec.describe Api::WorkTimesController, type: :controller do
               name: work_time.project.name,
               color: work_time.project.color,
               work_times_allows_task: work_time.project.work_times_allows_task,
-              lunch: work_time.project.lunch
+              lunch: work_time.project.lunch,
+              count_duration: work_time.project.count_duration
             },
             date: work_time.date
           }
@@ -105,7 +107,8 @@ RSpec.describe Api::WorkTimesController, type: :controller do
               name: user_work_time.project.name,
               color: user_work_time.project.color,
               work_times_allows_task: work_time.project.work_times_allows_task,
-              lunch: work_time.project.lunch
+              lunch: work_time.project.lunch,
+              count_duration: work_time.project.count_duration
             },
             date: user_work_time.date
           }

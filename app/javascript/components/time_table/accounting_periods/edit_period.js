@@ -31,6 +31,7 @@ class EditPeriod extends React.Component {
       hours: '168',
       minutes: '00'
     },
+    errors: {},
     users: [],
     redirectToReferer: undefined
   }
@@ -42,18 +43,11 @@ class EditPeriod extends React.Component {
     let pathId = parseInt(_.last(base.path().split('/')));
     let periodId = isNaN(pathId) ? null : pathId;
 
-    this.setState({
-      period: {
-        ...this.state.period,
-        user_id: userId
-      }
-    }, () => {
-      if (periodId) {
-        this.getPeriod(periodId);
-      }
+    if (periodId) {
+      this.getPeriod(periodId);
+    }
 
-      this.getUsers();
-    })
+    this.getUsers();
   }
 
   getPeriod (id) {
@@ -63,7 +57,6 @@ class EditPeriod extends React.Component {
         let hours = this.formatTimeHours(data.duration);
         let minutes = this.formatTimeMinutes(data.duration);
 
-        hours = this.formatTimeHours(response.data.duration)
         this.setState({
           period: {
             ...response.data,
@@ -148,6 +141,7 @@ class EditPeriod extends React.Component {
             redirectToReferer: `/accounting_periods?user_id=${period.user_id}`
           })
         }).catch((results) => {
+          console.log(results.errors);
           this.setState({
             errors: results.errors
           });
@@ -173,7 +167,7 @@ class EditPeriod extends React.Component {
   }
 
   render () {
-    const { period, users, redirectToReferer } = this.state;
+    const { period, users, redirectToReferer, errors } = this.state;
 
     if (redirectToReferer) return (<Redirect to={redirectToReferer} />)
     if (!currentUser.admin) return (<Redirect to="/" />)
@@ -190,19 +184,26 @@ class EditPeriod extends React.Component {
               </select>
             </div>
             <div className="col-md-6 form-group">
-              <DatePicker dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at} name="starts_at" placeholder="From" onChange={this.onStartsAtChange} />
+              <DatePicker dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at ? moment(period.starts_at) : null} name="starts_at" placeholder="From" onChange={this.onStartsAtChange} />
             </div>
             <div className="col-md-6 form-group">
-              <DatePicker dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.ends_at} name="ends_at" placeholder="To" onChange={this.onEndsAtChange} />
+              <DatePicker dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.ends_at ? moment(period.ends_at) : null} name="ends_at" placeholder="To" onChange={this.onEndsAtChange} />
             </div>
             <div className="form-group">
               <textarea className="form-control" name="note" placeholder="Note" onChange={this.onChange} value={period.note}></textarea>
             </div>
             <label>{I18n.t('common.duration')}</label>
             <div className="form-group input-group">
-              <input className="form-control" type="text" name="hours" onChange={this.onChange} value={period.hours} />
+              { errors.duration ?
+                <div className="error-description">{errors.duration.join(', ')}</div>
+              : null }
+              <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="hours" onChange={this.onChange} value={period.hours} />
               <div className="input-group-addon">h</div>
-              <input className="form-control" type="text" name="minutes" onChange={this.onChange} value={period.minutes} />
+
+              { errors.duration ?
+                <div className="error-description">{errors.duration.join(', ')}</div>
+              : null }
+              <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="minutes" onChange={this.onChange} value={period.minutes} />
               <div className="input-group-addon">m</div>
             </div>
             <div className="form-group">
@@ -216,8 +217,12 @@ class EditPeriod extends React.Component {
               </label>
             </div>
             <div className="form-group">
-              <label>{I18n.t('common.position')}</label>
-              <input className="form-control" type="number" name="position" value={period.position} onChange={this.onChange} />
+              <label>{I18n.t('common.position')}
+                 { errors.position ?
+                   <div className="error-description">{errors.position.join(', ')}</div>
+                 : null }
+              </label>
+              <input className={`${errors.position ? 'error' : ''} form-control`} type="number" name="position" value={period.position} onChange={this.onChange} />
             </div>
           </form>
           <NavLink className="btn btn-default" to="/accounting_periods" data-navigate="">{I18n.t('common.cancel')}</NavLink>

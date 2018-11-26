@@ -14,7 +14,7 @@ $ ->
   $('body').on 'click', '.icon.wait', ->
     $('#modal-info').addClass('active visible')
 
-  $('body').on 'click', '#modal-info .button.cancel', ->
+  $('body').on 'click', '#modal-info .button.cancel, .modal-backdrop', ->
     $('#modal-info').removeClass('active visible')
 
   $('body').on 'click', (e) ->

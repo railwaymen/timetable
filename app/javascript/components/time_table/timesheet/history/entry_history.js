@@ -301,14 +301,15 @@ class EntryHistory extends React.Component {
     e.preventDefault();
 
     let projectId = parseInt(e.target.attributes.getNamedItem('data-project-id').value);
+    let { from, to } = this.state;
 
     if (projectId) {
-      this.getWorkHours({ project_id: projectId, pushHistory: true });
+      this.getWorkHours({ project_id: projectId, pushHistory: true, from: from, to: to });
       this.setState({
         selectedProject: _.find(this.props.projects, (project) => project.id === projectId)
       })
     } else {
-      this.getWorkHours({ pushHistory: true });
+      this.getWorkHours({ pushHistory: true, from: from, to: to });
       this.setState({
         selectedProject: {}
       })
@@ -478,7 +479,7 @@ class EntryHistory extends React.Component {
             </div>
           </div>
         </div>
-        <div className="ui dimmer modals page transition" id="modal-info" style={{display: 'none; !important'}}>
+        <div className="ui dimmer modal-backdrop modals page transition" id="modal-info" style={{display: 'none; !important'}}>
           <div className="ui centered-modal modal transition visible active" style={{ display: 'none !important' }}>
             <div className="header">
               { info ? info.body : <div className="preloader"></div> }

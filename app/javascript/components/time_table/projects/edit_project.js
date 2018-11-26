@@ -139,8 +139,8 @@ class EditProject extends React.Component {
             <input type="checkbox" name="work_times_allows_task" checked={project.work_times_allows_task} onChange={this.onCheckboxChange} />
           </label>
         </div>
-        <input className="btn btn-default" type="submit" value="Save" onClick={this.onSubmit} />
-        <NavLink className="btn btn-primary" to="/projects/list">Cancel</NavLink>
+        <input className="btn btn-default" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
+        <NavLink className="btn btn-primary" to="/projects/list">{I18n.t('common.cancel')}</NavLink>
       </form>
     )
   }

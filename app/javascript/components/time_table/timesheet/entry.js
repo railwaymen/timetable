@@ -80,16 +80,17 @@ class Entry extends React.Component {
 
   validate () {
     const project = this.state.project;
+    const { body, starts_at, ends_at, project_id, duration, task } = this.state;
 
     if (project.lunch || project.autofill) {
       return []
     } else {
       let errors = {
-        body: Validations.presence(this.state.body),
-        starts_at: Validations.presence(this.state.starts_at),
-        ends_at: Validations.presence(this.state.ends_at),
-        project_id: Validations.presence(this.state.project_id),
-        duration: Validations.greaterThan(0, this.state.duration)
+        body: (!task ? Validations.presence(body) : undefined),
+        starts_at: Validations.presence(starts_at),
+        ends_at: Validations.presence(ends_at),
+        project_id: Validations.presence(project_id),
+        duration: Validations.greaterThan(0, duration)
       }
       Object.keys(errors).forEach((key) => { if (errors[key] === undefined) { delete errors[key] } })
       return errors;
@@ -118,14 +119,16 @@ class Entry extends React.Component {
         url: '/api/work_times',
         body: { work_time: entryData }
       }).then((response) => {
-          this.props.pushEntry(response.data);
-          this.setState({
-            starts_at: this.state.ends_at,
-            duration: 0,
-            durationHours: '00:00',
-            body: '',
-            task: ''
-          })
+          if (response.data.id) {
+            this.props.pushEntry(response.data);
+            this.setState({
+              starts_at: this.state.ends_at,
+              duration: 0,
+              durationHours: '00:00',
+              body: '',
+              task: ''
+            })
+          }
         }).catch((e) => {
           alert('There was an error while trying to add work time');
         })
@@ -235,7 +238,7 @@ class Entry extends React.Component {
                 <span id="duration">{durationHours}</span>
               </div>
               <div className="date">
-                <DatePicker value={date} onChange={this.onDateChange} onSelect={this.onDateChange}/>
+                <DatePicker value={date} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange}/>
               </div>
               <div className="action">
                 <button className="btn-start button fluid ui" onClick={this.onSubmit}>{I18n.t('common.save')}</button>

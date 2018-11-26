@@ -240,6 +240,18 @@ class Periods extends React.Component {
     return options;
   }
 
+  _renderUserInfo (user) {
+    if (!_.isEmpty(user)) {
+      return (
+        <span>{`${user.first_name} ${user.last_name}`}</span>
+      )
+    } else {
+      return (
+        <div style={{width:'390px', display: 'inline-block'}} className="preloader"></div>
+      )
+    }
+  }
+
   render () {
     const { periods, user, userId, generatePeriods } = this.state;
 
@@ -248,10 +260,10 @@ class Periods extends React.Component {
         {currentUser.admin ? this._renderButtons() : null}
         <div className="col-md-offset-3 col-md-6 vert-offset-bottom clearfix">
           { currentUser.admin ? <h3 className="text-center text-muted">
-            {`${user.first_name} ${user.last_name}`}
-            <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left"></a>
+            { user.prev_id ? <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left"></a> : null }
+            {this._renderUserInfo(user)}
             <span>
-              <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right"></a>
+              { user.next_id ? <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right"></a> : null }
             </span>
           </h3> : null }
         </div>
