@@ -101,13 +101,7 @@ class WorkHours extends React.Component {
           project_id: projectId
         }
       }, () => {
-        // this.setState({ projectEditable: false });
-        // this.props.updateWorkHours(this, 0);
         this.saveWorkHours();
-        // Api.makePutRequest({
-        //   url: `/api/work_times/${this.state.workHours.id}`,
-        //   body: this.workHoursJsonApi()
-        // })
       })
     }
   }
