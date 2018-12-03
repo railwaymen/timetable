@@ -94,11 +94,11 @@ module Api
     end
 
     def increase_work_time(work_time, duration)
-      IncreaseWorkTimeWorker.perform_async(user_id: work_time.user_id, duration: duration, starts_at: work_time.starts_at, ends_at: work_time.ends_at, date: work_time.date)
+      IncreaseWorkTimeWorker.perform_async(user_id: work_time.user_id, duration: duration, starts_at: work_time.starts_at, ends_at: work_time.ends_at, date: work_time.starts_at.to_date)
     end
 
     def decrease_work_time(work_time, duration)
-      DecreaseWorkTimeWorker.perform_async(duration: duration, date: work_time.date, user_id: work_time.user_id)
+      DecreaseWorkTimeWorker.perform_async(duration: duration, date: work_time.starts_at.to_date, user_id: work_time.user_id)
     end
 
     def find_work_time

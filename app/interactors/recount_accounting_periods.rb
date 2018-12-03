@@ -12,7 +12,7 @@ class RecountAccountingPeriods < IncreaseWorkTime
     work_times.each do |work_time|
       IncreaseWorkTime.call(user: user, duration: work_time.duration,
                             starts_at: work_time.starts_at,
-                            ends_at: work_time.ends_at, date: work_time.date.to_date)
+                            ends_at: work_time.ends_at, date: work_time.starts_at.to_date)
     end
   end
   # rubocop:enable SkipsModelValidations

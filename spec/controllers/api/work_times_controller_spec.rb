@@ -74,7 +74,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
               lunch: work_time.project.lunch,
               count_duration: work_time.project.count_duration
             },
-            date: work_time.date
+            date: work_time.starts_at.to_date
           }
         ].to_json
 
@@ -110,7 +110,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
               lunch: work_time.project.lunch,
               count_duration: work_time.project.count_duration
             },
-            date: user_work_time.date
+            date: user_work_time.starts_at.to_date
           }
         ].to_json
 
