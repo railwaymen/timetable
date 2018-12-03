@@ -5,7 +5,7 @@ class WorkTime < ApplicationRecord
   belongs_to :creator, class_name: 'User'
 
   before_validation :assign_duration
-  before_create :assign_date
+  before_save :assign_date
   before_save :delete_spaces
 
   validates :project_id, :starts_at, :ends_at, presence: true
