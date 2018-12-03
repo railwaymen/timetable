@@ -65,7 +65,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
               name: work_time.project.name,
               color: work_time.project.color
             },
-            date: work_time.date
+            date: work_time.starts_at.to_date
           }
         ].to_json
 
@@ -97,7 +97,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
               name: user_work_time.project.name,
               color: user_work_time.project.color
             },
-            date: user_work_time.date
+            date: user_work_time.starts_at.to_date
           }
         ].to_json
 
