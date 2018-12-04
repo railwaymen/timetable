@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181122094509) do
+ActiveRecord::Schema.define(version: 20181204084117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,7 +104,6 @@ ActiveRecord::Schema.define(version: 20181122094509) do
     t.boolean "active", default: true, null: false
     t.integer "creator_id", null: false
     t.boolean "updated_by_admin", default: false, null: false
-    t.date "date", null: false
     t.string "task"
   end
 

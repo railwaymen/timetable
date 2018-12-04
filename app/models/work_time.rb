@@ -5,7 +5,6 @@ class WorkTime < ApplicationRecord
   belongs_to :creator, class_name: 'User'
 
   before_validation :assign_duration
-  before_save :assign_date
   before_save :delete_spaces
 
   validates :project_id, :starts_at, :ends_at, presence: true
@@ -46,10 +45,6 @@ class WorkTime < ApplicationRecord
 
   def body_optional?
     project.try(:lunch?) || project.try(:autofill?)
-  end
-
-  def assign_date
-    self.date = starts_at.to_date
   end
 
   def validates_date
