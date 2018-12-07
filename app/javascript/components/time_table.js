@@ -22,7 +22,6 @@ class TimeTable extends React.Component {
   }
 
   render () {
-
     return (
       <BrowserRouter>
         <div className="app container">
