@@ -153,7 +153,6 @@ class EditPeriod extends React.Component {
             redirectToReferer: `/accounting_periods?user_id=${period.user_id}`
           })
         }).catch((results) => {
-          console.log(results.errors);
           this.setState({
             errors: results.errors
           });
@@ -161,8 +160,6 @@ class EditPeriod extends React.Component {
   }
 
   onStartsAtChange (time) {
-    console.log(time);
-
     this.setState({
       period: {
         ...this.state.period,
