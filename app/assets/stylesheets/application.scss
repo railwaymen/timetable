@@ -27,7 +27,6 @@ div.react-datepicker__input-container {
 
 .error-tooltip {
   position: absolute;
-  display: inline-block;
   color: #FF5744;
   width: 100%;
   padding: 8px 5px;
@@ -39,7 +38,7 @@ div.react-datepicker__input-container {
   font-weight: 800;
   font-size: 15px;
   transition-duration: 0.3s;
-  z-index: 1500;
+  z-index: 150;
   ul {
     list-style-type: none;
   }

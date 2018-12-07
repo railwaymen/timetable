@@ -30,7 +30,7 @@ class Period extends React.Component {
   }
 
   onDelete () {
-    if (confirm()) this.props.onDelete(this.props.period.id);
+    if (confirm(I18n.t('common.confirm'))) this.props.onDelete(this.props.period.id);
   }
 
   render () {

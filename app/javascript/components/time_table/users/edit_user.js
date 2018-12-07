@@ -37,7 +37,7 @@ class EditUser extends React.Component {
   state = {
     user: {},
     redirectToReferer: undefined,
-    userId: window.location.pathname.match(/[0-9]+/)
+    userId: parseInt(window.location.pathname.match(/[0-9]+/))
   }
 
   onChange (e) {
@@ -69,12 +69,13 @@ class EditUser extends React.Component {
     if (this.state.userId) {
       Api.makePutRequest({ url: `/api/users/${user.id}`, body: { id: user.id, user: user } })
          .then(() => {
-           this.setState({ redirectToReferer: (currentUser.admin ? '/users' : '/projects') }, () => {
-             if (currentUser.id === user.id) {
-               if (user.lang !== currentUser.lang) window.location.reload()
-               window.currentUser = { ...currentUser, ...user };
-             }
-           })
+           if (user.lang !== currentUser.lang) {
+             window.location.href = currentUser.admin ? '/users' : '/projects';
+           } else {
+             this.setState({ redirectToReferer: (currentUser.admin ? '/users' : '/projects') });
+           }
+
+           if (currentUser.id === user.id) window.currentUser = { ...currentUser, ...user };
          })
     } else {
       Api.makePostRequest({ url: `/api/users`, body: { user: user } })
@@ -139,16 +140,40 @@ class EditUser extends React.Component {
     )
   }
 
+  _renderPreloader () {
+    return (
+      <div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+      </div>
+    )
+  }
+
   render () {
-    const { user, redirectToReferer } = this.state;
+    const { user, redirectToReferer, userId } = this.state;
 
     if (redirectToReferer) return <Redirect to={redirectToReferer} />
 
     return (
       <form>
-        {currentUser.admin ? this._renderAdminFields(user) : this._renderUserFields(user)}
-        <input className="btn btn-default" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
-        <NavLink className="btn btn-primary" to="/users">{I18n.t('common.cancel')}</NavLink>
+        { (user.id === userId || !userId) ?
+          currentUser.admin ? this._renderAdminFields(user) : this._renderUserFields(user)
+        : this._renderPreloader() }
+        <NavLink activeClassName="" className="btn btn-default" to="/users">{I18n.t('common.cancel')}</NavLink>
+        <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
       </form>
     )
   }

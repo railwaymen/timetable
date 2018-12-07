@@ -29,22 +29,31 @@ class EditPeriod extends React.Component {
       ends_at: moment(),
       starts_at: moment(),
       hours: '168',
-      minutes: '00'
+      minutes: '00',
+      note: ''
     },
     errors: {},
     users: [],
-    redirectToReferer: undefined
+    redirectToReferer: undefined,
+    periodId: parseInt(window.location.pathname.match(/[0-9]+/))
   }
 
   componentDidMount () {
     let base = URI(window.location.href);
     let queries = base.query(true);
     let userId = queries['user_id'] ? queries['user_id'] : currentUser.id;
-    let pathId = parseInt(_.last(base.path().split('/')));
+    let pathId = this.state.periodId;
     let periodId = isNaN(pathId) ? null : pathId;
 
+    this.setState({
+      period: {
+        ...this.state.period,
+        user_id: userId
+      }
+    })
+
     if (periodId) {
-      this.getPeriod(periodId);
+      this.getPeriod(periodId, userId);
     }
 
     this.getUsers();
@@ -56,6 +65,9 @@ class EditPeriod extends React.Component {
         let data = response.data;
         let hours = this.formatTimeHours(data.duration);
         let minutes = this.formatTimeMinutes(data.duration);
+
+        data.starts_at = moment(data.starts_at).format('YYYY-MM-DD HH:mm');
+        data.ends_at = moment(moment(data.ends_at).format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm');
 
         this.setState({
           period: {
@@ -149,6 +161,8 @@ class EditPeriod extends React.Component {
   }
 
   onStartsAtChange (time) {
+    console.log(time);
+
     this.setState({
       period: {
         ...this.state.period,
@@ -166,70 +180,95 @@ class EditPeriod extends React.Component {
     })
   }
 
-  render () {
-    const { period, users, redirectToReferer, errors } = this.state;
-
-    if (redirectToReferer) return (<Redirect to={redirectToReferer} />)
-    if (!currentUser.admin) return (<Redirect to="/" />)
-
+  _renderPreloader () {
     return (
-      <div id="content">
-        <div>
-          <form onSubmit={this.onSubmit}>
-            <div className="form-group">
-              <select className="form-control" name="user_id" value={period.user_id} onChange={this.onChange}>
-                { users.map((user, index) => (
-                  <option key={index} value={user.id}>{user.first_name} {user.last_name}</option>
-                )) }
-              </select>
-            </div>
-            <div className="col-md-6 form-group">
-              <DatePicker dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at ? moment(period.starts_at) : null} name="starts_at" placeholder="From" onChange={this.onStartsAtChange} />
-            </div>
-            <div className="col-md-6 form-group">
-              <DatePicker dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.ends_at ? moment(period.ends_at) : null} name="ends_at" placeholder="To" onChange={this.onEndsAtChange} />
-            </div>
-            <div className="form-group">
-              <textarea className="form-control" name="note" placeholder="Note" onChange={this.onChange} value={period.note}></textarea>
-            </div>
-            <label>{I18n.t('common.duration')}</label>
-            <div className="form-group input-group">
-              { errors.duration ?
-                <div className="error-description">{errors.duration.join(', ')}</div>
-              : null }
-              <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="hours" onChange={this.onChange} value={period.hours} />
-              <div className="input-group-addon">h</div>
-
-              { errors.duration ?
-                <div className="error-description">{errors.duration.join(', ')}</div>
-              : null }
-              <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="minutes" onChange={this.onChange} value={period.minutes} />
-              <div className="input-group-addon">m</div>
-            </div>
-            <div className="form-group">
-              <label>{I18n.t('apps.accounting_periods.closed')}
-                <input type="checkbox" name="closed" checked={period.closed} onChange={this.onCheckboxChange} />
-              </label>
-            </div>
-            <div className="form-group">
-              <label>{I18n.t('apps.accounting_periods.full_time')}
-                <input type="checkbox" name="full_time" checked={period.full_time} onChange={this.onCheckboxChange} />
-              </label>
-            </div>
-            <div className="form-group">
-              <label>{I18n.t('common.position')}
-                 { errors.position ?
-                   <div className="error-description">{errors.position.join(', ')}</div>
-                 : null }
-              </label>
-              <input className={`${errors.position ? 'error' : ''} form-control`} type="number" name="position" value={period.position} onChange={this.onChange} />
-            </div>
-          </form>
-          <NavLink className="btn btn-default" to="/accounting_periods" data-navigate="">{I18n.t('common.cancel')}</NavLink>
-          <button onClick={this.onSubmit} className="btn btn-primary" type="button">{I18n.t('common.save')}</button>
+      <div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+        <div className="form-group">
+          <div className="preloader"></div>
         </div>
       </div>
     )
+  }
+
+  render () {
+    const { period, users, redirectToReferer, errors, periodId } = this.state;
+
+    if (redirectToReferer) return (<Redirect to={redirectToReferer} />)
+    if (!currentUser.admin) return (<Redirect to="/" />)
+    if (!periodId || periodId === period.id) {
+      return (
+        <div id="content">
+          <div>
+            <form onSubmit={this.onSubmit}>
+              <div className="form-group">
+                <select className="form-control" name="user_id" value={period.user_id} onChange={this.onChange}>
+                  { users.map((user, index) => (
+                    <option key={index} value={user.id}>{user.first_name} {user.last_name}</option>
+                  )) }
+                </select>
+              </div>
+              <div className="col-md-6 form-group">
+                <DatePicker locale="pl" onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at ? moment(period.starts_at, 'YYYY-MM-DD HH:mm') : null} name="starts_at" placeholder="From" onChange={this.onStartsAtChange} />
+              </div>
+              <div className="col-md-6 form-group">
+                <DatePicker locale="pl" onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.ends_at ? moment(period.ends_at, 'YYYY-MM-DD HH:mm') : null} name="ends_at" placeholder="To" onSelect={this.onEndsAtChange} onChange={this.onEndsAtChange} />
+              </div>
+              <div className="form-group">
+                <textarea className="form-control" name="note" placeholder="Note" onChange={this.onChange} value={period.note}></textarea>
+              </div>
+              <label>{I18n.t('common.duration')}</label>
+              <div className="form-group input-group">
+                { errors.duration ?
+                  <div className="error-description">{errors.duration.join(', ')}</div>
+                : null }
+                <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="hours" onChange={this.onChange} value={period.hours} />
+                <div className="input-group-addon">h</div>
+
+                { errors.duration ?
+                  <div className="error-description">{errors.duration.join(', ')}</div>
+                : null }
+                <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="minutes" onChange={this.onChange} value={period.minutes} />
+                <div className="input-group-addon">m</div>
+              </div>
+              <div className="form-group">
+                <label>{I18n.t('apps.accounting_periods.closed')}
+                  <input type="checkbox" name="closed" checked={period.closed} onChange={this.onCheckboxChange} />
+                </label>
+              </div>
+              <div className="form-group">
+                <label>{I18n.t('apps.accounting_periods.full_time')}
+                  <input type="checkbox" name="full_time" checked={period.full_time} onChange={this.onCheckboxChange} />
+                </label>
+              </div>
+              <div className="form-group">
+                <label>{I18n.t('common.position')}
+                   { errors.position ?
+                     <div className="error-description">{errors.position.join(', ')}</div>
+                   : null }
+                </label>
+                <input className={`${errors.position ? 'error' : ''} form-control`} type="number" name="position" value={period.position} onChange={this.onChange} />
+              </div>
+            </form>
+            <NavLink activeClassName="" className="btn btn-default" to="/accounting_periods">{I18n.t('common.cancel')}</NavLink>
+            <button onClick={this.onSubmit} className="btn btn-primary" type="button">{I18n.t('common.save')}</button>
+          </div>
+        </div>
+      )
+    } else {
+      return this._renderPreloader();
+    }
   }
 }
 
