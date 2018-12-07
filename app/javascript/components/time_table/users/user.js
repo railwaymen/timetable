@@ -20,7 +20,7 @@ class User extends React.Component {
         <td>{user.last_name}</td>
         <td>{user.first_name}</td>
         <td>{user.email}</td>
-        <td>{user.contract_id}</td>
+        <td>{user.contract_name}</td>
         <td>{user.phone}</td>
         <td>
           <div className="ui buttons">
