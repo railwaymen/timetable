@@ -35,7 +35,7 @@ class EditPeriod extends React.Component {
     errors: {},
     users: [],
     redirectToReferer: undefined,
-    periodId: parseInt(window.location.pathname.match(/[0-9]+/))
+    periodId: parseInt(this.props.match.params.id)
   }
 
   componentDidMount () {
