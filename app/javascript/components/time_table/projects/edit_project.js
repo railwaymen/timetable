@@ -29,7 +29,7 @@ class EditProject extends React.Component {
       active: true
     },
     users: [],
-    projectId: parseInt(this.props.match.params.id)
+    projectId: parseInt(this.props.match.params.id),
     redirectToReferer: undefined
   }
 
