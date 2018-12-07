@@ -37,7 +37,7 @@ class EditUser extends React.Component {
   state = {
     user: {},
     redirectToReferer: undefined,
-    userId: parseInt(window.location.pathname.match(/[0-9]+/))
+    userId: parseInt(this.props.match.params.id)
   }
 
   onChange (e) {
