@@ -36,7 +36,18 @@ $ ->
     , 600)
 
   $(document).on 'edit-entry', (e) ->
-    $("#work-time-#{e.detail.id}").addClass('hotline-bling')
-    setTimeout( ->
-      $("#work-time-#{e.detail.id}").removeClass('hotline-bling')
-    , 2500)
+    detail = e.detail
+    if detail.success
+      element = $("#work-time-#{detail.id}")
+      element.addClass('hotline-bling')
+
+      setTimeout( ->
+        element.removeClass('hotline-bling')
+      , 2500)
+    else
+      element = $("#work-time-#{detail.id}").parent().parent().find('.error-tooltip')
+      element.css({ display: 'block' })
+
+      setTimeout ->
+        element.css({ display: '' })
+      , 2300

@@ -1,7 +1,9 @@
 @keyframes slide
   0%
     margin-left: 100%
+    opacity: 1
   100%
+    opacity: 1
     margin-left: 0px
 
 @keyframes blink
@@ -31,9 +33,11 @@
 .preloader
   width: 100%
   background-color: #eaeaea
+  opacity: 0.5
   padding: 2%
   position: relative
   &:after
+    opacity: 0
     background: linear-gradient(to right, #eaeaea, #dcdcdc, #eaeaea)
     content: ""
     position: absolute
@@ -42,6 +46,7 @@
     top: 0
     width: 7%
     height: 100%
+    animation-delay: 1s
     animation: preloader-slide 1.4s infinite
 
 .centered-modal
@@ -65,6 +70,14 @@
   display: inline-block
   cursor: pointerentry
 
+#time-entry-list
+  .error-tooltip
+    display: none
+
+#time-entry-list .time-entries-list-container:hover
+  .error-tooltip
+    display: block
+
 .time-entries-list > li.entry
   display: -webkit-box
   display: -moz-box
@@ -79,6 +92,12 @@
   position: relative
   border-right: 3px solid transparent
   padding-right: 7px
+
+  .error-info-container
+    line-height: 49px
+    font-size: 22px
+    margin: 0 12px 0 22px
+    color: #0c0c0c
 
   &.new
     animation-name: slide

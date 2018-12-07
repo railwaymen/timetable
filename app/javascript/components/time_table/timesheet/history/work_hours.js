@@ -148,7 +148,7 @@ class WorkHours extends React.Component {
         <input className="start-input" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
         <input className="end-input" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
         <div className="edit-date input ui">
-          <DatePicker value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
+          <DatePicker locale="pl" value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
         </div>
       </div>
     )
@@ -231,7 +231,7 @@ class WorkHours extends React.Component {
         this.props.updateWorkHours(this, durationDeviation);
         let event = new CustomEvent(
           'edit-entry',
-          { detail: { id: workHours.id } }
+          { detail: { id: workHours.id, success: true } }
         )
 
         document.dispatchEvent(event);
@@ -241,6 +241,13 @@ class WorkHours extends React.Component {
         starts_at_hours: formattedStartsAtTime,
         ends_at_hours: formattedEndsAtTime,
         errors: Object.values(e.errors)
+      }, () => {
+        let event = new CustomEvent(
+          'edit-entry',
+          { detail: { id: workHours.id, success: false } }
+        )
+
+        document.dispatchEvent(event);
       })
     })
   }
@@ -261,6 +268,7 @@ class WorkHours extends React.Component {
         { errors.map((error, index) => (<ErrorTooltip key={index} errors={error} />)) }
         <ul className="time-entries-list">
           <li className={`entry ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
+            { !_.isEmpty(errors) ? <div className="error-info-container"><i className="glyphicon glyphicon-warning-sign"></i></div> : null }
             <div className="task-container">
               <span className="description-text">
                 <a href={workHours.task} target="_blank">{workHours.task_preview}</a>

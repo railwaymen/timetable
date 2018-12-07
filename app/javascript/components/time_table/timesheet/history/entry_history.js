@@ -151,7 +151,7 @@ class EntryHistory extends React.Component {
   }
 
   pushEntry (object) {
-    if (moment(object.starts_at).format('MMMM') === moment(this.state.from).format('MMMM')) {
+    if (moment(object.starts_at).format('MM') === moment(this.state.from).format('MM')) {
       let time = moment(object.starts_at).format('YYYYMMDD');
       let groupedWorkHours = this.state.groupedWorkHours;
       let groupedIndex = groupedWorkHours[time];
@@ -243,7 +243,7 @@ class EntryHistory extends React.Component {
     return (
       this.state.daysKeys.map((key, index) => {
         let value = this.state.groupedWorkHours[key];
-        return (<WorkHoursDay key={index + '/' + value}
+        return (<WorkHoursDay key={index + '/' + key + '/' + value}
                               day={value}
                               fingerPrint={key}
                               onCopy={this.props.onCopy}

@@ -174,13 +174,15 @@ class Periods extends React.Component {
 
     return (
       <ul className="pagination pull-right">
-        <li className={!isBackAvailable ? 'disabled' : ''} id="prevPage">
-          <a className="glyphicon glyphicon-chevron-left" onClick={this.onPageChange} href={isBackAvailable ? `/accounting_periods?user_id=${userId}&page=${page - 1}`: '#'}></a>
-        </li>
+        { isBackAvailable ?
+          <li id="prevPage">
+            <a className="glyphicon glyphicon-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`}></a>
+          </li> : null }
         {this.paginationBody(pages, page, userId)}
-        <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
-          <a className="glyphicon glyphicon-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'}></a>
-        </li>
+        { isForwardAvailable ?
+          <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
+            <a className="glyphicon glyphicon-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'}></a>
+          </li> : null }
       </ul>
     )
   }

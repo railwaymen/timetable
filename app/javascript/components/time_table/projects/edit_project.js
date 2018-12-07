@@ -29,7 +29,7 @@ class EditProject extends React.Component {
       active: true
     },
     users: [],
-    projectId: window.location.pathname.match(/[0-9]+/),
+    projectId: parseInt(this.props.match.params.id),
     redirectToReferer: undefined
   }
 
@@ -102,47 +102,69 @@ class EditProject extends React.Component {
     }
   }
 
+  _renderPreloader () {
+    return (
+      <div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+        <div className="form-group">
+          <div className="preloader"></div>
+        </div>
+      </div>
+    )
+  }
+
   render () {
-    const { project, users, redirectToReferer } = this.state;
+    const { project, users, redirectToReferer, projectId } = this.state;
 
     if (redirectToReferer) return <Redirect to={redirectToReferer} />
-
-    return (
-      <form>
-        { currentUser.admin ?
-          <div>
-            <div className="form-group">
-              <input className="form-control" type="text" name="name" placeholder={I18n.t('common.name')} onChange={this.onChange} value={project.name} autoFocus />
+    if (!projectId || projectId === project.id ) {
+      return (
+        <form>
+          { currentUser.admin ?
+            <div>
+              <div className="form-group">
+                <input className="form-control" type="text" name="name" placeholder={I18n.t('common.name')} onChange={this.onChange} value={project.name} autoFocus />
+              </div>
+              <div className="form-group">
+                <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
+                <select name="leader_id" id="leader" className="form-control" value={project.leader_id} onChange={this.onChange}>
+                  <option value=""></option>
+                  { users.map((user, index) => (
+                    <option key={user.id} value={user.id}>{user.first_name} {user.first_name}</option>
+                  )) }
+                </select>
+              </div>
+              <div className="form-group">
+                <label>
+                  {I18n.t('apps.projects.active')}
+                  <input type="checkbox" name="active" checked={project.active} onChange={this.onCheckboxChange} />
+                </label>
+              </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
-              <select name="leader_id" id="leader" className="form-control" value={project.leader_id} onChange={this.onChange}>
-                <option value=""></option>
-                { users.map((user, index) => (
-                  <option key={user.id} value={user.id}>{user.first_name} {user.first_name}</option>
-                )) }
-              </select>
-            </div>
-            <div className="form-group">
-              <label>
-                {I18n.t('apps.projects.active')}
-                <input type="checkbox" name="active" checked={project.active} onChange={this.onCheckboxChange} />
-              </label>
-            </div>
+          : null }
+          <div className="form-group"></div>
+          <input type="color" name="color" value={((project.color && project.color[0] !== '#') ? '#' : '') + project.color} onChange={this.onChange} />
+          <div className="form-group">
+            <label>
+              {I18n.t('apps.projects.work_times_allows_task')}
+              <input type="checkbox" name="work_times_allows_task" checked={project.work_times_allows_task} onChange={this.onCheckboxChange} />
+            </label>
           </div>
-        : null }
-        <div className="form-group"></div>
-        <input type="color" name="color" value={((project.color && project.color[0] !== '#') ? '#' : '') + project.color} onChange={this.onChange} />
-        <div className="form-group">
-          <label>
-            {I18n.t('apps.projects.work_times_allows_task')}
-            <input type="checkbox" name="work_times_allows_task" checked={project.work_times_allows_task} onChange={this.onCheckboxChange} />
-          </label>
-        </div>
-        <input className="btn btn-default" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
-        <NavLink className="btn btn-primary" to="/projects/list">{I18n.t('common.cancel')}</NavLink>
-      </form>
-    )
+          <input className="btn btn-default" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
+          <NavLink className="btn btn-primary" to="/projects/list">{I18n.t('common.cancel')}</NavLink>
+        </form>
+      )
+    } else {
+      return this._renderPreloader()
+    }
   }
 }
 

@@ -39,7 +39,7 @@ class TimeTable extends React.Component {
             <Route path='/reports/work_times/by_projects' component={ByProjects} />
             <Route path='/reports/work_times/by_users' component={ByUsers} />
             <Route path='/accounting_periods' exact component={Periods} />
-            <Route path='/accounting_periods/edit/:id' exact component={EditPeriod} />
+            <Route path='/accounting_periods/edit/:id' component={EditPeriod} />
             <Route path='/accounting_periods/new' component={EditPeriod} />
             <Route path='/timesheet' component={Timesheet} />
           </div>
