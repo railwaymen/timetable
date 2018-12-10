@@ -99,7 +99,7 @@ class EditUser extends React.Component {
           <input className="form-control" type="text" name="last_name" placeholder={I18n.t('apps.users.last_name')} value={user.last_name} onChange={this.onChange} />
         </div>
         <div className="form-group">
-          <input className="form-control" type="text" name="contract_name" placeholder={I18n.t('apps.users.contract_id')} value={user.contract_id} onChange={this.onChange} />
+          <input className="form-control" type="text" name="contract_name" placeholder={I18n.t('apps.users.contract_name')} value={user.contract_name} onChange={this.onChange} />
         </div>
         <div className="form-group">
           <input className="form-control" type="text" name="phone" placeholder={I18n.t('apps.users.phone')} value={user.phone} onChange={this.onChange} />

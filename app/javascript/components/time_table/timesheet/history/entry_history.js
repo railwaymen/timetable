@@ -29,6 +29,7 @@ class EntryHistory extends React.Component {
   }
 
   componentDidMount () {
+    moment.locale(currentUser.lang);
     let a = moment().subtract(5, 'years');
     let b = moment().add(1, 'month');
     let months = [];
