@@ -27,4 +27,7 @@ task populate_dev_data: :environment do
       end
     end
   end
+
+  ActiveRecord::Base.connection.reset_pk_sequence!(User.table_name)
+  ActiveRecord::Base.connection.reset_pk_sequence!(Project.table_name)
 end
