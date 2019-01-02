@@ -138,7 +138,7 @@ class EditProject extends React.Component {
                 <select name="leader_id" id="leader" className="form-control" value={project.leader_id} onChange={this.onChange}>
                   <option value=""></option>
                   { users.map((user, index) => (
-                    <option key={user.id} value={user.id}>{user.first_name} {user.first_name}</option>
+                    <option key={user.id} value={user.id}>{user.first_name} {user.last_name}</option>
                   )) }
                 </select>
               </div>
