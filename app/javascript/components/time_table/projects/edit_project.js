@@ -83,7 +83,7 @@ class EditProject extends React.Component {
   onSubmit (e) {
     e.preventDefault();
     let project = this.state.project;
-    project.color = project.color ? project.color.substring(1) : '0c0c0c';
+    project.color = project.color[0] === '#' ? project.color.substring(1) : project.color;
 
     if (this.state.projectId) {
       Api.makePutRequest({ url: `/api/projects/${this.state.project.id}`, body: { project: project } })
