@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   around_action :use_user_locale
 
+  helper_method :current_user
+
   def authenticate_admin!
     authenticate_user!
     return head(:forbidden) unless current_user.admin?

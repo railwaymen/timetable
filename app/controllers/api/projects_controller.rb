@@ -1,5 +1,5 @@
 module Api
-  class ProjectsController < AuthenticatedController
+  class ProjectsController < Api::BaseController
     respond_to :json
     wrap_parameters :project
     before_action :authenticate_admin_or_manager_or_leader!, only: %i[show create update]
@@ -17,7 +17,7 @@ module Api
     end
 
     def simple
-      @projects = Project.order(:internal, :name)
+      @projects = Project.order(:internal, :name).active
       respond_with @projects
     end
 

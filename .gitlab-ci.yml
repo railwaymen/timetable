@@ -4,6 +4,7 @@ variables:
 before_script:
   - bundle config build.nokogiri --use-system-libraries
   - bundle install --path=/home/gitlab-runner/builds/shared/${CI_PROJECT_NAME}/gems
+  - yarn install
 
 test:
   script:
@@ -16,3 +17,11 @@ production:
   script:
     - bundle exec cap production_1 deploy
     - bundle exec cap production_2 deploy
+
+
+staging:
+  stage: deploy
+  only:
+    - develop
+  script:
+    - bundle exec cap staging deploy

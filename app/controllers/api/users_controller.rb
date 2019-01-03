@@ -1,5 +1,5 @@
 module Api
-  class UsersController < AuthenticatedController
+  class UsersController < Api::BaseController
     before_action :authenticate_notself, only: [:update]
     before_action :authenticate_admin!, except: %i[index show update]
     before_action :authenticate_admin_or_manager_or_leader!, only: [:index]
@@ -12,7 +12,7 @@ module Api
     end
 
     def show
-      @user = User.find(params[:id])
+      @user = User.with_next_and_previous_user_id.find(params[:id])
       respond_with @user
     end
 

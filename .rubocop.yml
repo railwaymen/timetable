@@ -34,6 +34,7 @@ Style/ExpandPathArguments:
 AllCops:
   TargetRubyVersion: 2.2
   Exclude:
+    - node_modules/**/*
     - bin/**/*
     - db/**/*
     - vendor/**/*

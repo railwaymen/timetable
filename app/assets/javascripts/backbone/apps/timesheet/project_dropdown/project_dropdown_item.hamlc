@@ -1,2 +1,0 @@
-.ui.empty.circular.label{style: 'background: #' + @color}
-= @name

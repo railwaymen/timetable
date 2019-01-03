@@ -5,17 +5,6 @@ GIT
     semantic-ui-sass (2.4.0.1)
       sass (>= 3.2)
 
-GIT
-  remote: git://github.com/plataformatec/devise.git
-  revision: 94adec3ceef6a3e9eb6bdc4d3fa7ed4a3fc6b348
-  specs:
-    devise (4.5.0)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 4.1.0, < 6.0)
-      responders
-      warden (~> 1.2.3)
-
 GEM
   remote: https://rubygems.org/
   remote: https://rails-assets.org/
@@ -68,6 +57,10 @@ GEM
     autoprefixer-rails (9.1.4)
       execjs
     awesome_print (1.8.0)
+    babel-source (5.8.35)
+    babel-transpiler (0.7.0)
+      babel-source (>= 4.0, < 6)
+      execjs (~> 2.0)
     bcrypt (3.1.12)
     better_errors (2.5.0)
       coderay (>= 1.0.0)
@@ -128,6 +121,12 @@ GEM
     connection_pool (2.2.2)
     crass (1.0.4)
     debug_inspector (0.0.3)
+    devise (4.5.0)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0, < 6.0)
+      responders
+      warden (~> 1.2.3)
     devise-i18n (1.6.5)
       devise (>= 4.4)
     diff-lcs (1.3)
@@ -158,6 +157,8 @@ GEM
     holidays (6.6.0)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
+    i18n-js (3.0.11)
+      i18n (>= 0.6.6, < 2)
     immigrant (0.3.6)
       activerecord (>= 3.0)
     interactor (3.1.1)
@@ -174,6 +175,7 @@ GEM
     json_spec (1.1.5)
       multi_json (~> 1.0)
       rspec (>= 2.0, < 4.0)
+    jwt (2.1.0)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.1.1)
@@ -224,6 +226,8 @@ GEM
     puma (3.12.0)
     rack (2.0.5)
     rack-protection (2.0.4)
+      rack
+    rack-proxy (0.6.5)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -282,6 +286,8 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
+    rails-ujs (0.1.0)
+      railties (>= 3.1)
     railties (5.1.0)
       actionpack (= 5.1.0)
       activesupport (= 5.1.0)
@@ -293,6 +299,12 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
+    react-rails (2.4.7)
+      babel-transpiler (>= 0.7.0)
+      connection_pool
+      execjs
+      railties (>= 3.2)
+      tilt
     redis (4.0.2)
     redis-namespace (1.6.0)
       redis (>= 3.0.4)
@@ -390,6 +402,10 @@ GEM
       rails (>= 3.0.0)
     warden (1.2.7)
       rack (>= 1.0)
+    webpacker (3.5.5)
+      activesupport (>= 4.2)
+      rack-proxy (>= 0.6.1)
+      railties (>= 4.2)
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
@@ -414,7 +430,7 @@ DEPENDENCIES
   capybara-selenium
   chromedriver-helper
   coffee-rails
-  devise!
+  devise
   devise-i18n
   dotenv-rails
   factory_girl_rails
@@ -422,11 +438,13 @@ DEPENDENCIES
   haml
   haml_coffee_assets
   holidays
+  i18n-js
   immigrant
   interactor
   jbuilder
   jquery-rails
   json_spec
+  jwt
   kaminari
   net-ldap
   paper_trail
@@ -447,6 +465,8 @@ DEPENDENCIES
   rails-assets-marionette (= 2.4.4)!
   rails-assets-momentjs!
   rails-controller-testing
+  rails-ujs
+  react-rails
   redis-namespace
   rspec-rails
   rubocop
@@ -461,6 +481,7 @@ DEPENDENCIES
   sinatra
   uglifier
   validates_overlap
+  webpacker
 
 RUBY VERSION
    ruby 2.4.1p111
