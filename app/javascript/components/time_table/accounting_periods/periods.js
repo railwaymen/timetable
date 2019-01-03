@@ -249,7 +249,7 @@ class Periods extends React.Component {
   _renderUserInfo (user) {
     if (!_.isEmpty(user)) {
       return (
-        <span>{`${user.first_name} ${user.last_name}`}</span>
+        <span><NavLink to={`/timesheet?user_id=${user.id}`}>{`${user.first_name} ${user.last_name}`}</NavLink></span>
       )
     } else {
       return (

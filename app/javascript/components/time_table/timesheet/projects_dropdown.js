@@ -17,8 +17,11 @@ class ProjectsDropdown extends React.Component {
   }
 
   componentDidMount () {
+    let availableProjects = this.props.projects.filter((p) => (p.active));
+
     this.setState({
-      filteredProjects: this.props.projects,
+      projects: availableProjects,
+      filteredProjects: availableProjects,
       selectedProject: {}
     })
   }
@@ -39,7 +42,7 @@ class ProjectsDropdown extends React.Component {
 
   assignProject (project) {
     this.setState({
-      selectedProject: _.find(this.props.projects, (p) => (
+      selectedProject: _.find(this.state.projects, (p) => (
         p.id === project.id
       ))
     })
@@ -50,7 +53,7 @@ class ProjectsDropdown extends React.Component {
       filter: e.target.value
     }, () => {
       this.setState({
-        filteredProjects: _.filter(this.props.projects, (p) => (
+        filteredProjects: _.filter(this.state.projects, (p) => (
           p.name.toLowerCase().match(this.state.filter)
         ))
       })
@@ -67,7 +70,7 @@ class ProjectsDropdown extends React.Component {
       document.removeEventListener('click', this.expandDropdown);
     }
 
-    this.setState({ isExpanded: !isExpanded, filter: '', filteredProjects: this.props.projects });
+    this.setState({ isExpanded: !isExpanded, filter: '', filteredProjects: this.state.projects });
   }
 
   onBlur (e) {
@@ -79,7 +82,7 @@ class ProjectsDropdown extends React.Component {
 
     if (projectId !== this.state.selectedProject) {
       this.setState({
-        selectedProject: _.find(this.props.projects, (p) => (
+        selectedProject: _.find(this.state.projects, (p) => (
           p.id === projectId
         ))
       }, () => {
