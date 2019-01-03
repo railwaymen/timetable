@@ -11,6 +11,7 @@ class EditPeriod extends React.Component {
     super(props);
 
     this.getPeriod = this.getPeriod.bind(this);
+    this.getPeriodPosition = this.getPeriodPosition.bind(this);
     this.getUsers = this.getUsers.bind(this);
 
     this.onChange = this.onChange.bind(this);
@@ -26,8 +27,8 @@ class EditPeriod extends React.Component {
 
   state = {
     period: {
-      ends_at: moment(),
-      starts_at: moment(),
+      ends_at: null,
+      starts_at: null,
       hours: '168',
       minutes: '00',
       note: ''
@@ -54,9 +55,23 @@ class EditPeriod extends React.Component {
 
     if (periodId) {
       this.getPeriod(periodId, userId);
+    } else {
+      this.getPeriodPosition(userId);
     }
 
     this.getUsers();
+  }
+
+  getPeriodPosition (userId) {
+    Api.makeGetRequest({ url: `/api/accounting_periods/next_position?user_id=${userId}` })
+       .then((response) => {
+          this.setState({
+            period: {
+              ...this.state.period,
+              position: response.data
+            }
+          })
+       })
   }
 
   getPeriod (id) {
@@ -66,8 +81,8 @@ class EditPeriod extends React.Component {
         let hours = this.formatTimeHours(data.duration);
         let minutes = this.formatTimeMinutes(data.duration);
 
-        data.starts_at = moment(data.starts_at).format('YYYY-MM-DD HH:mm');
-        data.ends_at = moment(moment(data.ends_at).format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm');
+        if (data.starts_at) data.starts_at = moment(data.starts_at).format('YYYY-MM-DD HH:mm');
+        if (data.ends_at) data.ends_at = moment(moment(data.ends_at).format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm')
 
         this.setState({
           period: {

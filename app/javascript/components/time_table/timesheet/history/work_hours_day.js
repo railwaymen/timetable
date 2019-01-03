@@ -60,9 +60,9 @@ class WorkHoursDay extends React.Component {
     const yesterday = moment().subtract(1, 'day');
 
     if (today.isSame(day.starts_at, 'day')) {
-      return 'Today'
+      return I18n.t('common.today')  // 'Today'
     } else if (yesterday.isSame(day.starts_at, 'day')) {
-      return 'Yesterday'
+      return I18n.t('common.yesterday')
     } else {
       return moment(day.starts_at).format('ddd DD, MMMM')
     }
