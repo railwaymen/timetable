@@ -17,7 +17,7 @@ module Api
     end
 
     def simple
-      @projects = Project.order(:internal, :name).active
+      @projects = Project.order(:internal, :name)
       respond_with @projects
     end
 
