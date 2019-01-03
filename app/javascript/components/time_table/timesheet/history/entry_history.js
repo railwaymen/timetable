@@ -208,7 +208,7 @@ class EntryHistory extends React.Component {
           let should_worked = results.data.should_worked;
 
           mandatoryHours = this.formattedDuration(duration);
-          shouldWork =this.formattedDuration(should_worked);
+          shouldWork = this.formattedDuration(should_worked);
         }
       }).then(() => {
         Api.makeGetRequest({ url: url })

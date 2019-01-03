@@ -87,8 +87,12 @@ class Periods extends React.Component {
     const id = this.state.user.prev_id;
 
     if (id) {
-      this.getPeriods({ userId: id });
-      window.history.pushState('TimeTable', 'Accounting Periods', URI(window.location.href).removeSearch('user_id').addSearch({ user_id: id }))
+      this.getPeriods({ userId: id, page: 1 });
+      window.history.pushState('TimeTable',
+                               'Accounting Periods',
+                               URI(window.location.href).removeSearch('user_id')
+                                                        .removeSearch('page')
+                                                        .addSearch({ user_id: id }))
     }
   }
 
@@ -96,8 +100,12 @@ class Periods extends React.Component {
     const id = this.state.user.next_id;
 
     if (id) {
-      this.getPeriods({ userId: id });
-      window.history.pushState('TimeTable', 'Accounting Periods', URI(window.location.href).removeSearch('user_id').addSearch({ user_id: id }))
+      this.getPeriods({ userId: id, page: 1 });
+      window.history.pushState('TimeTable',
+                               'Accounting Periods',
+                               URI(window.location.href).removeSearch('user_id')
+                                                        .removeSearch('page')
+                                                        .addSearch({ user_id: id }))
     }
   }
 
