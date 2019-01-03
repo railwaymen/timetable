@@ -20,7 +20,7 @@ class Navbar extends React.Component {
           <NavLink className="item" to="/projects">{I18n.t('common.projects')}</NavLink>
           <NavLink className="item" to={currentUser.admin || currentUser.manager || currentUser.leader ? '/reports/work_times/by_projects' : '/reports/work_times/by_users'}>{I18n.t('common.reports')}</NavLink>
           <NavLink className="item" to="/accounting_periods">{I18n.t('common.accounting_periods')}</NavLink>
-          <NavLink className="item" exact to="/timesheet">{I18n.t('common.timesheet')}</NavLink>
+          <NavLink className="item" to="/timesheet">{I18n.t('common.timesheet')}</NavLink>
           <div className="right menu">
             <div className="item"></div>
             <NavLink className="item" to={`/users/edit/${currentUser.id}`}>{currentUser.last_name} {currentUser.first_name}</NavLink>
