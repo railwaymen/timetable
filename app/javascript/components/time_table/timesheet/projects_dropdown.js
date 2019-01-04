@@ -41,10 +41,14 @@ class ProjectsDropdown extends React.Component {
   }
 
   assignProject (project) {
-    this.setState({
-      selectedProject: _.find(this.state.projects, (p) => (
+    let projects = this.state.projects;
+    let selectedProject = _.find(
+      projects, (p) => (
         p.id === project.id
-      ))
+    ) || projects[0]);
+
+    this.setState({
+      selectedProject: selectedProject
     })
   }
 
@@ -81,10 +85,13 @@ class ProjectsDropdown extends React.Component {
     let projectId = parseInt(e.target.attributes.getNamedItem('data-value').value);
 
     if (projectId !== this.state.selectedProject) {
+      let projects = this.state.projects;
+      let selectedProject = _.find(projects, (p) => (
+        p.id === projectId
+      ) || projects[0]);
+
       this.setState({
-        selectedProject: _.find(this.state.projects, (p) => (
-          p.id === projectId
-        ))
+        selectedProject: selectedProject
       }, () => {
         this.props.updateProject(this.state.selectedProject);
       })
