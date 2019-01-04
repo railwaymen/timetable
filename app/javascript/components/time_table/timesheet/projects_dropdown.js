@@ -45,7 +45,7 @@ class ProjectsDropdown extends React.Component {
     let selectedProject = _.find(
       projects, (p) => (
         p.id === project.id
-    ) || projects[0]);
+    )) || projects[0];
 
     this.setState({
       selectedProject: selectedProject
@@ -88,7 +88,7 @@ class ProjectsDropdown extends React.Component {
       let projects = this.state.projects;
       let selectedProject = _.find(projects, (p) => (
         p.id === projectId
-      ) || projects[0]);
+      )) || projects[0];
 
       this.setState({
         selectedProject: selectedProject

@@ -175,6 +175,12 @@ class EntryHistory extends React.Component {
           { detail: { id: object.id } }
         )
 
+        let lastWorkTime = this.state.workHours[0];
+        if (lastWorkTime && lastWorkTime.project.name === 'Lunch') {
+          lastWorkTime = this.state.workHours[1];
+          this.props.setLastProject(lastWorkTime.project || {})
+        }
+
         document.dispatchEvent(event);
       })
     }
@@ -234,7 +240,13 @@ class EntryHistory extends React.Component {
 
             this.groupWorkHoursPerDay();
             this.totalWorkHours();
-            this.props.setLastProject((_.first(this.state.workHours) || {}).project);
+
+            let lastWorkTime = this.state.workHours[0];
+            if (lastWorkTime && lastWorkTime.project.name === 'Lunch') {
+              lastWorkTime = this.state.workHours[1];
+            }
+
+            this.props.setLastProject((lastWorkTime || {}).project);
           })
         })
       })
