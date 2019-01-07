@@ -275,7 +275,7 @@ class WorkHours extends React.Component {
               </span>
             </div>
             <div className="description-container" onClick={this.toggleEdit}>
-              <span className="description-text">{workHours.project.lunch ? 'Omnonmonmonmnomnonmonmn' : (workHours.body || '[No description]')}</span>
+              <span className="description-text">{workHours.project.lunch ? 'Omnonmonmonmnomnonmonmn' : (_.unescape(workHours.body) || '[No description]')}</span>
               { editing ? this._renderBodyEditable() : null }
             </div>
             <div className="project-container" onClick={this.toggleProjectEdit}>

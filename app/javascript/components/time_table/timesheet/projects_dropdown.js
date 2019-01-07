@@ -17,8 +17,11 @@ class ProjectsDropdown extends React.Component {
   }
 
   componentDidMount () {
+    let availableProjects = this.props.projects.filter((p) => (p.active));
+
     this.setState({
-      filteredProjects: this.props.projects,
+      projects: availableProjects,
+      filteredProjects: availableProjects,
       selectedProject: {}
     })
   }
@@ -38,10 +41,14 @@ class ProjectsDropdown extends React.Component {
   }
 
   assignProject (project) {
-    this.setState({
-      selectedProject: _.find(this.props.projects, (p) => (
+    let projects = this.state.projects;
+    let selectedProject = _.find(
+      projects, (p) => (
         p.id === project.id
-      ))
+    )) || projects[0];
+
+    this.setState({
+      selectedProject: selectedProject
     })
   }
 
@@ -50,8 +57,8 @@ class ProjectsDropdown extends React.Component {
       filter: e.target.value
     }, () => {
       this.setState({
-        filteredProjects: _.filter(this.props.projects, (p) => (
-          p.name.toLowerCase().match(this.state.filter)
+        filteredProjects: _.filter(this.state.projects, (p) => (
+          p.name.toLowerCase().match(escape(this.state.filter))
         ))
       })
     })
@@ -67,7 +74,7 @@ class ProjectsDropdown extends React.Component {
       document.removeEventListener('click', this.expandDropdown);
     }
 
-    this.setState({ isExpanded: !isExpanded, filter: '', filteredProjects: this.props.projects });
+    this.setState({ isExpanded: !isExpanded, filter: '', filteredProjects: this.state.projects });
   }
 
   onBlur (e) {
@@ -78,10 +85,13 @@ class ProjectsDropdown extends React.Component {
     let projectId = parseInt(e.target.attributes.getNamedItem('data-value').value);
 
     if (projectId !== this.state.selectedProject) {
+      let projects = this.state.projects;
+      let selectedProject = _.find(projects, (p) => (
+        p.id === projectId
+      )) || projects[0];
+
       this.setState({
-        selectedProject: _.find(this.props.projects, (p) => (
-          p.id === projectId
-        ))
+        selectedProject: selectedProject
       }, () => {
         this.props.updateProject(this.state.selectedProject);
       })
