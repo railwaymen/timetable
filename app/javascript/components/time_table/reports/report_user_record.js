@@ -40,6 +40,7 @@ class ReportUserRecord extends React.Component {
             <h4>
               <i className="glyphicon glyphicon-user"></i>
               <a href={`/timesheet?user_id=${overallData.user_id}&from=${from}&to=${to}`} onClick={this.onRedirect}>{overallData.user_name}</a>
+              <a href={`/reports/project.csv?from=${from}&to=${to}&user_id=${overallData.user_id}`}><i className="calendar icon"></i></a>
             </h4>
             <span className="badge">{this.formattedDuration(overallData.user_work_time)}</span>
           </div>
