@@ -40,6 +40,7 @@ class ReportProjectRecord extends React.Component {
             <h4>
               <i className="glyphicon glyphicon-user"></i>
               {overallData.project_name}
+              <a href={`/reports/project.csv?from=${from}&to=${to}&id=${overallData.project_id}`}><i className="calendar icon"></i></a>
             </h4>
             <span className="badge">{this.formattedDuration(overallData.project_duration)}</span>
           </div>
