@@ -25,18 +25,24 @@ RSpec.describe WorkTime, type: :model do
 
   context 'validations' do
     before(:each) do
-      @work_time = create :work_time
+      @work_time = build_stubbed(:work_time)
       allow(@work_time).to receive(:assign_duration)
+    end
+
+    it 'should not throw exceptions for empty values' do
+      expect(WorkTime.new).to_not be_valid
     end
 
     it 'should validate task url' do
       @work_time.task = 'abcde fgh ijk'
       expect(@work_time).to_not be_valid
+      expect(@work_time.errors[:task].present?).to eql(true)
     end
 
     it 'should validate presence of project_id' do
       @work_time.project_id = nil
       expect(@work_time).to_not be_valid
+      expect(@work_time.errors[:project_id].present?).to eql(true)
     end
 
     context 'duration' do
@@ -58,20 +64,21 @@ RSpec.describe WorkTime, type: :model do
 
     context 'body' do
       it 'should be required for regular projects' do
-        work_time = create :work_time
+        work_time = build_stubbed :work_time
         work_time.body = ''
         expect(work_time).to_not be_valid
+        expect(work_time.errors[:base].present?).to eql(true)
       end
 
       it 'should not be required for lunch' do
-        work_time = create :work_time,
+        work_time = build_stubbed :work_time,
                            project: (create :project, name: 'Lunch', lunch: true),
                            body: ''
         expect(work_time).to be_valid
       end
 
       it 'should not require body for vacation' do
-        work_time = create :work_time,
+        work_time = build_stubbed :work_time,
                            project: (create :project, name: 'Vacation', autofill: true),
                            body: ''
         expect(work_time).to be_valid

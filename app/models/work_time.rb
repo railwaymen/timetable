@@ -38,7 +38,7 @@ class WorkTime < ApplicationRecord
   def assign_duration
     self.duration = if project_zero?
                       0
-                    else
+                    elsif ends_at && starts_at
                       ends_at - starts_at
                     end
   end
@@ -48,7 +48,7 @@ class WorkTime < ApplicationRecord
   end
 
   def validates_date
-    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_date')) if starts_at.to_date != ends_at.to_date
+    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_date')) if starts_at && ends_at && starts_at.to_date != ends_at.to_date
   end
 
   def validates_ends_at
@@ -56,7 +56,7 @@ class WorkTime < ApplicationRecord
   end
 
   def validates_time
-    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_time')) if starts_at < 3.business_days.ago.beginning_of_day || ends_at < 3.business_days.ago.beginning_of_day
+    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_time')) if starts_at && ends_at && (starts_at < 3.business_days.ago.beginning_of_day || ends_at < 3.business_days.ago.beginning_of_day)
   end
 
   def validates_body
