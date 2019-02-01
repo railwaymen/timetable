@@ -58,7 +58,7 @@ class ProjectsDropdown extends React.Component {
     }, () => {
       this.setState({
         filteredProjects: _.filter(this.state.projects, (p) => (
-          p.name.toLowerCase().match(escape(this.state.filter))
+          p.name.toLowerCase().match(escape(this.state.filter.toLowerCase()))
         ))
       })
     })
