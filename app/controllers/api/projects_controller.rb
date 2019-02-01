@@ -69,7 +69,7 @@ module Api
     end
 
     def admin_project_params
-      params.require(:project)
+      params.fetch(:project)
             .permit(:name, :color, :leader_id, :active, :work_times_allows_task)
     end
   end

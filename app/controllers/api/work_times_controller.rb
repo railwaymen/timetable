@@ -110,11 +110,11 @@ module Api
     end
 
     def work_time_create_params
-      params.require(:work_time).permit(:project_id, :user_id, :body, :task, :starts_at, :ends_at)
+      params.fetch(:work_time).permit(:project_id, :user_id, :body, :task, :starts_at, :ends_at)
     end
 
     def work_time_params
-      params.require(:work_time).permit(:project_id, :body, :task, :starts_at, :ends_at)
+      params.fetch(:work_time).permit(:project_id, :body, :task, :starts_at, :ends_at)
     end
   end
 end
