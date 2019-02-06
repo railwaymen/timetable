@@ -2,9 +2,11 @@ require 'sidekiq/web'
 require 'sidekiq-status/web'
 
 TimeTable::Application.routes.draw do
-  mount Sidekiq::Web => '/jobs'
   root to: 'home#index'
   devise_for :users
+  authenticate :user, ->(u) { u.admin? } do
+    mount Sidekiq::Web => '/jobs'
+  end
 
   namespace :api do
     devise_for :users, controllers: { sessions: 'api/sessions' }
