@@ -4,7 +4,7 @@ require 'sidekiq-status/web'
 TimeTable::Application.routes.draw do
   root to: 'home#index'
   devise_for :users
-  authenticate :user, lambda { |u| u.admin? } do
+  authenticate :user, ->(u) { u.admin? } do
     mount Sidekiq::Web => '/jobs'
   end
 
