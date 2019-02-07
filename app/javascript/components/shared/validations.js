@@ -1,11 +1,11 @@
 export const presence = (value) => {
   if (value === null || value === undefined || value === '') {
-    return ['can\'t be blank']
+    return [I18n.t('errors.messages.blank')];
   }
 }
 
 export const greaterThan = (number, value) => {
   if (value <= number) {
-    return ['must be greater than ' + number]
+    return [I18n.t('errors.messages.greater_than', { count: number })]
   }
 }
