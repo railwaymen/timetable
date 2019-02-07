@@ -124,12 +124,12 @@ class Entry extends React.Component {
           if (response.data.id) {
             this.props.pushEntry(response.data);
             const newState = {
-              starts_at: this.state.ends_at,
-              duration: 0,
-              durationHours: '00:00',
               body: '',
               task: ''
             };
+            if (!this.state.project.autofill) {
+              Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' })
+            }
             if (this.lastProject && this.state.project.lunch)
               newState.project = this.lastProject;
             if (!this.state.project.lunch)
