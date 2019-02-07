@@ -65,7 +65,7 @@ class Entry extends React.Component {
 
   paste (object) {
     this.setState({
-      body: object.body,
+      body: _.unescape(object.body),
       project: object.project,
       project_id: object.project.id,
       task: object.task

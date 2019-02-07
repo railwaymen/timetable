@@ -133,7 +133,7 @@ class WorkHours extends React.Component {
   _renderBodyEditable () {
     return (
       <div>
-        <textarea autoFocus name="body" type="text" value={this.state.workHours.body} onChange={this.onChange} />
+        <textarea autoFocus name="body" type="text" value={_.unescape(this.state.workHours.body)} onChange={this.onChange} />
         { this.props.workHours.project.work_times_allows_task ?
           <div className="task-edit">
             <input className="task-input" name="task" value={this.state.workHours.task} onChange={this.onChange} />
