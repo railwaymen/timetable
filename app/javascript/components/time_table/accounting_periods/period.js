@@ -29,6 +29,10 @@ class Period extends React.Component {
     return `${hours}:${minutes}`;
   }
 
+  formatNote (note) {
+    return note.split("\n").map((line, idx) => <p key={idx}>{line}</p>)
+  }
+
   onDelete () {
     if (confirm(I18n.t('common.confirm'))) this.props.onDelete(this.props.period.id);
   }
@@ -43,7 +47,7 @@ class Period extends React.Component {
         <td>{period.starts_at ? this.formatDate(period.starts_at) : ''}</td>
         <td>{period.ends_at ? this.formatDate(period.ends_at) : ''}</td>
         <td>{this.formatTime(period.counted_duration)}/{this.formatTime(period.duration)}</td>
-        <td>{period.note}</td>
+        <td>{this.formatNote(period.note)}</td>
         <td>{period.closed ? <i className="glyphicon glyphicon-ok"></i> : ''}</td>
         <td>{period.full_time ? <i className="glyphicon glyphicon-ok"></i> : ''}</td>
         <td>
