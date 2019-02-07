@@ -172,9 +172,19 @@ class Entry extends React.Component {
     return moment(time).format('HH:mm');
   }
 
+  inclusiveParse(time) {
+    const firstFormat = moment(time, 'HH:mm');
+    if (firstFormat.isValid()) {
+      return firstFormat;
+    }
+
+    // Format for f('835') = 08:35
+    return moment(time, 'Hmm');
+  }
+
   recountTime () {
-    let formattedStartsAt = moment(this.state.starts_at, 'HH:mm');
-    let formattedEndsAt   = moment(this.state.ends_at, 'HH:mm');
+    let formattedStartsAt = this.inclusiveParse(this.state.starts_at)
+    let formattedEndsAt   = this.inclusiveParse(this.state.ends_at)
 
     let duration = this.state.project.count_duration ? moment(formattedEndsAt.diff(formattedStartsAt)) : 0;
 
