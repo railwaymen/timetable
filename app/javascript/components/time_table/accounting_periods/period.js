@@ -30,7 +30,7 @@ class Period extends React.Component {
   }
 
   formatNote (note) {
-    return note.split("\n").map((line, idx) => <p key={idx}>{line}</p>)
+    return `${note}`.split("\n").map((line, idx) => <p key={idx}>{line}</p>)
   }
 
   onDelete () {
