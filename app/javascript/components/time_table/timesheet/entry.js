@@ -11,6 +11,8 @@ class Entry extends React.Component {
   constructor (props) {
     super(props);
 
+    this.lastProject = null;
+
     this.onChange = this.onChange.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -121,13 +123,20 @@ class Entry extends React.Component {
       }).then((response) => {
           if (response.data.id) {
             this.props.pushEntry(response.data);
-            this.setState({
+            const newState = {
               starts_at: this.state.ends_at,
               duration: 0,
               durationHours: '00:00',
               body: '',
               task: ''
-            })
+            };
+            if (this.lastProject && this.state.project.lunch)
+              newState.project = this.lastProject;
+            if (!this.state.project.lunch)
+              this.lastProject = this.state.project;
+            this.setState(newState);
+          } else {
+            throw new Error("Invalid response");
           }
         }).catch((e) => {
           alert('There was an error while trying to add work time');
