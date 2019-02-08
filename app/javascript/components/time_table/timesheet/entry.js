@@ -139,7 +139,13 @@ class Entry extends React.Component {
             throw new Error("Invalid response");
           }
         }).catch((e) => {
-          alert('There was an error while trying to add work time');
+          if (e.errors && (e.errors.starts_at || e.errors.ends_at)) {
+            const errors = Object.create(null);
+            errors.duration = (e.errors.starts_at || []).concat(e.errors.ends_at || [])
+            this.setState({ errors });
+          } else {
+            alert(I18n.t('activerecord.errors.models.work_time.basic'));
+          }
         })
     }
   }
