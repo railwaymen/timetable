@@ -184,7 +184,7 @@ class Entry extends React.Component {
       return firstFormat;
     }
 
-    // Format for f('835') = 08:35
+    // Properly handly input without '0' prefix, for example '830' -> 08:30
     return moment(time, 'Hmm');
   }
 
