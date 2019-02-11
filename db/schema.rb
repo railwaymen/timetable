@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181204084117) do
+ActiveRecord::Schema.define(version: 20190211110225) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,15 @@ ActiveRecord::Schema.define(version: 20181204084117) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_accounting_periods_recounts_on_user_id"
+  end
+
+  create_table "external_auths", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.jsonb "data", null: false
+    t.string "provider", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_external_auths_on_project_id"
   end
 
   create_table "projects", id: :serial, force: :cascade do |t|
@@ -109,6 +118,7 @@ ActiveRecord::Schema.define(version: 20181204084117) do
 
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"
   add_foreign_key "accounting_periods_recounts", "users"
+  add_foreign_key "external_auths", "projects"
   add_foreign_key "projects", "users", column: "leader_id"
   add_foreign_key "work_times", "projects", name: "work_times_project_id_fk"
   add_foreign_key "work_times", "users", column: "creator_id", name: "work_times_creator_id_fk"

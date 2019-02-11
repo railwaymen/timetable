@@ -25,6 +25,11 @@ module Api
       @project = project_scope
     end
 
+    def external_auth
+      @project = project_scope
+      @external_auth = @project.external_auth
+    end
+
     def create
       @project = Project.create(project_params)
       respond_with :api, @project
