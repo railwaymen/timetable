@@ -4,6 +4,7 @@ import * as Api from '../../../shared/api.js';
 import DatePicker from 'react-datepicker';
 import ProjectsList from '../projects_list.js';
 import ErrorTooltip from '../errors/error_tooltip.js';
+import { preserveLines } from '../../../shared/helpers.js';
 
 class WorkHours extends React.Component {
   constructor (props) {
@@ -133,7 +134,7 @@ class WorkHours extends React.Component {
   _renderBodyEditable () {
     return (
       <div>
-        <textarea autoFocus name="body" type="text" value={this.state.workHours.body} onChange={this.onChange} />
+        <textarea autoFocus name="body" type="text" value={_.unescape(this.state.workHours.body)} onChange={this.onChange} />
         { this.props.workHours.project.work_times_allows_task ?
           <div className="task-edit">
             <input className="task-input" name="task" value={this.state.workHours.task} onChange={this.onChange} />
@@ -275,7 +276,7 @@ class WorkHours extends React.Component {
               </span>
             </div>
             <div className="description-container" onClick={this.toggleEdit}>
-              <span className="description-text">{workHours.project.lunch ? 'Omnonmonmonmnomnonmonmn' : (_.unescape(workHours.body) || '[No description]')}</span>
+              <span className="description-text">{workHours.project.lunch ? 'Omnonmonmonmnomnonmonmn' : preserveLines((_.unescape(workHours.body) || '[No description]'))}</span>
               { editing ? this._renderBodyEditable() : null }
             </div>
             <div className="project-container" onClick={this.toggleProjectEdit}>

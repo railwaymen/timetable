@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as Api from '../../shared/api.js';
 import { NavLink, Redirect } from 'react-router-dom';
+import { unnullifyFields } from '../../shared/helpers';
 
 class EditUser extends React.Component {
   constructor (props) {
@@ -25,7 +26,8 @@ class EditUser extends React.Component {
     if (this.state.userId) {
       Api.makeGetRequest({ url: `/api/users/${this.state.userId}` })
          .then((response) => {
-           this.setState({ user: response.data });
+           const user = unnullifyFields(response.data);
+           this.setState({ user });
          })
      }
   }

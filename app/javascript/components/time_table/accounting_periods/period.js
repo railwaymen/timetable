@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { NavLink } from 'react-router-dom';
+import { preserveLines } from '../../shared/helpers';
 
 class Period extends React.Component {
   constructor (props) {
@@ -43,7 +44,7 @@ class Period extends React.Component {
         <td>{period.starts_at ? this.formatDate(period.starts_at) : ''}</td>
         <td>{period.ends_at ? this.formatDate(period.ends_at) : ''}</td>
         <td>{this.formatTime(period.counted_duration)}/{this.formatTime(period.duration)}</td>
-        <td>{period.note}</td>
+        <td>{preserveLines(period.note)}</td>
         <td>{period.closed ? <i className="glyphicon glyphicon-ok"></i> : ''}</td>
         <td>{period.full_time ? <i className="glyphicon glyphicon-ok"></i> : ''}</td>
         <td>

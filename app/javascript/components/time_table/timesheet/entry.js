@@ -11,6 +11,8 @@ class Entry extends React.Component {
   constructor (props) {
     super(props);
 
+    this.lastProject = null;
+
     this.onChange = this.onChange.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -63,7 +65,7 @@ class Entry extends React.Component {
 
   paste (object) {
     this.setState({
-      body: object.body,
+      body: _.unescape(object.body),
       project: object.project,
       project_id: object.project.id,
       task: object.task
@@ -121,16 +123,29 @@ class Entry extends React.Component {
       }).then((response) => {
           if (response.data.id) {
             this.props.pushEntry(response.data);
-            this.setState({
-              starts_at: this.state.ends_at,
-              duration: 0,
-              durationHours: '00:00',
+            const newState = {
               body: '',
               task: ''
-            })
+            };
+            if (!this.state.project.autofill) {
+              Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' })
+            }
+            if (this.lastProject && this.state.project.lunch)
+              newState.project = this.lastProject;
+            if (!this.state.project.lunch)
+              this.lastProject = this.state.project;
+            this.setState(newState);
+          } else {
+            throw new Error("Invalid response");
           }
         }).catch((e) => {
-          alert('There was an error while trying to add work time');
+          if (e.errors && (e.errors.starts_at || e.errors.ends_at)) {
+            const errors = Object.create(null);
+            errors.duration = (e.errors.starts_at || []).concat(e.errors.ends_at || [])
+            this.setState({ errors });
+          } else {
+            alert(I18n.t('activerecord.errors.models.work_time.basic'));
+          }
         })
     }
   }
@@ -160,17 +175,22 @@ class Entry extends React.Component {
   }
 
   formattedHoursAndMinutes (time) {
-    let hours = moment(time).hours();
-    let minutes = moment(time).minutes();
-    if (hours < 10) hours = `0${hours}`;
-    if (minutes < 10) minutes = `0${minutes}`;
+    return moment(time).format('HH:mm');
+  }
 
-    return `${hours}:${minutes}`;
+  inclusiveParse(time) {
+    const firstFormat = moment(time, 'HH:mm');
+    if (firstFormat.isValid()) {
+      return firstFormat;
+    }
+
+    // Properly handly input without '0' prefix, for example '830' -> 08:30
+    return moment(time, 'Hmm');
   }
 
   recountTime () {
-    let formattedStartsAt = moment(this.state.starts_at, 'HH:mm');
-    let formattedEndsAt   = moment(this.state.ends_at, 'HH:mm');
+    let formattedStartsAt = this.inclusiveParse(this.state.starts_at)
+    let formattedEndsAt   = this.inclusiveParse(this.state.ends_at)
 
     let duration = this.state.project.count_duration ? moment(formattedEndsAt.diff(formattedStartsAt)) : 0;
 
