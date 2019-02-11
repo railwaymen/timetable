@@ -146,6 +146,7 @@ pl:
     errors:
       models:
         work_time:
+          basic: Nie udało się dodać czasu pracy
           base:
             validates_date: 'Nie można utworzyć wpisu który kończy się następnego dnia'
             validates_time: 'Nie można utworzyć lub edytować wpisu'
