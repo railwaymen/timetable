@@ -14,3 +14,4 @@ addons:
 before_script:
   - yarn install
   - bundle exec rake db:create
+  - cp .env.example .env
