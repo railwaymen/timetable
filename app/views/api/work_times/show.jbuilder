@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.partial! @work_time
 json.sum_duration @work_time_duration
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.array! @projects do |project|
   json.id project.id
   json.project_id project.project_id

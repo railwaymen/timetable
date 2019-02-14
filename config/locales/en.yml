@@ -110,10 +110,10 @@ en:
           attributes:
             task:
               invalid_uri: 'Task URL is not valid'
+              invalid_external: 'Task URL does not point to a valid external tasak'
             ends_at:
               validates_ends_at: 'Can not create work times that starts more than 1 month from now'
             starts_at:
               overlap: There is another task overlapping the specified time
-
             duration:
               greater_than: Duration should be greater than zero

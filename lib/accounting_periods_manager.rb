@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AccountingPeriodsManager
   def initialize(user_id:)
     @user_id = user_id

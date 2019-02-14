@@ -12,7 +12,7 @@ module Api
     end
 
     def create
-      @provider = ExternalAuthStrategy.const_get(params[:external_auth][:provider].camelize).new(domain: params[:external_auth][:domain])
+      @provider = ExternalAuthStrategy.const_get(params[:external_auth][:provider].camelize).new('domain' => params[:external_auth][:domain])
       if params[:external_auth][:request_data]
         @provider.prepare_request_data(JwtService.decode(token: params[:external_auth][:request_data]))
       end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AccountingPeriodsGenerator
   def initialize(user_id:, periods_count:, start_on:)
     @user_id = user_id

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'signs me in, view projects, accounting_periods, timesheet', type: :feature, js: true do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   class AccountingPeriodsController < Api::BaseController
     before_action :authenticate_admin!, except: %i[index matching_fulltime]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable MethodLength
 
 module Api
@@ -25,7 +27,7 @@ module Api
         @work_time = current_user.work_times.build(work_time_params)
       end
       @work_time.creator = current_user
-      @work_time.save(work_hours_save_params)
+      @work_time = WorkTimeSaver.new(@work_time).call(work_hours_save_params)
       increase_work_time(@work_time, @work_time.duration) if @work_time.valid?(context)
       respond_with @work_time
     end
@@ -37,7 +39,7 @@ module Api
       if current_user.admin?
         @work_time.updated_by_admin = true if @work_time.user_id != current_user.id
       end
-      @work_time.save(work_hours_save_params)
+      @work_time = WorkTimeSaver.new(@work_time).call(work_hours_save_params)
       increase_or_decrease_work_time(@work_time, duration_was) if @work_time.valid?(context)
       respond_with @work_time
     end
@@ -46,6 +48,7 @@ module Api
       @work_time = find_work_time
       @work_time.update(updated_by_admin: true) if @work_time.user_id != current_user.id
       @work_time.update(active: false)
+      UpdateExternalAuthWorker.perform_async(@work_time.project_id, @work_time.external_task_id) if @work_time.external_task_id
       decrease_work_time(@work_time, @work_time.duration)
       respond_with @work_time
     end

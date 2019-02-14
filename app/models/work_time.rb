@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WorkTime < ApplicationRecord
   has_paper_trail skip: [:contract_name]
   belongs_to :project
@@ -18,6 +20,8 @@ class WorkTime < ApplicationRecord
   validate :task_url
 
   scope :active, -> { where(active: true) }
+
+  delegate :external_auth, to: :project
 
   def delete_spaces
     self.task = task.strip if task
@@ -61,5 +65,9 @@ class WorkTime < ApplicationRecord
 
   def validates_body
     errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_body')) if (body.presence.nil? && task.presence.nil?) && !body_optional?
+  end
+
+  def external_task_id
+    integration_payload&.dig(external_auth&.provider, 'task_id')
   end
 end

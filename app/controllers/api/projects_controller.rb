@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   class ProjectsController < Api::BaseController
     respond_to :json

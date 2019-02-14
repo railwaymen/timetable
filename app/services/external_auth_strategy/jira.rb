@@ -2,25 +2,43 @@
 
 # :nocov:
 require 'jira-ruby'
+require 'uri'
 
 module ExternalAuthStrategy
   class Jira < Base
-    CONSUMER_KEY = 'timetable'.freeze
+    CONSUMER_KEY = 'timetable'
+    COMMENT = 'Time registered in Timetable'
 
     attr_reader :domain, :client
 
-    def self.from_external_auth(external_auth)
-      new(domain: external_auth.data[:domain]).tap do |result|
-        result.set_access_token(external_auth.data['token'], external_auth.data['secret'])
+    def self.from_data(data)
+      new('domain' => data['domain']).tap do |result|
+        result.set_access_token(data['token'], data['secret'])
       end
     end
 
     def initialize(params)
-      @domain = params[:domain]
+      @domain = params['domain']
       @client = new_client
     end
 
     delegate :set_access_token, to: :client
+
+    def update(params)
+      task_id = params['task_id'].upcase
+      client.Issue.find(task_id).worklogs.each(&:delete)
+      work_log = client.Issue.find(task_id).worklogs.build
+      work_log.save(comment: COMMENT, timeSpentSeconds: params['time_spent'])
+    end
+
+    def integration_payload(work_time)
+      id = URI.parse(work_time.task).path.split('/').last.upcase
+      {
+        'task_id' => client.Issue.find(id).key
+      }
+    rescue JIRA::HTTPError
+      nil
+    end
 
     def init_access_token(oauth_verifier)
       client.init_access_token(oauth_verifier: oauth_verifier)

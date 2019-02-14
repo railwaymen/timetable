@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IncreaseWorkTime
   include Interactor
   delegate :user, :duration, :starts_at, :ends_at, :date, to: :context
@@ -12,7 +14,7 @@ class IncreaseWorkTime
 
   def add_duration_to_full_time_period
     full_time_period = user.accounting_periods.full_time.where('starts_at <= ? AND ends_at >= ?', Time.zone.parse(date.to_s), Time.zone.parse(date.to_s)).first
-    full_time_period.update(counted_duration: full_time_period.counted_duration + duration) if full_time_period
+    full_time_period&.update(counted_duration: full_time_period.counted_duration + duration)
   end
 
   # rubocop:disable MethodLength

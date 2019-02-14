@@ -154,6 +154,7 @@ pl:
           attributes:
             task:
               invalid_uri: 'URL Taska nie jest poprawny'
+              invalid_external: 'URL nie wskazuje na poprawny zewnętrzny task'
             ends_at:
               validates_ends_at: 'Nie można utworzyć wpisu z wyprzedzeniem o miesiąc'
             starts_at:
