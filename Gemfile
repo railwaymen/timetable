@@ -22,7 +22,7 @@ gem 'business_time'
 gem 'holidays'
 gem 'sentry-raven'
 gem 'bootstrap-sass'
-gem 'jira-ruby'
+gem 'jira-ruby', require: false
 gem 'interactor'
 gem 'pry-rails'
 gem 'kaminari'
