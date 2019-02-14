@@ -72,6 +72,8 @@ en:
       phone: Phone
       button_disabled_tooltip: Account creation disabled. Automatic creation with LDAP login.
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
+    external_auths:
+      authorized: 'Authorized with'
   common:
     rank: 'Rank'
     add: Add
@@ -97,6 +99,7 @@ en:
     confirm: Are you sure ?
     sum: Sum
     name: Name
+    external_auth: External integration
 
   activerecord:
     errors:

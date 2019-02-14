@@ -90,7 +90,6 @@ class ExternalAuth extends React.Component {
     if (redirectToReferer) return <Redirect to={redirectToReferer} />
     return (
       <div>
-        <h1>Instructions</h1>
         {this._renderPublicKey()}
         {this._renderAuth()}
         <NavLink className="btn btn-primary" to={`/projects/${projectId}/edit`}>{I18n.t('common.cancel')}</NavLink>
@@ -116,10 +115,10 @@ class ExternalAuth extends React.Component {
       return (
         <div>
           <p>
-            Zautoryzowano z {this.state.auth.provider}
+             {`${I18n.t('apps.external_auths.authorized')} ${this.state.auth.provider}`}
           </p>
           <p>
-            <a className="btn btn-danger" onClick={this.onDelete}>Delete</a>
+            <a className="btn btn-danger" onClick={this.onDelete}>{I18n.t('common.destroy')}</a>
           </p>
         </div>
       );
