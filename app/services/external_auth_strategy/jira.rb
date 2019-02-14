@@ -26,9 +26,13 @@ module ExternalAuthStrategy
 
     def update(params)
       task_id = params['task_id'].upcase
-      client.Issue.find(task_id).worklogs.each(&:delete)
-      work_log = client.Issue.find(task_id).worklogs.build
-      work_log.save(comment: COMMENT, timeSpentSeconds: params['time_spent'])
+      task = client.Issue.find(task_id)
+      work_log_data = {comment: COMMENT, timeSpentSeconds: params['time_spent']}
+      if (log = task.worklogs.first)
+        log.save(work_log_data)
+      else
+        task.worklogs.build.save(work_log_data)
+      end
     end
 
     def integration_payload(work_time)
