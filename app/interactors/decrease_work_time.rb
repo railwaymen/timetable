@@ -20,7 +20,7 @@ class DecreaseWorkTime
   # rubocop:disable MethodLength
   def substract_duration_from_contract_periods
     remaning_duration = duration
-    while remaning_duration > 0
+    while remaning_duration.positive?
       period = user.accounting_periods.contract.where('counted_duration > 0').order('position DESC').first
       break if period.nil?
 

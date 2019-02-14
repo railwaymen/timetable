@@ -10,18 +10,12 @@ class WorkTimeSaver
 
   def call(additional_params = {})
     external_auth = work_time.project&.external_auth
-    if work_time.project.external_auth.nil? || work_time.task.nil?
-      work_time.integration_payload = nil
-      work_time.save(additional_params)
-      update_old_task
-      return work_time
+    if external_auth.nil? || work_time.task.nil?
+      return save_without_payload(additional_params)
     end
-    payload = validate_integration(work_time, external_auth)
-    if payload
-      work_time.integration_payload = payload
-      saved = work_time.save
-      update_external_auth if saved
-      work_time
+
+    if (payload = validate_integration(work_time, external_auth))
+      save_with_payload(payload, additional_params)
     else
       InvalidWorkTime.new(work_time)
     end
@@ -63,6 +57,20 @@ class WorkTimeSaver
     else
       { auth.provider => integration_payload }
     end
+  end
+
+  def save_with_payload(payload, additional_params)
+    work_time.integration_payload = payload
+    saved = work_time.save(additional_params)
+    update_external_auth if saved
+    work_time
+  end
+
+  def save_without_payload(additional_params)
+    work_time.integration_payload = nil
+    work_time.save(additional_params)
+    update_old_task
+    work_time
   end
 
   def update_external_auth

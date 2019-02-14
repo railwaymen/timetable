@@ -20,7 +20,7 @@ class IncreaseWorkTime
   # rubocop:disable MethodLength
   def add_duration_to_contract_periods
     remaning_duration = duration
-    while remaning_duration > 0
+    while remaning_duration.positive?
       period = user.accounting_periods.contract.where(closed: false).order('position').first
       break if period.nil?
 
