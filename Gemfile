@@ -33,6 +33,7 @@ gem 'capistrano-rails'
 gem 'capistrano-sidekiq'
 gem 'sidekiq'
 gem 'sidekiq-status'
+gem 'sidekiq-unique-jobs'
 gem 'sinatra', require: false
 gem 'immigrant'
 gem 'validates_overlap'
