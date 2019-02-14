@@ -27,7 +27,7 @@ module ExternalAuthStrategy
     def update(params)
       task_id = params['task_id'].upcase
       task = client.Issue.find(task_id)
-      work_log_data = {comment: COMMENT, timeSpentSeconds: params['time_spent']}
+      work_log_data = { comment: COMMENT, timeSpentSeconds: params['time_spent'] }
       if (log = task.worklogs.first)
         log.save(work_log_data)
       else

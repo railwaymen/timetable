@@ -73,7 +73,7 @@ pl:
       button_disabled_tooltip: Tworzenie kont zablokowane. Automatyczne tworzenie poprzez logowanie LDAP.
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
     external_auths:
-      authorized: 'Zaautoryzowano z'
+      authorized: 'Zautoryzowano z'
   common:
     rank: 'Ranking'
     add: Dodaj
