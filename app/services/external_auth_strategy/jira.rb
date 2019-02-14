@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# :nocov:
 require 'jira-ruby'
 require 'uri'
 
@@ -66,16 +65,16 @@ module ExternalAuthStrategy
 
     def data
       {
-        domain: domain,
-        token: token,
-        secret: secret
+        'domain' =>  domain,
+        'token' => token,
+        'secret' => secret
       }
     end
 
     def request_data
       {
-        token: client.request_token.token,
-        secret: client.request_token.secret
+        'token' => client.request_token.token,
+        'secret' => client.request_token.secret
       }
     end
 
@@ -91,4 +90,3 @@ module ExternalAuthStrategy
     end
   end
 end
-# :nocov:
