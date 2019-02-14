@@ -176,6 +176,33 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       expect(work_time.ends_at).to eql(ends_at)
       expect(response.body).to be_json_eql(work_time_response(work_time).to_json)
     end
+
+    it 'does not create work time when invalid task url' do
+      module ExternalAuthStrategy
+        class Sample < Base; def self.from_data(*args); end; end
+      end
+      auth = create(:external_auth, provider: 'Sample')
+      sign_in(user)
+      strategy_double = double('strategy')
+      allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
+      expect(strategy_double).to receive(:integration_payload) { nil }
+      post :create, params: { work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      expect(response.code).to eql('422')
+    end
+
+    it 'creates integration payload' do
+      module ExternalAuthStrategy
+        class Sample < Base; def self.from_data(*args); end; end
+      end
+      auth = create(:external_auth, provider: 'Sample')
+      sign_in(user)
+      strategy_double = double('strategy')
+      allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
+      expect(strategy_double).to receive(:integration_payload) { { 'task_id' => 1 } }
+      expect(UpdateExternalAuthWorker).to receive(:perform_async)
+      post :create, params: { work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      expect(response.code).to eql('200')
+    end
   end
 
   describe '#update' do
@@ -226,6 +253,22 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       expect(work_time.starts_at).to eql(starts_at)
       expect(work_time.ends_at).to eql(ends_at)
       expect(response.body).to be_json_eql(work_time_response(work_time).to_json)
+    end
+
+    it 'updates old external task' do
+      module ExternalAuthStrategy
+        class Sample < Base; def self.from_data(*args); end; end
+      end
+      sign_in(user)
+      auth = create(:external_auth, provider: 'Sample')
+      work_time = create(:work_time, project: auth.project, user: user, integration_payload: { 'Sample' => { 'task_id' => '1' } })
+      strategy_double = double('strategy')
+      allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
+      expect(strategy_double).to receive(:integration_payload) { { 'task_id' => 1 } }
+      expect(UpdateExternalAuthWorker).to receive(:perform_async).twice
+      put :update, params: { id: work_time.id, work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://www.example.com' } }, format: :json
+      expect(response.code).to eql('200')
+      expect(work_time.reload.body).to eql(body)
     end
   end
 

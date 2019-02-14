@@ -34,9 +34,10 @@ class WorkTimeSaver
       false
     end
 
+    # :nocov:
     def method_missing(method, *arguments, &block)
       if @work_time.respond_to?(method)
-        @work_time.send(method, *arguments, &block)
+        @work_time.public_send(method, *arguments, &block)
       else
         super
       end
@@ -45,6 +46,7 @@ class WorkTimeSaver
     def respond_to_missing?(method, include_private = false)
       @work_time.respond_to?(method, include_private) || super
     end
+    # :nocov:
   end
 
   attr_reader :old_payload
