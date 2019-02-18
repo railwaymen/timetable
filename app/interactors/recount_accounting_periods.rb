@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RecountAccountingPeriods < IncreaseWorkTime
   delegate :user, :work_times, :periods, to: :context
 

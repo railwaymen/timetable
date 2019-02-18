@@ -72,6 +72,13 @@ en:
       phone: Phone
       button_disabled_tooltip: Account creation disabled. Automatic creation with LDAP login.
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
+    external_auths:
+      authorized: 'Authorized with'
+      generate_link: Generate link
+      follow_link: Click to authorize
+      new: New auth
+      domain: Domain
+      token: Token
   common:
     rank: 'Rank'
     add: Add
@@ -97,11 +104,12 @@ en:
     confirm: Are you sure ?
     sum: Sum
     name: Name
+    external_auth: External integration
 
   activerecord:
     errors:
       models:
-        work_time:
+        work_time: &worktime
           basic: There was an error while trying to add work time
           base:
             validates_date: 'Can not create work times that ends in next day'
@@ -110,10 +118,17 @@ en:
           attributes:
             task:
               invalid_uri: 'Task URL is not valid'
+              invalid_external: 'Task URL does not point to a valid external task'
             ends_at:
               validates_ends_at: 'Can not create work times that starts more than 1 month from now'
             starts_at:
               overlap: There is another task overlapping the specified time
-
             duration:
               greater_than: Duration should be greater than zero
+        external_auth:
+          basic: Error during authorization
+  activemodel:
+    errors:
+      models:
+        work_time_form:
+          <<: *worktime

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WorkTimeHelper
   def task_preview_helper(task)
     return if task.blank?

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.array! @report do |user_record|
   json.project_id user_record.project_id
   json.project_name user_record.project_name

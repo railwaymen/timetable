@@ -19,7 +19,7 @@ module Reports
       CSV.generate(headers: true) do |csv|
         headers = (@params.key?(:user_id) ? %w[Date Description Duration] : %w[Developer Date Description Duration])
         array_position = @params.key?(:user_id) ? 1 : 2
-        headers.insert(array_position, 'Task URL') if @project && @project.work_times_allows_task?
+        headers.insert(array_position, 'Task URL') if @project&.work_times_allows_task?
 
         csv << headers
 
@@ -31,7 +31,7 @@ module Reports
             format_duration(record.duration)
           ]
           row.unshift(record.user_name) unless @params.key?(:user_id)
-          row.insert(array_position, record.task) if @project && @project.work_times_allows_task?
+          row.insert(array_position, record.task) if @project&.work_times_allows_task?
           csv << row
           if record.task.present? && (next_record.nil? || record.task != next_record.task) && record.duration != record.task_sum
             row = [
@@ -40,7 +40,7 @@ module Reports
               format_duration(record.task_sum)
             ]
             row.unshift(record.user_name) unless @params.key?(:user_id)
-            row.insert(2, nil) if @project && @project.work_times_allows_task?
+            row.insert(2, nil) if @project&.work_times_allows_task?
             csv << row
           end
 
@@ -50,7 +50,7 @@ module Reports
               nil,
               format_duration(record.user_sum)
             ]
-            row.insert(2, nil) if @project && @project.work_times_allows_task?
+            row.insert(2, nil) if @project&.work_times_allows_task?
             row.insert(1, nil) unless @params.key?(:user_id)
             csv << row
           end

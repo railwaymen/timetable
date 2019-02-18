@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RecountAccountingPeriodsWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker

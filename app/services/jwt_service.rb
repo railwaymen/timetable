@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'jwt'
 
 class JwtService
   SECRET    = Rails.application.secrets.jwt[:secret]
-  ALGORITHM = 'HS256'.freeze
+  ALGORITHM = 'HS256'
 
   def self.encode(payload:)
     JWT.encode(payload, SECRET, ALGORITHM)

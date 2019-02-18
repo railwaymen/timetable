@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 ruby '2.4.1'
@@ -20,6 +22,7 @@ gem 'business_time'
 gem 'holidays'
 gem 'sentry-raven'
 gem 'bootstrap-sass'
+gem 'jira-ruby', require: false
 gem 'interactor'
 gem 'pry-rails'
 gem 'kaminari'
@@ -30,6 +33,7 @@ gem 'capistrano-rails'
 gem 'capistrano-sidekiq'
 gem 'sidekiq'
 gem 'sidekiq-status'
+gem 'sidekiq-unique-jobs'
 gem 'sinatra', require: false
 gem 'immigrant'
 gem 'validates_overlap'
