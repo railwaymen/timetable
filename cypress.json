@@ -1,0 +1,4 @@
+{
+  "integrationFolder": "spec/cypress/integration",
+  "fixturesFolder": "spec/cypress/fixtures"
+}

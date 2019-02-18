@@ -3,6 +3,7 @@
     "@rails/webpacker": "3.5",
     "babel-preset-react": "^6.24.1",
     "component-webpack-plugin": "^0.2.1",
+    "cypress": "^3.1.5",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
