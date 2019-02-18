@@ -26,9 +26,9 @@ class WorkTimeForm
 
     work_time.integration_payload = @external_payload
     saved = work_time.save(additional_params)
-    if saved && @external_payload
-      update_external_auth
-      update_old_task
+    if saved
+      update_external_auth if @external_payload
+      update_old_task if old_payload
     end
     saved
   end
