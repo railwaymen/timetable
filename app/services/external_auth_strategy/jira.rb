@@ -28,9 +28,9 @@ module ExternalAuthStrategy
       task = client.Issue.find(task_id)
       work_log_data = { comment: COMMENT, timeSpentSeconds: params['time_spent'] }
       if (log = task.worklogs.first)
-        log.save(work_log_data)
+        log.save!(work_log_data)
       else
-        task.worklogs.build.save(work_log_data)
+        task.worklogs.build.save!(work_log_data)
       end
     end
 

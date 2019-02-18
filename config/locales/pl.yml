@@ -153,7 +153,7 @@ pl:
   activerecord:
     errors:
       models:
-        work_time:
+        work_time: &worktime
           basic: Nie udało się dodać czasu pracy
           base:
             validates_date: 'Nie można utworzyć wpisu który kończy się następnego dnia'
@@ -171,3 +171,8 @@ pl:
               greater_than: Czas trwania musi być większy od zera
         external_auth:
           basic: Błąd uwierzytelnienia
+  activemodel:
+    errors:
+      models:
+        work_time_form:
+          <<: *worktime

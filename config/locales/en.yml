@@ -109,7 +109,7 @@ en:
   activerecord:
     errors:
       models:
-        work_time:
+        work_time: &worktime
           basic: There was an error while trying to add work time
           base:
             validates_date: 'Can not create work times that ends in next day'
@@ -127,3 +127,8 @@ en:
               greater_than: Duration should be greater than zero
         external_auth:
           basic: Error during authorization
+  activemodel:
+    errors:
+      models:
+        work_time_form:
+          <<: *worktime

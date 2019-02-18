@@ -101,7 +101,7 @@ RSpec.describe ExternalAuthStrategy::Jira do
 
         params = { 'task_id' => issue_double.key, 'time_spent' => 60 }
 
-        expect(worklog_double).to receive(:save).with(comment: described_class::COMMENT, timeSpentSeconds: 60)
+        expect(worklog_double).to receive(:save!).with(comment: described_class::COMMENT, timeSpentSeconds: 60)
 
         strategy = described_class.new('domain' => domain)
         strategy.update(params)
@@ -119,7 +119,7 @@ RSpec.describe ExternalAuthStrategy::Jira do
 
         params = { 'task_id' => issue_double.key, 'time_spent' => 60 }
 
-        expect(build_double).to receive(:save).with(comment: described_class::COMMENT, timeSpentSeconds: 60)
+        expect(build_double).to receive(:save!).with(comment: described_class::COMMENT, timeSpentSeconds: 60)
 
         strategy = described_class.new('domain' => domain)
         strategy.update(params)

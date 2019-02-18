@@ -27,7 +27,8 @@ module Api
         @work_time = current_user.work_times.build(work_time_params)
       end
       @work_time.creator = current_user
-      @work_time = WorkTimeSaver.new(@work_time).call(work_hours_save_params)
+      @work_time = WorkTimeForm.new(work_time: @work_time)
+      @work_time.save(work_hours_save_params)
       increase_work_time(@work_time, @work_time.duration) if @work_time.valid?(context)
       respond_with @work_time
     end
@@ -39,7 +40,8 @@ module Api
       if current_user.admin?
         @work_time.updated_by_admin = true if @work_time.user_id != current_user.id
       end
-      @work_time = WorkTimeSaver.new(@work_time).call(work_hours_save_params)
+      @work_time = WorkTimeForm.new(work_time: @work_time)
+      @work_time.save(work_hours_save_params)
       increase_or_decrease_work_time(@work_time, duration_was) if @work_time.valid?(context)
       respond_with @work_time
     end
