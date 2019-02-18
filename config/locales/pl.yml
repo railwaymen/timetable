@@ -72,6 +72,13 @@ pl:
       phone: Telefon
       button_disabled_tooltip: Tworzenie kont zablokowane. Automatyczne tworzenie poprzez logowanie LDAP.
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
+    external_auths:
+      authorized: 'Zautoryzowano z'
+      generate_link: Wygeneruj link
+      follow_link: Kliknij by autoryzować
+      new: Nowe uwierzytelnienie
+      domain: Domena
+      token: Token
   common:
     rank: 'Ranking'
     add: Dodaj
@@ -97,6 +104,7 @@ pl:
     confirm: Jesteś pewien ?
     sum: Suma
     name: Nazwa
+    external_auth: Integracja z serwisami zewnętrznymi
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -145,7 +153,7 @@ pl:
   activerecord:
     errors:
       models:
-        work_time:
+        work_time: &worktime
           basic: Nie udało się dodać czasu pracy
           base:
             validates_date: 'Nie można utworzyć wpisu który kończy się następnego dnia'
@@ -154,9 +162,17 @@ pl:
           attributes:
             task:
               invalid_uri: 'URL Taska nie jest poprawny'
+              invalid_external: 'URL nie wskazuje na poprawny zewnętrzny task'
             ends_at:
               validates_ends_at: 'Nie można utworzyć wpisu z wyprzedzeniem o miesiąc'
             starts_at:
               overlap: Istnieje inne zadanie o pokrywającym się czasie wykonania
             duration:
               greater_than: Czas trwania musi być większy od zera
+        external_auth:
+          basic: Błąd uwierzytelnienia
+  activemodel:
+    errors:
+      models:
+        work_time_form:
+          <<: *worktime

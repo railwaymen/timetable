@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable MethodLength
 
 require 'net/ldap'
@@ -6,7 +8,7 @@ require 'devise/strategies/authenticatable'
 module Devise
   module Strategies
     class LdapAuthenticatable < Authenticatable
-      LDAP_ASTERISK_SIGN = '\2a'.freeze
+      LDAP_ASTERISK_SIGN = '\2a'
 
       def authenticate!
         return false unless params[:user]

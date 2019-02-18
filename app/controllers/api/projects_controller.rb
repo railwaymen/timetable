@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   class ProjectsController < Api::BaseController
     respond_to :json
@@ -23,6 +25,11 @@ module Api
 
     def show
       @project = project_scope
+    end
+
+    def external_auth
+      @project = project_scope
+      @external_auth = @project.external_auth
     end
 
     def create

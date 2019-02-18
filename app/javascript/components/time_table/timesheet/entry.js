@@ -141,9 +141,12 @@ class Entry extends React.Component {
             throw new Error("Invalid response");
           }
         }).catch((e) => {
-          if (e.errors && (e.errors.starts_at || e.errors.ends_at)) {
-            const errors = Object.create(null);
-            errors.duration = (e.errors.starts_at || []).concat(e.errors.ends_at || [])
+          if (e.errors && (e.errors.starts_at || e.errors.ends_at || e.errors.task)) {
+            const errors = {};
+            if (e.errors.starts_at || e.errors.ends_at)
+              errors.duration = (e.errors.starts_at || []).concat(e.errors.ends_at || [])
+            if (e.errors.task)
+              errors.task = e.errors.task
             this.setState({ errors });
           } else {
             alert(I18n.t('activerecord.errors.models.work_time.basic'));
@@ -235,6 +238,7 @@ class Entry extends React.Component {
                 </div>
                 { project.work_times_allows_task ?
                   <div className="input task-url transparent ui">
+                    { errors.task ? <ErrorTooltip errors={errors.task} /> : null }
                     <input className="task" placeholder={I18n.t('apps.timesheet.task_url')} type="text" name="task" value={task} onChange={this.onChange} />
                   </div> : null }
               </div>

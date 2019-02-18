@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.id work_time.id
 json.updated_by_admin work_time.updated_by_admin
 json.project_id work_time.project_id

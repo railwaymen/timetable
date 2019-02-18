@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   class UsersController < Api::BaseController
     before_action :authenticate_notself, only: [:update]

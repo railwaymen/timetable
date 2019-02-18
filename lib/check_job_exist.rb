@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CheckJobExist
   def initialize(worker, args)
     @worker = worker

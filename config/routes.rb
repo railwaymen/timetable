@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sidekiq/web'
 require 'sidekiq-status/web'
 
@@ -32,9 +34,11 @@ TimeTable::Application.routes.draw do
     end
     resources :work_times
     resources :projects, only: %i[index show create update] do
+      get :external_auth, on: :member
       get :list, on: :collection
       get :simple, on: :collection
     end
+    resources :external_auths, only: %i[new create destroy]
   end
 
   resources :reports, only: [] do
