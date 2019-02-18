@@ -74,6 +74,11 @@ en:
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
     external_auths:
       authorized: 'Authorized with'
+      generate_link: Generate link
+      follow_link: Click to authorize
+      new: New auth
+      domain: Domain
+      token: Token
   common:
     rank: 'Rank'
     add: Add
@@ -120,3 +125,5 @@ en:
               overlap: There is another task overlapping the specified time
             duration:
               greater_than: Duration should be greater than zero
+        external_auth:
+          basic: Error during authorization

@@ -74,6 +74,11 @@ pl:
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
     external_auths:
       authorized: 'Zautoryzowano z'
+      generate_link: Wygeneruj link
+      follow_link: Kliknij by autoryzować
+      new: Nowe uwierzytelnienie
+      domain: Domena
+      token: Token
   common:
     rank: 'Ranking'
     add: Dodaj
@@ -164,3 +169,5 @@ pl:
               overlap: Istnieje inne zadanie o pokrywającym się czasie wykonania
             duration:
               greater_than: Czas trwania musi być większy od zera
+        external_auth:
+          basic: Błąd uwierzytelnienia
