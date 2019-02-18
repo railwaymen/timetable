@@ -40,9 +40,7 @@ class EditPeriod extends React.Component {
   }
 
   componentDidMount () {
-    let base = URI(window.location.href);
-    let queries = base.query(true);
-    let userId = queries['user_id'] ? queries['user_id'] : currentUser.id;
+    let userId = this.userId();
     let pathId = this.state.periodId;
     let periodId = isNaN(pathId) ? null : pathId;
 
@@ -192,6 +190,16 @@ class EditPeriod extends React.Component {
     })
   }
 
+  userId () {
+    const base = URI(window.location.href);
+    const queries = base.query(true);
+    return queries['user_id'] || currentUser.id;
+  }
+
+  cancelUrl () {
+    return `/accounting_periods?user_id=${this.userId()}`
+  }
+
   _renderPreloader () {
     return (
       <div>
@@ -273,7 +281,7 @@ class EditPeriod extends React.Component {
                 <input className={`${errors.position ? 'error' : ''} form-control`} type="number" name="position" value={period.position} onChange={this.onChange} />
               </div>
             </form>
-            <NavLink activeClassName="" className="btn btn-default" to="/accounting_periods">{I18n.t('common.cancel')}</NavLink>
+            <NavLink activeClassName="" className="btn btn-default" to={this.cancelUrl()}>{I18n.t('common.cancel')}</NavLink>
             <button onClick={this.onSubmit} className="btn btn-primary" type="button">{I18n.t('common.save')}</button>
           </div>
         </div>
