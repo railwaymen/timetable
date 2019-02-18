@@ -12,7 +12,7 @@ class Project extends React.Component {
   }
 
   _renderButtons () {
-    if (currentUser.admin || (this.state.project.leader_id === currentUser.id)) {
+    if (currentUser.admin || (this.props.project.leader_id === currentUser.id)) {
       return (
         <NavLink className="ui button icon basic blue" to={`/projects/${this.props.project.id}/edit`}>
           <i className="icon pencil"></i>
