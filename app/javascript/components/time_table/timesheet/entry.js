@@ -50,7 +50,7 @@ class Entry extends React.Component {
 
     this.setState({
       [name]: e.target.value
-    }, () => { this.removeErrorsFor(name); })
+    }, () => { this.removeErrorsFor(name); });
   }
 
   onKeyPress (e) {
@@ -60,7 +60,7 @@ class Entry extends React.Component {
   onDateChange (e) {
     this.setState({
       date: e.format('DD/MM/YYYY')
-    }, () => { this.removeErrorsFor('date'); })
+    }, () => { this.removeErrorsFor('date'); });
   }
 
   paste (object) {
@@ -69,9 +69,7 @@ class Entry extends React.Component {
       project: object.project,
       project_id: object.project.id,
       task: object.task
-    }, () => {
-      this.projectsDropdown.assignProject(object.project);
-    })
+    });
   }
 
   removeErrorsFor (name) {
@@ -246,7 +244,7 @@ class Entry extends React.Component {
                 <div className="project-dropdown">
                   { errors.project_id ? <ErrorTooltip errors={errors.project_id} /> : null }
                   <div>
-                    <ProjectsDropdown ref={(projectsDropdown) => { this.projectsDropdown = projectsDropdown }} updateProject={this.updateProject} projects={this.props.projects} />
+                    <ProjectsDropdown updateProject={this.updateProject} selectedProject={this.state.project} projects={this.props.projects} />
                   </div>
                 </div>
               </div>
