@@ -72,7 +72,7 @@ class WorkTimeForm
     auth = @work_time.external_auth
     return @external_payload = nil if auth.nil? || work_time.task.nil?
 
-    integration_payload = ExternalAuthStrategy.const_get(auth.provider).from_data(auth.data).integration_payload(work_time)
+    integration_payload = ExternalAuthStrategy.init_from_data(auth.provider, auth.data).integration_payload(work_time)
     @external_payload = if integration_payload.nil?
                           nil
                         else

@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
 class UpdateExternalAuth
-  attr_reader :project, :work_time_task
+  attr_reader :project, :work_time_task, :user_id
 
-  def initialize(project, work_time_task)
+  def initialize(project, work_time_task, user_id)
     @project = project
     @work_time_task = work_time_task
+    @user_id = user_id
   end
 
   def call
-    ExternalAuthStrategy.const_get(project.external_auth.provider.camelize).from_data(project.external_auth.data).update(
+    ExternalAuthStrategy.init_from_data(project.external_auth.provider.camelize, project.external_auth.data).update(
       'task_id' => work_time_task,
-      'time_spent' => calculate_sum
+      'time_spent' => calculate_sum,
+      'user_id' => user_id
     )
   end
 
