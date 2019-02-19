@@ -56,15 +56,15 @@ class WorkTimeForm
   end
 
   def update_external_auth
-    UpdateExternalAuthWorker.perform_async(work_time.project_id, work_time.external_task_id) if work_time.external_task_id
+    UpdateExternalAuthWorker.perform_async(work_time.project_id, work_time.external_task_id, work_time.id) if work_time.external_task_id
   end
 
   def update_old_task
     return if old_payload.blank?
 
-    project_id = work_time.saved_changes[:project_id] ? @work_time.saved_changes[:project_id][0] : @work_time.project_id
+    project_id = work_time.saved_changes[:project_id] ? work_time.saved_changes[:project_id][0] : work_time.project_id
     old_payload.each_value do |v|
-      UpdateExternalAuthWorker.perform_async(project_id, v['task_id'])
+      UpdateExternalAuthWorker.perform_async(project_id, v['task_id'], work_time.id)
     end
   end
 
