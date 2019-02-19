@@ -18,10 +18,10 @@ class UpdateExternalAuth
       'task_id' => work_time_task,
       'time_spent' => calculate_sum
     )
-    logger.info("Updating work_time_id: #{work_time.id} (task: #{work_time.external_task_id}, user_id: #{work_time.user_id}) in project_id: #{project.id} returned #{res}")
+    logger.info("Updating work_time_id: #{work_time.id} (task: #{work_time_task}, user_id: #{work_time.user_id}) in project_id: #{project.id} returned #{res}")
     res
   rescue StandardError => e
-    logger.error("Updating work_time_id: #{work_time.id} (task: #{work_time.external_task_id}, user_id: #{work_time.user_id}) in project_id: #{project.id} raised #{e}")
+    logger.error("Updating work_time_id: #{work_time.id} (task: #{work_time_task}, user_id: #{work_time.user_id}) in project_id: #{project.id} raised #{e}")
     raise e
   end
 
