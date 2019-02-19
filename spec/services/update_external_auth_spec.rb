@@ -9,8 +9,10 @@ RSpec.describe UpdateExternalAuth do
     end
   end
 
-  describe 'call' do
+  describe '#call' do
     it 'it calls external auth strategy with correct data' do
+      logger_double = double('logger')
+      allow(Logger).to receive(:new) { logger_double }
       auth = FactoryGirl.create(:external_auth, provider: 'Sample')
       strategy_double = double('strategy')
       task_id = 'TT-1'
@@ -19,7 +21,24 @@ RSpec.describe UpdateExternalAuth do
       FactoryGirl.create(:work_time, project: auth.project, integration_payload: { 'Sample' => { 'task_id' => 'TT-3' } })
 
       expect(strategy_double).to receive(:update).with('task_id' => task_id, 'time_spent' => tasks.map(&:duration).inject(:+))
-      described_class.new(auth.project, task_id).call
+      expect(logger_double).to receive(:info)
+      described_class.new(auth.project, task_id, tasks.first).call
+    end
+
+    it 'handles error' do
+      logger_double = double('logger')
+      allow(Logger).to receive(:new) { logger_double }
+      auth = FactoryGirl.create(:external_auth, provider: 'Sample')
+      strategy_double = double('strategy')
+      task_id = 'TT-1'
+      expect(ExternalAuthStrategy::Sample).to receive(:from_data).with(auth.data).and_return(strategy_double)
+      tasks = Array.new(2).map { FactoryGirl.create(:work_time, project: auth.project, integration_payload: { 'Sample' => { 'task_id' => task_id } }) }
+      FactoryGirl.create(:work_time, project: auth.project, integration_payload: { 'Sample' => { 'task_id' => 'TT-3' } })
+
+      error = StandardError.new('Error')
+      expect(strategy_double).to receive(:update).with('task_id' => task_id, 'time_spent' => tasks.map(&:duration).inject(:+)).and_raise(error)
+      expect(logger_double).to receive(:error)
+      expect { described_class.new(auth.project, task_id, tasks.first).call }.to raise_error(error)
     end
   end
 end
