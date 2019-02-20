@@ -240,10 +240,12 @@ class EditPeriod extends React.Component {
                 </select>
               </div>
               <div className="col-md-6 form-group">
-                <DatePicker locale="pl" onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at ? moment(period.starts_at, 'YYYY-MM-DD HH:mm') : null} name="starts_at" placeholder="From" onChange={this.onStartsAtChange} />
+                <DatePicker locale="pl" onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at ? moment(period.starts_at, 'YYYY-MM-DD HH:mm') : null} name="starts_at" placeholder="From" onChange={this.onStartsAtChange}
+                popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
               </div>
               <div className="col-md-6 form-group">
-                <DatePicker locale="pl" onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.ends_at ? moment(period.ends_at, 'YYYY-MM-DD HH:mm') : null} name="ends_at" placeholder="To" onSelect={this.onEndsAtChange} onChange={this.onEndsAtChange} />
+                <DatePicker locale="pl" onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.ends_at ? moment(period.ends_at, 'YYYY-MM-DD HH:mm') : null} name="ends_at" placeholder="To" onSelect={this.onEndsAtChange} onChange={this.onEndsAtChange}
+                popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
               </div>
               <div className="form-group">
                 <textarea className="form-control" name="note" placeholder="Note" onChange={this.onChange} value={period.note}></textarea>
