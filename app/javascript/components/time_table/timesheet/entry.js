@@ -264,7 +264,7 @@ class Entry extends React.Component {
                 <span id="duration">{durationHours}</span>
               </div>
               <div className="date">
-                <DatePicker className="datepicker" locale="pl" value={moment(date, 'DD/MM/YYYY').format('DD/MM')} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange}/>
+                <DatePicker selected={moment(date, 'DD/MM/YYYY')} className="datepicker" locale="pl" value={moment(date, 'DD/MM/YYYY').format('DD/MM')} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange}/>
               </div>
               <div className="action">
                 <button className="btn-start button fluid ui" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
