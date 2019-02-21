@@ -149,7 +149,8 @@ class WorkHours extends React.Component {
         <input className="start-input" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
         <input className="end-input" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
         <div className="edit-date input ui">
-          <DatePicker locale="pl" value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
+          <DatePicker locale="pl" value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange}
+            popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
         </div>
       </div>
     )
