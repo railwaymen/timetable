@@ -149,7 +149,8 @@ class WorkHours extends React.Component {
         <input className="start-input" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
         <input className="end-input" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
         <div className="edit-date input ui">
-          <DatePicker locale="pl" value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
+          <DatePicker locale="pl" value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange}
+            popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
         </div>
       </div>
     )
@@ -260,6 +261,22 @@ class WorkHours extends React.Component {
               .then((response) => this.props.assignModalInfo(response.data))
   }
 
+  descriptionText() {
+    const { workHours, editing } = this.state;
+    if (editing) {
+      return null;
+    }
+    return (
+      <span className="description-text">
+        {
+          workHours.project.lunch ?
+          'Omnonmonmonmnomnonmonmn' :
+          preserveLines((_.unescape(workHours.body) || '[No description]'))
+        }
+      </span>
+    );
+  }
+
   render () {
     const { projects } = this.props;
     const { workHours, projectEditable, openModal, editing, starts_at_hours, ends_at_hours, errors } = this.state;
@@ -276,7 +293,7 @@ class WorkHours extends React.Component {
               </span>
             </div>
             <div className="description-container" onClick={this.toggleEdit}>
-              <span className="description-text">{workHours.project.lunch ? 'Omnonmonmonmnomnonmonmn' : preserveLines((_.unescape(workHours.body) || '[No description]'))}</span>
+              {this.descriptionText()}
               { editing ? this._renderBodyEditable() : null }
             </div>
             <div className="project-container" onClick={this.toggleProjectEdit}>

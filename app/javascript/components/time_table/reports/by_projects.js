@@ -90,10 +90,12 @@ class ByProjects extends Report {
           <a className="glyphicon glyphicon-chevron-right next pull-left" href="javascript:void(0)" onClick={this.nextMonth}></a>
           <div className="clearfix">
             <div className="col-xs-3">
-              <DatePicker locale="pl" className="form-control" dateFormat="DD/MM/YYYY" selected={moment(from)} onChange={this.onFromDateChange} name="from" placeholder="from" />
+              <DatePicker locale="pl" className="form-control" dateFormat="DD/MM/YYYY" selected={moment(from)} onChange={this.onFromDateChange} name="from" placeholder="from"
+                popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
             </div>
             <div className="col-xs-3">
-              <DatePicker locale="pl" className="form-control" dateFormat="DD/MM/YYYY" selected={moment(to)} onChange={this.onToDateChange} name="to" placeholder="to" />
+              <DatePicker locale="pl" className="form-control" dateFormat="DD/MM/YYYY" selected={moment(to)} onChange={this.onToDateChange} name="to" placeholder="to"
+                popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
             </div>
             <div className="btn btn-default filter" onClick={this.onFilter}>
               {I18n.t('apps.reports.filter')}
