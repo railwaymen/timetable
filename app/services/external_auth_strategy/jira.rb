@@ -27,11 +27,8 @@ module ExternalAuthStrategy
       task_id = params['task_id'].upcase
       task = client.Issue.find(task_id)
       work_log_data = { comment: COMMENT, timeSpentSeconds: params['time_spent'] }
-      if (log = task.worklogs.first)
-        log.save!(work_log_data)
-      else
-        task.worklogs.build.save!(work_log_data)
-      end
+      log = task.worklogs.first || task.worklogs.build
+      log.save!(work_log_data, url_with_estimate_query(log.url))
     end
 
     def integration_payload(work_time)
@@ -79,6 +76,13 @@ module ExternalAuthStrategy
     end
 
     private
+
+    def url_with_estimate_query(url)
+      uri = URI.parse(url)
+      uri.path = "/#{uri.path}" unless uri.path.starts_with?('/')
+      uri.query = URI.encode_www_form(adjustEstimate: 'leave')
+      uri.to_s
+    end
 
     def new_client
       ::JIRA::Client.new(
