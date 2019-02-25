@@ -92,7 +92,8 @@ RSpec.describe ExternalAuthStrategy::Jira do
   describe 'update' do
     context 'work log exists' do
       it 'updates worklog' do
-        worklog_double = double('worklog')
+        path = 'example/rest'
+        worklog_double = double('worklog', url: path)
         worklogs_double = double('worklogs', first: worklog_double)
         issue_double = double('issue', key: 'ASD', worklogs: worklogs_double)
         issues_double = double('Issue')
@@ -101,7 +102,7 @@ RSpec.describe ExternalAuthStrategy::Jira do
 
         params = { 'task_id' => issue_double.key, 'time_spent' => 60 }
 
-        expect(worklog_double).to receive(:save!).with(comment: described_class::COMMENT, timeSpentSeconds: 60)
+        expect(worklog_double).to receive(:save!).with({ comment: described_class::COMMENT, timeSpentSeconds: 60 }, "/#{path}?adjustEstimate=leave")
 
         strategy = described_class.new('domain' => domain)
         strategy.update(params)
@@ -110,7 +111,8 @@ RSpec.describe ExternalAuthStrategy::Jira do
 
     context 'work log does not exist' do
       it 'creates new worklog' do
-        build_double = double('build')
+        path = 'example/rest'
+        build_double = double('build', url: path)
         worklogs_double = double('worklogs', first: nil, build: build_double)
         issue_double = double('issue', key: 'ASD', worklogs: worklogs_double)
         issues_double = double('Issue')
@@ -119,7 +121,7 @@ RSpec.describe ExternalAuthStrategy::Jira do
 
         params = { 'task_id' => issue_double.key, 'time_spent' => 60 }
 
-        expect(build_double).to receive(:save!).with(comment: described_class::COMMENT, timeSpentSeconds: 60)
+        expect(build_double).to receive(:save!).with({ comment: described_class::COMMENT, timeSpentSeconds: 60 }, "/#{path}?adjustEstimate=leave")
 
         strategy = described_class.new('domain' => domain)
         strategy.update(params)
