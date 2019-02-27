@@ -8,8 +8,8 @@ class UpdateExternalAuth
   def initialize(project, work_time_task, work_time)
     @project = project
     @work_time_task = work_time_task
-    @name = project.external_auth.provider.camelize
-    @logger = Logger.new("#{Rails.root}/log/#{@name}_auth.log")
+    @name = project.external_auth.provider
+    @logger = Logger.new(Rails.root.join('log', "#{@name.downcase}_auth.log"))
     @work_time = work_time
   end
 
