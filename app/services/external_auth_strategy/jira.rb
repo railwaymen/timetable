@@ -24,11 +24,21 @@ module ExternalAuthStrategy
     delegate :set_access_token, to: :client
 
     def update(params)
+      return destroy(params) if params['time_spent'].zero?
+
       task_id = params['task_id'].upcase
       task = client.Issue.find(task_id)
       work_log_data = { comment: COMMENT, timeSpentSeconds: params['time_spent'] }
       log = task.worklogs.first || task.worklogs.build
-      log.save!(work_log_data, url_with_estimate_query(log.url))
+      log.save!(work_log_data, log_url(log))
+    end
+
+    def destroy(params)
+      task = client.Issue.find(params['task_id'].upcase)
+      log = task.worklogs.first
+      return unless log
+
+      client.delete(log.patched_url)
     end
 
     def integration_payload(work_time)
@@ -77,9 +87,10 @@ module ExternalAuthStrategy
 
     private
 
-    def url_with_estimate_query(url)
-      uri = URI.parse(url)
-      uri.path = "/#{uri.path}" unless uri.path.starts_with?('/')
+    def log_url(log)
+      return log.patched_url if log.issue.timetracking['originalEstimateSeconds'].present?
+
+      uri = URI.parse(log.patched_url)
       uri.query = URI.encode_www_form(adjustEstimate: 'leave')
       uri.to_s
     end

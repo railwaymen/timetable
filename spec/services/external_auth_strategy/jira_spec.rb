@@ -92,17 +92,36 @@ RSpec.describe ExternalAuthStrategy::Jira do
   describe 'update' do
     context 'work log exists' do
       it 'updates worklog' do
-        path = 'example/rest'
-        worklog_double = double('worklog', url: path)
+        path = '/example/rest'
+        issue_double = double('issue', key: 'ASD', timetracking: { 'originalEstimateSeconds' => 60 })
+        worklog_double = double('worklog', patched_url: path, issue: issue_double)
         worklogs_double = double('worklogs', first: worklog_double)
-        issue_double = double('issue', key: 'ASD', worklogs: worklogs_double)
+        allow(issue_double).to receive(:worklogs) { worklogs_double }
         issues_double = double('Issue')
         allow(issues_double).to receive(:find).with(issue_double.key) { issue_double }
         allow(jira_double).to receive(:Issue) { issues_double }
 
         params = { 'task_id' => issue_double.key, 'time_spent' => 60 }
 
-        expect(worklog_double).to receive(:save!).with({ comment: described_class::COMMENT, timeSpentSeconds: 60 }, "/#{path}?adjustEstimate=leave")
+        expect(worklog_double).to receive(:save!).with({ comment: described_class::COMMENT, timeSpentSeconds: 60 }, path)
+
+        strategy = described_class.new('domain' => domain)
+        strategy.update(params)
+      end
+
+      it 'destroys worklog when time_spent is 0' do
+        path = '/example/rest'
+        issue_double = double('issue', key: 'ASD')
+        worklog_double = double('worklog', patched_url: path, issue: issue_double)
+        worklogs_double = double('worklogs', first: worklog_double)
+        allow(issue_double).to receive(:worklogs) { worklogs_double }
+        issues_double = double('Issue')
+        allow(issues_double).to receive(:find).with(issue_double.key) { issue_double }
+        allow(jira_double).to receive(:Issue) { issues_double }
+
+        params = { 'task_id' => issue_double.key, 'time_spent' => 0 }
+
+        expect(jira_double).to receive(:delete).with(worklog_double.patched_url)
 
         strategy = described_class.new('domain' => domain)
         strategy.update(params)
@@ -110,21 +129,44 @@ RSpec.describe ExternalAuthStrategy::Jira do
     end
 
     context 'work log does not exist' do
-      it 'creates new worklog' do
-        path = 'example/rest'
-        build_double = double('build', url: path)
-        worklogs_double = double('worklogs', first: nil, build: build_double)
-        issue_double = double('issue', key: 'ASD', worklogs: worklogs_double)
-        issues_double = double('Issue')
-        allow(issues_double).to receive(:find).with(issue_double.key) { issue_double }
-        allow(jira_double).to receive(:Issue) { issues_double }
+      context 'estimate' do
+        it 'creates new worklog' do
+          path = '/example/rest'
+          issue_double = double('issue', key: 'ASD', timetracking: { 'originalEstimateSeconds' => 60 })
+          build_double = double('build', patched_url: path, issue: issue_double)
+          worklogs_double = double('worklogs', first: nil, build: build_double)
+          allow(issue_double).to receive(:worklogs) { worklogs_double }
+          issues_double = double('Issue')
+          allow(issues_double).to receive(:find).with(issue_double.key) { issue_double }
+          allow(jira_double).to receive(:Issue) { issues_double }
 
-        params = { 'task_id' => issue_double.key, 'time_spent' => 60 }
+          params = { 'task_id' => issue_double.key, 'time_spent' => 60 }
 
-        expect(build_double).to receive(:save!).with({ comment: described_class::COMMENT, timeSpentSeconds: 60 }, "/#{path}?adjustEstimate=leave")
+          expect(build_double).to receive(:save!).with({ comment: described_class::COMMENT, timeSpentSeconds: 60 }, path)
 
-        strategy = described_class.new('domain' => domain)
-        strategy.update(params)
+          strategy = described_class.new('domain' => domain)
+          strategy.update(params)
+        end
+      end
+
+      context 'no estimate' do
+        it 'creates new worklog' do
+          path = '/example/rest'
+          issue_double = double('issue', key: 'ASD', timetracking: {})
+          build_double = double('build', patched_url: path, issue: issue_double)
+          worklogs_double = double('worklogs', first: nil, build: build_double)
+          allow(issue_double).to receive(:worklogs) { worklogs_double }
+          issues_double = double('Issue')
+          allow(issues_double).to receive(:find).with(issue_double.key) { issue_double }
+          allow(jira_double).to receive(:Issue) { issues_double }
+
+          params = { 'task_id' => issue_double.key, 'time_spent' => 60 }
+
+          expect(build_double).to receive(:save!).with({ comment: described_class::COMMENT, timeSpentSeconds: 60 }, "#{path}?adjustEstimate=leave")
+
+          strategy = described_class.new('domain' => domain)
+          strategy.update(params)
+        end
       end
     end
   end
