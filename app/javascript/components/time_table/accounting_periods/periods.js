@@ -260,6 +260,7 @@ class Periods extends React.Component {
 
   render () {
     const { periods, user, userId, generatePeriods } = this.state;
+    const MONTHS_IN_YEAR = 12;
 
     return (
       <div>
@@ -306,7 +307,7 @@ class Periods extends React.Component {
                 <div className="fields inline">
                   <div className="field">
                     <label>{I18n.t('apps.accounting_periods.periods_count')}</label>
-                    <input type="number" onChange={this.onGeneratePeriodsChange} value={generatePeriods.periods_count} name="periods_count" placeholder="periods count" />
+                    <input type="number" onChange={this.onGeneratePeriodsChange} max={MONTHS_IN_YEAR * 5} value={generatePeriods.periods_count} name="periods_count" placeholder="periods count" />
                   </div>
                   <div className="field">
                     <label>{I18n.t('apps.accounting_periods.starting_from_month')}</label>

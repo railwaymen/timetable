@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AccountingPeriodsGenerator
+  MAXIMUM_PERIODS_COUNT = 5 * 12 # 5 years
+
   def initialize(user_id:, periods_count:, start_on:)
     @user_id = user_id
     @periods_count = periods_count
@@ -11,7 +13,7 @@ class AccountingPeriodsGenerator
   def generate
     position = User.find(@user_id).accounting_periods.maximum(:position) || 0
     AccountingPeriod.transaction do
-      @periods_count.times do |n|
+      [@periods_count, MAXIMUM_PERIODS_COUNT].min.times do |n|
         ends_at = @start_on.end_of_month
         duration = @start_on.business_time_until(ends_at + 8.hours)
         AccountingPeriod.create! user_id: @user_id, starts_at: @start_on,
