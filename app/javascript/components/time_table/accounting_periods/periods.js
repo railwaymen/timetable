@@ -234,8 +234,8 @@ class Periods extends React.Component {
 
   _generateYears () {
     let options = [];
-    let currentYear = moment().format('YYYY');
-    let maxYear = parseInt(currentYear) + 10;
+    let currentYear = parseInt(moment().format('YYYY'), 10);
+    let maxYear = currentYear + 10;
 
     for (let i = currentYear; i <= maxYear; i++) {
       options.push(
@@ -260,6 +260,7 @@ class Periods extends React.Component {
 
   render () {
     const { periods, user, userId, generatePeriods } = this.state;
+    const MONTHS_IN_YEAR = 12;
 
     return (
       <div>
@@ -306,16 +307,16 @@ class Periods extends React.Component {
                 <div className="fields inline">
                   <div className="field">
                     <label>{I18n.t('apps.accounting_periods.periods_count')}</label>
-                    <input type="number" onChange={this.onGeneratePeriodsChange} value={generatePeriods.periods_count} name="periods_count" placeholder="periods count" />
+                    <input type="number" onChange={this.onGeneratePeriodsChange} max={MONTHS_IN_YEAR * 5} value={generatePeriods.periods_count} name="periods_count" placeholder="periods count" />
                   </div>
                   <div className="field">
                     <label>{I18n.t('apps.accounting_periods.starting_from_month')}</label>
-                    <select onChange={this.onGeneratePeriodsChange} value={generatePeriods.month} className="dropdown ui" id="month" type="text" name="month">
+                    <select onChange={this.onGeneratePeriodsChange} value={parseInt(generatePeriods.month, 10)} className="dropdown ui" id="month" type="text" name="month">
                       {this._generateMonths()}
                     </select>
                   </div>
                   <div className="field">
-                    <select onChange={this.onGeneratePeriodsChange} value={generatePeriods.year} className="dropdown ui" id="year" type="text" name="year">
+                    <select onChange={this.onGeneratePeriodsChange} value={parseInt(generatePeriods.year, 10)} className="dropdown ui" id="year" type="text" name="year">
                       {this._generateYears()}
                     </select>
                   </div>
