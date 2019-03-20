@@ -4,8 +4,6 @@ info:
   title: "Api"
 host: <%= request.host_with_port %>
 basePath: "/api"
-schemes:
-- "http"
 securityDefinitions:
   authentication:
     type: apiKey
@@ -33,8 +31,10 @@ paths:
           properties:
             email:
               type: 'string'
+              example: admin@example.com
             password:
               type: 'string'
+              example: password
       responses:
         200:
           description: 'Success'

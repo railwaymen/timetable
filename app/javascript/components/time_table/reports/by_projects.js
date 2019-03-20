@@ -1,6 +1,7 @@
 import React from 'react';
 import Report from './report.js';
 import * as Api from '../../shared/api.js';
+import { defaultDatePickerProps } from '../../shared/helpers.js';
 import _ from 'lodash';
 import ReportProjectRecord from './report_project_record.js';
 import { Redirect, NavLink } from 'react-router-dom';
@@ -90,12 +91,10 @@ class ByProjects extends Report {
           <a className="glyphicon glyphicon-chevron-right next pull-left" href="javascript:void(0)" onClick={this.nextMonth}></a>
           <div className="clearfix">
             <div className="col-xs-3">
-              <DatePicker locale="pl" className="form-control" dateFormat="DD/MM/YYYY" selected={moment(from)} onChange={this.onFromDateChange} name="from" placeholder="from"
-                popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
+              <DatePicker {...defaultDatePickerProps} className="form-control" dateFormat="DD/MM/YYYY" selected={moment(from)} onChange={this.onFromDateChange} name="from" placeholder="from" />
             </div>
             <div className="col-xs-3">
-              <DatePicker locale="pl" className="form-control" dateFormat="DD/MM/YYYY" selected={moment(to)} onChange={this.onToDateChange} name="to" placeholder="to"
-                popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
+              <DatePicker {...defaultDatePickerProps} className="form-control" dateFormat="DD/MM/YYYY" selected={moment(to)} onChange={this.onToDateChange} name="to" placeholder="to" />
             </div>
             <div className="btn btn-default filter" onClick={this.onFilter}>
               {I18n.t('apps.reports.filter')}

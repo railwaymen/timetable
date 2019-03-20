@@ -4,7 +4,7 @@ import * as Api from '../../../shared/api.js';
 import DatePicker from 'react-datepicker';
 import ProjectsList from '../projects_list.js';
 import ErrorTooltip from '../errors/error_tooltip.js';
-import { preserveLines } from '../../../shared/helpers.js';
+import { preserveLines, defaultDatePickerProps } from '../../../shared/helpers.js';
 
 class WorkHours extends React.Component {
   constructor (props) {
@@ -149,8 +149,7 @@ class WorkHours extends React.Component {
         <input className="start-input" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
         <input className="end-input" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
         <div className="edit-date input ui">
-          <DatePicker locale="pl" value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange}
-            popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
+          <DatePicker {...defaultDatePickerProps} value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
         </div>
       </div>
     )
