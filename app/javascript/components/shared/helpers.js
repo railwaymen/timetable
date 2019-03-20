@@ -15,3 +15,13 @@ export const unnullifyFields = (object) => {
   }
   return result;
 };
+
+export const popperModifiers = {
+  computeStyle: { gpuAcceleration: false }
+};
+
+export const defaultDatePickerProps = {
+  popperModifiers,
+  autoComplete: 'off',
+  locale: 'pl'
+}

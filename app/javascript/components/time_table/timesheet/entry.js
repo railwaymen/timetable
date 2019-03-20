@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker';
 import ErrorTooltip from './errors/error_tooltip.js';
 import * as Api from '../../shared/api.js';
 import * as Validations from '../../shared/validations.js';
+import { defaultDatePickerProps } from '../../shared/helpers.js';
 
 class Entry extends React.Component {
   constructor (props) {
@@ -262,8 +263,7 @@ class Entry extends React.Component {
                 <span id="duration">{durationHours}</span>
               </div>
               <div className="date">
-                <DatePicker selected={moment(date, 'DD/MM/YYYY')} className="datepicker" locale="pl" value={moment(date, 'DD/MM/YYYY').format('DD/MM')} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange}
-                  popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
+                <DatePicker {...defaultDatePickerProps} selected={moment(date, 'DD/MM/YYYY')} className="datepicker" value={moment(date, 'DD/MM/YYYY').format('DD/MM')} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange} />
               </div>
               <div className="action">
                 <button className="btn-start button fluid ui" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
