@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import URI from 'urijs';
 import * as Api from '../../shared/api.js';
+import { defaultDatePickerProps } from '../../shared/helpers.js'
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import { Redirect, NavLink } from 'react-router-dom';
@@ -240,12 +241,12 @@ class EditPeriod extends React.Component {
                 </select>
               </div>
               <div className="col-md-6 form-group">
-                <DatePicker locale="pl" onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at ? moment(period.starts_at, 'YYYY-MM-DD HH:mm') : null} name="starts_at" placeholder="From" onChange={this.onStartsAtChange}
-                popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
+                <DatePicker onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at ? moment(period.starts_at, 'YYYY-MM-DD HH:mm') : null} name="starts_at" placeholder="From" onChange={this.onStartsAtChange}
+                {...defaultDatePickerProps}/>
               </div>
               <div className="col-md-6 form-group">
-                <DatePicker locale="pl" onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.ends_at ? moment(period.ends_at, 'YYYY-MM-DD HH:mm') : null} name="ends_at" placeholder="To" onSelect={this.onEndsAtChange} onChange={this.onEndsAtChange}
-                popperModifiers={{ computeStyle: { gpuAcceleration: false } }}/>
+                <DatePicker onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.ends_at ? moment(period.ends_at, 'YYYY-MM-DD HH:mm') : null} name="ends_at" placeholder="To" onSelect={this.onEndsAtChange} onChange={this.onEndsAtChange}
+                {...defaultDatePickerProps}/>
               </div>
               <div className="form-group">
                 <textarea className="form-control" name="note" placeholder="Note" onChange={this.onChange} value={period.note}></textarea>
