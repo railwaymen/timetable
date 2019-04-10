@@ -196,11 +196,11 @@ class Entry extends React.Component {
     let formattedStartsAt = this.inclusiveParse(this.state.starts_at)
     let formattedEndsAt   = this.inclusiveParse(this.state.ends_at)
 
-    let duration = this.state.project.count_duration ? moment(formattedEndsAt.diff(formattedStartsAt)) : 0;
+    let duration = this.state.project.count_duration ? formattedEndsAt.diff(formattedStartsAt) : 0
 
     this.setState({
-      duration: duration._i,
-      durationHours: moment(duration - (60 * 60 * 1000)).format('HH:mm'),
+      duration: duration,
+      durationHours: moment.utc(duration).format('HH:mm'),
       starts_at: this.formattedHoursAndMinutes(formattedStartsAt),
       ends_at: this.formattedHoursAndMinutes(formattedEndsAt)
     }, () => {
@@ -220,7 +220,7 @@ class Entry extends React.Component {
   }
 
   render () {
-    const { duration, body, task, starts_at, ends_at, durationHours, date, errors, project } = this.state;
+    const { body, task, starts_at, ends_at, durationHours, date, errors, project } = this.state;
 
     return (
       <div className="new-entry" id="content">
