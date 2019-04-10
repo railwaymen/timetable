@@ -4,6 +4,7 @@ import WorkHoursDay from './work_hours_day.js';
 import * as Api from '../../../shared/api.js';
 import moment from 'moment';
 import URI from 'urijs';
+import padStart from 'lodash/padStart';
 
 class EntryHistory extends React.Component {
   constructor (props) {
@@ -386,7 +387,7 @@ class EntryHistory extends React.Component {
           <td>
             { version.body ?
               <span className={(version.event === 'update' ? 'changed' : '')}>{new String(version.body).replace(/\n/g, '<br />')}</span>
-              : <span>{new String(version.body_was).replace(/\n/g, '<br />')}</span> }
+              : <span>{new String(version.body_was || '').replace(/\n/g, '<br />')}</span> }
           </td>
           <td>
             { version.starts_at ?
@@ -465,6 +466,23 @@ class EntryHistory extends React.Component {
     )
   }
 
+  _renderTaskDuration() {
+    const { info } = this.state;
+    if (!info || !info.task_preview)
+      return null;
+    const secondsInMinute = 60;
+    const minutesInHour = 60;
+    const hours = String(Math.floor(info.sum_duration / secondsInMinute / minutesInHour));
+    const minutes = padStart(
+      String(Math.floor((info.sum_duration / secondsInMinute) % minutesInHour)), 2, '0'
+    );
+    return (
+      <p>
+        {`${info.task_preview}: ${hours}:${minutes}`}
+      </p>
+    )
+  }
+
   render () {
     const { info, filteredUser } = this.state;
 
@@ -498,20 +516,21 @@ class EntryHistory extends React.Component {
               { info ? info.body : <div className="preloader"></div> }
             </div>
             <div className="content">
-              <form>
-                <table className="history table table-striped">
-                  <tbody>
-                    { this.state.info ? this._renderVersions() :
-                        <tr>
-                          <td><div className="preloader"></div></td>
-                          <td><div className="preloader"></div></td>
-                          <td><div className="preloader"></div></td>
-                          <td><div className="preloader"></div></td>
-                        </tr>
-                    }
-                  </tbody>
-                </table>
-              </form>
+              <table className="history table table-striped">
+                <tbody>
+                  { this.state.info ? this._renderVersions() :
+                      <tr>
+                        <td><div className="preloader"></div></td>
+                        <td><div className="preloader"></div></td>
+                        <td><div className="preloader"></div></td>
+                        <td><div className="preloader"></div></td>
+                      </tr>
+                  }
+                </tbody>
+              </table>
+              {
+                this._renderTaskDuration()
+              }
             </div>
             <div className="actions">
               <button className="button cancel right ui">
