@@ -386,8 +386,8 @@ class EntryHistory extends React.Component {
           </td>
           <td>
             { version.body ?
-              <span className={(version.event === 'update' ? 'changed' : '')}>{new String(version.body).replace(/\n/g, '<br />')}</span>
-              : <span>{new String(version.body_was || '').replace(/\n/g, '<br />')}</span> }
+              <span className={(version.event === 'update' ? 'changed' : '')}>{(version.body || '').replace(/\n/g, '<br />')}</span>
+              : <span>{(version.body_was || '').replace(/\n/g, '<br />')}</span> }
           </td>
           <td>
             { version.starts_at ?
