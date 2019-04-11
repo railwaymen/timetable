@@ -4,7 +4,7 @@ import WorkHoursDay from './work_hours_day.js';
 import * as Api from '../../../shared/api.js';
 import moment from 'moment';
 import URI from 'urijs';
-import padStart from 'lodash/padStart';
+import { displayDuration } from '../../../shared/helpers';
 
 class EntryHistory extends React.Component {
   constructor (props) {
@@ -296,18 +296,8 @@ class EntryHistory extends React.Component {
   }
 
   totalWorkHours () {
-    let total = _.sumBy(this.state.workHours, (w) => w.duration)
-
-    let time = moment.duration(total, 'seconds').asMinutes();
-
-    let hours = Math.floor(time / 60);
-    let minutes = time % 60;
-
-    if (hours < 10) hours = `0${hours}`;
-    if (minutes < 10) minutes = `0${minutes}`;
-
     this.setState({
-      total: `${hours}:${minutes}`
+      total: displayDuration(_.sumBy(this.state.workHours, (w) => w.duration))
     });
   }
 
@@ -348,15 +338,7 @@ class EntryHistory extends React.Component {
     if (!value || parseInt(value) === 0) {
       return '00:00'
     } else {
-      let time = moment.duration(value, 'seconds').asMinutes();
-
-      let hours = Math.floor(time / 60);
-      let minutes = time % 60;
-
-      if (hours < 10) hours = `0${hours}`;
-      if (minutes < 10) minutes = `0${minutes}`;
-
-      return `${hours}:${minutes}`
+      return displayDuration(value);
     }
   }
 
@@ -470,17 +452,11 @@ class EntryHistory extends React.Component {
     const { info } = this.state;
     if (!info || !info.task_preview)
       return null;
-    const secondsInMinute = 60;
-    const minutesInHour = 60;
-    const hours = String(Math.floor(info.sum_duration / secondsInMinute / minutesInHour));
-    const minutes = padStart(
-      String(Math.floor((info.sum_duration / secondsInMinute) % minutesInHour)), 2, '0'
-    );
     return (
       <p>
-        {`${info.task_preview}: ${hours}:${minutes}`}
+        {`${info.task_preview}: ${displayDuration(info.sum_duration)}`}
       </p>
-    )
+    );
   }
 
   render () {
