@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import WorkHours from './work_hours.js';
 import _ from 'lodash';
 import moment from 'moment';
+import { displayDuration } from '../../../shared/helpers';
 
 class WorkHoursDay extends React.Component {
   constructor (props) {
@@ -42,16 +43,7 @@ class WorkHoursDay extends React.Component {
   }
 
   totalDurationViaProps () {
-    let total = _.sumBy(this.props.day, (w) => w.duration)
-
-    let time = moment.duration(total, 'seconds');
-    let hours = time.hours();
-    let minutes = time.minutes();
-
-    if (hours < 10) hours = `0${hours}`;
-    if (minutes < 10) minutes = `0${minutes}`;
-
-    return `${hours}:${minutes}`;
+    return displayDuration(_.sumBy(this.props.day, (w) => w.duration))
   }
 
   displayDayInfo () {
