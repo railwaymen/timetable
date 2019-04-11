@@ -4,6 +4,7 @@ import WorkHoursDay from './work_hours_day.js';
 import * as Api from '../../../shared/api.js';
 import moment from 'moment';
 import URI from 'urijs';
+import { displayDuration } from '../../../shared/helpers';
 
 class EntryHistory extends React.Component {
   constructor (props) {
@@ -295,18 +296,8 @@ class EntryHistory extends React.Component {
   }
 
   totalWorkHours () {
-    let total = _.sumBy(this.state.workHours, (w) => w.duration)
-
-    let time = moment.duration(total, 'seconds').asMinutes();
-
-    let hours = Math.floor(time / 60);
-    let minutes = time % 60;
-
-    if (hours < 10) hours = `0${hours}`;
-    if (minutes < 10) minutes = `0${minutes}`;
-
     this.setState({
-      total: `${hours}:${minutes}`
+      total: displayDuration(_.sumBy(this.state.workHours, (w) => w.duration))
     });
   }
 
@@ -347,15 +338,7 @@ class EntryHistory extends React.Component {
     if (!value || parseInt(value) === 0) {
       return '00:00'
     } else {
-      let time = moment.duration(value, 'seconds').asMinutes();
-
-      let hours = Math.floor(time / 60);
-      let minutes = time % 60;
-
-      if (hours < 10) hours = `0${hours}`;
-      if (minutes < 10) minutes = `0${minutes}`;
-
-      return `${hours}:${minutes}`
+      return displayDuration(value);
     }
   }
 
@@ -385,8 +368,8 @@ class EntryHistory extends React.Component {
           </td>
           <td>
             { version.body ?
-              <span className={(version.event === 'update' ? 'changed' : '')}>{new String(version.body).replace(/\n/g, '<br />')}</span>
-              : <span>{new String(version.body_was).replace(/\n/g, '<br />')}</span> }
+              <span className={(version.event === 'update' ? 'changed' : '')}>{(version.body || '').replace(/\n/g, '<br />')}</span>
+              : <span>{(version.body_was || '').replace(/\n/g, '<br />')}</span> }
           </td>
           <td>
             { version.starts_at ?
@@ -465,6 +448,17 @@ class EntryHistory extends React.Component {
     )
   }
 
+  _renderTaskDuration() {
+    const { info } = this.state;
+    if (!info || !info.task_preview)
+      return null;
+    return (
+      <p>
+        {`${info.task_preview}: ${displayDuration(info.sum_duration)}`}
+      </p>
+    );
+  }
+
   render () {
     const { info, filteredUser } = this.state;
 
@@ -498,20 +492,21 @@ class EntryHistory extends React.Component {
               { info ? info.body : <div className="preloader"></div> }
             </div>
             <div className="content">
-              <form>
-                <table className="history table table-striped">
-                  <tbody>
-                    { this.state.info ? this._renderVersions() :
-                        <tr>
-                          <td><div className="preloader"></div></td>
-                          <td><div className="preloader"></div></td>
-                          <td><div className="preloader"></div></td>
-                          <td><div className="preloader"></div></td>
-                        </tr>
-                    }
-                  </tbody>
-                </table>
-              </form>
+              <table className="history table table-striped">
+                <tbody>
+                  { this.state.info ? this._renderVersions() :
+                      <tr>
+                        <td><div className="preloader"></div></td>
+                        <td><div className="preloader"></div></td>
+                        <td><div className="preloader"></div></td>
+                        <td><div className="preloader"></div></td>
+                      </tr>
+                  }
+                </tbody>
+              </table>
+              {
+                this._renderTaskDuration()
+              }
             </div>
             <div className="actions">
               <button className="button cancel right ui">
