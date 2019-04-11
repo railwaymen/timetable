@@ -2,6 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class ProjectStats extends React.Component {
+  projectLabel() {
+    const data = this.props.stats[0];
+    if (currentUser.admin || currentUser.leader) {
+      return (<a href={`/projects/${data.project_id}/work_times`}>
+        {data.name}
+      </a>);
+    } else {
+      return data.name;
+    }
+  }
   render () {
     const stats = this.props.stats;
     const data  = stats[0];
@@ -10,7 +20,7 @@ class ProjectStats extends React.Component {
       <div className="five wide column card">
         <div className="title">
           <h3>
-            {data.name}
+            {this.projectLabel()}
             <div className="badge" style={{ 'backgroundColor': '#' + data.color, width: '18px', height: '18px', display: 'block' }}></div>
           </h3>
           <p className="center"> {data.leader ? data.leader.name : ''} </p>

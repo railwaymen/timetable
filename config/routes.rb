@@ -37,6 +37,7 @@ TimeTable::Application.routes.draw do
       get :external_auth, on: :member
       get :list, on: :collection
       get :simple, on: :collection
+      get :work_times, on: :member
     end
     resources :external_auths, only: %i[new create destroy]
   end

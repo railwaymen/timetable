@@ -379,4 +379,39 @@ RSpec.describe Api::ProjectsController do
       put :external_auth, params: { id: external_auth.project_id }, format: :json
     end
   end
+
+  describe '#work_times' do
+    before { sign_in admin }
+    context 'range params' do
+      it 'returns correct work times' do
+        time = Time.new(2019, 4, 4).in_time_zone
+        project = FactoryGirl.create :project
+
+        work_time = FactoryGirl.create :work_time, user: user, project: project, starts_at: time, ends_at: time + 30.minutes
+        FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.zone.now, ends_at: Time.zone.now + 1.hour
+
+        get :work_times, params: { id: project, from: time, to: time + 2.days }, format: :json
+        expect(response).to be_ok
+        parsed_body = JSON.parse(response.body)
+        expect(parsed_body.dig('project', 'name')).to eq project.name
+        expect(parsed_body['work_times'].map { |wt| wt['id'] }).to match_array([work_time.id])
+      end
+    end
+
+    context 'no range params' do
+      it 'returns work times in current week' do
+        current_time = Time.zone.now
+        project = FactoryGirl.create :project
+
+        work_time = FactoryGirl.create :work_time, user: user, project: project, starts_at: current_time - 30.minutes, ends_at: current_time - 25.minutes
+        FactoryGirl.create :work_time, user: user, project: project, starts_at: current_time - 70.days - 8.hours, ends_at: current_time - 70.days - 7.hours
+
+        get :work_times, params: { id: project }, format: :json
+        expect(response).to be_ok
+        parsed_body = JSON.parse(response.body)
+        expect(parsed_body.dig('project', 'name')).to eq project.name
+        expect(parsed_body['work_times'].map { |wt| wt['id'] }).to match_array([work_time.id])
+      end
+    end
+  end
 end

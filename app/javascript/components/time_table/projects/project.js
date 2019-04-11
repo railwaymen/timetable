@@ -21,13 +21,24 @@ class Project extends React.Component {
     }
   }
 
+  _renderProjectName () {
+    const { project } = this.props;
+    if (currentUser.admin || currentUser.leader) {
+      return (<a href={`/projects/${project.id}/work_times`}>
+        {project.name}
+      </a>);
+    } else {
+      return project.name;
+    }
+  }
+
   render () {
     const { project } = this.props;
 
     return (
       <tr>
         <td></td>
-        <td>{project.name}</td>
+        <td>{this._renderProjectName()}</td>
         <td>{project.leader ? `${project.leader.first_name} ${project.leader.last_name}` : ''}</td>
         <td>
           <div className="ui buttons">
