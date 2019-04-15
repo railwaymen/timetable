@@ -12,7 +12,7 @@ class Project extends React.Component {
   }
 
   _renderButtons () {
-    if (currentUser.admin || currentUser.manager || (this.props.project.leader_id === currentUser.id)) {
+    if (currentUser.canManageProject(this.props.project)) {
       return (
         <NavLink className="ui button icon basic blue" to={`/projects/${this.props.project.id}/edit`}>
           <i className="icon pencil"></i>
@@ -23,7 +23,7 @@ class Project extends React.Component {
 
   _renderProjectName () {
     const { project } = this.props;
-    if (currentUser.admin || currentUser.leader) {
+    if (currentUser.canManageProject(project)) {
       return (<a href={`/projects/${project.id}/work_times`}>
         {project.name}
       </a>);

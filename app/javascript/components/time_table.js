@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import '../models/currentUser';
 import Navbar from './shared/navbar.js';
 
 import Projects from './time_table/projects/projects.js';

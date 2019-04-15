@@ -18,7 +18,7 @@ class Navbar extends React.Component {
           { currentUser.admin &&
             <NavLink className="item" to="/users">{I18n.t('common.people')}</NavLink> }
           <NavLink className="item" to="/projects">{I18n.t('common.projects')}</NavLink>
-          <NavLink className="item" to={currentUser.admin || currentUser.manager || currentUser.leader ? '/reports/work_times/by_projects' : '/reports/work_times/by_users'}>{I18n.t('common.reports')}</NavLink>
+          <NavLink className="item" to={currentUser.isSuperUser() ? '/reports/work_times/by_projects' : '/reports/work_times/by_users'}>{I18n.t('common.reports')}</NavLink>
           <NavLink className="item" to="/accounting_periods">{I18n.t('common.accounting_periods')}</NavLink>
           <NavLink className="item" to="/timesheet">{I18n.t('common.timesheet')}</NavLink>
           <div className="right menu">

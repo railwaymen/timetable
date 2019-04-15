@@ -381,9 +381,9 @@ RSpec.describe Api::ProjectsController do
   end
 
   describe '#work_times' do
-    before { sign_in admin }
     context 'range params' do
       it 'returns correct work times' do
+        sign_in admin
         time = Time.new(2019, 4, 4).in_time_zone
         project = FactoryGirl.create :project
 
@@ -400,6 +400,7 @@ RSpec.describe Api::ProjectsController do
 
     context 'no range params' do
       it 'returns work times in current week' do
+        sign_in admin
         current_time = Time.zone.now
         project = FactoryGirl.create :project
 
@@ -411,6 +412,16 @@ RSpec.describe Api::ProjectsController do
         parsed_body = JSON.parse(response.body)
         expect(parsed_body.dig('project', 'name')).to eq project.name
         expect(parsed_body['work_times'].map { |wt| wt['id'] }).to match_array([work_time.id])
+      end
+
+      it 'filters out work_times when normal user' do
+        sign_in user
+        time = Time.new(2019, 4, 4).in_time_zone
+        project = FactoryGirl.create(:project)
+
+        expect do
+          get :work_times, params: { id: project, from: time, to: time + 2.days }, format: :json
+        end.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end

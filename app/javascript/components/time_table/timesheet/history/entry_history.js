@@ -464,7 +464,7 @@ class EntryHistory extends React.Component {
 
     return (
       <div className="content-wrapper">
-        { (currentUser.admin || currentUser.manager || currentUser.leader) && filteredUser ?
+        { currentUser.isSuperUser() && filteredUser ?
           <h1 className="active-user-timesheet">
             { filteredUser.prev_id ?
               <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" /> : null }

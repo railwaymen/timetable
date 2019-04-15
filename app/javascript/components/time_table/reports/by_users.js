@@ -84,7 +84,7 @@ class ByUsers extends Report {
     return (
       <div id="content">
         <div className="pull-left">
-          { (currentUser.admin || currentUser.manager || currentUser.is_leader) ?
+          { currentUser.isSuperUser() ?
             <select id="filter-list" className="form-control" name="list" onChange={this.onFilterChange} defaultValue={list}>
               { currentUser.admin || currentUser.manager ?
                 <option value="all">{I18n.t('apps.reports.all')}</option> : null }
@@ -94,7 +94,7 @@ class ByUsers extends Report {
             </select> : null }
         </div>
         <h3 className="clearfix col-md-offset-4 text-muted">
-          { (currentUser.admin || currentUser.manager || currentUser.is_leader) ?
+          { currentUser.isSuperUser() ?
             <div className="btn-group pull-right">
               <NavLink className="btn btn-default" to="/reports/work_times/by_projects">{I18n.t('apps.reports.by_projects')}</NavLink>
               <div className="btn btn-default active">{I18n.t('apps.reports.by_people')}</div>

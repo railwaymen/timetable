@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 class ProjectStats extends React.Component {
   projectLabel() {
     const data = this.props.stats[0];
-    if (currentUser.admin || currentUser.leader) {
+    if (currentUser.canManageProject({ id: data.project_id })) {
       return (<a href={`/projects/${data.project_id}/work_times`}>
         {data.name}
       </a>);
