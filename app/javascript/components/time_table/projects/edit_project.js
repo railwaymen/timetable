@@ -128,7 +128,7 @@ class EditProject extends React.Component {
     if (!projectId || projectId === project.id ) {
       return (
         <form>
-          { (currentUser.admin || currentUser.manager) ?
+          { currentUser.isSuperUser() ?
             <div>
               <div className="form-group">
                 <input className="form-control" type="text" name="name" placeholder={I18n.t('common.name')} onChange={this.onChange} value={project.name} autoFocus />
