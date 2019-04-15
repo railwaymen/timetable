@@ -27,6 +27,17 @@ module Api
       @project = project_scope
     end
 
+    def work_times
+      @project = project_scope
+      search_params = if params[:from].present? && params[:to].present?
+                        { starts_at: Time.zone.parse(params[:from])..Time.zone.parse(params[:to]) }
+                      else
+                        time = Time.zone.now
+                        { starts_at: time.beginning_of_week..time.end_of_week }
+                      end
+      @work_times = WorkTimePolicy::Scope.new(current_user, @project.work_times.active.where(search_params)).resolve.includes(:user)
+    end
+
     def external_auth
       @project = project_scope
       @external_auth = @project.external_auth

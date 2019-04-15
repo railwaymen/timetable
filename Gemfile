@@ -44,6 +44,7 @@ gem 'jwt', require: false
 gem 'webpacker'
 gem 'react-rails'
 gem 'rails-ujs'
+gem 'pundit'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-marionette', '2.4.4'

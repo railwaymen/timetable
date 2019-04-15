@@ -8,6 +8,8 @@ import { Redirect, NavLink } from 'react-router-dom';
 import URI from 'urijs';
 import DatePicker from 'react-datepicker';
 import PropTypes from 'prop-types';
+import HorizontalArrows from '../../shared/horizontal_arrows';
+import DateRangeFilter from '../../shared/date_range_filter';
 
 class ByProjects extends Report {
   static propTypes = {
@@ -86,20 +88,10 @@ class ByProjects extends Report {
             <div className="btn btn-default active">{I18n.t('apps.reports.by_projects')}</div>
             <NavLink className="btn btn-default" to="/reports/work_times/by_users">{I18n.t('apps.reports.by_people')}</NavLink>
           </div>
-          <a className="glyphicon glyphicon-chevron-left previous pull-left" href="javascript:void(0)" onClick={this.prevMonth}></a>
-          <div className="current-month pull-left">{this.detectMonth(from, to)}</div>
-          <a className="glyphicon glyphicon-chevron-right next pull-left" href="javascript:void(0)" onClick={this.nextMonth}></a>
-          <div className="clearfix">
-            <div className="col-xs-3">
-              <DatePicker {...defaultDatePickerProps} className="form-control" dateFormat="DD/MM/YYYY" selected={moment(from)} onChange={this.onFromDateChange} name="from" placeholder="from" />
-            </div>
-            <div className="col-xs-3">
-              <DatePicker {...defaultDatePickerProps} className="form-control" dateFormat="DD/MM/YYYY" selected={moment(to)} onChange={this.onToDateChange} name="to" placeholder="to" />
-            </div>
-            <div className="btn btn-default filter" onClick={this.onFilter}>
-              {I18n.t('apps.reports.filter')}
-            </div>
-          </div>
+          <HorizontalArrows onLeftClick={this.prevMonth} onRightClick={this.nextMonth}>
+            <div className="current-month pull-left">{this.detectMonth(from, to)}</div>
+          </HorizontalArrows>
+          <DateRangeFilter className="clearfix" from={from} to={to} onFilter={this.onFilter} onFromChange={this.onFromDateChange} onToChange={this.onToDateChange} />
         </h3>
         { projects.map((project, index) => (
           <ReportProjectRecord key={index} reportRows={reports[project]} from={from} to={to} redirectTo={this.redirectTo} />

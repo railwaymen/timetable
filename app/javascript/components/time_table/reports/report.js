@@ -1,5 +1,6 @@
 import React from 'react';
 import URI from 'urijs';
+import { monthFromRange } from '../../shared/helpers';
 
 class Report extends React.Component {
   constructor (props) {
@@ -66,14 +67,14 @@ class Report extends React.Component {
     let from = moment(this.state.from).subtract(1, 'month').format();
     let to = moment(from).endOf('month').format();
 
-    this.getReports({ from: from, to: to });
+    this.getReports({ from, to });
   }
 
   nextMonth () {
     let from = moment(this.state.from).add(1, 'month').format();
     let to = moment(from).endOf('month').format();
 
-    this.getReports({ from: from, to: to });
+    this.getReports({ from, to });
   }
 
   redirectTo (location) {
@@ -83,9 +84,9 @@ class Report extends React.Component {
 
   detectMonth (from, to) {
     if (moment(from).month() === moment(to).month()) {
-      return moment(from).format('MMMM YYYY')
+      return moment(from).format('MMMM YYYY');
     } else {
-      return 'Custom'
+      return I18n.t('common.custom');
     }
   }
 }

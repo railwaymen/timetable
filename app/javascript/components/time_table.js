@@ -1,10 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import '../models/currentUser';
 import Navbar from './shared/navbar.js';
 
 import Projects from './time_table/projects/projects.js';
 import ProjectsList from './time_table/projects/projects_list.js';
+import ProjectWorkTimes from './time_table/projects/project_work_times';
 import EditProject from './time_table/projects/edit_project.js';
 import ExternalAuth from './time_table/projects/external_auth';
 import Users from './time_table/users/users.js';
@@ -34,6 +35,7 @@ class TimeTable extends React.Component {
             <Route path='/users/new' exact component={EditUser} />
             <Route path='/projects' exact component={Projects} />
             <Route path='/projects/list' exact component={ProjectsList} />
+            <Route path='/projects/:id/work_times' component={ProjectWorkTimes} />
             <Route path='/projects/:id/edit' component={EditProject} />
             <Route path='/projects/:id/external_authorization' component={ExternalAuth} />
             <Route path='/projects/new' component={EditProject} />

@@ -50,7 +50,7 @@ class ProjectsList extends React.Component {
               <NavLink className="btn btn-default" exact to="/projects">{I18n.t('common.rank')}</NavLink>
               <NavLink className="btn btn-default active" to="/projects/list">{I18n.t('common.all')}</NavLink>
             </div>
-            { (currentUser.admin || currentUser.manager) ? <NavLink to="/projects/new" className="btn btn-default pull-left">{I18n.t('common.add')}</NavLink> : null }
+            { currentUser.isSuperUser() ? <NavLink to="/projects/new" className="btn btn-default pull-left">{I18n.t('common.add')}</NavLink> : null }
             <div className="btn-group pull-left">
               <select name="visible" id="filter" className="form-control" onChange={this.onChange} value={visible}>
                 <option value="active">{I18n.t('apps.projects.filter_active')}</option>

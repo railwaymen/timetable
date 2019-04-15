@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import WorkHours from './work_hours.js';
 import _ from 'lodash';
 import moment from 'moment';
-import { displayDuration } from '../../../shared/helpers';
+import { displayDuration, displayDayInfo } from '../../../shared/helpers';
 
 class WorkHoursDay extends React.Component {
   constructor (props) {
@@ -46,20 +46,6 @@ class WorkHoursDay extends React.Component {
     return displayDuration(_.sumBy(this.props.day, (w) => w.duration))
   }
 
-  displayDayInfo () {
-    const day = this.props.day ? this.props.day[0] : {};
-    const today = moment();
-    const yesterday = moment().subtract(1, 'day');
-
-    if (today.isSame(day.starts_at, 'day')) {
-      return I18n.t('common.today')  // 'Today'
-    } else if (yesterday.isSame(day.starts_at, 'day')) {
-      return I18n.t('common.yesterday')
-    } else {
-      return moment(day.starts_at).format('ddd DD, MMMM YYYY')
-    }
-  }
-
   updateWorkHours (component, deviation) {
     if (moment(component.state.workHours.starts_at).format('YYYYMMDD') !== this.props.fingerPrint) {
       this.props.removeWorkHours(component, () => { this.props.pushEntry(component.state.workHours) });
@@ -78,7 +64,7 @@ class WorkHoursDay extends React.Component {
         <header>
           <div className="date-container">
             <span className="title">
-              { this.displayDayInfo() }
+              { displayDayInfo(day ? day[0].starts_at : undefined) }
             </span>
             <span className="super">{total}</span>
             { day.map((workHours, index) => (

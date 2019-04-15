@@ -5,6 +5,10 @@ import DatePicker from 'react-datepicker';
 import ProjectsList from '../projects_list.js';
 import ErrorTooltip from '../errors/error_tooltip.js';
 import { preserveLines, defaultDatePickerProps } from '../../../shared/helpers.js';
+import WorkTimeTask from '../../../shared/work_time_task';
+import WorkTimeDuration from '../../../shared/work_time_duration';
+import WorkTimeTime from '../../../shared/work_time_time';
+import WorkTimeDescription from '../../../shared/work_time_description';
 
 class WorkHours extends React.Component {
   constructor (props) {
@@ -41,19 +45,10 @@ class WorkHours extends React.Component {
 
   componentDidMount () {
     this.setState({
-      starts_at_hours: this.formattedHoursAndMinutes(this.state.workHours.starts_at),
-      ends_at_hours: this.formattedHoursAndMinutes(this.state.workHours.ends_at),
+      starts_at_hours: moment(this.state.workHours.starts_at).format('HH:mm'),
+      ends_at_hours: moment(this.state.workHours.ends_at).format('HH:mm'),
       date: moment(this.state.workHours.starts_at).format('DD/MM/YYYY')
     })
-  }
-
-  formattedHoursAndMinutes (time) {
-    let hours = moment(time).hours();
-    let minutes = moment(time).minutes();
-    if (hours < 10) hours = `0${hours}`;
-    if (minutes < 10) minutes = `0${minutes}`;
-
-    return `${hours}:${minutes}`;
   }
 
   formattedHoursAndMinutesDuration (time) {
@@ -116,13 +111,14 @@ class WorkHours extends React.Component {
   recountTime (e) {
     const { starts_at_hours, ends_at_hours } = this.state;
 
-    let formattedStartsAtTime = this.formattedHoursAndMinutes(moment(starts_at_hours, 'HH:mm'));
-    let formattedEndsAtTime = this.formattedHoursAndMinutes(moment(ends_at_hours, 'HH:mm'));
+    // parse and reformat as starts_at_hours are input from user
+    let formattedStartsAtTime = moment(starts_at_hours, 'HH:mm').format('HH:mm');
+    let formattedEndsAtTime = moment(ends_at_hours, 'HH:mm').format('HH:mm');
 
     this.setState({
       starts_at_hours: formattedStartsAtTime,
-      ends_at_hours: formattedEndsAtTime
-    })
+      ends_at_hours: formattedEndsAtTime,
+    });
   }
 
   onDateChange (value) {
@@ -270,7 +266,7 @@ class WorkHours extends React.Component {
         {
           workHours.project.lunch ?
           'Omnonmonmonmnomnonmonmn' :
-          preserveLines((_.unescape(workHours.body) || '[No description]'))
+          WorkTimeDescription(workHours)
         }
       </span>
     );
@@ -278,7 +274,7 @@ class WorkHours extends React.Component {
 
   render () {
     const { projects } = this.props;
-    const { workHours, projectEditable, openModal, editing, starts_at_hours, ends_at_hours, errors } = this.state;
+    const { workHours, projectEditable, editing, errors } = this.state;
 
     return (
       <div className="time-entries-list-container" style={!_.isEmpty(errors) ? { 'backgroundColor': '#FF9177', position: 'relative' } : {}}>
@@ -286,11 +282,7 @@ class WorkHours extends React.Component {
         <ul className="time-entries-list">
           <li className={`entry ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
             { !_.isEmpty(errors) ? <div className="error-info-container"><i className="glyphicon glyphicon-warning-sign"></i></div> : null }
-            <div className="task-container">
-              <span className="description-text">
-                <a href={workHours.task} target="_blank">{workHours.task_preview}</a>
-              </span>
-            </div>
+            <WorkTimeTask workTime={workHours} />
             <div className="description-container" onClick={this.toggleEdit}>
               {this.descriptionText()}
               { editing ? this._renderBodyEditable() : null }
@@ -325,17 +317,10 @@ class WorkHours extends React.Component {
                 <i className="glyphicon glyphicon-paste"></i>
               </div>
             </div>
-            <div className="duration-container">
-              <div className="duration">
-                {this.formattedHoursAndMinutesDuration(workHours.duration)}
-              </div>
-            </div>
-            <div className="time-container">
-              <div className="time" onClick={this.toggleEdit}>
-                {starts_at_hours} - {ends_at_hours}
-              </div>
+            <WorkTimeDuration workTime={workHours} />
+            <WorkTimeTime workTime={workHours} onClick={this.toggleEdit}>
               { editing ? this._renderDateEditable() : null }
-            </div>
+            </WorkTimeTime>
           </li>
         </ul>
       </div>

@@ -105,6 +105,7 @@ en:
     sum: Sum
     name: Name
     external_auth: External integration
+    custom: Custom
 
   activerecord:
     errors:
