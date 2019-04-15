@@ -35,7 +35,7 @@ module Api
                         time = Time.zone.now
                         { starts_at: time.beginning_of_week..time.end_of_week }
                       end
-      @work_times = WorkTimePolicy::Scope.new(current_user, @project.work_times.active.where(search_params)).resolve
+      @work_times = WorkTimePolicy::Scope.new(current_user, @project.work_times.active.where(search_params)).resolve.includes(:user)
     end
 
     def external_auth

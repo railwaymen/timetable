@@ -9,6 +9,6 @@ json.body sanitize(work_time.body)
 json.task sanitize(work_time.task)
 json.task_preview sanitize(task_preview_helper(work_time.task))
 json.user do
-  json.partial!('api/users/user', user: work_time.user)
+  json.extract! work_time.user, :id, :first_name, :last_name
 end
 json.date work_time.starts_at.to_date
