@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { displayDuration } from './helpers';
 
-export const WorkTimeDuration = ({ workTime }) => ( 
+const WorkTimeDuration = ({ workTime }) => (
   <div className="duration-container">
     <div className="duration">
       {displayDuration(workTime.duration)}
@@ -13,7 +13,7 @@ export const WorkTimeDuration = ({ workTime }) => (
 WorkTimeDuration.propTypes = {
   workTime: PropTypes.shape({
     duration: PropTypes.number,
-  }),
+  }).isRequired,
 };
 
 export default WorkTimeDuration;

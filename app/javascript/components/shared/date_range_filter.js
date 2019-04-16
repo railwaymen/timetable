@@ -1,10 +1,13 @@
 import React from 'react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
-import { defaultDatePickerProps } from './helpers';
 import DatePicker from 'react-datepicker';
+import { defaultDatePickerProps } from './helpers';
 
 const dateFormat = 'DD/MM/YYYY';
-const DateRangeFilter = ({ from, to, onFromChange, onToChange, onFilter, className }) => (
+const DateRangeFilter = ({
+  from, to, onFromChange, onToChange, onFilter, className,
+}) => (
   <div className={className}>
     <div className="col-xs-3">
       <DatePicker {...defaultDatePickerProps} className="form-control" dateFormat={dateFormat} selected={moment(from)} onChange={onFromChange} name="from" placeholder="from" />
@@ -18,12 +21,16 @@ const DateRangeFilter = ({ from, to, onFromChange, onToChange, onFilter, classNa
   </div>
 );
 
+DateRangeFilter.defaultProps = {
+  className: '',
+};
 DateRangeFilter.propTypes = {
+  className: PropTypes.string,
   from: PropTypes.string.isRequired,
   to: PropTypes.string.isRequired,
-  onFromChange: PropTypes.func,
-  onToChange: PropTypes.func,
-  onFilter: PropTypes.func,
-}
+  onFromChange: PropTypes.func.isRequired,
+  onToChange: PropTypes.func.isRequired,
+  onFilter: PropTypes.func.isRequired,
+};
 
 export default DateRangeFilter;

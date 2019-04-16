@@ -11,6 +11,13 @@ addons:
   postgresql: "9.6"
   chrome: stable
 
+script:
+  - bundle exec rake 
+  - yarn lint
+
+before_install:
+  - nvm install v11.4.0
+
 before_script:
   - yarn install
   - bundle exec rake db:create

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import URI from 'urijs';
 import moment from 'moment';
-import * as Api from '../../shared/api.js';
+import * as Api from '../../shared/api';
 import { displayDayInfo, displayDuration } from '../../shared/helpers';
 import WorkTimeTask from '../../shared/work_time_task';
 import WorkTimeDuration from '../../shared/work_time_duration';
@@ -12,7 +12,7 @@ import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
 
 export default class ProjectWorkTimes extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -23,7 +23,7 @@ export default class ProjectWorkTimes extends React.Component {
         color: '0c0c0c',
         leader_id: '',
       },
-      projectId: parseInt(this.props.match.params.id),
+      projectId: parseInt(this.props.match.params.id, 10),
       groupedWorkTimes: {},
     };
 
@@ -38,7 +38,7 @@ export default class ProjectWorkTimes extends React.Component {
     return { from, to };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getWorkTimes(this.state, this.replaceUrl);
   }
 
@@ -77,13 +77,15 @@ export default class ProjectWorkTimes extends React.Component {
     const url = URI(`/api/projects/${this.state.projectId}/work_times`).addSearch({ from, to });
 
     Api.makeGetRequest({ url })
-       .then((response) => {
+      .then((response) => {
         const { project, work_times } = response.data;
-        const groupedWorkTimes = _.groupBy(work_times, (workTime) => (
+        const groupedWorkTimes = _.groupBy(work_times, workTime => (
           moment(workTime.starts_at).format('YYYYMMDD')
         ));
-        this.setState({ project, groupedWorkTimes, from, to }, stateCallback);
-       });
+        this.setState({
+          project, groupedWorkTimes, from, to,
+        }, stateCallback);
+      });
   }
 
   onFromChange(date) {
@@ -98,29 +100,31 @@ export default class ProjectWorkTimes extends React.Component {
     });
   }
 
-  render () {
-    const { groupedWorkTimes, from, to, project } = this.state;
-    const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l))
+  render() {
+    const {
+      groupedWorkTimes, from, to, project,
+    } = this.state;
+    const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
     return (
       <div className="content-wrapper box">
-      <h1 className="center">{project.name}</h1>
+        <h1 className="center">{project.name}</h1>
         <div className="clearfix col-md-offset-4">
           <HorizontalArrows onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
             <DateRangeFilter className="pull-left" from={from} to={to} onFromChange={this.onFromChange} onToChange={this.onToChange} onFilter={() => this.getWorkTimes(this.state)} />
           </HorizontalArrows>
         </div>
-        {dayKeys.map((dayKey) => ( 
+        {dayKeys.map(dayKey => (
           <section key={dayKey} className="time-entries-day">
             <header>
               <div className="date-container">
                 <span className="title">{displayDayInfo(groupedWorkTimes[dayKey][0].starts_at)}</span>
-                <span className="super">{displayDuration(_.sumBy(groupedWorkTimes[dayKey], (w) => w.duration))}</span>
+                <span className="super">{displayDuration(_.sumBy(groupedWorkTimes[dayKey], w => w.duration))}</span>
                 <div className="time-entries-list-container">
                   <ul className="time-entries-list">
-                    {groupedWorkTimes[dayKey].map((workTime) => ( 
+                    {groupedWorkTimes[dayKey].map(workTime => (
                       <li className={`entry ${workTime.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workTime.id}`} key={workTime.id}>
                         <div className="project-container">{`${workTime.user.first_name} ${workTime.user.last_name}`}</div>
-                        <div className="description-container" style={{cursor: 'inherit'}}>
+                        <div className="description-container" style={{ cursor: 'inherit' }}>
                           <span className="description-text">
                             {WorkTimeTimeDescription(workTime)}
                           </span>
