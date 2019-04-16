@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import URI from 'urijs';
-import * as Api from '../../shared/api.js';
-import Period from './period.js';
 import { NavLink } from 'react-router-dom';
 import moment from 'moment';
+import _ from 'lodash';
+import * as Api from '../../shared/api';
+import Period from './period';
 
 class Periods extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.getPeriods = this.getPeriods.bind(this);
-    this._renderPagination = this._renderPagination.bind(this);
+    this.renderPagination = this.renderPagination.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.onGeneratePeriodsChange = this.onGeneratePeriodsChange.bind(this);
     this.onGenerateSubmit = this.onGenerateSubmit.bind(this);
@@ -25,134 +26,134 @@ class Periods extends React.Component {
   static propTypes = {
     periods: PropTypes.array,
     userId: PropTypes.number,
-    user: PropTypes.object
+    user: PropTypes.object,
   }
 
   state = {
     periods: {
       accounting_periods: [],
-      total_count: 0
+      total_count: 0,
     },
     generatePeriods: {
       periods_count: undefined,
       month: moment().format('MM'),
-      year: moment().format('YYYY')
+      year: moment().format('YYYY'),
     },
     userId: undefined,
-    user: {}
+    user: {},
   }
 
-  componentDidMount () {
-    let base = URI(window.location.href);
-    let params = base.query(true)
-    let userId = (params['user_id'] || currentUser.id);
-    let page = params['page'] || 1;
+  componentDidMount() {
+    const base = URI(window.location.href);
+    const params = base.query(true);
+    const userId = (params.user_id || currentUser.id);
+    const page = params.page || 1;
 
-    this.getPeriods({ userId: userId, page: page });
+    this.getPeriods({ userId, page });
   }
 
-  getPeriods (options) {
+  getPeriods(options) {
     Api.makeGetRequest({
-      url: `/api/accounting_periods?user_id=${options.userId}&page=${options.page}`
+      url: `/api/accounting_periods?user_id=${options.userId}&page=${options.page}`,
     }).then((response) => {
-      let periods = response.data;
+      const periods = response.data;
 
       Api.makeGetRequest({ url: `/api/users/${options.userId}` })
-         .then((userResponse) => {
-           this.setState({
-             periods: periods,
-             userId: options.userId,
-             user: userResponse.data,
-             page: options.page,
-             recounting: periods.recounting
-           })
-         })
-    })
+        .then((userResponse) => {
+          this.setState({
+            periods,
+            userId: options.userId,
+            user: userResponse.data,
+            page: options.page,
+            recounting: periods.recounting,
+          });
+        });
+    });
   }
 
-  onPageChange (e) {
+  onPageChange(e) {
     e.preventDefault();
-    let href = URI(e.target.href);
-    let params = href.query(true);
+    const href = URI(e.target.href);
+    const params = href.query(true);
 
     const { userId, page } = this.state;
 
-    if (params['user_id'] !== userId || params['page'] !== page) {
-      this.getPeriods({ userId: params['user_id'], page: params['page'] });
-      history.pushState('Timetable', 'Accounting Periods', href)
+    if (params.user_id !== userId || params.page !== page) {
+      this.getPeriods({ userId: params.user_id, page: params.page });
+      window.history.pushState('Timetable', 'Accounting Periods', href);
     }
   }
 
-  onPreviousUserChange () {
+  onPreviousUserChange() {
     const id = this.state.user.prev_id;
 
     if (id) {
       this.getPeriods({ userId: id, page: 1 });
       window.history.pushState('TimeTable',
-                               'Accounting Periods',
-                               URI(window.location.href).search({ user_id: id }));
+        'Accounting Periods',
+        URI(window.location.href).search({ user_id: id }));
     }
   }
 
-  onNextUserChange () {
+  onNextUserChange() {
     const id = this.state.user.next_id;
 
     if (id) {
       this.getPeriods({ userId: id, page: 1 });
       window.history.pushState('TimeTable',
-                               'Accounting Periods',
-                               URI(window.location.href).search({ user_id: id }));
+        'Accounting Periods',
+        URI(window.location.href).search({ user_id: id }));
     }
   }
 
-  onGenerateSubmit () {
+  onGenerateSubmit() {
     const { periods_count, year, month } = this.state.generatePeriods;
 
-    let date = moment(`${year}-${month}`, 'YYYY-MM');
-    let day = moment(moment(date).startOf('month')).format('YYYY-MM-DD');
+    const date = moment(`${year}-${month}`, 'YYYY-MM');
+    const day = moment(moment(date).startOf('month')).format('YYYY-MM-DD');
 
-    let params = {
+    const params = {
       user_id: this.state.userId,
-      periods_count: periods_count,
-      start_on: moment(`${date.format('YYYY-MM')}-${day}`, 'YYYY-MM-DD')
-    }
+      periods_count,
+      start_on: moment(`${date.format('YYYY-MM')}-${day}`, 'YYYY-MM-DD'),
+    };
 
     Api.makePostRequest({
-      url: `/api/accounting_periods/generate`,
-      body: params
+      url: '/api/accounting_periods/generate',
+      body: params,
     }).then((response) => {
       this.setState({
         periods: {
-          accounting_periods: response.data
-        }
-      })
+          accounting_periods: response.data,
+        },
+      });
     }).catch(() => {
-      alert('There was an error with generate')
-    })
+      alert('There was an error with generate');
+    });
   }
 
-  onGeneratePeriodsChange (e) {
+  onGeneratePeriodsChange(e) {
     this.setState({
       generatePeriods: {
         ...this.state.generatePeriods,
-        [e.target.name]: e.target.value
-      }
-    })
+        [e.target.name]: e.target.value,
+      },
+    });
   }
 
-  recountPeriods () {
+  recountPeriods() {
     Api.makePostRequest({
       url: '/api/accounting_periods/recount',
-      body: { user_id: this.state.userId }
-    }).then((response) => {
+      body: { user_id: this.state.userId },
+    }).then(() => {
       this.setState({
-        recounting: true
-      })
-    })
+        recounting: true,
+      });
+    });
   }
 
-  _renderButtons () {
-    const recounting = this.state.recounting;
+  renderButtons() {
+    const { recounting } = this.state;
 
     if (currentUser.admin) {
       return (
@@ -161,118 +162,126 @@ class Periods extends React.Component {
           <a id="generate" className="btn btn-default">{I18n.t('apps.accounting_periods.generate_periods')}</a>
           <a id="recount" onClick={this.recountPeriods} className={`btn btn-default ${recounting ? 'disabled' : ''}`}>{I18n.t('apps.accounting_periods.recount_periods')}</a>
         </div>
-      )
+      );
     }
-    return (<div />)
+    return (<div />);
   }
 
-  _renderPagination () {
-    let { page, userId, periods } = this.state;
-    const total_count = periods.total_count;
+  renderPagination() {
+    let { page } = this.state;
+    const { userId, periods } = this.state;
+    const { total_count } = periods;
     const pages = Math.ceil(total_count / 25);
 
-    page = parseInt(page);
+    page = parseInt(page, 10);
 
-    let isBackAvailable = (page !== 1);
-    let isForwardAvailable = (pages > 1 && page !== pages);
+    const isBackAvailable = (page !== 1);
+    const isForwardAvailable = (pages > 1 && page !== pages);
 
     return (
       <ul className="pagination pull-right">
-        { isBackAvailable ?
-          <li id="prevPage">
-            <a className="glyphicon glyphicon-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`}></a>
-          </li> : null }
+        { isBackAvailable
+          ? (
+            <li id="prevPage">
+              <a className="glyphicon glyphicon-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`} />
+            </li>
+          ) : null }
         {this.paginationBody(pages, page, userId)}
-        { isForwardAvailable ?
-          <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
-            <a className="glyphicon glyphicon-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'}></a>
-          </li> : null }
+        { isForwardAvailable
+          ? (
+            <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
+              <a className="glyphicon glyphicon-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />
+            </li>
+          ) : null }
       </ul>
-    )
+    );
   }
 
-  paginationBody (size, page, userId) {
-    let li = [];
+  paginationBody(size, page, userId) {
+    const li = [];
 
-    for (let i = 1; i < size + 1; i++) {
+    for (let i = 1; i < size + 1; i += 1) {
       li.push(
-        <li key={i} className={`page ${parseInt(page) === i ? 'active' : ''}`}>
+        <li key={i} className={`page ${parseInt(page, 10) === i ? 'active' : ''}`}>
           <a onClick={this.onPageChange} className="page" href={`/accounting_periods?user_id=${userId}&page=${i}`}>{i}</a>
-        </li>
-      )
+        </li>,
+      );
     }
 
     return li;
   }
 
-  onDelete (id) {
+  onDelete(id) {
     Api.makeDeleteRequest({ url: `/api/accounting_periods/${id}` })
-       .then((response) => {
-         if (parseInt(response.status) === 204) {
-           this.setState({
-             periods: {
-               accounting_periods: this.state.periods.accounting_periods.filter((period) => (period.id !== id))
-             }
-           })
-         } else {
-           alert('Error while trying to remove accounting period');
-         }
-       })
+      .then((response) => {
+        if (parseInt(response.status, 10) === 204) {
+          this.setState({
+            periods: {
+              accounting_periods: this.state.periods.accounting_periods.filter(period => (period.id !== id)),
+            },
+          });
+        } else {
+          alert('Error while trying to remove accounting period');
+        }
+      });
   }
 
-  _generateMonths () {
-    let options = [];
+  generateMonths() {
+    const options = [];
 
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 1; i <= 12; i += 1) {
       options.push(
-        <option key={i} value={i}>{i}</option>
-      )
+        <option key={i} value={i}>{i}</option>,
+      );
     }
 
     return options;
   }
 
-  _generateYears () {
-    let options = [];
-    let currentYear = parseInt(moment().format('YYYY'), 10);
-    let maxYear = currentYear + 10;
+  generateYears() {
+    const options = [];
+    const currentYear = parseInt(moment().format('YYYY'), 10);
+    const maxYear = currentYear + 10;
 
-    for (let i = currentYear; i <= maxYear; i++) {
+    for (let i = currentYear; i <= maxYear; i += 1) {
       options.push(
-        <option key={i} value={i}>{i}</option>
-      )
+        <option key={i} value={i}>{i}</option>,
+      );
     }
 
     return options;
   }
 
-  _renderUserInfo (user) {
+  renderUserInfo(user) {
     if (!_.isEmpty(user)) {
       return (
         <span><NavLink to={`/timesheet?user_id=${user.id}`}>{`${user.first_name} ${user.last_name}`}</NavLink></span>
-      )
-    } else {
-      return (
-        <div style={{width:'390px', display: 'inline-block'}} className="preloader"></div>
-      )
+      );
     }
+    return (
+      <div style={{ width: '390px', display: 'inline-block' }} className="preloader" />
+    );
   }
 
-  render () {
-    const { periods, user, userId, generatePeriods } = this.state;
+  render() {
+    const {
+      periods, user, userId, generatePeriods,
+    } = this.state;
     const MONTHS_IN_YEAR = 12;
 
     return (
       <div>
-        {currentUser.admin ? this._renderButtons() : null}
+        {currentUser.admin ? this.renderButtons() : null}
         <div className="col-md-offset-3 col-md-6 vert-offset-bottom clearfix">
-          { currentUser.admin ? <h3 className="text-center text-muted">
-            { user.prev_id ? <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left"></a> : null }
-            {this._renderUserInfo(user)}
-            <span>
-              { user.next_id ? <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right"></a> : null }
-            </span>
-          </h3> : null }
+          { currentUser.admin ? (
+            <h3 className="text-center text-muted">
+              { user.prev_id ? <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" /> : null }
+              {this.renderUserInfo(user)}
+              <span>
+                { user.next_id ? <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" /> : null }
+              </span>
+            </h3>
+          ) : null }
         </div>
         <table className="table table-striped">
           <thead>
@@ -290,19 +299,20 @@ class Periods extends React.Component {
           </thead>
           <tbody>
             { periods.accounting_periods.map((period, index) => (
+              // eslint-disable-next-line
               <Period key={index} period={period} onDelete={this.onDelete} userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`} />
             )) }
           </tbody>
         </table>
-        {this._renderPagination()}
+        {this.renderPagination()}
         <div id="modal" style={{ display: 'none' }}>
           <div className="ui centered-modal modal transition visible active">
-            <i className="close icon"></i>
+            <i className="close icon" />
             <div className="header">{I18n.t('apps.accounting_periods.generate_accounting_periods')}</div>
             <div className="content">
               <form className="form ui">
                 <div className="error hidden message ui">
-                  <p></p>
+                  <p />
                 </div>
                 <div className="fields inline">
                   <div className="field">
@@ -312,12 +322,12 @@ class Periods extends React.Component {
                   <div className="field">
                     <label>{I18n.t('apps.accounting_periods.starting_from_month')}</label>
                     <select onChange={this.onGeneratePeriodsChange} value={parseInt(generatePeriods.month, 10)} className="dropdown ui" id="month" type="text" name="month">
-                      {this._generateMonths()}
+                      {this.generateMonths()}
                     </select>
                   </div>
                   <div className="field">
                     <select onChange={this.onGeneratePeriodsChange} value={parseInt(generatePeriods.year, 10)} className="dropdown ui" id="year" type="text" name="year">
-                      {this._generateYears()}
+                      {this.generateYears()}
                     </select>
                   </div>
                 </div>
@@ -326,14 +336,14 @@ class Periods extends React.Component {
             <div className="actions">
               <button onClick={this.onGenerateSubmit} className="button green icon labeled right ui" id="generate" type="button">
                 {I18n.t('apps.accounting_periods.generate')}
-                <i className="angle double icon right"></i>
+                <i className="angle double icon right" />
               </button>
             </div>
           </div>
-          <div className="ui dimmer modals modal-backdrop page transition visible active" style={{ display: 'flex !important' }}></div>
+          <div className="ui dimmer modals modal-backdrop page transition visible active" style={{ display: 'flex !important' }} />
         </div>
       </div>
-    )
+    );
   }
 }
 

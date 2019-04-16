@@ -1,44 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import User from './user.js';
 import { NavLink } from 'react-router-dom';
+import User from './user';
 
 class Users extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.onChange = this.onChange.bind(this);
     this.getUsers = this.getUsers.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getUsers();
   }
 
   static propTypes = {
-    users: PropTypes.array
+    users: PropTypes.array,
   }
 
   state = {
     users: [],
-    visible: 'active'
+    visible: 'active',
   }
 
-  getUsers () {
+  getUsers() {
     fetch(`/api/users?filter=${this.state.visible}`)
-      .then((response) => { return response.json(); })
+      .then(response => response.json())
       .then((data) => {
         this.setState({ users: data });
-      })
+      });
   }
 
-  onChange (e) {
+  onChange(e) {
     this.setState({
-      [e.target.name]: [e.target.value]
-    }, () => { this.getUsers() })
+      [e.target.name]: [e.target.value],
+    }, () => { this.getUsers(); });
   }
 
-  render () {
+  render() {
     const { users, visible } = this.state;
 
     return (
@@ -58,7 +58,7 @@ class Users extends React.Component {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th></th>
+              <th />
               <th>{I18n.t('apps.users.last_name')}</th>
               <th>{I18n.t('apps.users.first_name')}</th>
               <th>Email</th>
@@ -67,13 +67,11 @@ class Users extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { users.map((user, i) =>
-              <User key={i + '/' + user.id} user={user} />
-            ) }
+            { users.map(user => <User key={user.id} user={user} />) }
           </tbody>
         </table>
       </div>
-    )
+    );
   }
 }
 

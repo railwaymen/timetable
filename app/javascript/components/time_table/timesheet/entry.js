@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import ProjectsDropdown from './projects_dropdown.js';
 import DatePicker from 'react-datepicker';
-import ErrorTooltip from './errors/error_tooltip.js';
-import * as Api from '../../shared/api.js';
-import * as Validations from '../../shared/validations.js';
-import { defaultDatePickerProps } from '../../shared/helpers.js';
+import _ from 'lodash';
+import URI from 'urijs';
+import ProjectsDropdown from './projects_dropdown';
+import ErrorTooltip from './errors/error_tooltip';
+import * as Api from '../../shared/api';
+import * as Validations from '../../shared/validations';
+import { defaultDatePickerProps } from '../../shared/helpers';
 
 class Entry extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.lastProject = null;
@@ -31,7 +33,7 @@ class Entry extends React.Component {
     task: PropTypes.string,
     project: PropTypes.object,
     starts_at: PropTypes.string,
-    ends_at: PropTypes.string
+    ends_at: PropTypes.string,
   }
 
   state = {
@@ -43,142 +45,142 @@ class Entry extends React.Component {
     ends_at: moment().format('HH:mm'),
     durationHours: '00:00',
     date: moment().format('DD/MM/YYYY'),
-    errors: []
+    errors: [],
   }
 
-  onChange (e) {
-    let name = e.target.name;
+  onChange(e) {
+    const { name } = e.target;
 
     this.setState({
-      [name]: e.target.value
+      [name]: e.target.value,
     }, () => { this.removeErrorsFor(name); });
   }
 
-  onKeyPress (e) {
+  onKeyPress(e) {
     if (e.key === 'Enter') this.onSubmit();
   }
 
-  onDateChange (e) {
+  onDateChange(e) {
     this.setState({
-      date: e.format('DD/MM/YYYY')
+      date: e.format('DD/MM/YYYY'),
     }, () => { this.removeErrorsFor('date'); });
   }
 
-  paste (object) {
+  paste(object) {
     this.setState({
       body: _.unescape(object.body),
       project: object.project,
       project_id: object.project.id,
-      task: object.task
+      task: object.task,
     });
   }
 
-  removeErrorsFor (name) {
-    let errors = this.state.errors;
+  removeErrorsFor(name) {
+    const { errors } = this.state;
     delete errors[name];
-    this.setState({ errors: errors });
+    this.setState({ errors });
   }
 
-  validate () {
-    const project = this.state.project;
-    const { body, starts_at, ends_at, project_id, duration, task } = this.state;
+  validate() {
+    const { project } = this.state;
+    const {
+      body, starts_at, ends_at, project_id, duration, task,
+    } = this.state;
 
     if (project.lunch || project.autofill) {
-      return []
-    } else {
-      let errors = {
-        body: (!task ? Validations.presence(body) : undefined),
-        starts_at: Validations.presence(starts_at),
-        ends_at: Validations.presence(ends_at),
-        project_id: Validations.presence(project_id),
-        duration: Validations.greaterThan(0, duration)
-      }
-      Object.keys(errors).forEach((key) => { if (errors[key] === undefined) { delete errors[key] } })
-      return errors;
+      return [];
     }
+    const errors = {
+      body: (!task ? Validations.presence(body) : undefined),
+      starts_at: Validations.presence(starts_at),
+      ends_at: Validations.presence(ends_at),
+      project_id: Validations.presence(project_id),
+      duration: Validations.greaterThan(0, duration),
+    };
+    Object.keys(errors).forEach((key) => { if (errors[key] === undefined) { delete errors[key]; } });
+    return errors;
   }
 
-  onSubmit () {
-    let errors = this.validate();
-    let userId = URI(window.location.href).search(true)['user_id'] || currentUser.id;
+  onSubmit() {
+    const errors = this.validate();
+    const userId = URI(window.location.href).search(true).user_id || currentUser.id;
 
     if (!_.isEmpty(errors)) {
-      this.setState({ errors: errors })
+      this.setState({ errors });
     } else {
-      const { body, task, project, date, starts_at, ends_at } = this.state;
+      const {
+        body, task, project, date, starts_at, ends_at,
+      } = this.state;
 
-      let entryData = {
+      const entryData = {
         user_id: userId,
-        body: body,
-        task: task,
+        body,
+        task,
         project_id: project.id,
         starts_at: moment(`${date} ${starts_at}`, 'DD/MM/YYYY HH:mm'),
-        ends_at: moment(`${date} ${ends_at}`, 'DD/MM/YYYY HH:mm')
-      }
+        ends_at: moment(`${date} ${ends_at}`, 'DD/MM/YYYY HH:mm'),
+      };
 
       Api.makePostRequest({
         url: '/api/work_times',
-        body: { work_time: entryData }
+        body: { work_time: entryData },
       }).then((response) => {
-          if (response.data.id) {
-            this.props.pushEntry(response.data);
-            const newState = {
-              body: '',
-              task: ''
-            };
-            if (!this.state.project.autofill) {
-              Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' })
-            }
-            if (this.lastProject && this.state.project.lunch) {
-              newState.project = this.lastProject;
-              newState.project_id = this.lastProject.id
-            }
-            if (!this.state.project.lunch)
-              this.lastProject = this.state.project;
-            this.setState(newState);
-          } else {
-            throw new Error("Invalid response");
+        if (response.data.id) {
+          this.props.pushEntry(response.data);
+          const newState = {
+            body: '',
+            task: '',
+          };
+          if (!this.state.project.autofill) {
+            Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' });
           }
-        }).catch((e) => {
-          if (e.errors && (e.errors.starts_at || e.errors.ends_at || e.errors.task)) {
-            const errors = {};
-            if (e.errors.starts_at || e.errors.ends_at)
-              errors.duration = (e.errors.starts_at || []).concat(e.errors.ends_at || [])
-            if (e.errors.task)
-              errors.task = e.errors.task
-            this.setState({ errors });
-          } else {
-            alert(I18n.t('activerecord.errors.models.work_time.basic'));
+          if (this.lastProject && this.state.project.lunch) {
+            newState.project = this.lastProject;
+            newState.project_id = this.lastProject.id;
           }
-        })
+          if (!this.state.project.lunch) this.lastProject = this.state.project;
+          this.setState(newState);
+        } else {
+          throw new Error('Invalid response');
+        }
+      }).catch((e) => {
+        if (e.errors && (e.errors.starts_at || e.errors.ends_at || e.errors.task)) {
+          const newErrors = {};
+          if (e.errors.starts_at || e.errors.ends_at) newErrors.duration = (e.errors.starts_at || []).concat(e.errors.ends_at || []);
+          if (e.errors.task) newErrors.task = e.errors.task;
+          this.setState({ errors: newErrors });
+        } else {
+          alert(I18n.t('activerecord.errors.models.work_time.basic'));
+        }
+      });
     }
   }
 
-  updateProject (project) {
+  updateProject(project) {
     let autoSettings = {};
 
     if (project.lunch) {
       autoSettings = {
-        ends_at: this.formattedHoursAndMinutes(moment(this.state.starts_at, 'HH:mm').add('30', 'minutes'))
-      }
+        ends_at: this.formattedHoursAndMinutes(moment(this.state.starts_at, 'HH:mm').add('30', 'minutes')),
+      };
     } else if (project.autofill) {
       autoSettings = {
         starts_at: '09:00',
-        ends_at: this.formattedHoursAndMinutes(moment('09:00', 'HH:mm').add('8', 'hours'))
-      }
+        ends_at: this.formattedHoursAndMinutes(moment('09:00', 'HH:mm').add('8', 'hours')),
+      };
     }
 
     this.setState({
       ...autoSettings,
-      project: project,
-      project_id: project.id
+      project,
+      project_id: project.id,
     }, () => {
       this.removeErrorsFor('project_id');
       this.recountTime();
-    })
+    });
   }
 
-  formattedHoursAndMinutes (time) {
+  formattedHoursAndMinutes(time) {
     return moment(time).format('HH:mm');
   }
 
@@ -192,35 +194,37 @@ class Entry extends React.Component {
     return moment(time, 'Hmm');
   }
 
-  recountTime () {
-    let formattedStartsAt = this.inclusiveParse(this.state.starts_at)
-    let formattedEndsAt   = this.inclusiveParse(this.state.ends_at)
+  recountTime() {
+    const formattedStartsAt = this.inclusiveParse(this.state.starts_at);
+    const formattedEndsAt = this.inclusiveParse(this.state.ends_at);
 
-    let duration = this.state.project.count_duration ? formattedEndsAt.diff(formattedStartsAt) : 0
+    const duration = this.state.project.count_duration ? formattedEndsAt.diff(formattedStartsAt) : 0;
 
     this.setState({
-      duration: duration,
+      duration,
       durationHours: moment.utc(duration).format('HH:mm'),
       starts_at: this.formattedHoursAndMinutes(formattedStartsAt),
-      ends_at: this.formattedHoursAndMinutes(formattedEndsAt)
+      ends_at: this.formattedHoursAndMinutes(formattedEndsAt),
     }, () => {
-      this.removeErrorsFor('duration')
-    })
+      this.removeErrorsFor('duration');
+    });
   }
 
-  onFocus (e) {
-    e.target.setSelectionRange(0, e.target.value.length)
+  onFocus(e) {
+    e.target.setSelectionRange(0, e.target.value.length);
   }
 
-  _renderEasterEgg () {
+  renderEasterEgg() {
     return _.sample(['https://media.tenor.com/images/cd9b58f5b362c24addbcb904c917ebdb/tenor.gif',
-                     'https://media1.tenor.com/images/c10b4e9e6b6d2835b19f42cbdd276774/tenor.gif?itemid=10644609',
-                     'https://78.media.tumblr.com/8873748d59f1b6e9ddd5a3fce67c12b4/tumblr_nt0tdjsWg61tpri36o1_400.gif',
-                     'https://media.giphy.com/media/11LtzfNXmCQQ80/giphy.gif']);
+      'https://media1.tenor.com/images/c10b4e9e6b6d2835b19f42cbdd276774/tenor.gif?itemid=10644609',
+      'https://78.media.tumblr.com/8873748d59f1b6e9ddd5a3fce67c12b4/tumblr_nt0tdjsWg61tpri36o1_400.gif',
+      'https://media.giphy.com/media/11LtzfNXmCQQ80/giphy.gif']);
   }
 
-  render () {
-    const { body, task, starts_at, ends_at, durationHours, date, errors, project } = this.state;
+  render() {
+    const {
+      body, task, starts_at, ends_at, durationHours, date, errors, project,
+    } = this.state;
 
     return (
       <div className="new-entry" id="content">
@@ -228,22 +232,24 @@ class Entry extends React.Component {
           <div className="segment ui">
             <div className="field">
               <div className="desc">
-                { errors.body ? <ErrorTooltip errors={errors.body} /> : null }
+                {errors.body ? <ErrorTooltip errors={errors.body} /> : null}
                 <div className="input transparent ui" onKeyPress={this.onKeyPress}>
-                  { project.lunch ?
-                      <div className="easter" style={{ 'backgroundImage': `url(${this._renderEasterEgg()})` }}></div>
-                    : <textarea className="description auto-focus" placeholder={I18n.t('apps.timesheet.what_have_you_done')} name="body" value={body} onChange={this.onChange}></textarea>
+                  {project.lunch
+                    ? <div className="easter" style={{ backgroundImage: `url(${this.renderEasterEgg()})` }} />
+                    : <textarea className="description auto-focus" placeholder={I18n.t('apps.timesheet.what_have_you_done')} name="body" value={body} onChange={this.onChange} />
                   }
                 </div>
-                { project.work_times_allows_task ?
-                  <div className="input task-url transparent ui">
-                    { errors.task ? <ErrorTooltip errors={errors.task} /> : null }
-                    <input className="task" placeholder={I18n.t('apps.timesheet.task_url')} type="text" name="task" value={task} onChange={this.onChange} />
-                  </div> : null }
+                {project.work_times_allows_task
+                  ? (
+                    <div className="input task-url transparent ui">
+                      {errors.task ? <ErrorTooltip errors={errors.task} /> : null}
+                      <input className="task" placeholder={I18n.t('apps.timesheet.task_url')} type="text" name="task" value={task} onChange={this.onChange} />
+                    </div>
+                  ) : null}
               </div>
               <div className="projects">
                 <div className="project-dropdown">
-                  { errors.project_id ? <ErrorTooltip errors={errors.project_id} /> : null }
+                  {errors.project_id ? <ErrorTooltip errors={errors.project_id} /> : null}
                   <div>
                     <ProjectsDropdown updateProject={this.updateProject} selectedProject={this.state.project} projects={this.props.projects} />
                   </div>
@@ -259,20 +265,20 @@ class Entry extends React.Component {
                 </div>
               </div>
               <div className="duration manual">
-                { errors.duration ? <ErrorTooltip errors={errors.duration} /> : null }
+                {errors.duration ? <ErrorTooltip errors={errors.duration} /> : null}
                 <span id="duration">{durationHours}</span>
               </div>
               <div className="date">
                 <DatePicker {...defaultDatePickerProps} selected={moment(date, 'DD/MM/YYYY')} className="datepicker" value={moment(date, 'DD/MM/YYYY').format('DD/MM')} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange} />
               </div>
               <div className="action">
-                <button className="btn-start button fluid ui" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
+                <button type="button" className="btn-start button fluid ui" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 

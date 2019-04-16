@@ -1,22 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
 class User extends React.Component {
-  getIconClass () {
+  getIconClass() {
     if (this.props.user.active) {
       return 'active';
-    } else {
-      return 'inactive';
     }
+    return 'inactive';
   }
 
-  render () {
-    const user = this.props.user;
+  render() {
+    const { user } = this.props;
 
     return (
       <tr>
-        <td><div className={`circle ${this.getIconClass()}`}></div></td>
+        <td><div className={`circle ${this.getIconClass()}`} /></td>
         <td>{user.last_name}</td>
         <td>{user.first_name}</td>
         <td>{user.email}</td>
@@ -36,7 +34,7 @@ class User extends React.Component {
           </div>
         </td>
       </tr>
-    )
+    );
   }
 }
 

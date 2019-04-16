@@ -1,45 +1,45 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as Api from '../../shared/api.js';
 import { NavLink } from 'react-router-dom';
-import Project from './project.js';
+import * as Api from '../../shared/api';
+import Project from './project';
 
 class ProjectsList extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.onChange = this.onChange.bind(this);
     this.getProjects = this.getProjects.bind(this);
   }
 
-  componentDidMount () {
-    this.getProjects()
+  componentDidMount() {
+    this.getProjects();
   }
 
   static propTypes = {
     projects: PropTypes.array,
-    visible: PropTypes.string
+    visible: PropTypes.string,
   }
 
   state = {
     projects: [],
-    visible: 'active'
+    visible: 'active',
   }
 
-  getProjects () {
+  getProjects() {
     Api.makeGetRequest({ url: `/api/projects/list?display=${this.state.visible}` })
-       .then((response) => {
-         this.setState({ projects: response.data });
-       })
+      .then((response) => {
+        this.setState({ projects: response.data });
+      });
   }
 
-  onChange (e) {
+  onChange(e) {
     this.setState({
-      [e.target.name]: [e.target.value]
-    }, () => { this.getProjects() })
+      [e.target.name]: [e.target.value],
+    }, () => { this.getProjects(); });
   }
 
-  render () {
+  render() {
     const { visible, projects } = this.state;
 
     return (
@@ -62,22 +62,22 @@ class ProjectsList extends React.Component {
           <table className="table table-striped">
             <thead>
               <tr>
-                <th></th>
+                <th />
                 <th>{I18n.t('apps.projects.name')}</th>
                 <th>{I18n.t('apps.projects.leader')}</th>
-                <th></th>
-                <th></th>
+                <th />
+                <th />
               </tr>
             </thead>
             <tbody>
-              { projects.map((project, index) => (
-                <Project key={`${project.id}/${index}`} project={project} />
+              { projects.map(project => (
+                <Project key={project.id} project={project} />
               )) }
             </tbody>
           </table>
         </div>
       </div>
-    )
+    );
   }
 }
 
