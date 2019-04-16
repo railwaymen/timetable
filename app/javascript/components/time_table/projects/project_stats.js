@@ -35,9 +35,7 @@ class ProjectStats extends React.Component {
           <ul>
             { stats.map((stat, index) => (
               <li className="person" key={index}> {/* eslint-disable-line */}
-                {' '}
                 {stat.user.name}
-                {' '}
               </li>
             )) }
           </ul>

@@ -385,9 +385,7 @@ class EntryHistory extends React.Component {
             { version.project_name
               ? (
                 <span className={(version.event === 'update' ? 'changed' : '')}>
-                  {' '}
                   {version.project_name}
-                  {' '}
                 </span>
               )
               : <span>{version.project_name_was}</span> }
@@ -498,9 +496,7 @@ class EntryHistory extends React.Component {
             <h1 className="active-user-timesheet">
               { filteredUser.prev_id
                 ? <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" /> : null }
-              {filteredUser.first_name}
-              {' '}
-              {filteredUser.last_name}
+              {currentUser.fullName.apply(filteredUser)}
               { filteredUser.next_id
                 ? <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" /> : null }
             </h1>

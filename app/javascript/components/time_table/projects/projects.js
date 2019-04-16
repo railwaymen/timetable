@@ -52,6 +52,14 @@ class Projects extends React.Component {
     }, () => { this.getProjects(); });
   }
 
+  renderOption(value) {
+    return (
+      <option value={value}>
+        {[I18n.t('apps.projects.last'), String(value), I18n.t('apps.projects.days')].join(' ')}
+      </option>
+    );
+  }
+
   render() {
     const { projectsStats } = this.state;
     const range = parseInt(this.state.range, 10);
@@ -66,29 +74,9 @@ class Projects extends React.Component {
             </div>
             <div className="btn-group pull-left">
               <select id="range" value={range} className="form-control" onChange={this.changeRange}>
-                <option value="30">
-                  {I18n.t('apps.projects.last')}
-                  {' '}
-                  30
-                  {' '}
-                  {I18n.t('apps.projects.days')}
-                  {' '}
-                </option>
-                <option value="60">
-                  {I18n.t('apps.projects.last')}
-                  {' '}
-                  60
-                  {' '}
-                  {I18n.t('apps.projects.days')}
-                  {' '}
-                </option>
-                <option value="90">
-                  {I18n.t('apps.projects.last')}
-                  {' '}
-                  90
-                  {' '}
-                  {I18n.t('apps.projects.days')}
-                </option>
+                {this.renderOption(30)}
+                {this.renderOption(60)}
+                {this.renderOption(90)}
               </select>
             </div>
           </div>
