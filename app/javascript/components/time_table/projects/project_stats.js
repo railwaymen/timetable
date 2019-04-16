@@ -30,9 +30,7 @@ class ProjectStats extends React.Component {
             />
           </h3>
           <p className="center">
-            {' '}
             {data.leader ? data.leader.name : ''}
-            {' '}
           </p>
           <ul>
             { stats.map((stat, index) => (

@@ -41,7 +41,7 @@ class Projects extends React.Component {
       projectKeys.map((key) => {
         const value = this.state.projectsStats[key];
 
-        return (<ProjectStats stats={value} key={key.id} />);
+        return (<ProjectStats stats={value} key={key} />);
       })
     );
   }
@@ -69,7 +69,7 @@ class Projects extends React.Component {
                 <option value="30">
                   {I18n.t('apps.projects.last')}
                   {' '}
-30
+                  30
                   {' '}
                   {I18n.t('apps.projects.days')}
                   {' '}
@@ -77,7 +77,7 @@ class Projects extends React.Component {
                 <option value="60">
                   {I18n.t('apps.projects.last')}
                   {' '}
-60
+                  60
                   {' '}
                   {I18n.t('apps.projects.days')}
                   {' '}
@@ -85,10 +85,9 @@ class Projects extends React.Component {
                 <option value="90">
                   {I18n.t('apps.projects.last')}
                   {' '}
-90
+                  90
                   {' '}
                   {I18n.t('apps.projects.days')}
-                  {' '}
                 </option>
               </select>
             </div>
