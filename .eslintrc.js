@@ -3,6 +3,7 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
+    jquery: true,
   },
   extends: 'airbnb',
   globals: {
@@ -30,6 +31,7 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': 'off',
     'jsx-a11y/label-has-for': 'off',
     'camelcase': 'off',
+    'no-param-reassign': 'off',
     'jsx-a11y/no-autofocus ': 'off',
     'jsx-a11y/no-noninteractive-tabindex': 'off',
     'no-param-reassign': 'off',

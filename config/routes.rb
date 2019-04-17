@@ -4,6 +4,12 @@ require 'sidekiq/web'
 require 'sidekiq-status/web'
 
 TimeTable::Application.routes.draw do
+  get 'project_reports/new'
+
+  get 'project_reports/create'
+
+  get 'project_reports/update'
+
   root to: 'home#index'
   devise_for :users
   authenticate :user, ->(u) { u.admin? } do
@@ -34,6 +40,9 @@ TimeTable::Application.routes.draw do
     end
     resources :work_times
     resources :projects, only: %i[index show create update] do
+      resources :project_reports, only: %i[create update edit show] do
+        get :roles, on: :collection
+      end
       get :external_auth, on: :member
       get :list, on: :collection
       get :simple, on: :collection

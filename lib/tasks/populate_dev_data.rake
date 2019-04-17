@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+desc 'Populates dev database with randomly generated data'
 task populate_dev_data: :environment do
   raise('Only works in development environment') unless Rails.env.development?
 

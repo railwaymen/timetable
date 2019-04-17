@@ -102,11 +102,14 @@ export default class ProjectWorkTimes extends React.Component {
 
   render() {
     const {
-      groupedWorkTimes, from, to, project,
+      groupedWorkTimes, from, to, project, projectId,
     } = this.state;
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
     return (
       <div className="content-wrapper box">
+        <a href={`/projects/${projectId}/new_report`}>
+          Generate report
+        </a>
         <h1 className="center">{project.name}</h1>
         <div className="clearfix col-md-offset-4">
           <HorizontalArrows onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
