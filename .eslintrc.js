@@ -32,6 +32,7 @@ module.exports = {
     'camelcase': 'off',
     'jsx-a11y/no-autofocus ': 'off',
     'jsx-a11y/no-noninteractive-tabindex': 'off',
+    'no-param-reassign': 'off',
 
     // TODO: enable these rules:
 

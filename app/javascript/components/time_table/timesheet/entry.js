@@ -25,6 +25,7 @@ class Entry extends React.Component {
     this.removeErrorsFor = this.removeErrorsFor.bind(this);
     this.paste = this.paste.bind(this);
     this.onKeyPress = this.onKeyPress.bind(this);
+    this.onTimeKeyPress = this.onTimeKeyPress.bind(this);
   }
 
   static propTypes = {
@@ -60,6 +61,10 @@ class Entry extends React.Component {
     if (e.key === 'Enter') this.onSubmit();
   }
 
+  onTimeKeyPress(e) {
+    if (e.key === 'Enter') this.recountTime(this.onSubmit);
+  }
+
   onDateChange(e) {
     this.setState({
       date: e.format('DD/MM/YYYY'),
@@ -75,10 +80,11 @@ class Entry extends React.Component {
     });
   }
 
-  removeErrorsFor(name) {
-    const { errors } = this.state;
-    delete errors[name];
-    this.setState({ errors });
+  removeErrorsFor(name, stateCallback) {
+    this.setState(({ errors }) => {
+      delete errors[name];
+      return { errors };
+    }, stateCallback);
   }
 
   validate() {
@@ -194,7 +200,7 @@ class Entry extends React.Component {
     return moment(time, 'Hmm');
   }
 
-  recountTime() {
+  recountTime(stateCallback) {
     const formattedStartsAt = this.inclusiveParse(this.state.starts_at);
     const formattedEndsAt = this.inclusiveParse(this.state.ends_at);
 
@@ -206,7 +212,7 @@ class Entry extends React.Component {
       starts_at: this.formattedHoursAndMinutes(formattedStartsAt),
       ends_at: this.formattedHoursAndMinutes(formattedEndsAt),
     }, () => {
-      this.removeErrorsFor('duration');
+      this.removeErrorsFor('duration', stateCallback);
     });
   }
 
@@ -243,7 +249,7 @@ class Entry extends React.Component {
                   ? (
                     <div className="input task-url transparent ui">
                       {errors.task ? <ErrorTooltip errors={errors.task} /> : null}
-                      <input className="task" placeholder={I18n.t('apps.timesheet.task_url')} type="text" name="task" value={task} onChange={this.onChange} />
+                      <input onKeyPress={this.onKeyPress} className="task" placeholder={I18n.t('apps.timesheet.task_url')} type="text" name="task" value={task} onChange={this.onChange} />
                     </div>
                   ) : null}
               </div>
@@ -257,11 +263,11 @@ class Entry extends React.Component {
               </div>
               <div className="time">
                 <div className="input transparent ui">
-                  <input className="auto-focus" id="start" type="text" name="starts_at" onChange={this.onChange} onClick={this.onFocus} onBlur={this.recountTime} value={starts_at} />
+                  <input className="auto-focus" id="start" type="text" name="starts_at" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onClick={this.onFocus} onBlur={() => this.recountTime()} value={starts_at} />
                 </div>
                 <span>-</span>
                 <div className="input transparent ui">
-                  <input className="auto-focus" id="end" type="text" name="ends_at" onChange={this.onChange} onClick={this.onFocus} onBlur={this.recountTime} value={ends_at} />
+                  <input className="auto-focus" id="end" type="text" name="ends_at" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onClick={this.onFocus} onBlur={() => this.recountTime()} value={ends_at} />
                 </div>
               </div>
               <div className="duration manual">
