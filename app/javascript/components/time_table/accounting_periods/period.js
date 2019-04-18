@@ -5,22 +5,22 @@ import { NavLink } from 'react-router-dom';
 import { preserveLines } from '../../shared/helpers';
 
 class Period extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.onDelete = this.onDelete.bind(this);
   }
 
   static propTypes = {
-    period: PropTypes.object
+    period: PropTypes.object,
   }
 
-  formatDate (date) {
-    return moment(date).format('YYYY-MM-DD HH:mm')
+  formatDate(date) {
+    return moment(date).format('YYYY-MM-DD HH:mm');
   }
 
-  formatTime (duration) {
-    let d = moment.duration(duration, 'seconds').asMinutes();
+  formatTime(duration) {
+    const d = moment.duration(duration, 'seconds').asMinutes();
     let hours = Math.floor(d / 60);
     let minutes = Math.floor(d % 60);
 
@@ -30,11 +30,11 @@ class Period extends React.Component {
     return `${hours}:${minutes}`;
   }
 
-  onDelete () {
-    if (confirm(I18n.t('common.confirm'))) this.props.onDelete(this.props.period.id);
+  onDelete() {
+    if (window.confirm(I18n.t('common.confirm'))) this.props.onDelete(this.props.period.id);
   }
 
-  render () {
+  render() {
     const { period, userName } = this.props;
 
     return (
@@ -43,19 +43,25 @@ class Period extends React.Component {
         <td>{userName}</td>
         <td>{period.starts_at ? this.formatDate(period.starts_at) : ''}</td>
         <td>{period.ends_at ? this.formatDate(period.ends_at) : ''}</td>
-        <td>{this.formatTime(period.counted_duration)}/{this.formatTime(period.duration)}</td>
-        <td>{preserveLines(period.note || '')}</td>
-        <td>{period.closed ? <i className="glyphicon glyphicon-ok"></i> : ''}</td>
-        <td>{period.full_time ? <i className="glyphicon glyphicon-ok"></i> : ''}</td>
         <td>
-          { currentUser.admin ?
-            <span>
-              <NavLink to={`/accounting_periods/edit/${period.id}?user_id=${period.user_id}`} className="btn btn-default edit">{I18n.t('common.edit')}</NavLink>
-              <div onClick={this.onDelete} className="btn btn-danger delete">{I18n.t('common.destroy')}</div>
-            </span> : null }
+          {this.formatTime(period.counted_duration)}
+/
+          {this.formatTime(period.duration)}
+        </td>
+        <td>{preserveLines(period.note || '')}</td>
+        <td>{period.closed ? <i className="glyphicon glyphicon-ok" /> : ''}</td>
+        <td>{period.full_time ? <i className="glyphicon glyphicon-ok" /> : ''}</td>
+        <td>
+          { currentUser.admin
+            ? (
+              <span>
+                <NavLink to={`/accounting_periods/edit/${period.id}?user_id=${period.user_id}`} className="btn btn-default edit">{I18n.t('common.edit')}</NavLink>
+                <div onClick={this.onDelete} className="btn btn-danger delete">{I18n.t('common.destroy')}</div>
+              </span>
+            ) : null }
         </td>
       </tr>
-    )
+    );
   }
 }
 

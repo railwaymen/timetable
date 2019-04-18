@@ -1,93 +1,93 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as Api from '../../shared/api.js';
 import { NavLink, Redirect } from 'react-router-dom';
+import * as Api from '../../shared/api';
 import { unnullifyFields } from '../../shared/helpers';
 
 class EditUser extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.onChange = this.onChange.bind(this);
-    this.getUser  = this.getUser.bind(this);
+    this.getUser = this.getUser.bind(this);
     this.saveUser = this.saveUser.bind(this);
     this.onCheckboxChange = this.onCheckboxChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
-    this._renderAdminFields = this._renderAdminFields.bind(this);
-    this._renderUserFields = this._renderUserFields.bind(this);
+    this.renderAdminFields = this.renderAdminFields.bind(this);
+    this.renderUserFields = this.renderUserFields.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getUser();
   }
 
-  getUser () {
+  getUser() {
     if (this.state.userId) {
       Api.makeGetRequest({ url: `/api/users/${this.state.userId}` })
-         .then((response) => {
-           const user = unnullifyFields(response.data);
-           this.setState({ user });
-         })
-     }
+        .then((response) => {
+          const user = unnullifyFields(response.data);
+          this.setState({ user });
+        });
+    }
   }
 
   static propTypes = {
-    user: PropTypes.object
+    user: PropTypes.object,
   }
 
   state = {
     user: {},
     redirectToReferer: undefined,
-    userId: parseInt(this.props.match.params.id)
+    userId: parseInt(this.props.match.params.id, 10),
   }
 
-  onChange (e) {
+  onChange(e) {
     this.setState({
       user: {
         ...this.state.user,
-        [e.target.name]: e.target.value
-      }
-    })
+        [e.target.name]: e.target.value,
+      },
+    });
   }
 
-  onCheckboxChange (e) {
+  onCheckboxChange(e) {
     this.setState({
       user: {
         ...this.state.user,
-        [e.target.name]: !this.state.user[e.target.name]
-      }
-    })
+        [e.target.name]: !this.state.user[e.target.name],
+      },
+    });
   }
 
-  onSubmit (e) {
+  onSubmit(e) {
     e.preventDefault();
     this.saveUser();
   }
 
-  saveUser () {
-    let user = this.state.user;
+  saveUser() {
+    const { user } = this.state;
 
     if (this.state.userId) {
-      Api.makePutRequest({ url: `/api/users/${user.id}`, body: { id: user.id, user: user } })
-         .then(() => {
-           if (user.lang !== currentUser.lang) {
-             window.location.href = currentUser.admin ? '/users' : '/projects';
-           } else {
-             this.setState({ redirectToReferer: (currentUser.admin ? '/users' : '/projects') });
-           }
+      Api.makePutRequest({ url: `/api/users/${user.id}`, body: { id: user.id, user } })
+        .then(() => {
+          if (user.lang !== currentUser.lang) {
+            window.location.href = currentUser.admin ? '/users' : '/projects';
+          } else {
+            this.setState({ redirectToReferer: (currentUser.admin ? '/users' : '/projects') });
+          }
 
-           if (currentUser.id === user.id) window.currentUser = { ...currentUser, ...user };
-         })
+          if (currentUser.id === user.id) window.currentUser = { ...currentUser, ...user };
+        });
     } else {
-      Api.makePostRequest({ url: `/api/users`, body: { user: user } })
-         .then(() => {
-           this.setState({ redirectToReferer: '/users' })
-         })
+      Api.makePostRequest({ url: '/api/users', body: { user } })
+        .then(() => {
+          this.setState({ redirectToReferer: '/users' });
+        });
     }
   }
 
-  _renderAdminFields (user) {
+  renderAdminFields(user) {
     return (
       <div>
         <div className="form-group">
@@ -106,13 +106,15 @@ class EditUser extends React.Component {
         <div className="form-group">
           <input className="form-control" type="text" name="phone" placeholder={I18n.t('apps.users.phone')} value={user.phone} onChange={this.onChange} />
         </div>
-        { user.id !== currentUser.id ?
-          <div className="form-group">
-            <label>
-              {I18n.t('apps.users.user_active')}
-              <input type="checkbox" name="active" checked={user.active} onChange={this.onCheckboxChange} />
-            </label>
-          </div> : null }
+        { user.id !== currentUser.id
+          ? (
+            <div className="form-group">
+              <label>
+                {I18n.t('apps.users.user_active')}
+                <input type="checkbox" name="active" checked={user.active} onChange={this.onCheckboxChange} />
+              </label>
+            </div>
+          ) : null }
         <div className="form-group">
           <select className="form-control" name="lang" onChange={this.onChange} value={user.lang}>
             <option value="pl">pl</option>
@@ -120,10 +122,10 @@ class EditUser extends React.Component {
           </select>
         </div>
       </div>
-    )
+    );
   }
 
-  _renderUserFields (user) {
+  renderUserFields(user) {
     return (
       <div>
         <div className="form-group">
@@ -139,45 +141,51 @@ class EditUser extends React.Component {
           </select>
         </div>
       </div>
-    )
+    );
   }
 
-  _renderPreloader () {
+  renderPreloader() {
     return (
       <div>
         <div className="form-group">
-          <div className="preloader"></div>
+          <div className="preloader" />
         </div>
         <div className="form-group">
-          <div className="preloader"></div>
+          <div className="preloader" />
         </div>
         <div className="form-group">
-          <div className="preloader"></div>
+          <div className="preloader" />
         </div>
         <div className="form-group">
-          <div className="preloader"></div>
+          <div className="preloader" />
         </div>
         <div className="form-group">
-          <div className="preloader"></div>
+          <div className="preloader" />
         </div>
       </div>
-    )
+    );
   }
 
-  render () {
-    const { user, redirectToReferer, userId } = this.state;
+  renderFields() {
+    const { user, userId } = this.state;
+    if (user.id === userId || !userId) {
+      return currentUser.admin ? this.renderAdminFields(user) : this.renderUserFields(user);
+    }
+    return this.renderPreloader();
+  }
 
-    if (redirectToReferer) return <Redirect to={redirectToReferer} />
+  render() {
+    const { redirectToReferer } = this.state;
+
+    if (redirectToReferer) return <Redirect to={redirectToReferer} />;
 
     return (
       <form>
-        { (user.id === userId || !userId) ?
-          currentUser.admin ? this._renderAdminFields(user) : this._renderUserFields(user)
-        : this._renderPreloader() }
+        {this.renderFields()}
         <NavLink activeClassName="" className="btn btn-default" to="/users">{I18n.t('common.cancel')}</NavLink>
         <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
       </form>
-    )
+    );
   }
 }
 

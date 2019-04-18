@@ -57,6 +57,7 @@ class User < ApplicationRecord
       id: id,
       first_name: first_name,
       last_name: last_name,
+      projects: project_ids,
       is_leader: leader?,
       admin: admin,
       manager: manager,

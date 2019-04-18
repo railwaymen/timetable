@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import WorkHours from './work_hours.js';
 import _ from 'lodash';
 import moment from 'moment';
-import { displayDuration } from '../../../shared/helpers';
+import WorkHours from './work_hours';
+import { displayDuration, displayDayInfo } from '../../../shared/helpers';
 
 class WorkHoursDay extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.totalDurationViaProps = this.totalDurationViaProps.bind(this);
@@ -16,21 +16,21 @@ class WorkHoursDay extends React.Component {
 
   static propTypes = {
     workHours: PropTypes.array,
-    total: PropTypes.string
+    total: PropTypes.string,
   }
 
   state = {
-    total: '00:00'
+    total: '00:00',
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setState({
-      total: this.totalDurationViaProps()
-    })
+      total: this.totalDurationViaProps(),
+    });
   }
 
-  increaseWorkHours (seconds) {
-    let time = moment.duration(this.state.total, 'seconds').add(seconds, 'seconds');
+  increaseWorkHours(seconds) {
+    const time = moment.duration(this.state.total, 'seconds').add(seconds, 'seconds');
     let hours = time.hours();
     let minutes = time.minutes();
 
@@ -42,34 +42,20 @@ class WorkHoursDay extends React.Component {
     });
   }
 
-  totalDurationViaProps () {
-    return displayDuration(_.sumBy(this.props.day, (w) => w.duration))
+  totalDurationViaProps() {
+    return displayDuration(_.sumBy(this.props.day, w => w.duration));
   }
 
-  displayDayInfo () {
-    const day = this.props.day ? this.props.day[0] : {};
-    const today = moment();
-    const yesterday = moment().subtract(1, 'day');
-
-    if (today.isSame(day.starts_at, 'day')) {
-      return I18n.t('common.today')  // 'Today'
-    } else if (yesterday.isSame(day.starts_at, 'day')) {
-      return I18n.t('common.yesterday')
-    } else {
-      return moment(day.starts_at).format('ddd DD, MMMM YYYY')
-    }
-  }
-
-  updateWorkHours (component, deviation) {
+  updateWorkHours(component, deviation) {
     if (moment(component.state.workHours.starts_at).format('YYYYMMDD') !== this.props.fingerPrint) {
-      this.props.removeWorkHours(component, () => { this.props.pushEntry(component.state.workHours) });
+      this.props.removeWorkHours(component, () => { this.props.pushEntry(component.state.workHours); });
     } else {
       this.props.updateWorkHours(component);
       this.increaseWorkHours(deviation);
     }
   }
 
-  render () {
+  render() {
     const { day } = this.props;
     const { total } = this.state;
 
@@ -78,23 +64,27 @@ class WorkHoursDay extends React.Component {
         <header>
           <div className="date-container">
             <span className="title">
-              { this.displayDayInfo() }
+              { displayDayInfo(day ? day[0].starts_at : undefined) }
             </span>
             <span className="super">{total}</span>
+            {/* eslint-disable */}
             { day.map((workHours, index) => (
-              <WorkHours key={index}
-                         updateWorkHours={this.updateWorkHours}
-                         workHours={workHours}
-                         fingerPrint={this.props.fingerPrint}
-                         assignModalInfo={this.props.assignModalInfo}
-                         onCopy={this.props.onCopy}
-                         removeWorkHours={this.props.removeWorkHours}
-                         projects={this.props.projects} />
+              <WorkHours
+                key={index}
+                updateWorkHours={this.updateWorkHours}
+                workHours={workHours}
+                fingerPrint={this.props.fingerPrint}
+                assignModalInfo={this.props.assignModalInfo}
+                onCopy={this.props.onCopy}
+                removeWorkHours={this.props.removeWorkHours}
+                projects={this.props.projects}
+              />
             )) }
+            {/* eslint-enable */}
           </div>
         </header>
       </section>
-    )
+    );
   }
 }
 

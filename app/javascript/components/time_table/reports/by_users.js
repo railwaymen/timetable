@@ -1,13 +1,14 @@
 import React from 'react';
-import Report from './report.js';
-import * as Api from '../../shared/api.js';
-import { defaultDatePickerProps } from '../../shared/helpers.js';
 import _ from 'lodash';
-import ReportUserRecord from './report_user_record.js';
+import moment from 'moment';
 import { Redirect, NavLink } from 'react-router-dom';
 import URI from 'urijs';
-import DatePicker from 'react-datepicker';
 import PropTypes from 'prop-types';
+import ReportUserRecord from './report_user_record';
+import * as Api from '../../shared/api';
+import Report from './report';
+import HorizontalArrows from '../../shared/horizontal_arrows';
+import DateRangeFilter from '../../shared/date_range_filter';
 
 class ByUsers extends Report {
   static propTypes = {
@@ -16,7 +17,7 @@ class ByUsers extends Report {
     from: PropTypes.string,
     to: PropTypes.string,
     redirectToReferer: PropTypes.string,
-    list: PropTypes.string
+    list: PropTypes.string,
   }
 
   state = {
@@ -25,14 +26,14 @@ class ByUsers extends Report {
     from: moment().startOf('month').format(),
     to: moment().endOf('month').format(),
     redirectToReferer: undefined,
-    list: 'self'
+    list: 'self',
   }
 
-  getReports (params = {}) {
-    let original = URI(window.location.href);
-    let queries = original.search(true);
+  getReports(params = {}) {
+    const original = URI(window.location.href);
     let { from, to, list } = params;
 
+    /* eslint-disable */
     if (!from || !to) {
       from = this.state.from;
       to = this.state.to;
@@ -41,84 +42,84 @@ class ByUsers extends Report {
     if (!list) {
       list = this.state.list;
     }
+    /* eslint-enable */
 
-    let prepareParams = { from: from, to: to, list: list };
+    const prepareParams = { from, to, list };
 
     original.removeSearch('from')
-            .removeSearch('to')
-            .removeSearch('list')
+      .removeSearch('to')
+      .removeSearch('list');
 
-    let url = URI('/api/reports/work_times/by_users?' + original.query())
-                 .addSearch(prepareParams)
+    const url = URI(`/api/reports/work_times/by_users?${original.query()}`)
+      .addSearch(prepareParams);
 
-    Api.makeGetRequest({ url: url })
-       .then((response) => {
-         let newPath = URI(window.location.href)
-                          .removeSearch('from')
-                          .removeSearch('to')
-                          .removeSearch('list')
-                          .addSearch(prepareParams);
+    Api.makeGetRequest({ url })
+      .then((response) => {
+        const newPath = URI(window.location.href)
+          .removeSearch('from')
+          .removeSearch('to')
+          .removeSearch('list')
+          .addSearch(prepareParams);
 
-         history.pushState('Timetable', 'Reports', newPath)
+        window.history.pushState('Timetable', 'Reports', newPath);
 
-         this.setState({
-           reports: _.groupBy(response.data, 'user_name'),
-           users: [],
-           from: from,
-           to: to,
-           list: list
-         }, () => {
-           this.setState({
-             users: Object.keys(this.state.reports)
-           })
-         })
-       })
+        this.setState({
+          reports: _.groupBy(response.data, 'user_name'),
+          users: [],
+          from,
+          to,
+          list,
+        }, () => {
+          this.setState({
+            users: Object.keys(this.state.reports),
+          });
+        });
+      });
   }
 
-  render () {
-    const { users, reports, from, to, redirectToReferer, list } = this.state;
+  render() {
+    const {
+      users, reports, from, to, redirectToReferer, list,
+    } = this.state;
 
-    if (redirectToReferer) return (<Redirect to={redirectToReferer} />)
+    if (redirectToReferer) return (<Redirect to={redirectToReferer} />);
 
     return (
       <div id="content">
         <div className="pull-left">
-          { (currentUser.admin || currentUser.manager || currentUser.is_leader) ?
-            <select id="filter-list" className="form-control" name="list" onChange={this.onFilterChange} defaultValue={list}>
-              { currentUser.admin || currentUser.manager ?
-                <option value="all">{I18n.t('apps.reports.all')}</option> : null }
-              { currentUser.is_leader ?
-                <option value="leader">{I18n.t('apps.reports.my_projects')}</option> : null }
-              <option value="self">{I18n.t('apps.reports.my_work_hours')}</option>
-            </select> : null }
+          { (currentUser.isSuperUser() || currentUser.is_leader)
+            ? (
+              <select id="filter-list" className="form-control" name="list" onChange={this.onFilterChange} defaultValue={list}>
+                { currentUser.isSuperUser()
+                  ? <option value="all">{I18n.t('apps.reports.all')}</option> : null }
+                { currentUser.is_leader
+                  ? <option value="leader">{I18n.t('apps.reports.my_projects')}</option> : null }
+                <option value="self">{I18n.t('apps.reports.my_work_hours')}</option>
+              </select>
+            ) : null }
         </div>
         <h3 className="clearfix col-md-offset-4 text-muted">
-          { (currentUser.admin || currentUser.manager || currentUser.is_leader) ?
-            <div className="btn-group pull-right">
-              <NavLink className="btn btn-default" to="/reports/work_times/by_projects">{I18n.t('apps.reports.by_projects')}</NavLink>
-              <div className="btn btn-default active">{I18n.t('apps.reports.by_people')}</div>
-            </div> : null }
-          <a className="glyphicon glyphicon-chevron-left previous pull-left" href="javascript:void(0)" onClick={this.prevMonth}></a>
-          <div className="current-month pull-left">{this.detectMonth(from, to)}</div>
-          <a className="glyphicon glyphicon-chevron-right next pull-left" href="javascript:void(0)" onClick={this.nextMonth}></a>
-          <div className="clearfix">
-            <div className="col-xs-3">
-              <DatePicker {...defaultDatePickerProps} className="form-control" dateFormat="DD/MM/YYYY" selected={moment(from)} onChange={this.onFromDateChange} name="from" placeholder="from" />
-            </div>
-            <div className="col-xs-3">
-              <DatePicker {...defaultDatePickerProps} className="form-control" dateFormat="DD/MM/YYYY" selected={moment(to)} onChange={this.onToDateChange} name="to" placeholder="to" />
-            </div>
-            <div className="btn btn-default filter" onClick={this.onFilter}>
-              {I18n.t('apps.reports.filter')}
-            </div>
-          </div>
+          { (currentUser.isSuperUser() || currentUser.is_leader)
+            ? (
+              <div className="btn-group pull-right">
+                <NavLink className="btn btn-default" to="/reports/work_times/by_projects">{I18n.t('apps.reports.by_projects')}</NavLink>
+                <div className="btn btn-default active">{I18n.t('apps.reports.by_people')}</div>
+              </div>
+            ) : null }
+
+          <HorizontalArrows onLeftClick={this.prevMonth} onRightClick={this.nextMonth}>
+            <div className="current-month pull-left">{this.detectMonth(from, to)}</div>
+          </HorizontalArrows>
+          <DateRangeFilter className="clearfix" from={from} to={to} onFilter={this.onFilter} onFromChange={this.onFromDateChange} onToChange={this.onToDateChange} />
         </h3>
+        {/* eslint-disable */}
         { users.map((user, index) => (
           <ReportUserRecord key={index} reportRows={reports[user]} from={from} to={to} redirectTo={this.redirectTo} />
         )) }
-        <div className="col-mid-offset-1"></div>
+        {/* eslint-enable */}
+        <div className="col-mid-offset-1" />
       </div>
-    )
+    );
   }
 }
 

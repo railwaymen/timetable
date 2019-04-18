@@ -1,22 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class ErrorTooltip extends React.Component {
-  static propTypes = {
-    errors: PropTypes.array
-  }
+const ErrorTooltip = ({ errors }) => (
+  <div className="error-tooltip">
+    <ul>
+      {errors.map(error => (
+        <li key={error}>{error}</li>
+      ))}
+    </ul>
+  </div>
+);
 
-  render () {
-    return (
-      <div className="error-tooltip">
-        <ul>
-          { this.props.errors.map((error, index) => (
-            <li key={index}>{error}</li>
-          )) }
-        </ul>
-      </div>
-    )
-  }
-}
+ErrorTooltip.propTypes = {
+  errors: PropTypes.array.isRequired,
+};
 
 export default ErrorTooltip;

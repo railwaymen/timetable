@@ -7,10 +7,8 @@
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
 
-var componentRequireContext = require.context("components", true)
-var ReactRailsUJS = require("react_ujs")
-ReactRailsUJS.useContext(componentRequireContext)
 // Support component names relative to this directory:
-var componentRequireContext = require.context("components", true)
-var ReactRailsUJS = require("react_ujs")
-ReactRailsUJS.useContext(componentRequireContext)
+const componentRequireContext = require.context('components', true);
+const ReactRailsUJS = require('react_ujs');
+
+ReactRailsUJS.useContext(componentRequireContext);

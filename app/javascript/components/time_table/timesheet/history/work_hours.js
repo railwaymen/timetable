@@ -1,21 +1,27 @@
 import React from 'react';
+import moment from 'moment';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
-import * as Api from '../../../shared/api.js';
 import DatePicker from 'react-datepicker';
-import ProjectsList from '../projects_list.js';
-import ErrorTooltip from '../errors/error_tooltip.js';
-import { preserveLines, defaultDatePickerProps } from '../../../shared/helpers.js';
+import * as Api from '../../../shared/api';
+import ProjectsList from '../projects_list';
+import ErrorTooltip from '../errors/error_tooltip';
+import { defaultDatePickerProps } from '../../../shared/helpers';
+import WorkTimeTask from '../../../shared/work_time_task';
+import WorkTimeDuration from '../../../shared/work_time_duration';
+import WorkTimeTime from '../../../shared/work_time_time';
+import WorkTimeDescription from '../../../shared/work_time_description';
 
 class WorkHours extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.onChange = this.onChange.bind(this);
     this.onCopy = this.onCopy.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
-    this._renderBodyEditable = this._renderBodyEditable.bind(this);
-    this._renderDateEditable = this._renderDateEditable.bind(this);
+    this.renderBodyEditable = this.renderBodyEditable.bind(this);
+    this.renderDateEditable = this.renderDateEditable.bind(this);
     this.workHoursJsonApi = this.workHoursJsonApi.bind(this);
     this.saveWorkHours = this.saveWorkHours.bind(this);
     this.getInfo = this.getInfo.bind(this);
@@ -28,36 +34,26 @@ class WorkHours extends React.Component {
   }
 
   static propTypes = {
-    workHours: PropTypes.object
+    workHours: PropTypes.object,
   }
 
   state = {
     workHours: this.props.workHours,
     editing: false,
-    openModal: false,
     projectEditable: false,
-    errors: []
+    errors: [],
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setState({
-      starts_at_hours: this.formattedHoursAndMinutes(this.state.workHours.starts_at),
-      ends_at_hours: this.formattedHoursAndMinutes(this.state.workHours.ends_at),
-      date: moment(this.state.workHours.starts_at).format('DD/MM/YYYY')
-    })
+      starts_at_hours: moment(this.state.workHours.starts_at).format('HH:mm'),
+      ends_at_hours: moment(this.state.workHours.ends_at).format('HH:mm'),
+      date: moment(this.state.workHours.starts_at).format('DD/MM/YYYY'),
+    });
   }
 
-  formattedHoursAndMinutes (time) {
-    let hours = moment(time).hours();
-    let minutes = moment(time).minutes();
-    if (hours < 10) hours = `0${hours}`;
-    if (minutes < 10) minutes = `0${minutes}`;
-
-    return `${hours}:${minutes}`;
-  }
-
-  formattedHoursAndMinutesDuration (time) {
-    time = moment.duration(time, 'seconds');
+  formattedHoursAndMinutesDuration(duration) {
+    const time = moment.duration(duration, 'seconds');
     let hours = time.hours();
     let minutes = time.minutes();
     if (hours < 10) hours = `0${hours}`;
@@ -66,84 +62,88 @@ class WorkHours extends React.Component {
     return `${hours}:${minutes}`;
   }
 
-  onCopy () {
+  onCopy() {
     this.props.onCopy(this.state.workHours);
   }
 
-  onDelete () {
-    if (confirm('Are you sure?')) {
+  onDelete() {
+    if (window.confirm('Are you sure?')) {
       Api.makeDeleteRequest({ url: `/api/work_times/${this.state.workHours.id}` })
-         .then((data) => {
-           if (parseInt(data.status) === 204) {
-             this.props.removeWorkHours(this);
-           }
-         })
+        .then((data) => {
+          if (parseInt(data.status, 10) === 204) {
+            this.props.removeWorkHours(this);
+          }
+        });
     }
   }
 
-  onChange (e) {
+  onChange(e) {
     this.setState({
       workHours: {
         ...this.state.workHours,
-        [e.target.name]: e.target.value
-      }
-    })
+        [e.target.name]: e.target.value,
+      },
+    });
   }
 
-  onChangeProject (e) {
-    let projectId = parseInt(e.target.attributes.getNamedItem('data-value').value);
-    let project = _.find(this.props.projects, (p) => p.id === projectId);
+  onChangeProject(e) {
+    const projectId = parseInt(e.target.attributes.getNamedItem('data-value').value, 10);
+    const project = _.find(this.props.projects, p => p.id === projectId);
 
     if (projectId !== this.state.selectedProject) {
       this.setState({
         workHours: {
           ...this.state.workHours,
-          project: project,
-          project_id: projectId
-        }
+          project,
+          project_id: projectId,
+        },
       }, () => {
         this.saveWorkHours();
-      })
+      });
     }
   }
 
-  onHoursEdit (e) {
+  onHoursEdit(e) {
     this.setState({
-      [e.target.name]: e.target.value
-    })
+      [e.target.name]: e.target.value,
+    });
   }
 
-  recountTime (e) {
+  recountTime() {
     const { starts_at_hours, ends_at_hours } = this.state;
 
-    let formattedStartsAtTime = this.formattedHoursAndMinutes(moment(starts_at_hours, 'HH:mm'));
-    let formattedEndsAtTime = this.formattedHoursAndMinutes(moment(ends_at_hours, 'HH:mm'));
+    // parse and reformat as starts_at_hours are input from user
+    const formattedStartsAtTime = moment(starts_at_hours, 'HH:mm').format('HH:mm');
+    const formattedEndsAtTime = moment(ends_at_hours, 'HH:mm').format('HH:mm');
 
     this.setState({
       starts_at_hours: formattedStartsAtTime,
-      ends_at_hours: formattedEndsAtTime
-    })
+      ends_at_hours: formattedEndsAtTime,
+    });
   }
 
-  onDateChange (value) {
+  onDateChange(value) {
     this.setState({
-      date: moment(value).format('DD/MM/YYYY')
-    })
+      date: moment(value).format('DD/MM/YYYY'),
+    });
   }
 
-  _renderBodyEditable () {
+  renderBodyEditable() {
     return (
       <div>
+        {/* eslint-disable-next-line */}
         <textarea autoFocus name="body" type="text" value={_.unescape(this.state.workHours.body)} onChange={this.onChange} />
-        { this.props.workHours.project.work_times_allows_task ?
-          <div className="task-edit">
-            <input className="task-input" name="task" value={this.state.workHours.task} onChange={this.onChange} />
-          </div> : null }
+        { this.props.workHours.project.work_times_allows_task
+          ? (
+            <div className="task-edit">
+              <input className="task-input" name="task" value={this.state.workHours.task} onChange={this.onChange} />
+            </div>
+          ) : null }
       </div>
-    )
+    );
   }
 
-  _renderDateEditable () {
+  renderDateEditable() {
     return (
       <div className="edit-time">
         <input className="start-input" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
@@ -152,11 +152,11 @@ class WorkHours extends React.Component {
           <DatePicker {...defaultDatePickerProps} value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
         </div>
       </div>
-    )
+    );
   }
 
-  workHoursJsonApi () {
-    const workHours = this.state.workHours;
+  workHoursJsonApi() {
+    const { workHours } = this.state;
 
     return {
       id: workHours.id,
@@ -164,38 +164,38 @@ class WorkHours extends React.Component {
       body: workHours.body,
       task: workHours.task,
       starts_at: workHours.starts_at,
-      ends_at: workHours.ends_at
-    }
+      ends_at: workHours.ends_at,
+    };
   }
 
-  disableEdit (e) {
-    const localName = e.target.localName;
+  disableEdit(e) {
+    const { localName } = e.target;
     const properly = ['textarea', 'input'];
 
     if (!properly.includes(localName)) {
       document.removeEventListener('click', this.disableEdit);
 
       this.setState({
-        editing: false
+        editing: false,
       }, () => {
         if (!this.state.editing) {
           this.saveWorkHours();
         }
-      })
+      });
     }
   }
 
-  toggleEdit () {
+  toggleEdit() {
     this.setState({
       editing: true,
-      errors: []
+      errors: [],
     }, () => {
       document.addEventListener('click', this.disableEdit);
-    })
+    });
   }
 
-  toggleProjectEdit (e) {
-    let projectEditable = this.state.projectEditable;
+  toggleProjectEdit() {
+    const { projectEditable } = this.state;
 
     if (!projectEditable) {
       document.addEventListener('click', this.toggleProjectEdit);
@@ -204,36 +204,38 @@ class WorkHours extends React.Component {
     }
 
     this.setState({
-      projectEditable: !projectEditable
-    })
+      projectEditable: !projectEditable,
+    });
   }
 
-  saveWorkHours () {
-    const { workHours, ends_at_hours, starts_at_hours, date } = this.state;
+  saveWorkHours() {
+    const {
+      workHours, ends_at_hours, starts_at_hours, date,
+    } = this.state;
 
-    let formattedStartsAtTime = moment(workHours.starts_at).format('HH:mm');
-    let formattedEndsAtTime = moment(workHours.ends_at).format('HH:mm');
-    let starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
-    let ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
-    let oldDuration = workHours.duration;
+    const formattedStartsAtTime = moment(workHours.starts_at).format('HH:mm');
+    const formattedEndsAtTime = moment(workHours.ends_at).format('HH:mm');
+    const starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
+    const ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
+    const oldDuration = workHours.duration;
 
     Api.makePutRequest({
       url: `/api/work_times/${this.state.workHours.id}`,
-      body: { work_time: { ...this.workHoursJsonApi(), starts_at: starts_at, ends_at: ends_at } }
+      body: { work_time: { ...this.workHoursJsonApi(), starts_at, ends_at } },
     }).then((response) => {
-      let data = response.data;
-      let durationDeviation = data.duration - oldDuration;
+      const { data } = response;
+      const durationDeviation = data.duration - oldDuration;
 
       this.setState({
         workHours: data,
         date: moment(data.starts_at).format('DD/MM/YYYY'),
-        errors: []
+        errors: [],
       }, () => {
         this.props.updateWorkHours(this, durationDeviation);
-        let event = new CustomEvent(
+        const event = new CustomEvent(
           'edit-entry',
-          { detail: { id: workHours.id, success: true } }
-        )
+          { detail: { id: workHours.id, success: true } },
+        );
 
         document.dispatchEvent(event);
       });
@@ -241,23 +243,23 @@ class WorkHours extends React.Component {
       this.setState({
         starts_at_hours: formattedStartsAtTime,
         ends_at_hours: formattedEndsAtTime,
-        errors: Object.values(e.errors)
+        errors: Object.values(e.errors),
       }, () => {
-        let event = new CustomEvent(
+        const event = new CustomEvent(
           'edit-entry',
-          { detail: { id: workHours.id, success: false } }
-        )
+          { detail: { id: workHours.id, success: false } },
+        );
 
         document.dispatchEvent(event);
-      })
-    })
+      });
+    });
   }
 
-  getInfo () {
+  getInfo() {
     this.props.assignModalInfo(undefined);
 
     return Api.makeGetRequest({ url: `/api/work_times/${this.state.workHours.id}` })
-              .then((response) => this.props.assignModalInfo(response.data))
+      .then(response => this.props.assignModalInfo(response.data));
   }
 
   descriptionText() {
@@ -268,78 +270,72 @@ class WorkHours extends React.Component {
     return (
       <span className="description-text">
         {
-          workHours.project.lunch ?
-          'Omnonmonmonmnomnonmonmn' :
-          preserveLines((_.unescape(workHours.body) || '[No description]'))
+          workHours.project.lunch
+            ? 'Omnonmonmonmnomnonmonmn'
+            : WorkTimeDescription(workHours)
         }
       </span>
     );
   }
 
-  render () {
+  render() {
     const { projects } = this.props;
-    const { workHours, projectEditable, openModal, editing, starts_at_hours, ends_at_hours, errors } = this.state;
+    const {
+      workHours, projectEditable, editing, errors,
+    } = this.state;
 
     return (
-      <div className="time-entries-list-container" style={!_.isEmpty(errors) ? { 'backgroundColor': '#FF9177', position: 'relative' } : {}}>
+      <div className="time-entries-list-container" style={!_.isEmpty(errors) ? { backgroundColor: '#FF9177', position: 'relative' } : {}}>
+        {/* eslint-disable-next-line */}
         { errors.map((error, index) => (<ErrorTooltip key={index} errors={error} />)) }
         <ul className="time-entries-list">
           <li className={`entry ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
-            { !_.isEmpty(errors) ? <div className="error-info-container"><i className="glyphicon glyphicon-warning-sign"></i></div> : null }
-            <div className="task-container">
-              <span className="description-text">
-                <a href={workHours.task} target="_blank">{workHours.task_preview}</a>
-              </span>
-            </div>
+            { !_.isEmpty(errors) ? <div className="error-info-container"><i className="glyphicon glyphicon-warning-sign" /></div> : null }
+            <WorkTimeTask workTime={workHours} />
             <div className="description-container" onClick={this.toggleEdit}>
               {this.descriptionText()}
-              { editing ? this._renderBodyEditable() : null }
+              { editing ? this.renderBodyEditable() : null }
             </div>
             <div className="project-container" onClick={this.toggleProjectEdit}>
-              <span className="project-pill" style={{ background: '#' + workHours.project.color }}>
+              <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
                 {workHours.project.name}
               </span>
               <div className="projects-region">
-                { projectEditable ?
-                  <div>
-                    <div className="dropdown fluid search ui active visible">
-                      <input type="hidden" name="project" value="12" />
-                      <input className="search" autoComplete="off" tabIndex="0" />
-                      <div className="text">
-                        <div className="circular empty label ui" style={{ background: '#' + workHours.project.color }}> </div>
-                        {workHours.project.name}
+                { projectEditable
+                  ? (
+                    <div>
+                      <div className="dropdown fluid search ui active visible">
+                        <input type="hidden" name="project" value="12" />
+                        <input className="search" autoComplete="off" tabIndex="0" />
+                        <div className="text">
+                          <div className="circular empty label ui" style={{ background: `#${workHours.project.color}` }} />
+                          {workHours.project.name}
+                        </div>
+                        <ProjectsList projects={projects} currentProject={workHours.project} onChangeProject={this.onChangeProject} />
                       </div>
-                      <ProjectsList projects={projects} currentProject={workHours.project} onChangeProject={this.onChangeProject}/>
                     </div>
-                  </div> : null }
+                  ) : null }
               </div>
             </div>
             <div className="actions-container">
               <div className="action-item destroy" onClick={this.onDelete}>
-                <i className="icon red trash"></i>
+                <i className="icon red trash" />
               </div>
               <div className="action-item history" onClick={this.getInfo}>
-                <i className="icon wait"></i>
+                <i className="icon wait" />
               </div>
               <div className="action-item copy" onClick={this.onCopy}>
-                <i className="glyphicon glyphicon-paste"></i>
+                <i className="glyphicon glyphicon-paste" />
               </div>
             </div>
-            <div className="duration-container">
-              <div className="duration">
-                {this.formattedHoursAndMinutesDuration(workHours.duration)}
-              </div>
-            </div>
-            <div className="time-container">
-              <div className="time" onClick={this.toggleEdit}>
-                {starts_at_hours} - {ends_at_hours}
-              </div>
-              { editing ? this._renderDateEditable() : null }
-            </div>
+            <WorkTimeDuration workTime={workHours} />
+            <WorkTimeTime workTime={workHours} onClick={this.toggleEdit}>
+              { editing ? this.renderDateEditable() : null }
+            </WorkTimeTime>
           </li>
         </ul>
       </div>
-    )
+    );
   }
 }
 

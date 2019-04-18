@@ -4,38 +4,47 @@ import { NavLink } from 'react-router-dom';
 
 class Project extends React.Component {
   static propTypes = {
-    project: PropTypes.object
+    project: PropTypes.object,
   }
 
-  state = {
-    project: {}
-  }
-
-  _renderButtons () {
-    if (currentUser.admin || currentUser.manager || (this.props.project.leader_id === currentUser.id)) {
+  renderButtons() {
+    if (currentUser.canManageProject(this.props.project)) {
       return (
         <NavLink className="ui button icon basic blue" to={`/projects/${this.props.project.id}/edit`}>
-          <i className="icon pencil"></i>
+          <i className="icon pencil" />
         </NavLink>
-      )
+      );
     }
+    return null;
   }
 
-  render () {
+  renderProjectName() {
+    const { project } = this.props;
+    if (currentUser.canManageProject(project)) {
+      return (
+        <a href={`/projects/${project.id}/work_times`}>
+          {project.name}
+        </a>
+      );
+    }
+    return project.name;
+  }
+
+  render() {
     const { project } = this.props;
 
     return (
       <tr>
-        <td></td>
-        <td>{project.name}</td>
+        <td />
+        <td>{this.renderProjectName()}</td>
         <td>{project.leader ? `${project.leader.first_name} ${project.leader.last_name}` : ''}</td>
         <td>
           <div className="ui buttons">
-            {this._renderButtons()}
+            {this.renderButtons()}
           </div>
         </td>
       </tr>
-    )
+    );
   }
 }
 

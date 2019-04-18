@@ -1,20 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ProjectsList from './projects_list.js';
 import _ from 'lodash';
+import ProjectsList from './projects_list';
 
 class ProjectsDropdown extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.expandDropdown = this.expandDropdown.bind(this);
-    this._renderProjectsList = this._renderProjectsList.bind(this);
+    this.renderProjectsList = this.renderProjectsList.bind(this);
     this.onChangeProject = this.onChangeProject.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onBlur = this.onBlur.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setState({
       filteredProjects: this.filterProjects(),
     });
@@ -24,7 +24,7 @@ class ProjectsDropdown extends React.Component {
     projects: PropTypes.array,
     selectedProject: PropTypes.object,
     isExpanded: PropTypes.bool,
-    filter: PropTypes.string
+    filter: PropTypes.string,
   }
 
   state = {
@@ -33,22 +33,22 @@ class ProjectsDropdown extends React.Component {
     filteredProjects: this.filterProjects(''),
   }
 
-  onFilterChange (e) {
+  onFilterChange(e) {
     this.setState({
       filter: e.target.value,
-      filteredProjects: this.filterProjects(e.target.value)
+      filteredProjects: this.filterProjects(e.target.value),
     });
   }
 
-  filterProjects (filter = this.state.filter) {
+  filterProjects(filter = this.state.filter) {
     const lowerFilter = filter.toLowerCase();
-    return _.filter(this.props.projects, (p) => (
+    return _.filter(this.props.projects, p => (
       p.active && p.name.toLowerCase().match(escape(lowerFilter))
     ));
   }
 
-  expandDropdown () {
-    let isExpanded = this.state.isExpanded;
+  expandDropdown() {
+    const { isExpanded } = this.state;
 
     if (!isExpanded) {
       document.getElementById('search-input').focus();
@@ -60,50 +60,50 @@ class ProjectsDropdown extends React.Component {
     this.setState({ isExpanded: !isExpanded, filter: '', filteredProjects: this.filterProjects('') });
   }
 
-  onBlur (e) {
+  onBlur() {
     this.setState({ isExpanded: false });
   }
 
-  onChangeProject (e) {
-    let projectId = parseInt(e.target.attributes.getNamedItem('data-value').value);
+  onChangeProject(e) {
+    const projectId = parseInt(e.target.attributes.getNamedItem('data-value').value, 10);
 
     if (projectId !== this.props.selectedProject) {
       const projects = this.filterProjects('');
-      let selectedProject = _.find(projects, (p) => (
+      const selectedProject = _.find(projects, p => (
         p.id === projectId
       )) || projects[0];
 
       this.props.updateProject(selectedProject);
 
       this.setState({
-        isExpanded: false
-      })
+        isExpanded: false,
+      });
     }
   }
 
-  _renderProjectsList () {
+  renderProjectsList() {
     return (
       <div style={{ marginTop: '15px' }}>
         <ProjectsList projects={this.state.filteredProjects} currentProject={this.props.selectedProject} onChangeProject={this.onChangeProject} />
       </div>
-    )
+    );
   }
 
-  render () {
+  render() {
     const { isExpanded, filter } = this.state;
     const { selectedProject } = this.props;
 
     return (
-      <div className="dropdown fluid search ui" style={{ 'minWidth': '90px' }} onClick={this.expandDropdown}>
+      <div className="dropdown fluid search ui" style={{ minWidth: '90px' }} onClick={this.expandDropdown}>
         <input type="hidden" name="project" value="12" />
         <input placeholder="Project +" className="search" name="filter" value={filter} autoComplete="off" tabIndex="0" onChange={this.onFilterChange} id="search-input" />
         <div className={`text active ${(isExpanded ? 'hidden' : '')}`} style={{ background: `#${selectedProject.color}` }}>
-          <div className="circular empty label ui" style={{ background: `#${selectedProject.color}` }} ></div>
+          <div className="circular empty label ui" style={{ background: `#${selectedProject.color}` }} />
           {selectedProject.name}
         </div>
-        { isExpanded ? this._renderProjectsList() : null }
+        { isExpanded ? this.renderProjectsList() : null }
       </div>
-    )
+    );
   }
 }
 

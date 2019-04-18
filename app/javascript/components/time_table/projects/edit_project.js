@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as Api from '../../shared/api.js';
 import { NavLink, Redirect } from 'react-router-dom';
+import * as Api from '../../shared/api';
 
 class EditProject extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.getProject = this.getProject.bind(this);
@@ -16,7 +16,7 @@ class EditProject extends React.Component {
 
   static propTypes = {
     project: PropTypes.object,
-    users: PropTypes.array
+    users: PropTypes.array,
   }
 
   state = {
@@ -26,14 +26,14 @@ class EditProject extends React.Component {
       color: '0c0c0c',
       leader_id: '',
       work_times_allows_task: true,
-      active: true
+      active: true,
     },
     users: [],
-    projectId: parseInt(this.props.match.params.id),
-    redirectToReferer: undefined
+    projectId: parseInt(this.props.match.params.id, 10),
+    redirectToReferer: undefined,
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getProject();
 
     if (currentUser.admin) {
@@ -41,116 +41,125 @@ class EditProject extends React.Component {
     }
   }
 
-  getProject () {
+  getProject() {
     if (this.state.projectId) {
       Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}` })
-         .then((response) => {
-           let project = response.data;
-           if (!project.leader_id) project.leader_id = undefined;
+        .then((response) => {
+          const project = response.data;
+          if (!project.leader_id) project.leader_id = undefined;
 
-           this.setState({ project: project });
-         })
+          this.setState({ project });
+        });
     }
   }
 
-  getUsers () {
+  getUsers() {
     Api.makeGetRequest({ url: '/api/users' })
-       .then((response) => {
-         this.setState({ users: response.data });
-       })
+      .then((response) => {
+        this.setState({ users: response.data });
+      });
   }
 
-  onChange (e) {
+  onChange(e) {
     this.setState({
       project: {
         ...this.state.project,
-        [e.target.name]: e.target.value
-      }
-    })
+        [e.target.name]: e.target.value,
+      },
+    });
   }
 
-  onCheckboxChange (e) {
-    let project = this.state.project;
+  onCheckboxChange(e) {
+    const { project } = this.state;
 
     this.setState({
       project: {
         ...project,
-        [e.target.name]: !project[e.target.name]
-      }
-    })
+        [e.target.name]: !project[e.target.name],
+      },
+    });
   }
 
-  onSubmit (e) {
+  onSubmit(e) {
     e.preventDefault();
-    let project = this.state.project;
+    const { project } = this.state;
     project.color = project.color[0] === '#' ? project.color.substring(1) : project.color;
 
     if (this.state.projectId) {
-      Api.makePutRequest({ url: `/api/projects/${this.state.project.id}`, body: { project: project } })
-         .then(() => {
-           this.setState({
-             redirectToReferer: '/projects/list'
-           })
-         })
+      Api.makePutRequest({ url: `/api/projects/${this.state.project.id}`, body: { project } })
+        .then(() => {
+          this.setState({
+            redirectToReferer: '/projects/list',
+          });
+        });
     } else {
-      Api.makePostRequest({ url: '/api/projects', body: { project: project } })
-         .then(() => {
-           this.setState({
-             redirectToReferer: '/projects/list'
-           })
-         })
+      Api.makePostRequest({ url: '/api/projects', body: { project } })
+        .then(() => {
+          this.setState({
+            redirectToReferer: '/projects/list',
+          });
+        });
     }
   }
 
-  _renderPreloader () {
+  renderPreloader() {
     return (
       <div>
         <div className="form-group">
-          <div className="preloader"></div>
+          <div className="preloader" />
         </div>
         <div className="form-group">
-          <div className="preloader"></div>
+          <div className="preloader" />
         </div>
         <div className="form-group">
-          <div className="preloader"></div>
+          <div className="preloader" />
         </div>
         <div className="form-group">
-          <div className="preloader"></div>
+          <div className="preloader" />
         </div>
       </div>
-    )
+    );
   }
 
-  render () {
-    const { project, users, redirectToReferer, projectId } = this.state;
+  render() {
+    const {
+      project, users, redirectToReferer, projectId,
+    } = this.state;
 
-    if (redirectToReferer) return <Redirect to={redirectToReferer} />
-    if (!projectId || projectId === project.id ) {
+    if (redirectToReferer) return <Redirect to={redirectToReferer} />;
+    if (!projectId || projectId === project.id) {
       return (
         <form>
-          { (currentUser.admin || currentUser.manager) ?
-            <div>
-              <div className="form-group">
-                <input className="form-control" type="text" name="name" placeholder={I18n.t('common.name')} onChange={this.onChange} value={project.name} autoFocus />
+          { currentUser.isSuperUser()
+            ? (
+              <div>
+                <div className="form-group">
+                  {/* eslint-disable-next-line */}
+                  <input className="form-control" type="text" name="name" placeholder={I18n.t('common.name')} onChange={this.onChange} value={project.name} autoFocus />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
+                  <select name="leader_id" id="leader" className="form-control" value={project.leader_id} onChange={this.onChange}>
+                    <option value="" />
+                    { users.map(user => (
+                      <option key={user.id} value={user.id}>
+                        {user.first_name}
+                        {' '}
+                        {user.last_name}
+                      </option>
+                    )) }
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>
+                    {I18n.t('apps.projects.active')}
+                    <input type="checkbox" name="active" checked={project.active} onChange={this.onCheckboxChange} />
+                  </label>
+                </div>
               </div>
-              <div className="form-group">
-                <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
-                <select name="leader_id" id="leader" className="form-control" value={project.leader_id} onChange={this.onChange}>
-                  <option value=""></option>
-                  { users.map((user, index) => (
-                    <option key={user.id} value={user.id}>{user.first_name} {user.last_name}</option>
-                  )) }
-                </select>
-              </div>
-              <div className="form-group">
-                <label>
-                  {I18n.t('apps.projects.active')}
-                  <input type="checkbox" name="active" checked={project.active} onChange={this.onCheckboxChange} />
-                </label>
-              </div>
-            </div>
-          : null }
-          <div className="form-group"></div>
+            )
+            : null }
+          <div className="form-group" />
           <input type="color" name="color" value={((project.color && project.color[0] !== '#') ? '#' : '') + project.color} onChange={this.onChange} />
           <div className="form-group">
             <label>
@@ -164,10 +173,9 @@ class EditProject extends React.Component {
           <input className="btn btn-default" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
           <NavLink className="btn btn-primary" to="/projects/list">{I18n.t('common.cancel')}</NavLink>
         </form>
-      )
-    } else {
-      return this._renderPreloader()
+      );
     }
+    return this.renderPreloader();
   }
 }
 
