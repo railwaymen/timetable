@@ -10,8 +10,8 @@ export default class NewReport extends React.Component {
 
   state = {
     projectId: parseInt(this.props.match.params.projectId, 10),
-    rangeStart: moment().startOf('month'),
-    rangeEnd: moment().endOf('month'),
+    startsAt: moment().startOf('month'),
+    endsAt: moment().endOf('month'),
     userRoles: [],
     redirectTo: null,
   }
@@ -26,17 +26,17 @@ export default class NewReport extends React.Component {
   }
 
   onRangeStartChange(time) {
-    const rangeStart = moment(time);
-    this.setState({ rangeStart });
+    const startsAt = moment(time);
+    this.setState({ startsAt });
   }
 
   onRangeEndChange(time) {
-    const rangeEnd = moment(time);
-    this.setState({ rangeEnd });
+    const endsAt = moment(time);
+    this.setState({ endsAt });
   }
 
   getRoles() {
-    Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}/project_reports/roles?range_start=${this.state.rangeStart.toISOString()}&range_end=${this.state.rangeEnd.toISOString()}` })
+    Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}/project_reports/roles?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}` })
       .then(({ data }) => {
         this.setState({ userRoles: data });
       });
@@ -53,14 +53,14 @@ export default class NewReport extends React.Component {
 
   onSubmit() {
     const {
-      projectId, userRoles, rangeStart, rangeEnd,
+      projectId, userRoles, startsAt, endsAt,
     } = this.state;
     Api.makePostRequest({
       url: `/api/projects/${projectId}/project_reports`,
       body: {
         project_report_roles: userRoles,
-        range_start: rangeStart,
-        range_end: rangeEnd,
+        starts_at: startsAt,
+        ends_at: endsAt,
       },
     }).then(({ data }) => {
       this.setState({
@@ -77,7 +77,7 @@ export default class NewReport extends React.Component {
     return (
       <div>
         <h1>Roles</h1>
-        <DateRangeFilter from={this.state.rangeStart.format()} to={this.state.rangeEnd.format()} onFromChange={this.onRangeStartChange} onToChange={this.onRangeEndChange} onFilter={this.getRoles} />
+        <DateRangeFilter from={this.state.startsAt.format()} to={this.state.endsAt.format()} onFromChange={this.onRangeStartChange} onToChange={this.onRangeEndChange} onFilter={this.getRoles} />
         <table className="table">
           <thead>
             <tr>

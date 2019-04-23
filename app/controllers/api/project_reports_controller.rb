@@ -9,8 +9,8 @@ module Api
       @report = @project.project_reports.new(
         initial_body: {},
         last_body: {},
-        range_start: params[:range_start],
-        range_end: params[:range_end]
+        starts_at: params[:starts_at],
+        ends_at: params[:ends_at]
       )
       authorize @report
       @report = ProjectReportCreator.new.call(@report, params[:project_report_roles])
@@ -36,7 +36,7 @@ module Api
 
     def roles
       authorize :project_report
-      users = @project.users_participating(params[:range_start]..params[:range_end])
+      users = @project.users_participating(params[:starts_at]..params[:ends_at])
       @user_roles = if (last_report = @project.project_reports.done.order(id: :desc).first)
                       users
                         .left_joins(:project_report_roles)

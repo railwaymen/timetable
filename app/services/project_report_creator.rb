@@ -25,7 +25,7 @@ class ProjectReportCreator
   def get_work_times(project_report)
     project_report.project.work_times.active
                   .joins(:user)
-                  .where('work_times.starts_at BETWEEN ? AND ?', project_report.range_start, project_report.range_end)
+                  .where('work_times.starts_at BETWEEN ? AND ?', project_report.starts_at, project_report.ends_at)
                   .group('user_id, users.last_name, users.first_name, task, body')
                   .select("user_id, CONCAT(users.first_name, ' ', users.last_name) AS owner, SUM(duration) AS duration, CASE WHEN coalesce(task, '') = '' THEN body ELSE task END as task")
   end

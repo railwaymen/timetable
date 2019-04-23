@@ -26,8 +26,8 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
           post(:create, params: {
                  format: 'json',
                  project_id: project,
-                 range_start: (time - 2.days).beginning_of_day,
-                 range_end: (time + 2.days).beginning_of_day,
+                 starts_at: (time - 2.days).beginning_of_day,
+                 ends_at: (time + 2.days).beginning_of_day,
                  project_report_roles: [worker, user].map { |u| { id: u.id, first_name: u.first_name, last_name: u.last_name, role: 'developer' } }
                })
         end.to change(ProjectReport, :count).by(1)
@@ -48,8 +48,8 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
           post(:create, params: {
                  format: 'json',
                  project_id: project,
-                 range_start: (time - 2.days).beginning_of_day,
-                 range_end: (time + 2.days).beginning_of_day,
+                 starts_at: (time - 2.days).beginning_of_day,
+                 ends_at: (time + 2.days).beginning_of_day,
                  project_report_roles: [worker].map { |u| { id: u.id, first_name: u.first_name, last_name: u.last_name, role: 'developer' } }
                })
         end.to raise_error(ProjectReportCreator::NotAllUsersHaveRole)
@@ -80,7 +80,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryGirl.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
-        get :roles, params: { format: 'json', project_id: project, range_start: (time - 2.days).beginning_of_day, range_end: (time + 2.days).beginning_of_day }
+        get :roles, params: { format: 'json', project_id: project, starts_at: (time - 2.days).beginning_of_day, ends_at: (time + 2.days).beginning_of_day }
         expect(response).to be_ok
         expect(JSON.parse(response.body)).to match_array([
                                                            {
@@ -107,10 +107,10 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryGirl.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
-        report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, range_start: (time - 40.days), range_end: (time - 20.days), duration_sum: 0)
+        report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0)
         report.project_report_roles.create!(user: user, role: 'developer')
 
-        get :roles, params: { format: 'json', project_id: project, range_start: (time - 2.days).beginning_of_day, range_end: (time + 2.days).beginning_of_day }
+        get :roles, params: { format: 'json', project_id: project, starts_at: (time - 2.days).beginning_of_day, ends_at: (time + 2.days).beginning_of_day }
         expect(response).to be_ok
         expect(JSON.parse(response.body)).to match_array([
                                                            {
