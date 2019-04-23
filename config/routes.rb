@@ -4,12 +4,6 @@ require 'sidekiq/web'
 require 'sidekiq-status/web'
 
 TimeTable::Application.routes.draw do
-  get 'project_reports/new'
-
-  get 'project_reports/create'
-
-  get 'project_reports/update'
-
   root to: 'home#index'
   devise_for :users
   authenticate :user, ->(u) { u.admin? } do
