@@ -158,7 +158,7 @@ export default class EditReport extends React.Component {
     const { mergeTask, mergeOwner } = this.state;
     const times = this.state.report.currentBody[category];
     if (times.length === 0) return null;
-    const disableMergeButton = times.filter(wt => wt.toMerge).length < 2;
+    const toMergeTasks = times.filter(wt => wt.toMerge);
     return (
       <div key={category}>
         <h2>{category}</h2>
@@ -189,7 +189,7 @@ export default class EditReport extends React.Component {
               <tr key={key}>
                 <td>
                   <input name="toMerge" type="checkbox" checked={toMerge} onChange={e => this.handleMergeChange(e, category, key)} />
-                  {toMerge && this.renderMergeButton(category, times, disableMergeButton)}
+                  {toMerge && this.renderMergeButton(category, times, toMergeTasks.length < 2)}
                 </td>
                 <td>{displayDuration(duration)}</td>
                 <td>{task}</td>
@@ -225,7 +225,7 @@ export default class EditReport extends React.Component {
                   <div>
                     <label>Time Spent:</label>
                     <p>
-                      {displayDuration(sumBy(times.filter(wt => wt.toMerge), 'duration'))}
+                      {displayDuration(sumBy(toMergeTasks, 'duration'))}
                     </p>
                   </div>
                 </div>
