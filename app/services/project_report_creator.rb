@@ -31,11 +31,13 @@ class ProjectReportCreator
   end
 
   def generate_body(work_times, user_role_map)
-    work_times.group_by { |work_time| user_role_map[work_time.user_id] }.tap do |body|
-      body.transform_values! do |wts|
-        wts.map { |wt| { owner: wt.owner, task: wt.task, duration: wt.duration } }
-      end
-    end
+    Hash[
+      work_times.group_by { |work_time| user_role_map[work_time.user_id] }.tap do |body|
+        body.transform_values! do |wts|
+          wts.map { |wt| { owner: wt.owner, task: wt.task, duration: wt.duration } }
+        end
+      end.sort_by(&:first) # compare only keys
+    ] # Keep keys in hash sorted alphabetically
   end
 
   def transform_param(param)
