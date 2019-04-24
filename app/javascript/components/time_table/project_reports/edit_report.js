@@ -307,7 +307,7 @@ export default class EditReport extends React.Component {
           {displayDuration(report.duration_sum - sumBy(currentBody.ignored, 'duration'))}
         </h2>
         <hr />
-        {without(Object.keys(currentBody), 'ignored').map(this.renderCategory)}
+        {without(Object.keys(currentBody), 'ignored').sort().map(this.renderCategory)}
         {this.renderIgnored()}
         <div className="text-center">
           <button className="text-center" type="button" onClick={this.onSubmit}>SUBMIT</button>
