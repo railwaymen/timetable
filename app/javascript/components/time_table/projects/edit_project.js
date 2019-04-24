@@ -143,9 +143,7 @@ class EditProject extends React.Component {
                     <option value="" />
                     { users.map(user => (
                       <option key={user.id} value={user.id}>
-                        {user.first_name}
-                        {' '}
-                        {user.last_name}
+                        {currentUser.fullName.apply(user)}
                       </option>
                     )) }
                   </select>

@@ -11,3 +11,7 @@ window.currentUser.canManageProject = function canManageProject(project) {
 window.currentUser.isSuperUser = function isSuperUser() {
   return this.admin || this.manager;
 };
+
+window.currentUser.fullName = function fullName() {
+  return `${this.first_name} ${this.last_name}`;
+};

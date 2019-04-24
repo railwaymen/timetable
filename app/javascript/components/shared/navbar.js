@@ -22,9 +22,7 @@ const Navbar = () => (
       <div className="right menu">
         <div className="item" />
         <NavLink className="item" to={`/users/edit/${currentUser.id}`}>
-          {currentUser.last_name}
-          {' '}
-          {currentUser.first_name}
+          {currentUser.fullName()}
         </NavLink>
         <a onClick={onLogout} className="sign_out ui button" to="/users/sign_out">{I18n.t('common.sign_out')}</a>
       </div>
