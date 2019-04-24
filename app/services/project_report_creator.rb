@@ -22,19 +22,27 @@ class ProjectReportCreator
     Set.new(user_role_map.map { |user_id, role| user_id.to_i if role.present? }.compact) == Set.new(work_times.map(&:user_id))
   end
 
+  SELECT_STATEMENT = <<~SQL
+    STRING_AGG(work_times.id::text, ',') as composed_id,
+    user_id,
+    CONCAT(users.first_name, ' ', users.last_name) AS owner,
+    SUM(duration) AS duration,
+    CASE WHEN coalesce(task, '') = '' THEN body ELSE task END AS task,
+    CASE WHEN coalesce(task, '') = '' THEN '' ELSE body END AS body
+  SQL
   def get_work_times(project_report)
     project_report.project.work_times.active
                   .joins(:user)
                   .where('work_times.starts_at BETWEEN ? AND ?', project_report.starts_at, project_report.ends_at)
                   .group('user_id, users.last_name, users.first_name, task, body')
-                  .select("user_id, CONCAT(users.first_name, ' ', users.last_name) AS owner, SUM(duration) AS duration, CASE WHEN coalesce(task, '') = '' THEN body ELSE task END as task")
+                  .select(SELECT_STATEMENT)
   end
 
   def generate_body(work_times, user_role_map)
     Hash[
       work_times.group_by { |work_time| user_role_map[work_time.user_id] }.tap do |body|
         body.transform_values! do |wts|
-          wts.map { |wt| { owner: wt.owner, task: wt.task, duration: wt.duration } }
+          wts.map { |wt| { owner: wt.owner, task: wt.task, duration: wt.duration, id: wt.composed_id, description: wt.body } }
         end
       end.sort_by(&:first) # compare only keys
     ] # Keep keys in hash sorted alphabetically

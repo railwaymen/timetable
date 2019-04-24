@@ -10,7 +10,8 @@ export default class EditReport extends React.Component {
   state = {
     reportId: parseInt(this.props.match.params.reportId, 10),
     projectId: parseInt(this.props.match.params.projectId, 10),
-    report: this.prepareReport(get(this.props.location, ['state', 'report'])),
+    report: get(this.props.location, ['state', 'report']),
+    currentBody: this.keyifyBody(get(this.props.location, ['state', 'report', 'last_body'])),
     mergeTask: '',
     mergeOwner: '',
   };
@@ -32,43 +33,40 @@ export default class EditReport extends React.Component {
   }
 
   componentDidMount() {
-    if (this.state.report) return;
+    this.props.history.replace({ pathname: this.props.location.pathname, state: {} });
+    if (this.state.currentBody) return;
     this.getReport();
   }
 
-  prepareReport(report) {
-    if (!report) return report;
-    report.currentBody = cloneDeep(report.last_body);
-    this.keyifyBody(report.currentBody);
-    return report;
-  }
-
   keyifyBody(body) {
-    Object.keys(body).forEach((key) => {
-      body[key].forEach((workTime) => {
+    if (!body) return body;
+    const newBody = cloneDeep(body);
+    Object.keys(newBody).forEach((key) => {
+      newBody[key].forEach((workTime) => {
         workTime.key = uuidv4();
         workTime.toMerge = false;
       });
     });
-    return body;
+    return newBody;
   }
 
   unkeyifyBody(body) {
-    Object.keys(body).forEach((key) => {
-      body[key].forEach((workTime) => {
+    const newBody = cloneDeep(body);
+    Object.keys(newBody).forEach((key) => {
+      newBody[key].forEach((workTime) => {
         delete workTime.key;
         delete workTime.toMerge;
       });
     });
-    return body;
+    return newBody;
   }
 
   onHardReset() {
-    this.setState(({ report }) => ({ report: { ...report, currentBody: this.keyifyBody(cloneDeep(report.initial_body)) } }));
+    this.setState(({ report }) => ({ currentBody: this.keyifyBody(report.initial_body) }));
   }
 
   onSoftReset() {
-    this.setState(({ report }) => ({ report: this.prepareReport(report) }));
+    this.setState(({ report }) => ({ currentBody: this.keyifyBody(report.last_body) }));
   }
 
   onMergeOwnerChange(event) {
@@ -81,26 +79,26 @@ export default class EditReport extends React.Component {
 
   onSubmit(event) {
     event.preventDefault();
-    const { report, projectId, reportId } = this.state;
+    const { currentBody, projectId, reportId } = this.state;
     Api.makePutRequest({
       url: `/api/projects/${projectId}/project_reports/${reportId}`,
       body: {
         project_report: {
-          last_body: this.unkeyifyBody(cloneDeep(report.currentBody)),
+          last_body: this.unkeyifyBody(currentBody),
         },
       },
     }).then(({ data }) => {
-      this.setState({ report: this.prepareReport(data) });
+      this.setState({ currentBody: this.keyifyBody(data.last_body) });
     });
   }
 
   onIgnore(event, category, key) {
     event.preventDefault();
-    this.setState(({ report }) => {
-      const [removedWorkedTime, rest] = partition(report.currentBody[category], wt => wt.key === key);
-      const ignored = removedWorkedTime.concat(report.currentBody.ignored || []);
-      const currentBody = { ...report.currentBody, [category]: rest, ignored };
-      return { report: { ...report, currentBody } };
+    this.setState(({ currentBody }) => {
+      const [removedWorkedTime, rest] = partition(currentBody[category], wt => wt.key === key);
+      const ignored = removedWorkedTime.concat(currentBody.ignored || []);
+      const newBody = { ...currentBody, [category]: rest, ignored };
+      return { currentBody: newBody };
     });
   }
 
@@ -118,31 +116,36 @@ export default class EditReport extends React.Component {
     const { projectId, reportId } = this.state;
     Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports/${reportId}/edit` })
       .then(({ data }) => {
-        this.setState({ report: this.prepareReport(data) });
+        this.setState({ report: data, currentBody: this.keyifyBody(data.last_body) });
       });
   }
 
   onMergeSubmit(e, category) {
     e.preventDefault();
-    this.setState(({ report, mergeOwner, mergeTask }) => {
-      const [wtToMerge, otherWt] = partition(report.currentBody[category], 'toMerge');
+    this.setState(({ currentBody, mergeOwner, mergeTask }) => {
+      const [wtToMerge, otherWt] = partition(currentBody[category], 'toMerge');
       const newWt = {
-        owner: mergeOwner, task: mergeTask, duration: sumBy(wtToMerge, 'duration'), key: uuidv4(), toMerge: false,
+        owner: mergeOwner,
+        task: mergeTask,
+        duration: sumBy(wtToMerge, 'duration'),
+        key: uuidv4(),
+        toMerge: false,
+        id: wtToMerge.map(wt => wt.id).join(','),
       };
       otherWt.unshift(newWt);
-      const currentBody = { ...report.currentBody, [category]: otherWt };
-      return { mergeOwner: '', mergeTask: '', report: { ...report, currentBody } };
+      const newBody = { ...currentBody, [category]: otherWt };
+      return { mergeOwner: '', mergeTask: '', currentBody: newBody };
     }, () => $(`#modal-${category}`).toggle());
   }
 
   handleMergeChange(event, category, key) {
     const checkValue = event.target.checked;
-    this.setState(({ report }) => {
-      report.currentBody[category] = report.currentBody[category].map((wt) => {
+    this.setState(({ currentBody }) => {
+      currentBody[category] = currentBody[category].map((wt) => {
         if (wt.key === key) wt.toMerge = checkValue;
         return wt;
       });
-      return report;
+      return { currentBody };
     });
   }
 
@@ -155,13 +158,14 @@ export default class EditReport extends React.Component {
   }
 
   renderCategory(category) {
-    const { mergeTask, mergeOwner } = this.state;
-    const times = this.state.report.currentBody[category];
+    const { mergeTask, mergeOwner, currentBody } = this.state;
+    const times = currentBody[category];
     if (times.length === 0) return null;
     const toMergeTasks = times.filter(wt => wt.toMerge);
     return (
       <div key={category}>
         <h2>{category}</h2>
+        <h3>{displayDuration(sumBy(times, 'duration'))}</h3>
         <table className="table">
           <thead>
             <tr>
@@ -175,6 +179,9 @@ export default class EditReport extends React.Component {
                 Task
               </th>
               <th>
+                Description
+              </th>
+              <th>
                 Owner
               </th>
               <th>
@@ -184,7 +191,7 @@ export default class EditReport extends React.Component {
           </thead>
           <tbody>
             {times.map(({
-              key, task, duration, owner, toMerge,
+              key, task, duration, owner, toMerge, description,
             }) => (
               <tr key={key}>
                 <td>
@@ -193,6 +200,7 @@ export default class EditReport extends React.Component {
                 </td>
                 <td>{displayDuration(duration)}</td>
                 <td>{task}</td>
+                <td>{description}</td>
                 <td>{owner}</td>
                 <td>
                   <button type="button" onClick={e => this.onIgnore(e, category, key)}>
@@ -245,7 +253,7 @@ export default class EditReport extends React.Component {
   }
 
   renderIgnored() {
-    const times = this.state.report.currentBody.ignored;
+    const times = this.state.currentBody.ignored;
     if (isEmpty(times)) return null;
     return (
       <div>
@@ -260,17 +268,21 @@ export default class EditReport extends React.Component {
                 Task
               </th>
               <th>
+                Description
+              </th>
+              <th>
                 Owner
               </th>
             </tr>
           </thead>
           <tbody>
             {times.map(({
-              key, task, duration, owner,
+              key, task, duration, owner, description,
             }) => (
               <tr key={key}>
                 <td>{displayDuration(duration)}</td>
                 <td>{task}</td>
+                <td>{description}</td>
                 <td>{owner}</td>
               </tr>
             ))}
@@ -282,14 +294,20 @@ export default class EditReport extends React.Component {
   }
 
   render() {
-    const { report } = this.state;
-    if (!report) return <div />;
+    const { report, currentBody } = this.state;
+    if (!report || !currentBody) return <div />;
     return (
       <div>
         <button type="button" onClick={this.onSoftReset}>Soft reset</button>
         <button type="button" onClick={this.onHardReset}>Hard reset</button>
         <hr />
-        {without(Object.keys(report.currentBody), 'ignored').map(this.renderCategory)}
+        <h2>
+          Whole duration:
+          {' '}
+          {displayDuration(report.duration_sum - sumBy(currentBody.ignored, 'duration'))}
+        </h2>
+        <hr />
+        {without(Object.keys(currentBody), 'ignored').map(this.renderCategory)}
         {this.renderIgnored()}
         <div className="text-center">
           <button className="text-center" type="button" onClick={this.onSubmit}>SUBMIT</button>
