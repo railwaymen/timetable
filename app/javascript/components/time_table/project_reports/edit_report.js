@@ -2,7 +2,6 @@ import React from 'react';
 import {
   bindAll, get, sumBy, uniq, partition, without, isEmpty, cloneDeep,
 } from 'lodash';
-import uuidv4 from 'uuid/v4';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
 
@@ -11,7 +10,7 @@ export default class EditReport extends React.Component {
     reportId: parseInt(this.props.match.params.reportId, 10),
     projectId: parseInt(this.props.match.params.projectId, 10),
     report: get(this.props.location, ['state', 'report']),
-    currentBody: this.keyifyBody(get(this.props.location, ['state', 'report', 'last_body'])),
+    currentBody: this.prepareBody(get(this.props.location, ['state', 'report', 'last_body'])),
     mergeTask: '',
     mergeOwner: '',
   };
@@ -38,23 +37,21 @@ export default class EditReport extends React.Component {
     this.getReport();
   }
 
-  keyifyBody(body) {
+  prepareBody(body) {
     if (!body) return body;
     const newBody = cloneDeep(body);
     Object.keys(newBody).forEach((key) => {
       newBody[key].forEach((workTime) => {
-        workTime.key = uuidv4();
         workTime.toMerge = false;
       });
     });
     return newBody;
   }
 
-  unkeyifyBody(body) {
+  stripBody(body) {
     const newBody = cloneDeep(body);
     Object.keys(newBody).forEach((key) => {
       newBody[key].forEach((workTime) => {
-        delete workTime.key;
         delete workTime.toMerge;
       });
     });
@@ -62,11 +59,11 @@ export default class EditReport extends React.Component {
   }
 
   onHardReset() {
-    this.setState(({ report }) => ({ currentBody: this.keyifyBody(report.initial_body) }));
+    this.setState(({ report }) => ({ currentBody: this.prepareBody(report.initial_body) }));
   }
 
   onSoftReset() {
-    this.setState(({ report }) => ({ currentBody: this.keyifyBody(report.last_body) }));
+    this.setState(({ report }) => ({ currentBody: this.prepareBody(report.last_body) }));
   }
 
   onMergeOwnerChange(event) {
@@ -84,18 +81,18 @@ export default class EditReport extends React.Component {
       url: `/api/projects/${projectId}/project_reports/${reportId}`,
       body: {
         project_report: {
-          last_body: this.unkeyifyBody(currentBody),
+          last_body: this.stripBody(currentBody),
         },
       },
     }).then(({ data }) => {
-      this.setState({ currentBody: this.keyifyBody(data.last_body) });
+      this.setState({ currentBody: this.prepareBody(data.last_body) });
     });
   }
 
-  onIgnore(event, category, key) {
+  onIgnore(event, category, id) {
     event.preventDefault();
     this.setState(({ currentBody }) => {
-      const [removedWorkedTime, rest] = partition(currentBody[category], wt => wt.key === key);
+      const [removedWorkedTime, rest] = partition(currentBody[category], wt => wt.id === id);
       const ignored = removedWorkedTime.concat(currentBody.ignored || []);
       const newBody = { ...currentBody, [category]: rest, ignored };
       return { currentBody: newBody };
@@ -116,7 +113,7 @@ export default class EditReport extends React.Component {
     const { projectId, reportId } = this.state;
     Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports/${reportId}/edit` })
       .then(({ data }) => {
-        this.setState({ report: data, currentBody: this.keyifyBody(data.last_body) });
+        this.setState({ report: data, currentBody: this.prepareBody(data.last_body) });
       });
   }
 
@@ -128,7 +125,6 @@ export default class EditReport extends React.Component {
         owner: mergeOwner,
         task: mergeTask,
         duration: sumBy(wtToMerge, 'duration'),
-        key: uuidv4(),
         toMerge: false,
         id: wtToMerge.map(wt => wt.id).join(','),
       };
@@ -138,18 +134,18 @@ export default class EditReport extends React.Component {
     }, () => $(`#modal-${category}`).toggle());
   }
 
-  handleMergeChange(event, category, key) {
+  handleMergeChange(event, category, id) {
     const checkValue = event.target.checked;
     this.setState(({ currentBody }) => {
       currentBody[category] = currentBody[category].map((wt) => {
-        if (wt.key === key) wt.toMerge = checkValue;
+        if (wt.id === id) wt.toMerge = checkValue;
         return wt;
       });
       return { currentBody };
     });
   }
 
-  renderMergeButton(category, times, disabled) {
+  renderMergeButton(category, disabled) {
     return (
       <button type="button" className="inline" disabled={disabled} onClick={() => this.onShowMerge(category)}>
         Merge
@@ -191,19 +187,19 @@ export default class EditReport extends React.Component {
           </thead>
           <tbody>
             {times.map(({
-              key, task, duration, owner, toMerge, description,
+              id, task, duration, owner, toMerge, description,
             }) => (
-              <tr key={key}>
+              <tr key={id}>
                 <td>
-                  <input name="toMerge" type="checkbox" checked={toMerge} onChange={e => this.handleMergeChange(e, category, key)} />
-                  {toMerge && this.renderMergeButton(category, times, toMergeTasks.length < 2)}
+                  <input name="toMerge" type="checkbox" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
+                  {toMerge && this.renderMergeButton(category, toMergeTasks.length < 2)}
                 </td>
                 <td>{displayDuration(duration)}</td>
                 <td>{task}</td>
                 <td>{description}</td>
                 <td>{owner}</td>
                 <td>
-                  <button type="button" onClick={e => this.onIgnore(e, category, key)}>
+                  <button type="button" onClick={e => this.onIgnore(e, category, id)}>
                     Ignore
                   </button>
                 </td>
@@ -277,9 +273,9 @@ export default class EditReport extends React.Component {
           </thead>
           <tbody>
             {times.map(({
-              key, task, duration, owner, description,
+              id, task, duration, owner, description,
             }) => (
-              <tr key={key}>
+              <tr key={id}>
                 <td>{displayDuration(duration)}</td>
                 <td>{task}</td>
                 <td>{description}</td>
