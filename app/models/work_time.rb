@@ -9,6 +9,13 @@ class WorkTime < ApplicationRecord
   before_validation :assign_duration
   before_save :delete_spaces
 
+  enum tag: {
+    'dev': 'dev',
+    'ui': 'ui',
+    'pm': 'pm',
+    'qa': 'qa'
+  }
+
   validates :project_id, :starts_at, :ends_at, presence: true
   validates :project_id, :starts_at, :ends_at, presence: true
   validates :duration, numericality: { greater_than: 0 }, unless: :project_zero?

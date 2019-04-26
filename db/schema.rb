@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190213100847) do
+ActiveRecord::Schema.define(version: 20190425095633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(version: 20190213100847) do
     t.boolean "updated_by_admin", default: false, null: false
     t.string "task"
     t.jsonb "integration_payload"
+    t.string "tag", default: "dev", null: false
   end
 
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"

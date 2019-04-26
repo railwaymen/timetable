@@ -78,6 +78,7 @@ class WorkHoursDay extends React.Component {
                 onCopy={this.props.onCopy}
                 removeWorkHours={this.props.removeWorkHours}
                 projects={this.props.projects}
+                tags={this.props.tags}
               />
             )) }
             {/* eslint-enable */}

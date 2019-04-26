@@ -106,6 +106,11 @@ en:
     name: Name
     external_auth: External integration
     custom: Custom
+    tag:
+      dev: Development
+      ui: Internal Meeting
+      pm: Client Communication
+      qa: Research
 
   activerecord:
     errors:

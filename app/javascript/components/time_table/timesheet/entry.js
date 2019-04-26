@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import _ from 'lodash';
 import URI from 'urijs';
 import ProjectsDropdown from './projects_dropdown';
+import TagsDropdown from './tags_dropdown';
 import ErrorTooltip from './errors/error_tooltip';
 import * as Api from '../../shared/api';
 import * as Validations from '../../shared/validations';
@@ -21,6 +22,7 @@ class Entry extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.recountTime = this.recountTime.bind(this);
     this.updateProject = this.updateProject.bind(this);
+    this.updateTag = this.updateTag.bind(this);
     this.validate = this.validate.bind(this);
     this.removeErrorsFor = this.removeErrorsFor.bind(this);
     this.paste = this.paste.bind(this);
@@ -32,6 +34,7 @@ class Entry extends React.Component {
     body: PropTypes.string,
     duration: PropTypes.number,
     task: PropTypes.string,
+    tag: PropTypes.string,
     project: PropTypes.object,
     starts_at: PropTypes.string,
     ends_at: PropTypes.string,
@@ -41,6 +44,7 @@ class Entry extends React.Component {
     body: undefined,
     duration: 0,
     task: '',
+    tag: 'dev',
     project: {},
     starts_at: moment().format('HH:mm'),
     ends_at: moment().format('HH:mm'),
@@ -77,6 +81,7 @@ class Entry extends React.Component {
       project: object.project,
       project_id: object.project.id,
       task: object.task,
+      tag: object.tag ? object.tag : 'dev',
     });
   }
 
@@ -90,7 +95,7 @@ class Entry extends React.Component {
   validate() {
     const { project } = this.state;
     const {
-      body, starts_at, ends_at, project_id, duration, task,
+      body, starts_at, ends_at, project_id, duration, task, tag,
     } = this.state;
 
     if (project.lunch || project.autofill) {
@@ -102,6 +107,7 @@ class Entry extends React.Component {
       ends_at: Validations.presence(ends_at),
       project_id: Validations.presence(project_id),
       duration: Validations.greaterThan(0, duration),
+      tag: Validations.presence(tag),
     };
     Object.keys(errors).forEach((key) => { if (errors[key] === undefined) { delete errors[key]; } });
     return errors;
@@ -115,13 +121,14 @@ class Entry extends React.Component {
       this.setState({ errors });
     } else {
       const {
-        body, task, project, date, starts_at, ends_at,
+        body, task, tag, project, date, starts_at, ends_at,
       } = this.state;
 
       const entryData = {
         user_id: userId,
         body,
         task,
+        tag,
         project_id: project.id,
         starts_at: moment(`${date} ${starts_at}`, 'DD/MM/YYYY HH:mm'),
         ends_at: moment(`${date} ${ends_at}`, 'DD/MM/YYYY HH:mm'),
@@ -160,6 +167,15 @@ class Entry extends React.Component {
         }
       });
     }
+  }
+
+  updateTag(tag) {
+    this.setState({
+      tag,
+    }, () => {
+      this.removeErrorsFor('tag');
+      this.recountTime();
+    });
   }
 
   updateProject(project) {
@@ -229,7 +245,7 @@ class Entry extends React.Component {
 
   render() {
     const {
-      body, task, starts_at, ends_at, durationHours, date, errors, project,
+      body, task, tag, starts_at, ends_at, durationHours, date, errors, project,
     } = this.state;
 
     return (
@@ -258,6 +274,14 @@ class Entry extends React.Component {
                   {errors.project_id ? <ErrorTooltip errors={errors.project_id} /> : null}
                   <div>
                     <ProjectsDropdown updateProject={this.updateProject} selectedProject={this.state.project} projects={this.props.projects} />
+                  </div>
+                </div>
+              </div>
+              <div className="tags">
+                <div className="tag-dropdown">
+                  {errors.tag ? <ErrorTooltip errors={errors.tag} /> : null}
+                  <div>
+                    <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />
                   </div>
                 </div>
               </div>

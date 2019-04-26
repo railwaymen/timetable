@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# rubocop:disable MethodLength
-
 module Api
+  # rubocop:disable ClassLength
+  # rubocop:disable MethodLength
   class WorkTimesController < Api::BaseController
     respond_to :json
 
@@ -115,13 +115,34 @@ module Api
     end
 
     def work_time_create_params
-      params.fetch(:work_time).permit(:project_id, :user_id, :body, :task, :starts_at, :ends_at)
+      params.require(:work_time)
+            .permit(
+              %i[
+                project_id
+                user_id
+                body
+                task
+                tag
+                starts_at
+                ends_at
+              ]
+            )
     end
 
     def work_time_params
-      params.fetch(:work_time).permit(:project_id, :body, :task, :starts_at, :ends_at)
+      params.require(:work_time)
+            .permit(
+              %i[
+                project_id
+                body
+                task
+                tag
+                starts_at
+                ends_at
+              ]
+            )
     end
   end
+  # rubocop:enable MethodLength
+  # rubocop:enable ClassLength
 end
-
-# rubocop:enable MethodLength

@@ -46,8 +46,9 @@ class EntryHistory extends React.Component {
 
     const linkParams = URI(window.location.href).search(true);
     const filteredUserId = linkParams.user_id;
-
-    let { from, to, project_id } = this.state;
+    let {
+      from, to, project_id,
+    } = this.state;
 
     if (linkParams.from && linkParams.to) {
       from = linkParams.from.replace(' ', '+');
@@ -58,9 +59,13 @@ class EntryHistory extends React.Component {
     if (linkParams.project_id) project_id = linkParams.project_id;
 
     if (filteredUserId) {
-      this.filterWorkHoursByUser(filteredUserId, { from, to, project_id });
+      this.filterWorkHoursByUser(filteredUserId, {
+        from, to, project_id,
+      });
     } else {
-      this.getWorkHours({ from, to, project_id });
+      this.getWorkHours({
+        from, to, project_id,
+      });
     }
   }
 
@@ -276,6 +281,7 @@ class EntryHistory extends React.Component {
             increaseWorkHours={this.increaseWorkHours}
             pushEntry={this.pushEntry}
             projects={this.props.projects}
+            tags={this.props.tags}
             updateWorkHours={this.updateWorkHours}
             assignModalInfo={this.assignModalInfo}
           />
@@ -449,7 +455,6 @@ class EntryHistory extends React.Component {
     /* eslint-disable */
     const { projects } = this.props;
     const { months, from, selectedProject } = this.state;
-
     return (
       <div>
         <div id="months" className="button dropdown right floated scrolling teal ui" tabIndex="0">

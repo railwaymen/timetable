@@ -21,10 +21,12 @@ class Timesheet extends React.Component {
 
   static propTypes = {
     projects: PropTypes.array,
+    tags: PropTypes.array,
   }
 
   state = {
     projects: [],
+    tags: [],
   }
 
   pushEntry(object) {
@@ -39,7 +41,8 @@ class Timesheet extends React.Component {
     Api.makeGetRequest({ url: '/api/projects/simple' })
       .then((response) => {
         this.setState({
-          projects: response.data,
+          projects: response.data.projects,
+          tags: response.data.tags,
         });
       });
   }
@@ -50,12 +53,13 @@ class Timesheet extends React.Component {
 
   render() {
     const { projects } = this.state;
+    const { tags } = this.state;
 
     if (projects.length > 0) {
       return (
         <div>
-          <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projects} />
-          <EntryHistory ref={(entryHistory) => { this.entryHistory = entryHistory; }} onCopy={this.onCopy} projects={projects} setLastProject={this.setLastProject} />
+          <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projects} tags={tags} />
+          <EntryHistory ref={(entryHistory) => { this.entryHistory = entryHistory; }} onCopy={this.onCopy} projects={projects} setLastProject={this.setLastProject} tags={tags} />
         </div>
       );
     }
