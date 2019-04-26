@@ -41,9 +41,9 @@ module Api
                       users
                         .left_joins(:project_report_roles)
                         .where('project_report_roles.id IS NULL OR project_report_roles.project_report_id=?', last_report.id) # either role from report or no role
-                        .distinct.select('users.*, project_report_roles.role')
+                        .distinct.select('users.*, project_report_roles.role, COALESCE(project_report_roles.hourly_wage, 0) AS hourly_wage')
                     else
-                      users.distinct.select('users.*, NULL AS role')
+                      users.distinct.select('users.*, NULL AS role, 0 AS hourly_wage')
                     end
     end
 

@@ -18,7 +18,7 @@ export default class NewReport extends React.Component {
 
   constructor(props) {
     super(props);
-    bindAll(this, ['onRangeStartChange', 'onRangeEndChange', 'getRoles', 'onRoleChange', 'onSubmit']);
+    bindAll(this, ['onRangeStartChange', 'onRangeEndChange', 'getRoles', 'onRoleChange', 'onSubmit', 'onWageChange']);
   }
 
   componentDidMount() {
@@ -47,6 +47,15 @@ export default class NewReport extends React.Component {
     this.setState(({ userRoles }) => {
       const idxInArray = userRoles.findIndex(({ id }) => id === userId);
       userRoles[idxInArray].role = value;
+      return { userRoles };
+    });
+  }
+
+  onWageChange(event, userId) {
+    const { value } = event.target;
+    this.setState(({ userRoles }) => {
+      const idxInArray = userRoles.findIndex(({ id }) => id === userId);
+      userRoles[idxInArray].hourly_wage = value;
       return { userRoles };
     });
   }
@@ -84,6 +93,7 @@ export default class NewReport extends React.Component {
               <th>Name</th>
               <th>Last name</th>
               <th>Role</th>
+              <th>Hourly wage</th>
             </tr>
           </thead>
           <tbody>
@@ -102,6 +112,9 @@ export default class NewReport extends React.Component {
                       <option key={role} value={role}>{role}</option>
                     ))}
                   </select>
+                </td>
+                <td>
+                  <input type="number" step="0.01" value={user.hourly_wage} onChange={e => this.onWageChange(e, user.id)} />
                 </td>
               </tr>
             ))}

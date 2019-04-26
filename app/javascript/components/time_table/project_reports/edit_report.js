@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import {
   bindAll, get, sumBy, uniq, partition, without, isEmpty, cloneDeep,
 } from 'lodash';
@@ -13,6 +14,9 @@ export default class EditReport extends React.Component {
     currentBody: this.prepareBody(get(this.props.location, ['state', 'report', 'last_body'])),
     mergeTask: '',
     mergeOwner: '',
+    mergeDescription: '',
+    workTimeModalCategory: null,
+    workTimeModalId: null,
   };
 
   constructor(props) {
@@ -22,6 +26,7 @@ export default class EditReport extends React.Component {
       'renderCategory',
       'onMergeOwnerChange',
       'onMergeTaskChange',
+      'onMergeDescriptionChange',
       'onShowMerge',
       'onMergeSubmit',
       'onIgnore',
@@ -74,6 +79,10 @@ export default class EditReport extends React.Component {
     this.setState({ mergeTask: event.target.value });
   }
 
+  onMergeDescriptionChange(event) {
+    this.setState({ mergeDescription: event.target.value });
+  }
+
   onSubmit(event) {
     event.preventDefault();
     const { currentBody, projectId, reportId } = this.state;
@@ -117,20 +126,32 @@ export default class EditReport extends React.Component {
       });
   }
 
+  onShowWorkTimeModal(e, category, id) {
+    e.preventDefault();
+    this.setState({ workTimeModalCategory: category, workTimeModalId: id }, () => $('#work-time-modal').toggle());
+  }
+
   onMergeSubmit(e, category) {
     e.preventDefault();
-    this.setState(({ currentBody, mergeOwner, mergeTask }) => {
+    this.setState(({
+      currentBody, mergeOwner, mergeTask, mergeDescription,
+    }) => {
       const [wtToMerge, otherWt] = partition(currentBody[category], 'toMerge');
       const newWt = {
         owner: mergeOwner,
         task: mergeTask,
+        description: mergeDescription,
         duration: sumBy(wtToMerge, 'duration'),
         toMerge: false,
-        id: wtToMerge.map(wt => wt.id).join(','),
+        touched: true,
+        cost: sumBy(wtToMerge, 'cost'),
+        id: wtToMerge.map(wt => wt.id).join(';'),
       };
       otherWt.unshift(newWt);
       const newBody = { ...currentBody, [category]: otherWt };
-      return { mergeOwner: '', mergeTask: '', currentBody: newBody };
+      return {
+        mergeOwner: '', mergeTask: '', currentBody: newBody, workTimeModalCategory: null, workTimeModalId: null,
+      };
     }, () => $(`#modal-${category}`).toggle());
   }
 
@@ -145,32 +166,116 @@ export default class EditReport extends React.Component {
     });
   }
 
-  renderMergeButton(category, disabled) {
+  renderMergeButton(category, edit) {
     return (
-      <button type="button" className="inline" disabled={disabled} onClick={() => this.onShowMerge(category)}>
-        Merge
+      <button type="button" className="inline" onClick={() => this.onShowMerge(category)}>
+        {edit ? 'Edit' : 'Merge'}
       </button>
     );
   }
 
+  renderWorkTimeModal() {
+    const { workTimeModalCategory, workTimeModalId, currentBody } = this.state;
+    if (!workTimeModalCategory || !workTimeModalId) return null;
+    const workTime = currentBody[workTimeModalCategory].find(wt => wt.id === workTimeModalId);
+    const ids = workTime.id.split(';');
+    const ancestors = this.state.report.initial_body[workTimeModalCategory].filter(wt => ids.includes(wt.id));
+    return (
+      <div id="work-time-modal" className="unique-modal-class" style={{ display: 'none' }}>
+        <div className="ui centered-modal modal transition visible active">
+          <i className="close icon" />
+          <div className="header">Details</div>
+          <div className="content">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>
+                    Task
+                  </th>
+                  <th>
+                    Description
+                  </th>
+                  <th>
+                    Owner
+                  </th>
+                  <th>
+                    Time spent
+                  </th>
+                  <th>
+                    Owner wage
+                  </th>
+                  <th>
+                    Cost
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {ancestors.map(({
+                  id, duration, task, description, owner, cost,
+                }) => (
+                  <tr key={id}>
+                    <td>
+                      {task}
+                    </td>
+                    <td>
+                      {description}
+                    </td>
+                    <td>
+                      {owner}
+                    </td>
+                    <td>
+                      {displayDuration(duration)}
+                    </td>
+                    <td>
+                      {this.state.report.roles[owner].hourly_wage}
+                    </td>
+                    <td>
+                      {cost.toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+                <tr className="active">
+                  <td>
+                    {workTime.task}
+                  </td>
+                  <td>
+                    {workTime.description}
+                  </td>
+                  <td>
+                    {workTime.owner}
+                  </td>
+                  <td>
+                    {displayDuration(workTime.duration)}
+                  </td>
+                  <td>
+                    -
+                  </td>
+                  <td>
+                    {workTime.cost.toFixed(2)}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="ui dimmer modals modal-backdrop page transition visible active" style={{ display: 'flex !important' }} />
+      </div>
+    );
+  }
+
   renderCategory(category) {
-    const { mergeTask, mergeOwner, currentBody } = this.state;
+    const {
+      mergeTask, mergeOwner, mergeDescription, currentBody,
+    } = this.state;
     const times = currentBody[category];
     if (times.length === 0) return null;
     const toMergeTasks = times.filter(wt => wt.toMerge);
     return (
       <div key={category}>
         <h2>{category}</h2>
-        <h3>{displayDuration(sumBy(times, 'duration'))}</h3>
         <table className="table">
           <thead>
             <tr>
-              <th>
-                Merge
-              </th>
-              <th>
-                Time spent
-              </th>
               <th>
                 Task
               </th>
@@ -181,24 +286,38 @@ export default class EditReport extends React.Component {
                 Owner
               </th>
               <th>
-                Ignore
+                Time spent
+              </th>
+              <th>
+                Cost
+              </th>
+              <th>
+                Actions
               </th>
             </tr>
           </thead>
           <tbody>
             {times.map(({
-              id, task, duration, owner, toMerge, description,
+              id, task, duration, owner, toMerge, description, cost, touched,
             }) => (
               <tr key={id}>
-                <td>
-                  <input name="toMerge" type="checkbox" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
-                  {toMerge && this.renderMergeButton(category, toMergeTasks.length < 2)}
-                </td>
-                <td>{displayDuration(duration)}</td>
                 <td>{task}</td>
                 <td>{description}</td>
                 <td>{owner}</td>
+                <td>{displayDuration(duration)}</td>
+                <td>{cost.toFixed(2)}</td>
                 <td>
+                  <p>
+                    <input name="toMerge" type="checkbox" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
+                    {toMerge && this.renderMergeButton(category, toMergeTasks.length < 2)}
+                  </p>
+                  {touched
+                    && (
+                    <button type="button" onClick={e => this.onShowWorkTimeModal(e, category, id)}>
+                      Show Details
+                    </button>
+                    )
+                  }
                   <button type="button" onClick={e => this.onIgnore(e, category, id)}>
                     Ignore
                   </button>
@@ -207,6 +326,7 @@ export default class EditReport extends React.Component {
             ))}
           </tbody>
         </table>
+        {this.renderWorkTimeModal()}
         <hr />
         <div id={`modal-${category}`} className="unique-modal-class" style={{ display: 'none' }}>
           <div className="ui centered-modal modal transition visible active">
@@ -217,14 +337,18 @@ export default class EditReport extends React.Component {
                 <div className="error hidden message ui">
                   <p />
                 </div>
-                <div className="fields inline">
+                <div className="fields">
                   <div className="field">
-                    <label>Task</label>
-                    <input onChange={this.onMergeTaskChange} value={mergeTask} name="mergeTask" />
+                    <label htmlFor="mergeTask">Task</label>
+                    <textarea onChange={this.onMergeTaskChange} value={mergeTask} name="mergeTask" />
                   </div>
                   <div className="field">
-                    <label>Owner</label>
-                    <input onChange={this.onMergeOwnerChange} value={mergeOwner} name="mergeOwner" />
+                    <label htmlFor="mergeDescription">Description</label>
+                    <textarea onChange={this.onMergeDescriptionChange} value={mergeDescription} name="mergeDescription" />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="mergeOwner">Owner</label>
+                    <textarea onChange={this.onMergeOwnerChange} value={mergeOwner} name="mergeOwner" />
                   </div>
                   <div>
                     <label>Time Spent:</label>
@@ -237,7 +361,7 @@ export default class EditReport extends React.Component {
             </div>
             <div className="actions">
               <button onClick={e => this.onMergeSubmit(e, category)} className="button green icon labeled right ui" type="button">
-                Merge
+                {toMergeTasks.length > 1 ? 'Merge' : 'Update'}
                 <i className="angle double icon right" />
               </button>
             </div>
@@ -258,9 +382,6 @@ export default class EditReport extends React.Component {
           <thead>
             <tr>
               <th>
-                Time spent
-              </th>
-              <th>
                 Task
               </th>
               <th>
@@ -269,17 +390,24 @@ export default class EditReport extends React.Component {
               <th>
                 Owner
               </th>
+              <th>
+                Time spent
+              </th>
+              <th>
+                Cost
+              </th>
             </tr>
           </thead>
           <tbody>
             {times.map(({
-              id, task, duration, owner, description,
+              id, task, duration, owner, description, cost,
             }) => (
               <tr key={id}>
-                <td>{displayDuration(duration)}</td>
                 <td>{task}</td>
                 <td>{description}</td>
                 <td>{owner}</td>
+                <td>{displayDuration(duration)}</td>
+                <td>{cost.toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
@@ -289,25 +417,61 @@ export default class EditReport extends React.Component {
     );
   }
 
+  renderSummary() {
+    const { report, currentBody } = this.state;
+    const categories = without(Object.keys(currentBody), 'ignored').sort();
+    const categoriesDurationSum = categories.map(category => sumBy(currentBody[category], 'duration'));
+    const categoriesCostSum = categories.map(category => sumBy(currentBody[category], 'cost'));
+    return (
+      <div className="edit-report-summary">
+        <button type="button" onClick={this.onSoftReset}>Soft reset</button>
+        <button type="button" onClick={this.onHardReset}>Hard reset</button>
+        <hr />
+        <h2>{report.project_name}</h2>
+        <p>
+          <strong>
+            {moment(report.starts_at).format('MM.DD')}
+-
+            {moment(report.ends_at).format('MM.DD')}
+          </strong>
+        </p>
+        <table className="table">
+          <tbody>
+            {categories.map((category, idx) => (
+              <tr key={category}>
+                <td>
+                  {category}
+                </td>
+                <td>
+                  {displayDuration(categoriesDurationSum[idx])}
+                </td>
+                <td>
+                  {categoriesCostSum[idx]}
+                </td>
+              </tr>
+            ))}
+            <tr className="active">
+              <th>Total</th>
+              <th>{displayDuration(sumBy(categoriesDurationSum))}</th>
+              <th>{sumBy(categoriesCostSum)}</th>
+            </tr>
+          </tbody>
+        </table>
+        <hr />
+        <button className="text-center" type="button" onClick={this.onSubmit}>Submit</button>
+        <button className="text-center" type="button">Generate</button>
+      </div>
+    );
+  }
+
   render() {
     const { report, currentBody } = this.state;
     if (!report || !currentBody) return <div />;
     return (
       <div>
-        <button type="button" onClick={this.onSoftReset}>Soft reset</button>
-        <button type="button" onClick={this.onHardReset}>Hard reset</button>
-        <hr />
-        <h2>
-          Whole duration:
-          {' '}
-          {displayDuration(report.duration_sum - sumBy(currentBody.ignored, 'duration'))}
-        </h2>
-        <hr />
         {without(Object.keys(currentBody), 'ignored').sort().map(this.renderCategory)}
         {this.renderIgnored()}
-        <div className="text-center">
-          <button className="text-center" type="button" onClick={this.onSubmit}>SUBMIT</button>
-        </div>
+        {this.renderSummary()}
       </div>
     );
   }

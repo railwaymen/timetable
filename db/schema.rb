@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 20190425095633) do
     t.bigint "project_report_id", null: false
     t.bigint "user_id", null: false
     t.string "role", default: "developer", null: false
+    t.decimal "hourly_wage", precision: 8, scale: 2, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["project_report_id", "user_id"], name: "index_project_report_roles_on_project_report_id_and_user_id", unique: true
@@ -64,8 +65,9 @@ ActiveRecord::Schema.define(version: 20190425095633) do
     t.bigint "project_id", null: false
     t.jsonb "initial_body", default: {}, null: false
     t.jsonb "last_body", default: {}, null: false
-    t.string "state", default: "selecting_roles", null: false
+    t.string "state", default: "editing", null: false
     t.integer "duration_sum", null: false
+    t.decimal "cost", precision: 12, scale: 2, default: "0.0", null: false
     t.datetime "starts_at", null: false
     t.datetime "ends_at", null: false
     t.datetime "created_at", null: false
