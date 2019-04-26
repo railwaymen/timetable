@@ -6,7 +6,7 @@ import * as Api from '../../shared/api';
 import DateRangeFilter from '../../shared/date_range_filter';
 
 export default class NewReport extends React.Component {
-  static roles = ['developer', 'qa', 'ux', 'pm'];
+  static roles = ['developer', 'qa', 'ux', 'pm', 'ignored'];
 
   state = {
     projectId: parseInt(this.props.match.params.projectId, 10),

@@ -94,7 +94,7 @@ export default class EditReport extends React.Component {
         },
       },
     }).then(({ data }) => {
-      this.setState({ currentBody: this.prepareBody(data.last_body) });
+      this.setState({ currentBody: this.prepareBody(data.last_body), report: data });
     });
   }
 
@@ -446,14 +446,14 @@ export default class EditReport extends React.Component {
                   {displayDuration(categoriesDurationSum[idx])}
                 </td>
                 <td>
-                  {categoriesCostSum[idx]}
+                  {categoriesCostSum[idx].toFixed(2)}
                 </td>
               </tr>
             ))}
             <tr className="active">
               <th>Total</th>
               <th>{displayDuration(sumBy(categoriesDurationSum))}</th>
-              <th>{sumBy(categoriesCostSum)}</th>
+              <th>{sumBy(categoriesCostSum).toFixed(2)}</th>
             </tr>
           </tbody>
         </table>

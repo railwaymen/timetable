@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectReportRole < ApplicationRecord
-  enum role: { developer: 'developer', qa: 'qa', ux: 'ux', pm: 'pm' }
+  enum role: { developer: 'developer', qa: 'qa', ux: 'ux', pm: 'pm', ignored: 'ignored' }
 
   belongs_to :project_report
   belongs_to :user
