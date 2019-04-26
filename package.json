@@ -11,8 +11,7 @@
     "react-dom": "^16.5.2",
     "react-router-dom": "^4.3.1",
     "react_ujs": "^2.4.4",
-    "urijs": "^1.19.1",
-    "uuid": "^3.3.2"
+    "urijs": "^1.19.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
