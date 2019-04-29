@@ -14,15 +14,14 @@ test:
 production:
   stage: deploy
   only:
-    - master
+    - ci_nvm
   script:
     - bundle exec cap production_1 deploy
     - bundle exec cap production_2 deploy
 
-
 staging:
   stage: deploy
   only:
-    - develop
+    - ci_nvm
   script:
     - bundle exec cap staging deploy
