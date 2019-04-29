@@ -150,7 +150,7 @@ export default class EditReport extends React.Component {
       otherWt.unshift(newWt);
       const newBody = { ...currentBody, [category]: otherWt };
       return {
-        mergeOwner: '', mergeTask: '', currentBody: newBody, workTimeModalCategory: null, workTimeModalId: null,
+        mergeOwner: '', mergeTask: '', mergeDescription: '', currentBody: newBody, workTimeModalCategory: null, workTimeModalId: null,
       };
     }, () => $(`#modal-${category}`).toggle());
   }
@@ -172,6 +172,12 @@ export default class EditReport extends React.Component {
         {edit ? 'Edit' : 'Merge'}
       </button>
     );
+  }
+
+  renderCost(cost) {
+    const { report } = this.state;
+    // eslint-disable-next-line
+    return `${cost.toFixed(2)} ${report.currency}`; // hard space
   }
 
   renderWorkTimeModal() {
@@ -230,7 +236,7 @@ export default class EditReport extends React.Component {
                       {this.state.report.roles[owner].hourly_wage}
                     </td>
                     <td>
-                      {cost.toFixed(2)}
+                      {this.renderCost(cost)}
                     </td>
                   </tr>
                 ))}
@@ -251,7 +257,7 @@ export default class EditReport extends React.Component {
                     -
                   </td>
                   <td>
-                    {workTime.cost.toFixed(2)}
+                    {this.renderCost(workTime.cost)}
                   </td>
                 </tr>
               </tbody>
@@ -305,7 +311,7 @@ export default class EditReport extends React.Component {
                 <td>{description}</td>
                 <td>{owner}</td>
                 <td>{displayDuration(duration)}</td>
-                <td>{cost.toFixed(2)}</td>
+                <td>{this.renderCost(cost)}</td>
                 <td>
                   <p>
                     <input name="toMerge" type="checkbox" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
@@ -407,7 +413,7 @@ export default class EditReport extends React.Component {
                 <td>{description}</td>
                 <td>{owner}</td>
                 <td>{displayDuration(duration)}</td>
-                <td>{cost.toFixed(2)}</td>
+                <td>{this.renderCost(cost)}</td>
               </tr>
             ))}
           </tbody>
@@ -446,14 +452,14 @@ export default class EditReport extends React.Component {
                   {displayDuration(categoriesDurationSum[idx])}
                 </td>
                 <td>
-                  {categoriesCostSum[idx].toFixed(2)}
+                  {this.renderCost(categoriesCostSum[idx])}
                 </td>
               </tr>
             ))}
             <tr className="active">
               <th>Total</th>
               <th>{displayDuration(sumBy(categoriesDurationSum))}</th>
-              <th>{sumBy(categoriesCostSum).toFixed(2)}</th>
+              <th>{this.renderCost(sumBy(categoriesCostSum))}</th>
             </tr>
           </tbody>
         </table>

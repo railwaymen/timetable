@@ -13,6 +13,7 @@ export default class NewReport extends React.Component {
     startsAt: moment().startOf('month'),
     endsAt: moment().endOf('month'),
     userRoles: [],
+    currency: '',
     redirectTo: null,
   }
 
@@ -38,7 +39,7 @@ export default class NewReport extends React.Component {
   getRoles() {
     Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}/project_reports/roles?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}` })
       .then(({ data }) => {
-        this.setState({ userRoles: data });
+        this.setState({ userRoles: data.user_roles, currency: data.currency });
       });
   }
 
@@ -62,7 +63,7 @@ export default class NewReport extends React.Component {
 
   onSubmit() {
     const {
-      projectId, userRoles, startsAt, endsAt,
+      projectId, userRoles, startsAt, endsAt, currency,
     } = this.state;
     Api.makePostRequest({
       url: `/api/projects/${projectId}/project_reports`,
@@ -70,6 +71,7 @@ export default class NewReport extends React.Component {
         project_report_roles: userRoles,
         starts_at: startsAt,
         ends_at: endsAt,
+        currency,
       },
     }).then(({ data }) => {
       this.setState({
@@ -85,6 +87,10 @@ export default class NewReport extends React.Component {
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
     return (
       <div>
+        <h2>
+          Currency
+        </h2>
+        <input value={this.state.currency} onChange={e => this.setState({ currency: e.target.value })} />
         <h1>Roles</h1>
         <DateRangeFilter from={this.state.startsAt.format()} to={this.state.endsAt.format()} onFromChange={this.onRangeStartChange} onToChange={this.onRangeEndChange} onFilter={this.getRoles} />
         <table className="table">
@@ -114,7 +120,7 @@ export default class NewReport extends React.Component {
                   </select>
                 </td>
                 <td>
-                  <input type="number" step="0.01" value={user.hourly_wage} onChange={e => this.onWageChange(e, user.id)} />
+                  <input type="number" min="0" step="0.01" value={user.hourly_wage} onChange={e => this.onWageChange(e, user.id)} />
                 </td>
               </tr>
             ))}

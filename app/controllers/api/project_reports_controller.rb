@@ -10,7 +10,8 @@ module Api
         initial_body: {},
         last_body: {},
         starts_at: params[:starts_at],
-        ends_at: params[:ends_at]
+        ends_at: params[:ends_at],
+        currency: params[:currency]
       )
       authorize @report
       @report = ProjectReportCreator.new.call(@report, params[:project_report_roles])
@@ -34,10 +35,13 @@ module Api
       respond_with @report
     end
 
+    # rubocop:disable MethodLength
     def roles
       authorize :project_report
       users = @project.users_participating(params[:starts_at]..params[:ends_at])
-      @user_roles = if (last_report = @project.project_reports.done.order(id: :desc).first)
+      last_report = @project.project_reports.done.order(id: :desc).first
+      @currency = last_report&.currency || ''
+      @user_roles = if last_report
                       users
                         .left_joins(:project_report_roles)
                         .where('project_report_roles.id IS NULL OR project_report_roles.project_report_id=?', last_report.id) # either role from report or no role
@@ -46,6 +50,7 @@ module Api
                       users.distinct.select('users.*, NULL AS role, 0 AS hourly_wage')
                     end
     end
+    # rubocop:enable MethodLength
 
     private
 

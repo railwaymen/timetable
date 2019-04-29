@@ -9,6 +9,7 @@ class CreateProjectReports < ActiveRecord::Migration[5.1]
       t.decimal :cost, precision: 12, scale: 2, default: 0, null: false
       t.datetime :starts_at, null: false
       t.datetime :ends_at, null: false
+      t.string :currency, null: false, default: ''
 
       t.timestamps
     end

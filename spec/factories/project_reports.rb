@@ -8,5 +8,6 @@ FactoryGirl.define do
     starts_at { 10.days.ago.beginning_of_day }
     ends_at { 3.days.ago.end_of_day }
     duration_sum 0
+    currency 'd'
   end
 end

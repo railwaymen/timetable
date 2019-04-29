@@ -13,7 +13,7 @@ class ProjectReportCreator
     project_report.assign_attributes(
       project_report_roles_attributes: report_roles.map(&method(:transform_param)),
       duration_sum: work_times.inject(0) { |sum, wt| sum + wt.duration },
-      cost: work_times.inject(0.to_r) { |sum, wt| sum + work_time_cost(wt, user_role_map) }.to_f
+      cost: work_times.inject(0.to_r) { |sum, wt| sum + work_time_cost(wt, user_role_map) }.round(2).to_f
     )
     project_report.tap(&:save!)
   end
@@ -38,6 +38,7 @@ class ProjectReportCreator
                   .where('work_times.starts_at BETWEEN ? AND ?', project_report.starts_at, project_report.ends_at)
                   .group('user_id, users.last_name, users.first_name, task, body')
                   .select(SELECT_STATEMENT)
+                  .order('users.last_name, users.first_name ASC')
   end
 
   def generate_body(work_times, user_role_map)

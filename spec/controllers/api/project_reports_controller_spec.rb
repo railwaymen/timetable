@@ -26,6 +26,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
           post(:create, params: {
                  format: 'json',
                  project_id: project,
+                 currency: 'd',
                  starts_at: (time - 2.days).beginning_of_day,
                  ends_at: (time + 2.days).beginning_of_day,
                  project_report_roles: [worker, user].map { |u| { id: u.id, first_name: u.first_name, last_name: u.last_name, role: 'developer', hourly_wage: 30.5 } }
@@ -48,6 +49,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
           post(:create, params: {
                  format: 'json',
                  project_id: project,
+                 currency: 'd',
                  starts_at: (time - 2.days).beginning_of_day,
                  ends_at: (time + 2.days).beginning_of_day,
                  project_report_roles: [worker].map { |u| { id: u.id, first_name: u.first_name, last_name: u.last_name, role: 'developer', hourly_wage: 30.5 } }
@@ -82,7 +84,8 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
         get :roles, params: { format: 'json', project_id: project, starts_at: (time - 2.days).beginning_of_day, ends_at: (time + 2.days).beginning_of_day }
         expect(response).to be_ok
-        expect(JSON.parse(response.body)).to match_array([
+        parsed_body = JSON.parse(response.body)
+        expect(parsed_body['user_roles']).to match_array([
                                                            {
                                                              'id' => user.id,
                                                              'first_name' => user.first_name,
@@ -98,6 +101,8 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
                                                              'hourly_wage' => 0.0
                                                            }
                                                          ])
+
+        expect(parsed_body['currency']).to eq ''
       end
     end
 
@@ -109,12 +114,13 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryGirl.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
-        report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0)
+        report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
         report.project_report_roles.create!(user: user, role: 'developer', hourly_wage: 30)
 
         get :roles, params: { format: 'json', project_id: project, starts_at: (time - 2.days).beginning_of_day, ends_at: (time + 2.days).beginning_of_day }
         expect(response).to be_ok
-        expect(JSON.parse(response.body)).to match_array([
+        parsed_body = JSON.parse(response.body)
+        expect(parsed_body['user_roles']).to match_array([
                                                            {
                                                              'id' => user.id,
                                                              'first_name' => user.first_name,
@@ -130,6 +136,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
                                                              'hourly_wage' => 0.0.to_s
                                                            }
                                                          ])
+        expect(parsed_body['currency']).to eq 'd'
       end
     end
   end
