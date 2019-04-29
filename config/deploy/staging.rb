@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'capistrano/nvm'
-
 set :nvm_type, :system
 set :nvm_node, 'v11.4.0'
 set :rails_env, :staging
