@@ -65,6 +65,7 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-sidekiq'
   gem 'capistrano-yarn'
+  gem 'capistrano-nvm'
 end
 
 group :test do
