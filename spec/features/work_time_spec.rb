@@ -170,7 +170,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     user = FactoryGirl.create :user, lang: 'en', password: 'password'
     login_user(user)
 
-    click_link("#{user.last_name} #{user.first_name}")
+    click_link("#{user.first_name} #{user.last_name}")
     expect(page).to have_selector('input[name="first_name"]')
     expect(page).to have_selector('input[name="last_name"]')
     expect(page).to have_selector('select[name="lang"]')
