@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+set :nvm_type, :system
 set :nvm_node, 'v11.4.0'
 set :rails_env, :staging
 set :deploy_to, ENV['CAP_STAGING_DEPLOY_TO']
