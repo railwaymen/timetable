@@ -21,6 +21,7 @@ require 'capistrano/rvm'
 # require 'capistrano/chruby'
 require 'capistrano/sidekiq'
 require 'capistrano/bundler'
+require 'capistrano/yarn'
 require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
 

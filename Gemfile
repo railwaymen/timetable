@@ -26,11 +26,6 @@ gem 'jira-ruby', require: false
 gem 'interactor'
 gem 'pry-rails'
 gem 'kaminari'
-gem 'capistrano'
-gem 'capistrano-bundler'
-gem 'capistrano-rvm'
-gem 'capistrano-rails'
-gem 'capistrano-sidekiq'
 gem 'sidekiq'
 gem 'sidekiq-status'
 gem 'sinatra', require: false
@@ -64,6 +59,12 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'rubocop'
+  gem 'capistrano'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rvm'
+  gem 'capistrano-rails'
+  gem 'capistrano-sidekiq'
+  gem 'capistrano-yarn'
 end
 
 group :test do
