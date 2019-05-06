@@ -36,6 +36,7 @@ TimeTable::Application.routes.draw do
     resources :projects, only: %i[index show create update] do
       resources :project_reports, only: %i[create update edit show] do
         get :roles, on: :collection
+        put :generate, on: :member
       end
       get :external_auth, on: :member
       get :list, on: :collection

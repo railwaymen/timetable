@@ -33,6 +33,7 @@ export default class EditReport extends React.Component {
       'onHardReset',
       'onSoftReset',
       'onSubmit',
+      'onGenerate',
     ]);
   }
 
@@ -61,6 +62,10 @@ export default class EditReport extends React.Component {
       });
     });
     return newBody;
+  }
+
+  editable() {
+    return this.state.report.state !== 'done';
   }
 
   onHardReset() {
@@ -95,6 +100,18 @@ export default class EditReport extends React.Component {
       },
     }).then(({ data }) => {
       this.setState({ currentBody: this.prepareBody(data.last_body), report: data });
+    });
+  }
+
+  onGenerate(event) {
+    event.preventDefault();
+    const { projectId, reportId } = this.state;
+    Api.makePutRequest({
+      url: `/api/projects/${projectId}/project_reports/${reportId}/generate`,
+      body: {
+      },
+    }).then(({ data }) => {
+      this.setState({ report: data });
     });
   }
 
@@ -178,6 +195,29 @@ export default class EditReport extends React.Component {
     const { report } = this.state;
     // eslint-disable-next-line
     return `${cost.toFixed(2)} ${report.currency}`; // hard space
+  }
+
+  renderRowActions({ id, touched, toMerge }, category, toMergeTasks) {
+    let result = [];
+    if (this.editable()) {
+      result = [
+        <p key="merge">
+          <input name="toMerge" type="checkbox" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
+          {toMerge && this.renderMergeButton(category, toMergeTasks.length < 2)}
+        </p>,
+        <button key="ignore" type="button" onClick={e => this.onIgnore(e, category, id)}>
+          Ignore
+        </button>,
+      ];
+    }
+    if (touched) {
+      result.push(
+        <button key="details" type="button" onClick={e => this.onShowWorkTimeModal(e, category, id)}>
+          Show Details
+        </button>,
+      );
+    }
+    return result;
   }
 
   renderWorkTimeModal() {
@@ -313,20 +353,7 @@ export default class EditReport extends React.Component {
                 <td>{displayDuration(duration)}</td>
                 <td>{this.renderCost(cost)}</td>
                 <td>
-                  <p>
-                    <input name="toMerge" type="checkbox" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
-                    {toMerge && this.renderMergeButton(category, toMergeTasks.length < 2)}
-                  </p>
-                  {touched
-                    && (
-                    <button type="button" onClick={e => this.onShowWorkTimeModal(e, category, id)}>
-                      Show Details
-                    </button>
-                    )
-                  }
-                  <button type="button" onClick={e => this.onIgnore(e, category, id)}>
-                    Ignore
-                  </button>
+                  {this.renderRowActions({ id, toMerge, touched }, category, toMergeTasks)}
                 </td>
               </tr>
             ))}
@@ -430,9 +457,13 @@ export default class EditReport extends React.Component {
     const categoriesCostSum = categories.map(category => sumBy(currentBody[category], 'cost'));
     return (
       <div className="edit-report-summary">
-        <button type="button" onClick={this.onSoftReset}>Soft reset</button>
-        <button type="button" onClick={this.onHardReset}>Hard reset</button>
-        <hr />
+        {this.editable()
+          && [
+            <button key="soft" type="button" onClick={this.onSoftReset}>Soft reset</button>,
+            <button key="hard" type="button" onClick={this.onHardReset}>Hard reset</button>,
+            <hr key="hr" />,
+          ]
+        }
         <h2>{report.project_name}</h2>
         <p>
           <strong>
@@ -463,9 +494,11 @@ export default class EditReport extends React.Component {
             </tr>
           </tbody>
         </table>
-        <hr />
-        <button className="text-center" type="button" onClick={this.onSubmit}>Submit</button>
-        <button className="text-center" type="button">Generate</button>
+        {this.editable() && [
+          <hr key="hr" />,
+          <button key="submit" className="text-center" type="button" onClick={this.onSubmit}>Submit</button>,
+          <button key="generate" className="text-center" type="button" onClick={this.onGenerate}>Generate</button>,
+        ]}
       </div>
     );
   }

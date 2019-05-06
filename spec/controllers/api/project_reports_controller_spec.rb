@@ -150,6 +150,20 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
     end
   end
 
+  describe 'PUT #submit' do
+    it 'generates project report' do
+      body = { development: [task: 'task', owner: 'Owner', duration: 300] }
+      project_report = create(:project_report, initial_body: body, last_body: body, duration_sum: 300, project: project)
+      patch :generate, params: {
+        format: 'json',
+        project_id: project.id,
+        id: project_report.id
+      }
+      expect(response).to be_ok
+      expect(project_report.reload).to be_done
+    end
+  end
+
   describe 'GET #edit' do
     let(:project_report) { create(:project_report) }
 

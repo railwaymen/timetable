@@ -35,6 +35,14 @@ module Api
       respond_with @report
     end
 
+    def generate
+      @report = @project.project_reports.find(params[:id])
+      authorize @report
+      @report.update!(state: :done)
+      # TODO: Call worker
+      respond_with @report
+    end
+
     # rubocop:disable MethodLength
     def roles
       authorize :project_report
