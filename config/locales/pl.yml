@@ -79,6 +79,11 @@ pl:
       new: Nowe uwierzytelnienie
       domain: Domena
       token: Token
+    tag:
+      dev: Development
+      ui: Spotkanie wewnętrzne
+      cc: Rozmowa z klientem
+      res: Poszukiwanie informacji
   common:
     rank: 'Ranking'
     add: Dodaj
@@ -106,11 +111,6 @@ pl:
     name: Nazwa
     external_auth: Integracja z serwisami zewnętrznymi
     custom: Własny
-    tag:
-      dev: Development
-      ui: Spotkanie
-      pm: Rozmowa z klientem
-      qa: Poszukiwanie informacji
   errors:
     format: "%{attribute} %{message}"
     messages:

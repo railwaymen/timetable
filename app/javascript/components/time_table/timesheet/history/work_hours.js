@@ -69,7 +69,10 @@ class WorkHours extends React.Component {
   }
 
   onCopy() {
-    this.props.onCopy(this.state.workHours);
+    this.props.onCopy({
+      ...this.state.workHours,
+      tag: this.state.workHours.tag.key
+    });
   }
 
   onDelete() {
@@ -135,8 +138,13 @@ class WorkHours extends React.Component {
   }
 
   onTagChange(tag) {
+    if (this.props.tags_disabled) return;
+
     this.setState({
-      tag,
+      workHours: {
+        ...this.state.workHours,
+        tag,
+      },
     }, () => {
       this.saveWorkHours();
     });
@@ -159,11 +167,9 @@ class WorkHours extends React.Component {
 
   renderTagEditable() {
     return (
-      <div className="tags">
-        <div className="tag-dropdown">
-          <div>
-            <TagsDropdown updateTag={this.onTagChange} selectedTag={this.state.workHours.tag} tags={this.props.tags} />
-          </div>
+      <div className="tag-container">
+        <div>
+          <TagsDropdown updateTag={this.onTagChange} selectedTag={this.state.workHours.tag.key} tags={this.props.tags} />
         </div>
       </div>
     );
@@ -189,7 +195,7 @@ class WorkHours extends React.Component {
       project_id: workHours.project_id,
       body: workHours.body,
       task: workHours.task,
-      tag: workHours.tag,
+      tag: workHours.tag.key,
       starts_at: workHours.starts_at,
       ends_at: workHours.ends_at,
     };
@@ -247,13 +253,14 @@ class WorkHours extends React.Component {
     }
 
     this.setState({
+      editing: false,
       tagEditable: !tagEditable,
     });
   }
 
   saveWorkHours() {
     const {
-      workHours, ends_at_hours, starts_at_hours, date, tag,
+      workHours, ends_at_hours, starts_at_hours, date,
     } = this.state;
 
     const formattedStartsAtTime = moment(workHours.starts_at).format('HH:mm');
@@ -265,7 +272,7 @@ class WorkHours extends React.Component {
       url: `/api/work_times/${this.state.workHours.id}`,
       body: {
         work_time: {
-          ...this.workHoursJsonApi(), starts_at, ends_at, tag,
+          ...this.workHoursJsonApi(), starts_at, ends_at,
         },
       },
     }).then((response) => {
@@ -325,7 +332,7 @@ class WorkHours extends React.Component {
   }
 
   render() {
-    const { projects } = this.props;
+    const { projects, tags_disabled } = this.props;
     const {
       workHours, projectEditable, editing, errors, tagEditable,
     } = this.state;
@@ -363,9 +370,12 @@ class WorkHours extends React.Component {
                   ) : null }
               </div>
             </div>
+            { !tags_disabled && (
             <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>
               { tagEditable && this.renderTagEditable() }
             </WorkTimeTag>
+            )
+            }
             <div className="actions-container">
               <div className="action-item destroy" onClick={this.onDelete}>
                 <i className="icon red trash" />

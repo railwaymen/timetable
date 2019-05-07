@@ -12,8 +12,8 @@ class WorkTime < ApplicationRecord
   enum tag: {
     'dev': 'dev',
     'ui': 'ui',
-    'pm': 'pm',
-    'qa': 'qa'
+    'cc': 'cc',
+    'res': 'res'
   }
 
   validates :project_id, :starts_at, :ends_at, presence: true

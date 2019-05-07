@@ -22,20 +22,18 @@ class TagsDropdown extends React.Component {
       p.key === tag_key
     )) || tags[0];
 
-    this.props.updateTag(selectedTagObj.key);
+    this.props.updateTag(selectedTagObj);
   }
 
   renderTagsList() {
     return (
-      <div style={{ marginTop: '15px' }}>
-        <TagsList tags={this.props.tags} selectedTag={this.props.selectedTag} onChangeTag={this.onChangeTag} />
-      </div>
+      <TagsList tags={this.props.tags} selectedTag={this.props.selectedTag} onChangeTag={this.onChangeTag} />
     );
   }
 
   render() {
     return (
-      <div style={{ minWidth: '90px' }}>
+      <div style={{ minWidth: '150px' }}>
         { this.renderTagsList() }
       </div>
     );

@@ -3,19 +3,24 @@
 require 'rails_helper'
 
 RSpec.describe Api::ProjectsController do
+  before(:each) { I18n.locale = :pl }
+
   render_views
   let(:user) { create(:user) }
   let(:admin) { create(:admin) }
   let(:manager) { create(:manager) }
   let(:project_name) { SecureRandom.hex }
   let(:tags_list) do
-    WorkTime.tags.keys.map { |wt| { key: wt, value: "\##{wt}" } }
+    WorkTime.tags
+            .keys
+            .map { |wt| { key: wt, value: I18n.t("apps.tag.#{wt}") } }
   end
 
   def prepare_expected_json(projects_json)
     {
       projects: projects_json,
-      tags: tags_list
+      tags: tags_list,
+      tags_disabled: false
     }.to_json
   end
 

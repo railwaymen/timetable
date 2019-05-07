@@ -81,7 +81,7 @@ class Entry extends React.Component {
       project: object.project,
       project_id: object.project.id,
       task: object.task,
-      tag: object.tag ? object.tag : 'dev',
+      tag: object.tag || 'dev',
     });
   }
 
@@ -143,6 +143,7 @@ class Entry extends React.Component {
           const newState = {
             body: '',
             task: '',
+            tag: 'dev',
           };
           if (!this.state.project.autofill) {
             Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' });
@@ -169,9 +170,9 @@ class Entry extends React.Component {
     }
   }
 
-  updateTag(tag) {
+  updateTag(tag_obj) {
     this.setState({
-      tag,
+      tag: tag_obj.key,
     }, () => {
       this.removeErrorsFor('tag');
       this.recountTime();
@@ -277,14 +278,6 @@ class Entry extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="tags">
-                <div className="tag-dropdown">
-                  {errors.tag ? <ErrorTooltip errors={errors.tag} /> : null}
-                  <div>
-                    <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />
-                  </div>
-                </div>
-              </div>
               <div className="time">
                 <div className="input transparent ui">
                   <input className="auto-focus" id="start" type="text" name="starts_at" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onClick={this.onFocus} onBlur={() => this.recountTime()} value={starts_at} />
@@ -305,6 +298,15 @@ class Entry extends React.Component {
                 <button type="button" className="btn-start button fluid ui" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
               </div>
             </div>
+            { !this.props.tags_disabled && (
+            <div className="field">
+              <div className="tag-container" style={{ marginTop: '5px' }}>
+                {errors.tag && <ErrorTooltip errors={errors.tag} />}
+                <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />
+              </div>
+            </div>
+            )
+            }
           </div>
         </div>
       </div>

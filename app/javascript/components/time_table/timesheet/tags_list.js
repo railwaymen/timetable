@@ -12,22 +12,20 @@ function TagsList(props) {
   const { selectedTag } = props;
 
   return (
-    <div className="visible" tabIndex="-1" style={{ display: 'block !important' }}>
+    <div className="visible" tabIndex="-1">
       { props.tags.map((tag) => {
         if (tag.key === 'dev') {
           return null;
         }
         return (
-          <button
-            className={tag.key === selectedTag ? ('btn btn-success ${tag.key}' ) : ('btn btn-info' + tag.key)}
+          <input
+            className={tag.key === selectedTag ? `tags selected ${tag.key}` : `tags ${tag.key}`}
             onClick={onChangeTag.bind(this, tag.key)}
             name="tag-item"
             type="button"
             key={tag.key}
-            data-value={tag.value}
-          >
-            {tag.value}
-          </button>
+            value={tag.value.toUpperCase()}
+          />
         );
       })}
     </div>
