@@ -9,5 +9,6 @@ FactoryGirl.define do
     ends_at { 3.days.ago.end_of_day }
     duration_sum 0
     currency 'd'
+    name 'Report'
   end
 end

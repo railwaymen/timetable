@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import URI from 'urijs';
 import moment from 'moment';
 import * as Api from '../../shared/api';
@@ -107,9 +108,9 @@ export default class ProjectWorkTimes extends React.Component {
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
     return (
       <div className="content-wrapper box">
-        <a href={`/projects/${projectId}/new_report`}>
-          Generate report
-        </a>
+        <Link to={`/projects/${projectId}/reports`}>
+          Reports
+        </Link>
         <h1 className="center">{project.name}</h1>
         <div className="clearfix col-md-offset-4">
           <HorizontalArrows onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>

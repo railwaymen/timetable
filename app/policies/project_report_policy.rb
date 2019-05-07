@@ -25,6 +25,10 @@ class ProjectReportPolicy < ApplicationPolicy
     create?
   end
 
+  def index?
+    create?
+  end
+
   class Scope < Scope
     # :nocov:
     def resolve

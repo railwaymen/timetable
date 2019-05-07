@@ -34,7 +34,7 @@ TimeTable::Application.routes.draw do
     end
     resources :work_times
     resources :projects, only: %i[index show create update] do
-      resources :project_reports, only: %i[create update edit show] do
+      resources :project_reports, except: %i[delete destroy] do
         get :roles, on: :collection
         put :generate, on: :member
       end

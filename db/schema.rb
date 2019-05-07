@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 20190425095633) do
     t.datetime "starts_at", null: false
     t.datetime "ends_at", null: false
     t.string "currency", default: "", null: false
+    t.string "name", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["project_id"], name: "index_project_reports_on_project_id"

@@ -38,6 +38,8 @@ export const displayDuration = (seconds) => {
   return `${padZeroes(hours)}:${padZeroes(minutes)}`;
 };
 
+export const displayDate = date => moment(date).format('ddd DD, MMMM YYYY');
+
 export const displayDayInfo = (day) => {
   const today = moment();
   const yesterday = moment().subtract(1, 'day');
@@ -47,5 +49,5 @@ export const displayDayInfo = (day) => {
   } if (yesterday.isSame(day, 'day')) {
     return I18n.t('common.yesterday');
   }
-  return moment(day).format('ddd DD, MMMM YYYY');
+  return displayDate(day);
 };

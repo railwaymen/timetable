@@ -27,6 +27,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
                  format: 'json',
                  project_id: project,
                  currency: 'd',
+                 name: 'name',
                  starts_at: (time - 2.days).beginning_of_day,
                  ends_at: (time + 2.days).beginning_of_day,
                  project_report_roles: [worker, user].map { |u| { id: u.id, first_name: u.first_name, last_name: u.last_name, role: 'developer', hourly_wage: 30.5 } }
@@ -169,6 +170,16 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
 
     it 'renders project report' do
       get :show, params: { project_id: project_report.project.id, id: project_report.id }
+
+      expect(response).to be_ok
+    end
+  end
+
+  describe 'GET #index' do
+    let(:project_report) { create(:project_report) }
+
+    it 'renders index' do
+      get :index, params: { project_id: project_report.project.id }
 
       expect(response).to be_ok
     end

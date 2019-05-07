@@ -14,6 +14,7 @@ export default class NewReport extends React.Component {
     endsAt: moment().endOf('month'),
     userRoles: [],
     currency: '',
+    name: '',
     redirectTo: null,
   }
 
@@ -63,7 +64,7 @@ export default class NewReport extends React.Component {
 
   onSubmit() {
     const {
-      projectId, userRoles, startsAt, endsAt, currency,
+      projectId, userRoles, startsAt, endsAt, currency, name,
     } = this.state;
     Api.makePostRequest({
       url: `/api/projects/${projectId}/project_reports`,
@@ -72,6 +73,7 @@ export default class NewReport extends React.Component {
         starts_at: startsAt,
         ends_at: endsAt,
         currency,
+        name,
       },
     }).then(({ data }) => {
       this.setState({
@@ -87,6 +89,10 @@ export default class NewReport extends React.Component {
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
     return (
       <div>
+        <h2>
+          Name
+        </h2>
+        <input value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
         <h2>
           Currency
         </h2>

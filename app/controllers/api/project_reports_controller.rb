@@ -11,10 +11,16 @@ module Api
         last_body: {},
         starts_at: params[:starts_at],
         ends_at: params[:ends_at],
-        currency: params[:currency]
+        currency: params[:currency],
+        name: params[:name]
       )
       authorize @report
       @report = ProjectReportCreator.new.call(@report, params[:project_report_roles])
+    end
+
+    def index
+      @reports = @project.project_reports
+      authorize @reports
     end
 
     def show
