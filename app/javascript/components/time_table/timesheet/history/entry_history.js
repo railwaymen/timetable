@@ -181,7 +181,9 @@ class EntryHistory extends React.Component {
         if (lastWorkTime && lastWorkTime.project.name === 'Lunch') {
           // eslint-disable-next-line
           lastWorkTime = this.state.workHours[1];
-          this.props.setLastProject(lastWorkTime.project || {});
+          if (lastWorkTime) {
+            this.props.setLastProject(lastWorkTime.project || {});
+          }
         }
 
         document.dispatchEvent(event);
