@@ -6,7 +6,7 @@ RSpec.describe ProjectReportPolicy, type: :policy do
   let(:user) { User.new }
 
   subject { described_class }
-  permissions :create?, :update?, :show?, :edit?, :roles?, :generate? do
+  permissions :create?, :update?, :show?, :edit?, :roles?, :generate?, :file? do
     it 'permits access if admin' do
       expect(subject).to permit(User.new(admin: true), ProjectReport.new)
     end

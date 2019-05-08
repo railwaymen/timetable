@@ -5,6 +5,7 @@ require 'prawn/table'
 require 'tempfile'
 require 'uri'
 # rubocop:disable ClassLength
+# :nocov:
 class ProjectReportGenerator
   attr_reader :project_report
 
@@ -22,10 +23,8 @@ class ProjectReportGenerator
     ]
   end
 
-  def call
-    file = Tempfile.new([file_name, '.pdf'])
+  def call(file)
     generate_pdf(file.path)
-    file
   end
 
   private
@@ -99,7 +98,7 @@ class ProjectReportGenerator
 
   # rubocop:disable MethodLength
   def summary(pdf, footers)
-    sum_duration = footer.sum { |footer| footer[1] }
+    sum_duration = footers.sum { |footer| footer[1] }
     sum_cost = footers.sum { |footer| footer[2].to_r }
     footers.each do |el|
       el[1] = format_duration(el[1])
@@ -141,10 +140,7 @@ class ProjectReportGenerator
 
     "#{project_report.currency} #{format(FORMAT_STRING, cost.round(2))}"
   end
-
-  def file_name
-    "#{project_report.project.name.gsub(/\s+/, '_')}_#{@project_report.name}"
-  end
 end
 
 # rubocop:enable ClassLength
+# :nocov:

@@ -11,6 +11,7 @@ class CreateProjectReports < ActiveRecord::Migration[5.1]
       t.datetime :ends_at, null: false
       t.string :currency, null: false, default: ''
       t.string :name, null: false, default: ''
+      t.string :file_path
 
       t.timestamps
     end

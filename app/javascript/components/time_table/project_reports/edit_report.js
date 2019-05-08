@@ -451,7 +451,12 @@ export default class EditReport extends React.Component {
   }
 
   renderSummary() {
-    const { report, currentBody } = this.state;
+    const {
+      report,
+      currentBody,
+      projectId,
+      reportId,
+    } = this.state;
     const categories = without(Object.keys(currentBody), 'ignored').sort();
     const categoriesDurationSum = categories.map(category => sumBy(currentBody[category], 'duration'));
     const categoriesCostSum = categories.map(category => sumBy(currentBody[category], 'cost'));
@@ -494,11 +499,19 @@ export default class EditReport extends React.Component {
             </tr>
           </tbody>
         </table>
-        {this.editable() && [
-          <hr key="hr" />,
-          <button key="submit" className="text-center" type="button" onClick={this.onSubmit}>Submit</button>,
-          <button key="generate" className="text-center" type="button" onClick={this.onGenerate}>Generate</button>,
-        ]}
+        {this.editable()
+          && [
+            <hr key="hr" />,
+            <button key="submit" className="text-center" type="button" onClick={this.onSubmit}>Submit</button>,
+            <button key="generate" className="text-center" type="button" onClick={this.onGenerate}>Generate</button>,
+          ]}
+        {report.generated
+          && (
+          <a href={`/api/projects/${projectId}/project_reports/${reportId}/file`}>
+            Download
+          </a>
+          )
+        }
       </div>
     );
   }

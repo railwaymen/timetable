@@ -46,8 +46,9 @@ export default class ProjectReports extends React.Component {
               state,
               starts_at,
               ends_at,
+              generated,
             }) => (
-              <tr>
+              <tr key={id}>
                 <td>
                   {name}
                 </td>
@@ -59,7 +60,15 @@ export default class ProjectReports extends React.Component {
                   Link
                   </Link>
                 </td>
-                <td />
+                <td>
+                  {generated
+                    && (
+                    <a href={`/api/projects/${projectId}/project_reports/${id}/file`}>
+                      Download
+                    </a>
+                    )
+                  }
+                </td>
                 <td>
                   {`${displayDate(starts_at)}-${displayDate(ends_at)}`}
                 </td>

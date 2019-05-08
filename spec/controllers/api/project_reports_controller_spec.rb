@@ -151,8 +151,9 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
     end
   end
 
-  describe 'PUT #submit' do
+  describe 'PUT #generate' do
     it 'generates project report' do
+      allow(GenerateProjectReportWorker).to receive(:perform_async)
       body = { development: [task: 'task', owner: 'Owner', duration: 300] }
       project_report = create(:project_report, initial_body: body, last_body: body, duration_sum: 300, project: project)
       patch :generate, params: {
@@ -162,6 +163,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
       }
       expect(response).to be_ok
       expect(project_report.reload).to be_done
+      expect(GenerateProjectReportWorker).to have_received(:perform_async).with(project_report.id)
     end
   end
 
@@ -182,6 +184,27 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
       get :index, params: { project_id: project_report.project.id }
 
       expect(response).to be_ok
+    end
+  end
+
+  describe 'GET #file' do
+    let(:project_report) { create(:project_report) }
+    context 'no file' do
+      it 'renders no content' do
+        get :file, params: { project_id: project_report.project.id, id: project_report.id }
+
+        expect(response).to be_no_content
+      end
+    end
+
+    context 'file do' do
+      it 'sends file' do
+        project_report.update!(file_path: file_fixture('sample.pdf').to_path)
+        get :file, params: { project_id: project_report.project.id, id: project_report.id }
+
+        expect(response).to be_ok
+        expect(response.body).to eq file_fixture('sample.pdf').binread
+      end
     end
   end
 end

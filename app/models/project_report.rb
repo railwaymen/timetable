@@ -13,6 +13,10 @@ class ProjectReport < ApplicationRecord
   validate :body_did_not_lost_duration, on: :update
   validate :body_did_not_change_cost
 
+  def generated
+    file_path.present?
+  end
+
   private
 
   def body_did_not_lost_duration

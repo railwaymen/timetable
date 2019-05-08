@@ -45,8 +45,16 @@ module Api
       @report = @project.project_reports.find(params[:id])
       authorize @report
       @report.update!(state: :done)
-      # TODO: Call worker
+      GenerateProjectReportWorker.perform_async(@report.id)
       respond_with @report
+    end
+
+    def file
+      @report = @project.project_reports.find(params[:id])
+      authorize @report
+      return head(:no_content) if @report.file_path.blank?
+
+      send_file @report.file_path
     end
 
     # rubocop:disable MethodLength
