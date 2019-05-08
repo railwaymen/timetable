@@ -40,7 +40,7 @@ export default class NewReport extends React.Component {
   getRoles() {
     Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}/project_reports/roles?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}` })
       .then(({ data }) => {
-        this.setState({ userRoles: data.user_roles, currency: data.currency });
+        this.setState({ userRoles: data.user_roles, currency: data.currency || this.state.currency });
       });
   }
 
