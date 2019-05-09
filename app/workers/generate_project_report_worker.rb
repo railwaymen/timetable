@@ -2,14 +2,12 @@
 
 require 'fileutils'
 
-# :nocov:
 class GenerateProjectReportWorker
   include Sidekiq::Worker
 
   def perform(id)
     project_report = ProjectReport.find(id)
-    file = File.new(file_path(project_report), 'w')
-    file.close
+    file = File.new(file_path(project_report), 'w').tap(&:close)
     ProjectReportGenerator.new(project_report: project_report).call(file)
     project_report.update!(file_path: file.path)
   end
@@ -22,4 +20,3 @@ class GenerateProjectReportWorker
     File.join(dir, "#{project_report.id}.pdf")
   end
 end
-# :nocov:
