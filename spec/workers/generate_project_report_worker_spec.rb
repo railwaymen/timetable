@@ -18,12 +18,13 @@ describe GenerateProjectReportWorker do
         File.join(__dir__, *arguments)
       end
       file_path = File.join(__dir__, 'system', 'uploads', 'reports', project_report.project_id.to_s, "#{project_report.id}.pdf")
+      begin
+        described_class.new.perform(project_report.id)
 
-      described_class.new.perform(project_report.id)
-
-      expect(IO.read(file_path)).to eq content
-
-      FileUtils.rm_r File.join(__dir__, 'system')
+        expect(IO.read(file_path)).to eq content
+      ensure
+        FileUtils.rm_r File.join(__dir__, 'system')
+      end
     end
   end
 end
