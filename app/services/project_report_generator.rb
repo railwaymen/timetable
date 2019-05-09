@@ -13,6 +13,7 @@ class ProjectReportGenerator
   LIGHT_GRAY = 'FBFBFB'
   TABLE_WIDTH = 523
   FORMAT_STRING = '%.2f'
+  LOGO_PATH = Rails.root.join('app', 'assets', 'images', 'reports', 'logo.jpg')
 
   def initialize(project_report:)
     @project_report = project_report
@@ -41,9 +42,10 @@ class ProjectReportGenerator
 
   # rubocop:disable MethodLength
   def report_header(pdf)
+    image_cell = File.file?(LOGO_PATH) ? { image: LOGO_PATH, rowspan: 2, image_width: 180 } : { content: '', rowspan: 2 }
     pdf.table([
                 [
-                  { image: './logo.jpg', rowspan: 2, image_width: 180 },
+                  image_cell,
                   { content: project_report.project.name, rowspan: 2, valign: :center, size: 20 },
                   { content: project_report.name, align: :center, valign: :center }
                 ],
