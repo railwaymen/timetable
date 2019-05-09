@@ -71,7 +71,7 @@ class WorkHours extends React.Component {
   onCopy() {
     this.props.onCopy({
       ...this.state.workHours,
-      tag: this.state.workHours.tag.key
+      tag: this.state.workHours.tag.key,
     });
   }
 

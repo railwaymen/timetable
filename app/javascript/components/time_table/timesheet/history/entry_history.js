@@ -28,6 +28,7 @@ class EntryHistory extends React.Component {
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
+    this.translateTag = this.translateTag.bind(this);
   }
 
   componentDidMount() {
@@ -366,6 +367,11 @@ class EntryHistory extends React.Component {
     return displayDuration(value);
   }
 
+  translateTag(tag_key) {
+    if (tag_key === 'dev') return null;
+    return tag_key && I18n.t(`apps.tag.${tag_key}`);
+  }
+
   onPreviousUserChange() {
     const { from, to, project_id } = this.state;
 
@@ -403,6 +409,11 @@ class EntryHistory extends React.Component {
             { version.body
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{(version.body || '').replace(/\n/g, '<br />')}</span>
               : <span>{(version.body_was || '').replace(/\n/g, '<br />')}</span> }
+          </td>
+          <td>
+            { version.tag
+              ? <span className={(version.event === 'update' ? 'changed' : '')}>{this.translateTag(version.tag)}</span>
+                : <span>{this.translateTag(version.tag_was)}</span> }
           </td>
           <td>
             { version.starts_at
