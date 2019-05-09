@@ -5,6 +5,7 @@ import {
 } from 'lodash';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
+import Modal from '../../shared/modal';
 
 export default class EditReport extends React.Component {
   state = {
@@ -227,85 +228,82 @@ export default class EditReport extends React.Component {
     const ids = workTime.id.split(';');
     const ancestors = this.state.report.initial_body[workTimeModalCategory].filter(wt => ids.includes(wt.id));
     return (
-      <div id="work-time-modal" className="unique-modal-class" style={{ display: 'none' }}>
-        <div className="ui centered-modal modal transition visible active">
-          <i className="close icon" />
-          <div className="header">Details</div>
-          <div className="content">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>
-                    Task
-                  </th>
-                  <th>
-                    Description
-                  </th>
-                  <th>
-                    Owner
-                  </th>
-                  <th>
-                    Time spent
-                  </th>
-                  <th>
-                    Owner wage
-                  </th>
-                  <th>
-                    Cost
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {ancestors.map(({
-                  id, duration, task, description, owner, cost,
-                }) => (
-                  <tr key={id}>
-                    <td>
-                      {task}
-                    </td>
-                    <td>
-                      {description}
-                    </td>
-                    <td>
-                      {owner}
-                    </td>
-                    <td>
-                      {displayDuration(duration)}
-                    </td>
-                    <td>
-                      {this.state.report.roles[owner].hourly_wage}
-                    </td>
-                    <td>
-                      {this.renderCost(cost)}
-                    </td>
-                  </tr>
-                ))}
-                <tr className="active">
+      <Modal
+        id="work-time-modal"
+        header="Details"
+        content={(
+          <table className="table">
+            <thead>
+              <tr>
+                <th>
+                  Task
+                </th>
+                <th>
+                  Description
+                </th>
+                <th>
+                  Owner
+                </th>
+                <th>
+                  Time spent
+                </th>
+                <th>
+                  Owner wage
+                </th>
+                <th>
+                  Cost
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {ancestors.map(({
+                id, duration, task, description, owner, cost,
+              }) => (
+                <tr key={id}>
                   <td>
-                    {workTime.task}
+                    {task}
                   </td>
                   <td>
-                    {workTime.description}
+                    {description}
                   </td>
                   <td>
-                    {workTime.owner}
+                    {owner}
                   </td>
                   <td>
-                    {displayDuration(workTime.duration)}
+                    {displayDuration(duration)}
                   </td>
                   <td>
-                    -
+                    {this.state.report.roles[owner].hourly_wage}
                   </td>
                   <td>
-                    {this.renderCost(workTime.cost)}
+                    {this.renderCost(cost)}
                   </td>
                 </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div className="ui dimmer modals modal-backdrop page transition visible active" style={{ display: 'flex !important' }} />
-      </div>
+              ))}
+              <tr className="active">
+                <td>
+                  {workTime.task}
+                </td>
+                <td>
+                  {workTime.description}
+                </td>
+                <td>
+                  {workTime.owner}
+                </td>
+                <td>
+                  {displayDuration(workTime.duration)}
+                </td>
+                <td>
+                  -
+                </td>
+                <td>
+                  {this.renderCost(workTime.cost)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          )}
+      />
     );
   }
 
@@ -316,6 +314,7 @@ export default class EditReport extends React.Component {
     const times = currentBody[category];
     if (times.length === 0) return null;
     const toMergeTasks = times.filter(wt => wt.toMerge);
+    const modalHeader = toMergeTasks.length > 1 ? 'Merge' : 'Update';
     return (
       <div key={category}>
         <h2>{category}</h2>
@@ -359,48 +358,44 @@ export default class EditReport extends React.Component {
             ))}
           </tbody>
         </table>
-        {this.renderWorkTimeModal()}
+        <Modal
+          id={`modal-${category}`}
+          header={modalHeader}
+          content={(
+            <form className="form ui">
+              <div className="error hidden message ui">
+                <p />
+              </div>
+              <div className="fields">
+                <div className="field">
+                  <label htmlFor="mergeTask">Task</label>
+                  <textarea onChange={this.onMergeTaskChange} value={mergeTask} name="mergeTask" />
+                </div>
+                <div className="field">
+                  <label htmlFor="mergeDescription">Description</label>
+                  <textarea onChange={this.onMergeDescriptionChange} value={mergeDescription} name="mergeDescription" />
+                </div>
+                <div className="field">
+                  <label htmlFor="mergeOwner">Owner</label>
+                  <textarea onChange={this.onMergeOwnerChange} value={mergeOwner} name="mergeOwner" />
+                </div>
+                <div>
+                  <label>Time Spent:</label>
+                  <p>
+                    {displayDuration(sumBy(toMergeTasks, 'duration'))}
+                  </p>
+                </div>
+              </div>
+            </form>
+          )}
+          actions={(
+            <button onClick={e => this.onMergeSubmit(e, category)} className="button green icon labeled right ui" type="button">
+              {modalHeader}
+              <i className="angle double icon right" />
+            </button>
+          )}
+        />
         <hr />
-        <div id={`modal-${category}`} className="unique-modal-class" style={{ display: 'none' }}>
-          <div className="ui centered-modal modal transition visible active">
-            <i className="close icon" />
-            <div className="header">MERGE</div>
-            <div className="content">
-              <form className="form ui">
-                <div className="error hidden message ui">
-                  <p />
-                </div>
-                <div className="fields">
-                  <div className="field">
-                    <label htmlFor="mergeTask">Task</label>
-                    <textarea onChange={this.onMergeTaskChange} value={mergeTask} name="mergeTask" />
-                  </div>
-                  <div className="field">
-                    <label htmlFor="mergeDescription">Description</label>
-                    <textarea onChange={this.onMergeDescriptionChange} value={mergeDescription} name="mergeDescription" />
-                  </div>
-                  <div className="field">
-                    <label htmlFor="mergeOwner">Owner</label>
-                    <textarea onChange={this.onMergeOwnerChange} value={mergeOwner} name="mergeOwner" />
-                  </div>
-                  <div>
-                    <label>Time Spent:</label>
-                    <p>
-                      {displayDuration(sumBy(toMergeTasks, 'duration'))}
-                    </p>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div className="actions">
-              <button onClick={e => this.onMergeSubmit(e, category)} className="button green icon labeled right ui" type="button">
-                {toMergeTasks.length > 1 ? 'Merge' : 'Update'}
-                <i className="angle double icon right" />
-              </button>
-            </div>
-          </div>
-          <div className="ui dimmer modals modal-backdrop page transition visible active" style={{ display: 'flex !important' }} />
-        </div>
       </div>
     );
   }
@@ -522,6 +517,7 @@ export default class EditReport extends React.Component {
     return (
       <div>
         {without(Object.keys(currentBody), 'ignored').sort().map(this.renderCategory)}
+        {this.renderWorkTimeModal()}
         {this.renderIgnored()}
         {this.renderSummary()}
       </div>
