@@ -4,7 +4,7 @@ import tagShape from './tag_shape';
 
 const TagPill = ({ tag, selected, onClick }) => (
   <input
-    className={selected ? `tags selected ${tag.key}` : `tags ${tag.key}`}
+    className={selected ? `tags clickable selected ${tag.key}` : `tags clickable ${tag.key}`}
     onClick={onClick}
     name="tag-item"
     type="button"

@@ -8,7 +8,7 @@ const WorkTimeTag = ({
   if (workTime.tag.key === 'dev') return null;
   return (
     <div className="tag-container" style={{ marginTop: '16px' }}>
-      <input onClick={onClick} className={`tags ${workTime.tag.key}`} type="button" value={workTime.tag.value.toUpperCase()} />
+      <input onClick={onClick} className={`tags clickable ${workTime.tag.key}`} type="button" value={workTime.tag.value.toUpperCase()} />
     </div>
   );
 };

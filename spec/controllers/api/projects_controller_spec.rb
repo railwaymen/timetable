@@ -413,7 +413,7 @@ RSpec.describe Api::ProjectsController do
         work_time = FactoryGirl.create :work_time, user: user, project: project, starts_at: time, ends_at: time + 30.minutes
         FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.zone.now, ends_at: Time.zone.now + 1.hour
 
-        get :work_times, params: { id: project, from: time, to: time + 2.days }, format: :json
+        get :work_times, params: { id: project, from: time, to: time + 2.days, user_id: user.id }, format: :json
         expect(response).to be_ok
         parsed_body = JSON.parse(response.body)
         expect(parsed_body.dig('project', 'name')).to eq project.name

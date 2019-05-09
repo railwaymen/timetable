@@ -28,16 +28,26 @@ module Api
       @project = project_scope
     end
 
+    # rubocop:disable Metrics/MethodLength
     def work_times
       @project = project_scope
-      search_params = if params[:from].present? && params[:to].present?
-                        { starts_at: Time.zone.parse(params[:from])..Time.zone.parse(params[:to]) }
-                      else
-                        time = Time.zone.now
-                        { starts_at: time.beginning_of_week..time.end_of_week }
-                      end
-      @work_times = WorkTimePolicy::Scope.new(current_user, @project.work_times.active.where(search_params)).resolve.includes(:user)
+      from, to = resolve_from_to_dates
+      report_params = { from: from, to: to, project_ids: params[:id], sort: params[:sort] }
+      work_times_query = @project.work_times.active.where(starts_at: from..to)
+
+      if params[:user_id]
+        report_params[:user_ids] = [params[:user_id]]
+        work_times_query = work_times_query.joins(:user).where('users.id = ?', params[:user_id])
+      end
+
+      @report = ReportProjectRecordQuery.new(report_params).results
+      @tag_report = ReportProjectTagRecordQuery.new(report_params).results
+
+      @work_times = WorkTimePolicy::Scope.new(current_user, work_times_query)
+                                         .resolve
+                                         .includes(:user)
     end
+    # rubocop:enable Metrics/MethodLength
 
     def external_auth
       @project = project_scope
@@ -63,6 +73,18 @@ module Api
 
     def valid_days
       %w[30 60 90]
+    end
+
+    def resolve_from_to_dates
+      time = Time.zone.now
+      if params[:from].present? && params[:to].present?
+        [
+          Time.zone.parse(params[:from]),
+          Time.zone.parse(params[:to])
+        ]
+      else
+        [time.beginning_of_week, time.end_of_week]
+      end
     end
 
     def project_scope

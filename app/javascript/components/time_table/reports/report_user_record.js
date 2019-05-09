@@ -33,15 +33,15 @@ class ReportUserRecord extends React.Component {
     const overallData = reportRows[0];
 
     return (
-      <div className="col-md-6">
+      <div className="col-md-4">
         <div className="panel panel-default">
           <div className="panel-heading">
             <h4>
               <i className="glyphicon glyphicon-user" />
               <a href={`/timesheet?user_id=${overallData.user_id}&from=${from}&to=${to}`} onClick={this.onRedirect}>{overallData.user_name}</a>
               <a href={`/reports/project.csv?from=${from}&to=${to}&user_id=${overallData.user_id}`}><i className="calendar icon" /></a>
+              <span className="badge">{this.formattedDuration(overallData.user_work_time)}</span>
             </h4>
-            <span className="badge">{this.formattedDuration(overallData.user_work_time)}</span>
           </div>
           <ul className="list-group">
             { reportRows.map(row => (

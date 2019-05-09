@@ -1,13 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 
-class ReportProjectRecord extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.onRedirect = this.onRedirect.bind(this);
-  }
-
+class ReportProjectTagRecord extends React.Component {
   formattedDuration(value) {
     if (!value || parseInt(value, 10) === 0) {
       return '00:00';
@@ -23,33 +17,23 @@ class ReportProjectRecord extends React.Component {
     return `${hours}:${minutes}`;
   }
 
-  onRedirect(e) {
-    e.preventDefault();
-    this.props.redirectTo(e.target.href);
-  }
-
   render() {
-    const { reportRows, from, to } = this.props;
+    const { reportRows } = this.props;
     const overallData = reportRows[0];
     return (
       <div className="panel panel-default">
         <div className="panel-heading">
           <h4>
             <span className="badge">{this.formattedDuration(overallData.project_duration)}</span>
-            <i className="glyphicon glyphicon-user" />
+            <i className="glyphicon glyphicon-tags" />
             {overallData.project_name}
-            <a href={`/reports/project.csv?from=${from}&to=${to}&id=${overallData.project_id}`}><i className="calendar icon" /></a>
           </h4>
         </div>
         <ul className="list-group">
           { reportRows.map((row, index) => (
             <li className="list-group-item record" key={index}> {/* eslint-disable-line */}
-              <a href={`/timesheet?project_id=${row.project_id}&user_id=${row.user_id}&from=${from}&to=${to}`} onClick={this.onRedirect}>
-                {row.user_name}
-              </a>
-              (
-              {Math.floor(row.duration * 10000 / row.project_duration) / 100}
-%)
+              <input type="button" disabled className={`tags ${row.tag}`} value={row.tag_label} />
+              {`${Math.floor(row.duration * 10000 / row.project_duration) / 100}%`}
               <span className="badge">{this.formattedDuration(row.duration)}</span>
             </li>
           )) }
@@ -59,4 +43,4 @@ class ReportProjectRecord extends React.Component {
   }
 }
 
-export default ReportProjectRecord;
+export default ReportProjectTagRecord;

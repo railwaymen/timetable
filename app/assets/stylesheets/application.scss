@@ -121,6 +121,22 @@ body {
   margin-bottom: 20px;
 }
 
+.panel-heading {
+  .badge {
+    float: right;
+  }
+}
+.list-group-item {
+  &.record {
+    padding: 5px 15px;
+  }
+}
+.sticky-record {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+}
+
 .card {
   background-color: #EDE8E1;
   border-radius: 5px;

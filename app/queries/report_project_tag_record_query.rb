@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ReportProjectRecordQuery
+class ReportProjectTagRecordQuery
   def initialize(from:, to:, project_ids:, sort:, user_ids: [])
     @from        = from
     @to          = to
@@ -20,7 +20,7 @@ class ReportProjectRecordQuery
   end
 
   def assign_to_class(row)
-    ReportProjectRecord.new(row.symbolize_keys)
+    ReportProjectTagRecord.new(row.symbolize_keys)
   end
 
   def sanitized_sql
@@ -41,11 +41,9 @@ class ReportProjectRecordQuery
       SELECT DISTINCT
         projects.id AS project_id,
         projects.name AS project_name,
-        work_times.user_id AS user_id,
-        SUM(work_times.duration) OVER(PARTITION BY projects.id, work_times.user_id) AS duration,
-        SUM(work_times.duration) OVER(PARTITION BY projects.id) AS project_duration,
-        users.last_name AS last_name,
-        CONCAT(users.last_name, ' ', users.first_name) AS user_name
+        work_times.tag AS tag,
+        SUM(work_times.duration) OVER(PARTITION BY projects.id, work_times.tag) AS duration,
+        SUM(work_times.duration) OVER(PARTITION BY projects.id) AS project_duration
       FROM projects
       INNER JOIN work_times ON projects.id = work_times.project_id
       INNER JOIN users ON users.id = work_times.user_id

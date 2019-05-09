@@ -19,7 +19,7 @@ function TagsList({ selectedTag, onChangeTag, tags }) {
           return null;
         }
         return (
-          <TagPill selected={tag.key === selectedTag} tag={tag} onClick={() => onClick(tag.key)} />
+          <TagPill selected={tag.key === selectedTag} key={tag.key} tag={tag} onClick={() => onClick(tag.key)} />
         );
       })}
     </div>

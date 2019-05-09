@@ -100,7 +100,9 @@ class ByProjects extends Report {
         </h3>
         {/* eslint-disable */}
         { projects.map((project, index) => (
-          <ReportProjectRecord key={index} reportRows={reports[project]} from={from} to={to} redirectTo={this.redirectTo} />
+          <div className="col-md-4">
+            <ReportProjectRecord key={index} reportRows={reports[project]} from={from} to={to} redirectTo={this.redirectTo} />
+          </div>
         )) }
         {/* eslint-enable */}
         <div className="col-mid-offset-1" />

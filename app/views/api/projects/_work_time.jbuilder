@@ -7,6 +7,10 @@ json.ends_at work_time.ends_at
 json.duration work_time.duration
 json.body sanitize(work_time.body)
 json.task sanitize(work_time.task)
+json.tag do
+  json.key work_time.tag
+  json.value I18n.t("apps.tag.#{work_time.tag}")
+end
 json.task_preview sanitize(task_preview_helper(work_time.task))
 json.user do
   json.extract! work_time.user, :id, :first_name, :last_name

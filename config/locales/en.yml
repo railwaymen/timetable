@@ -80,7 +80,7 @@ en:
       domain: Domain
       token: Token
     tag:
-      dev: Development
+      dev: Others
       ui: Internal Meeting
       cc: Client Communication
       res: Research

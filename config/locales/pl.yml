@@ -80,7 +80,7 @@ pl:
       domain: Domena
       token: Token
     tag:
-      dev: Development
+      dev: Inne
       ui: Spotkanie wewnętrzne
       cc: Rozmowa z klientem
       res: Poszukiwanie informacji
