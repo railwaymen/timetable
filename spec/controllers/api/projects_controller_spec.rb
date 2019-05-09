@@ -3,11 +3,26 @@
 require 'rails_helper'
 
 RSpec.describe Api::ProjectsController do
+  before(:each) { I18n.locale = :pl }
+
   render_views
   let(:user) { create(:user) }
   let(:admin) { create(:admin) }
   let(:manager) { create(:manager) }
   let(:project_name) { SecureRandom.hex }
+  let(:tags_list) do
+    WorkTime.tags
+            .keys
+            .map { |wt| { key: wt, value: I18n.t("apps.tag.#{wt}") } }
+  end
+
+  def prepare_expected_json(projects_json)
+    {
+      projects: projects_json,
+      tags: tags_list,
+      tags_disabled: false
+    }.to_json
+  end
 
   def full_project_response(project)
     project.attributes.slice('id', 'name', 'work_times_allows_task', 'color', 'active', 'leader_id')
@@ -105,7 +120,7 @@ RSpec.describe Api::ProjectsController do
       project = FactoryGirl.create :project
       inactive_project = FactoryGirl.create :project, active: false
 
-      expected_json = [
+      projects_json = [
         {
           id: project.id,
           name: project.name,
@@ -124,7 +139,7 @@ RSpec.describe Api::ProjectsController do
 
       get :list, params: { display: 'all' }, format: :json
 
-      expect(response.body).to eq(expected_json)
+      expect(response.body).to eq(projects_json)
     end
 
     describe 'filters' do
@@ -198,7 +213,11 @@ RSpec.describe Api::ProjectsController do
 
   describe '#simple' do
     def project_response(project)
-      project.attributes.slice('id', 'name', 'active', 'internal', 'work_times_allows_task', 'color', 'autofill', 'lunch', 'count_duration')
+      project.attributes.slice(
+        'id', 'name', 'internal', 'active',
+        'work_times_allows_task', 'color', 'autofill',
+        'lunch', 'count_duration'
+      )
     end
 
     it 'authenticates user' do
@@ -211,7 +230,11 @@ RSpec.describe Api::ProjectsController do
       project = create(:project)
       get :simple, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql([project_response(project)].to_json)
+      expect(response.body).to be_json_eql(
+        prepare_expected_json(
+          [project_response(project)]
+        )
+      )
     end
   end
 

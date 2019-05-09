@@ -16,6 +16,8 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'user_id')
              .merge(task_preview: task_preview_helper(work_time.task))
              .merge(date: work_time.starts_at.to_date,
+                    tag: { key: work_time.tag,
+                           value: I18n.t("apps.tag.#{work_time.tag}") },
                     project: { name: work_time.project.name,
                                color: work_time.project.color,
                                lunch: work_time.project.lunch,
@@ -64,6 +66,10 @@ RSpec.describe Api::WorkTimesController, type: :controller do
             duration: work_time.duration,
             body: work_time.body,
             task: work_time.task,
+            tag: {
+              key: work_time.tag,
+              value: I18n.t("apps.tag.#{work_time.tag}")
+            },
             task_preview: task_preview_helper(work_time.task),
             user_id: work_time.user_id,
             project: {
@@ -80,7 +86,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
 
         get :index, params: { user_id: worker.id, project_id: belonged_project.id }, format: :json
 
-        expect(response.body).to eq expected_work_times_json
+        expect(response.body).to be_json_eql expected_work_times_json
       end
 
       aggregate_failures 'won\'t display data from other project' do
@@ -100,6 +106,10 @@ RSpec.describe Api::WorkTimesController, type: :controller do
             duration: user_work_time.duration,
             body: user_work_time.body,
             task: user_work_time.task,
+            tag: {
+              key: work_time.tag,
+              value: I18n.t("apps.tag.#{work_time.tag}")
+            },
             task_preview: task_preview_helper(work_time.task),
             user_id: user_work_time.user_id,
             project: {
@@ -116,7 +126,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
 
         get :index, params: { project_id: project.id }, format: :json
 
-        expect(response.body).to eq expected_user_work_times_json
+        expect(response.body).to be_json_eql expected_user_work_times_json
       end
     end
 

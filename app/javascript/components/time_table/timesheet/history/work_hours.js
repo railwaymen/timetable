@@ -5,10 +5,12 @@ import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import * as Api from '../../../shared/api';
 import ProjectsList from '../projects_list';
+import TagsDropdown from '../tags_dropdown';
 import ErrorTooltip from '../errors/error_tooltip';
 import { defaultDatePickerProps } from '../../../shared/helpers';
 import WorkTimeTask from '../../../shared/work_time_task';
 import WorkTimeDuration from '../../../shared/work_time_duration';
+import WorkTimeTag from '../../../shared/work_time_tag';
 import WorkTimeTime from '../../../shared/work_time_time';
 import WorkTimeDescription from '../../../shared/work_time_description';
 
@@ -22,15 +24,18 @@ class WorkHours extends React.Component {
     this.toggleEdit = this.toggleEdit.bind(this);
     this.renderBodyEditable = this.renderBodyEditable.bind(this);
     this.renderDateEditable = this.renderDateEditable.bind(this);
+    this.renderTagEditable = this.renderTagEditable.bind(this);
     this.workHoursJsonApi = this.workHoursJsonApi.bind(this);
     this.saveWorkHours = this.saveWorkHours.bind(this);
     this.getInfo = this.getInfo.bind(this);
     this.onChangeProject = this.onChangeProject.bind(this);
     this.disableEdit = this.disableEdit.bind(this);
     this.toggleProjectEdit = this.toggleProjectEdit.bind(this);
+    this.toggleTagEdit = this.toggleTagEdit.bind(this);
     this.onHoursEdit = this.onHoursEdit.bind(this);
     this.recountTime = this.recountTime.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
+    this.onTagChange = this.onTagChange.bind(this);
   }
 
   static propTypes = {
@@ -41,6 +46,7 @@ class WorkHours extends React.Component {
     workHours: this.props.workHours,
     editing: false,
     projectEditable: false,
+    tagEditable: false,
     errors: [],
   }
 
@@ -63,7 +69,10 @@ class WorkHours extends React.Component {
   }
 
   onCopy() {
-    this.props.onCopy(this.state.workHours);
+    this.props.onCopy({
+      ...this.state.workHours,
+      tag: this.state.workHours.tag.key,
+    });
   }
 
   onDelete() {
@@ -128,6 +137,19 @@ class WorkHours extends React.Component {
     });
   }
 
+  onTagChange(tag) {
+    if (this.props.tags_disabled) return;
+
+    this.setState({
+      workHours: {
+        ...this.state.workHours,
+        tag,
+      },
+    }, () => {
+      this.saveWorkHours();
+    });
+  }
+
   renderBodyEditable() {
     return (
       <div>
@@ -139,6 +161,16 @@ class WorkHours extends React.Component {
               <input className="task-input" name="task" value={this.state.workHours.task} onChange={this.onChange} />
             </div>
           ) : null }
+      </div>
+    );
+  }
+
+  renderTagEditable() {
+    return (
+      <div className="tag-container">
+        <div>
+          <TagsDropdown updateTag={this.onTagChange} selectedTag={this.state.workHours.tag.key} tags={this.props.tags} />
+        </div>
       </div>
     );
   }
@@ -163,6 +195,7 @@ class WorkHours extends React.Component {
       project_id: workHours.project_id,
       body: workHours.body,
       task: workHours.task,
+      tag: workHours.tag.key,
       starts_at: workHours.starts_at,
       ends_at: workHours.ends_at,
     };
@@ -177,6 +210,7 @@ class WorkHours extends React.Component {
 
       this.setState({
         editing: false,
+        tagEditable: false,
       }, () => {
         if (!this.state.editing) {
           this.saveWorkHours();
@@ -188,6 +222,7 @@ class WorkHours extends React.Component {
   toggleEdit() {
     this.setState({
       editing: true,
+      tagEditable: true,
       errors: [],
     }, () => {
       document.addEventListener('click', this.disableEdit);
@@ -208,6 +243,21 @@ class WorkHours extends React.Component {
     });
   }
 
+  toggleTagEdit() {
+    const { tagEditable } = this.state;
+
+    if (!tagEditable) {
+      document.addEventListener('click', this.toggleTagEdit);
+    } else {
+      document.removeEventListener('click', this.toggleTagEdit);
+    }
+
+    this.setState({
+      editing: false,
+      tagEditable: !tagEditable,
+    });
+  }
+
   saveWorkHours() {
     const {
       workHours, ends_at_hours, starts_at_hours, date,
@@ -218,10 +268,13 @@ class WorkHours extends React.Component {
     const starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
     const ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
     const oldDuration = workHours.duration;
-
     Api.makePutRequest({
       url: `/api/work_times/${this.state.workHours.id}`,
-      body: { work_time: { ...this.workHoursJsonApi(), starts_at, ends_at } },
+      body: {
+        work_time: {
+          ...this.workHoursJsonApi(), starts_at, ends_at,
+        },
+      },
     }).then((response) => {
       const { data } = response;
       const durationDeviation = data.duration - oldDuration;
@@ -279,9 +332,9 @@ class WorkHours extends React.Component {
   }
 
   render() {
-    const { projects } = this.props;
+    const { projects, tags_disabled } = this.props;
     const {
-      workHours, projectEditable, editing, errors,
+      workHours, projectEditable, editing, errors, tagEditable,
     } = this.state;
 
     return (
@@ -317,6 +370,12 @@ class WorkHours extends React.Component {
                   ) : null }
               </div>
             </div>
+            { !tags_disabled && (
+            <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>
+              { tagEditable && this.renderTagEditable() }
+            </WorkTimeTag>
+            )
+            }
             <div className="actions-container">
               <div className="action-item destroy" onClick={this.onDelete}>
                 <i className="icon red trash" />

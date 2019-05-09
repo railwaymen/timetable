@@ -79,6 +79,11 @@ en:
       new: New auth
       domain: Domain
       token: Token
+    tag:
+      dev: Development
+      ui: Internal Meeting
+      cc: Client Communication
+      res: Research
   common:
     rank: 'Rank'
     add: Add

@@ -12,6 +12,8 @@ json.versions @work_time.versions do |version|
   json.body_was version.reify.try(:body)
   json.body version.changeset['body'].try(:last)
   json.starts_at_was version.reify.try(:starts_at)
+  json.tag_was version.reify.try(:tag)
+  json.tag version.changeset['tag'].try(:last)
   json.starts_at version.changeset['starts_at'].try(:last)
   json.ends_at_was version.reify.try(:ends_at)
   json.ends_at version.changeset['ends_at'].try(:last)
