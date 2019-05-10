@@ -6,6 +6,7 @@ import {
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
 import Modal from '../../shared/modal';
+import TagPill from '../timesheet/tag_pill';
 
 export default class EditReport extends React.Component {
   state = {
@@ -307,6 +308,28 @@ export default class EditReport extends React.Component {
     );
   }
 
+  createTagObject(tag) {
+    return {
+      key: tag,
+      value: I18n.t(`apps.tag.${tag}`),
+    };
+  }
+
+  selectAllWithTag(category, tag) {
+    this.setState(({ currentBody }) => {
+      const newBody = currentBody[category].map((wt) => {
+        const workTime = cloneDeep(wt);
+        if (workTime.tag === tag) {
+          workTime.toMerge = true;
+        } else {
+          delete workTime.toMerge;
+        }
+        return workTime;
+      });
+      return { currentBody: { ...currentBody, [category]: newBody } };
+    });
+  }
+
   renderCategory(category) {
     const {
       mergeTask, mergeOwner, mergeDescription, currentBody,
@@ -321,6 +344,7 @@ export default class EditReport extends React.Component {
         <table className="table">
           <thead>
             <tr>
+              <th>Tag</th>
               <th>
                 Task
               </th>
@@ -343,9 +367,10 @@ export default class EditReport extends React.Component {
           </thead>
           <tbody>
             {times.map(({
-              id, task, duration, owner, toMerge, description, cost, touched,
+              id, task, duration, owner, toMerge, description, cost, touched, tag,
             }) => (
               <tr key={id}>
+                <td><TagPill tag={this.createTagObject(tag)} onClick={() => this.selectAllWithTag(category, tag)} /></td>
                 <td>{task}</td>
                 <td>{description}</td>
                 <td>{owner}</td>

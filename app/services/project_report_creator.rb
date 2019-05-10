@@ -29,6 +29,7 @@ class ProjectReportCreator
     user_id,
     CONCAT(users.first_name, ' ', users.last_name) AS owner,
     SUM(duration) AS duration,
+    tag,
     CASE WHEN coalesce(task, '') = '' THEN body ELSE task END AS task,
     CASE WHEN coalesce(task, '') = '' THEN '' ELSE body END AS body
   SQL
@@ -36,7 +37,7 @@ class ProjectReportCreator
     project_report.project.work_times.active
                   .joins(:user)
                   .where('work_times.starts_at BETWEEN ? AND ?', project_report.starts_at, project_report.ends_at)
-                  .group('user_id, users.last_name, users.first_name, task, body')
+                  .group('user_id, users.last_name, users.first_name, task, body, tag')
                   .select(SELECT_STATEMENT)
                   .order('users.last_name, users.first_name ASC')
   end
@@ -46,7 +47,8 @@ class ProjectReportCreator
       body.transform_values! do |wts|
         wts.map do |wt|
           { owner: wt.owner, task: wt.task, duration: wt.duration,
-            id: wt.composed_id, description: wt.body, cost: work_time_cost(wt, user_role_map) }
+            id: wt.composed_id, description: wt.body, cost: work_time_cost(wt, user_role_map),
+            tag: wt.tag }
         end
       end
     end
