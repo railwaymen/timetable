@@ -132,6 +132,7 @@ export default class NewReport extends React.Component {
             ))}
           </tbody>
         </table>
+        <hr />
         <button type="button" onClick={this.onSubmit}>Submit</button>
       </div>
     );

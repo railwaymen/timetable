@@ -84,6 +84,7 @@ en:
       ui: Internal Meeting
       cc: Client Communication
       res: Research
+      various: Various
   common:
     rank: 'Rank'
     add: Add

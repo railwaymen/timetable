@@ -24,11 +24,9 @@ export default class ProjectReports extends React.Component {
     const { projectId, reports } = this.state;
     return (
       <div>
-        <h2>
-          <Link to={`/projects/${projectId}/new_report`}>
-            New report
-          </Link>
-        </h2>
+        <Link to={`/projects/${projectId}/new_report`} className="btn btn-success">
+          New report
+        </Link>
         <table className="table">
           <thead>
             <tr>

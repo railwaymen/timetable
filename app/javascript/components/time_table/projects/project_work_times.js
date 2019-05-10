@@ -108,7 +108,7 @@ export default class ProjectWorkTimes extends React.Component {
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
     return (
       <div className="content-wrapper box">
-        <Link to={`/projects/${projectId}/reports`}>
+        <Link to={`/projects/${projectId}/reports`} className="btn btn-success">
           Reports
         </Link>
         <h1 className="center">{project.name}</h1>
