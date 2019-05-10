@@ -1,35 +1,39 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import tagShape from './tag_shape';
+import TagPill from './tag_pill';
 
-function TagsList(props) {
-  function onChangeTag(tag_key) {
-    if (tag_key === props.selectedTag) {
-      props.onChangeTag('dev');
+function TagsList({ selectedTag, onChangeTag, tags }) {
+  const onClick = (tagKey) => {
+    if (tagKey === selectedTag) {
+      onChangeTag('dev');
     } else {
-      props.onChangeTag(tag_key);
+      onChangeTag(tagKey);
     }
-  }
-
-  const { selectedTag } = props;
+  };
 
   return (
     <div className="visible" tabIndex="-1">
-      { props.tags.map((tag) => {
+      { tags.map((tag) => {
         if (tag.key === 'dev') {
           return null;
         }
         return (
-          <input
-            className={tag.key === selectedTag ? `tags selected ${tag.key}` : `tags ${tag.key}`}
-            onClick={onChangeTag.bind(this, tag.key)}
-            name="tag-item"
-            type="button"
-            key={tag.key}
-            value={tag.value.toUpperCase()}
-          />
+          <TagPill selected={tag.key === selectedTag} tag={tag} onClick={() => onClick(tag.key)} />
         );
       })}
     </div>
   );
 }
+
+TagsList.propTypes = {
+  selectedTag: PropTypes.string.isRequired,
+  onChangeTag: PropTypes.func,
+  tags: PropTypes.arrayOf(tagShape).isRequired,
+};
+
+TagsList.defaultProps = {
+  onChangeTag: () => {},
+};
 
 export default TagsList;

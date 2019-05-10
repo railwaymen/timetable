@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :accounting_periods, dependent: :destroy
   has_many :accounting_periods_recounts, dependent: :destroy
   has_many :projects, foreign_key: :leader_id, dependent: :nullify, inverse_of: :leader
+  has_many :project_report_roles, dependent: :destroy
   validates :first_name, :last_name, presence: true
 
   scope :active, -> { where(active: true) }

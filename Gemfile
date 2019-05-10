@@ -40,6 +40,8 @@ gem 'webpacker'
 gem 'react-rails'
 gem 'rails-ujs'
 gem 'pundit'
+gem 'prawn', require: false
+gem 'prawn-table', require: false
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-marionette', '2.4.4'

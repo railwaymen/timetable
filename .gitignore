@@ -29,3 +29,5 @@ public/assets
 yarn-debug.log*
 .yarn-integrity
 vendor/bundle
+system
+app/assets/images/reports/logo.jpg
