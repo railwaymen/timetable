@@ -13,7 +13,7 @@ class ProjectReportGenerator
   LIGHT_GRAY = 'FBFBFB'
   TABLE_WIDTH = 523
   FORMAT_STRING = '%.2f'
-  LOGO_PATH = Rails.root.join('app', 'assets', 'images', 'reports', 'logo.jpg')
+  LOGO_PATH = Rails.root.join('public', 'images', 'reports_logo.jpg')
 
   def initialize(project_report:)
     @project_report = project_report
