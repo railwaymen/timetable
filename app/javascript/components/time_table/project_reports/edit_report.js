@@ -156,6 +156,7 @@ export default class EditReport extends React.Component {
       currentBody, mergeOwner, mergeTask, mergeDescription,
     }) => {
       const [wtToMerge, otherWt] = partition(currentBody[category], 'toMerge');
+      const oneTag = wtToMerge.find(({ tag }) => tag !== wtToMerge[0].tag) === undefined;
       const newWt = {
         owner: mergeOwner,
         task: mergeTask,
@@ -164,6 +165,7 @@ export default class EditReport extends React.Component {
         toMerge: false,
         touched: true,
         cost: sumBy(wtToMerge, 'cost'),
+        tag: oneTag ? wtToMerge[0].tag : 'various',
         id: wtToMerge.map(wt => wt.id).join(';'),
       };
       otherWt.unshift(newWt);
