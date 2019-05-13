@@ -11,7 +11,6 @@ class ProjectReportGenerator
 
   STRONG_GRAY = 'F6F6F6'
   LIGHT_GRAY = 'FBFBFB'
-  TABLE_WIDTH = 523
   FORMAT_STRING = '%.2f'
   LOGO_PATH = Rails.root.join('public', 'images', 'reports_logo.jpg')
 
@@ -51,7 +50,7 @@ class ProjectReportGenerator
                 ],
                 [{ content: [project_report.starts_at, project_report.ends_at].map { |n| n.strftime('%Y/%m/%d') }.join('-'), align: :center }]
               ]) do |t|
-      t.width = TABLE_WIDTH
+      t.width = pdf.bounds.width
       t.cells.border_width = 0
     end
   end
@@ -86,10 +85,10 @@ class ProjectReportGenerator
                   [{ content: key.upcase, size: 25, colspan: 4, font_style: :bold }],
                   *content.flatten(1),
                   footer
-                ], width: TABLE_WIDTH) do
-        cells.size = 10
-        column(2..-1).width = 65
-        columns(2..-1).align = :center
+                ], width: pdf.bounds.width) do |t|
+        t.cells.size = 10
+        t.columns(2..-1).align = :center
+        t.column_widths = [210, 210, 60, 60]
       end
       pdf.move_down 20
       [key, sum_duration, sum_cost]
