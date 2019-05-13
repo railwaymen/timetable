@@ -56,39 +56,38 @@ class ProjectReportGenerator
   end
   # rubocop:enable MethodLength
 
-  CATEGORY_HEADERS = %w[task description duration cost].freeze
   # rubocop:disable MethodLength
   # rubocop:disable BlockLength
   def category_tables(pdf)
-    header = CATEGORY_HEADERS.map { |content| { content: content.capitalize, background_color: LIGHT_GRAY, font_style: :bold } }
+    header = allowed_categories.map { |content| { content: content.capitalize, background_color: LIGHT_GRAY, font_style: :bold } }
     project_report.last_body.map do |key, work_times|
       next if key == 'ignored'
 
       content = work_times.group_by { |wt| wt['owner'] }.map do |owner, wts|
-        name = if (wage = wage_hash[owner])
+        name = if show_cost? && (wage = wage_hash[owner])
                  "#{owner} (#{wage} #{project_report.currency}/h)"
                else
                  owner
                end
         [
-          [{ colspan: 4, content: name, align: :center, background_color: STRONG_GRAY, font_style: :bold }],
+          [{ colspan: header_colspan, content: name, align: :center, background_color: STRONG_GRAY, font_style: :bold }],
           header,
-          *wts.map { |wt| CATEGORY_HEADERS.map { |k| send("format_#{k}", wt[k]) } }
+          *wts.map { |wt| allowed_categories.map { |k| send("format_#{k}", wt[k]) } }
         ]
       end
       sum_duration = work_times.sum { |e| e['duration'] }
       sum_cost = work_times.sum { |e| e['cost'].to_r }
-      footer = ['', '', format_duration(sum_duration), format_cost(sum_cost)].map do |str|
+      footer = ['', '', format_duration(sum_duration), format_cost(sum_cost)].compact.map do |str|
         { content: str, background_color: STRONG_GRAY }
       end
       pdf.table([
-                  [{ content: key.upcase, size: 25, colspan: 4, font_style: :bold }],
+                  [{ content: key.upcase, size: 25, colspan: header_colspan, font_style: :bold }],
                   *content.flatten(1),
-                  footer
+                  footer.compact
                 ], width: pdf.bounds.width) do |t|
         t.cells.size = 10
         t.columns(2..-1).align = :center
-        t.column_widths = [210, 210, 60, 60]
+        t.column_widths = column_widths(pdf)
       end
       pdf.move_down 20
       [key, sum_duration, sum_cost]
@@ -105,15 +104,17 @@ class ProjectReportGenerator
       el[1] = format_duration(el[1])
       el[2] = format_cost(el[2])
     end
+    header = (%w[duration cost] & allowed_categories).map(&:capitalize).unshift('Category')
     pdf.table([
-                %w[Type Duration Cost],
-                *footers,
-                ['Sum', format_duration(sum_duration), format_cost(sum_cost)]
+                header,
+                *footers.map(&:compact),
+                ['Sum', format_duration(sum_duration), format_cost(sum_cost)].compact
               ], position: :right, width: 300) do
       row(0).background_color = LIGHT_GRAY
       row(0).font_style = :bold
       row(-1).background_color = STRONG_GRAY
       row(-1).font_style = :bold
+      column(1..-1).align = :center
     end
   end
   # rubocop:enable MethodLength
@@ -137,9 +138,50 @@ class ProjectReportGenerator
   end
 
   def format_cost(cost)
+    return nil unless show_cost? # nil column will not be rendered
     return format(FORMAT_STRING, cost.round(2)) if project_report.currency.blank?
 
     "#{project_report.currency} #{format(FORMAT_STRING, cost.round(2))}"
+  end
+
+  CATEGORY_HEADERS = %w[task description duration cost].freeze
+  def allowed_categories
+    @allowed_categories ||= CATEGORY_HEADERS.select { |header| send("show_#{header}?") }
+  end
+
+  WEIGHTS = {
+    'task' => 4,
+    'description' => 4,
+    'duration' => 1,
+    'cost' => 1
+  }.freeze
+  def column_widths(pdf)
+    return @column_widths if defined?(@column_widths)
+
+    width = pdf.bounds.width
+    weights = allowed_categories.map(&WEIGHTS)
+    sum = weights.sum
+    @column_widths = weights.map { |weight| ((weight.to_r / sum) * width) }
+  end
+
+  def header_colspan
+    @allowed_categories.size
+  end
+
+  def show_cost?
+    project_report.currency.present?
+  end
+
+  def show_duration?
+    true
+  end
+
+  def show_task?
+    true
+  end
+
+  def show_description?
+    true
   end
 end
 
