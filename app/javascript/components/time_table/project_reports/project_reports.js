@@ -1,8 +1,9 @@
 import React from 'react';
+import moment from 'moment';
 import { Link } from 'react-router-dom';
 import * as Api from '../../shared/api';
-import { displayDate } from '../../shared/helpers';
 
+const simpleDateFormat = date => moment(date).format('YYYY/MM/DD');
 export default class ProjectReports extends React.Component {
   state = {
     projectId: parseInt(this.props.match.params.projectId, 10),
@@ -68,7 +69,7 @@ export default class ProjectReports extends React.Component {
                   }
                 </td>
                 <td>
-                  {`${displayDate(starts_at)}-${displayDate(ends_at)}`}
+                  {`${simpleDateFormat(starts_at)}-${simpleDateFormat(ends_at)}`}
                 </td>
               </tr>
             ))}
