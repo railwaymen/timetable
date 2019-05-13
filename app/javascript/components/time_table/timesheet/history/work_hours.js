@@ -370,7 +370,7 @@ class WorkHours extends React.Component {
                   ) : null }
               </div>
             </div>
-            { !tags_disabled && (
+            { !tags_disabled && !workHours.project.lunch && (
             <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>
               { tagEditable && this.renderTagEditable() }
             </WorkTimeTag>

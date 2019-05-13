@@ -33,9 +33,8 @@ export default class ProjectWorkTimes extends React.Component {
     };
 
     this.filterByUser = this.filterByUser.bind(this);
-    this.allUsers = this.allUsers.bind(this);
 
-    _.bindAll(this, ['getWorkTimes', 'nextWeek', 'prevWeek', 'replaceUrl', 'pushUrl', 'onFromChange', 'onToChange']);
+    _.bindAll(this, ['getWorkTimes', 'nextWeek', 'prevWeek', 'replaceUrl', 'pushUrl', 'onFromChange', 'onToChange', 'allUsers']);
   }
 
   parseRange() {
@@ -168,7 +167,7 @@ export default class ProjectWorkTimes extends React.Component {
                             </div>
                             { workTime.tag && !tags_disabled && (
                               <div className="col-md-2 tag-container" style={{ marginTop: '15px' }}>
-                                <input disabled className={`tags ${workTime.tag.key}`} type="button" value={workTime.tag.key.toUpperCase()} />
+                                <input disabled className={`tags selected ${workTime.tag}`} type="button" value={workTime.tag.toUpperCase()} />
                               </div>
                             )
                             }

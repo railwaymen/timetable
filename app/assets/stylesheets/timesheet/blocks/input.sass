@@ -4,34 +4,39 @@ input[type=text]
   color: rgba(0,0,0,.87)
   padding: 9px 14px
 
+@mixin tag-clickable($tag-color)
+  border: 3px solid $tag-color
+  color: $tag-color
+  background: #fff
+  &.clickable:hover
+    background: $tag-color
+    color: #fff
+    font-weight: 700
+  &.selected
+    background: $tag-color
+    color: #fff
+
+
 input[type=button]
   &.tags
-    &.clickable:hover
-      opacity: 1
-      webkit-box-shadow: inset 0px 0px 1px 3px #555
-      moz-box-shadow: inset 0px 0px 1px 3px #555
-      box-shadow: inset 0px 0px 1px 3px #555
     display: inline-block
     outline: none
     font-size: 11px
     border: 0
     padding: 5px 9px
     margin-right: 10px
-    color: #fff
     border-radius: 10px
     webkit-border-radius: 10px
-    &.selected
-      font-weight: bold
     &.ui
-      background: #E7B60A
+      @include tag-clickable(#E7B60A)
     &.cc
-      background: #B43498
+      @include tag-clickable(#B43498)
     &.res
-      background: #68DA22
+      @include tag-clickable(#68DA22)
     &.dev
-      background: #89CFF0
+      @include tag-clickable(#89CFF0)
     &.various
-      background: black
+      @include tag-clickable(black)
 input[type=button]::-moz-focus-inner
   border: 0
 

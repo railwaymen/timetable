@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { formattedDuration } from '../../shared/helpers';
+import { formattedDuration, countDurationPercentage } from '../../shared/helpers';
 
 const ReportProjectTagRecord = ({ reportRows }) => {
   const overallData = reportRows[0];
@@ -16,8 +16,8 @@ const ReportProjectTagRecord = ({ reportRows }) => {
       <ul className="list-group">
         { reportRows.map((row, index) => (
           <li className="list-group-item record" key={index}> {/* eslint-disable-line */}
-            <input type="button" disabled className={`tags ${row.tag}`} value={row.tag_label} />
-            {`${Math.floor(row.duration * 10000 / row.project_duration) / 100}%`}
+            <input type="button" disabled className={`tags selected ${row.tag}`} value={I18n.t(`apps.tag.${row.tag}`).toUpperCase()} />
+            {countDurationPercentage(row.duration, row.project_duration)}
             <span className="badge">{formattedDuration(row.duration)}</span>
           </li>
         )) }
@@ -30,7 +30,6 @@ ReportProjectTagRecord.propTypes = {
   reportRows: PropTypes.arrayOf(
     PropTypes.shape({
       tag: PropTypes.string.isRequired,
-      tag_label: PropTypes.string.isRequired,
       duration: PropTypes.number.isRequired,
       project_duration: PropTypes.number.isRequired,
     }),

@@ -36,7 +36,7 @@ DateRangeFilter.propTypes = {
   onFromChange: PropTypes.func.isRequired,
   onToChange: PropTypes.func.isRequired,
   onFilter: PropTypes.func.isRequired,
-  children: PropTypes.any,
+  children: PropTypes.node,
 };
 
 export default DateRangeFilter;

@@ -22,7 +22,6 @@ class ReportProjectTagRecord
     @project_name     = project_name
     @project_duration = project_duration
     @tag              = tag
-    @tag_label        = I18n.t("apps.tag.#{tag}")
     @duration         = duration
     raise(RecordError, errors) unless valid?
   end

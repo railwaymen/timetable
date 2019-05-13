@@ -15,6 +15,10 @@ class ReportProjectTagRecordQuery
 
   private
 
+  def sanitize_array(arr)
+    ActiveRecord::Base.send(:sanitize_sql_array, arr)
+  end
+
   def assign_sort
     (@sort.presence_in(%w[duration last_name]) || 'duration') == 'last_name' ? 'last_name ASC' : 'duration DESC'
   end
@@ -24,15 +28,15 @@ class ReportProjectTagRecordQuery
   end
 
   def sanitized_sql
-    ActiveRecord::Base.send :sanitize_sql_array, [raw, @from, @to]
+    sanitize_array [raw, @from, @to]
   end
 
   def projects_access
-    ActiveRecord::Base.send(:sanitize_sql_array, ['AND projects.id IN (?)', @project_ids]) if @project_ids
+    sanitize_array(['AND projects.id IN (?)', @project_ids]) if @project_ids
   end
 
   def user_filter
-    ActiveRecord::Base.send(:sanitize_sql_array, ['AND users.id IN (?)', @user_ids]) unless @user_ids.empty?
+    sanitize_array(['AND users.id IN (?)', @user_ids]) unless @user_ids.empty?
   end
 
   # rubocop:disable Metrics/MethodLength

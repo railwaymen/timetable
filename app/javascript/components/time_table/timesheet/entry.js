@@ -298,7 +298,7 @@ class Entry extends React.Component {
                 <button type="button" className="btn-start button fluid ui" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
               </div>
             </div>
-            { !this.props.tags_disabled && (
+            { !this.props.tags_disabled && !project.lunch && (
             <div className="field">
               <div className="tag-container" style={{ marginTop: '5px' }}>
                 {errors.tag && <ErrorTooltip errors={errors.tag} />}

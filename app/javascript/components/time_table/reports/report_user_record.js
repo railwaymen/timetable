@@ -1,5 +1,5 @@
 import React from 'react';
-import { formattedDuration } from '../../shared/helpers';
+import { formattedDuration, countDurationPercentage } from '../../shared/helpers';
 
 class ReportUserRecord extends React.Component {
   constructor(props) {
@@ -35,8 +35,8 @@ class ReportUserRecord extends React.Component {
                   {row.project_name}
                 </a>
                 (
-                {Math.floor(row.time_worked * 10000 / row.user_work_time) / 100}
-%)
+                {countDurationPercentage(row.time_worked, row.user_work_time)}
+                )
                 <span className="badge">{formattedDuration(row.time_worked)}</span>
               </li>
             )) }
