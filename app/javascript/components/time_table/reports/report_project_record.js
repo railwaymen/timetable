@@ -1,26 +1,11 @@
 import React from 'react';
-import moment from 'moment';
+import { formattedDuration } from '../../shared/helpers';
 
 class ReportProjectRecord extends React.Component {
   constructor(props) {
     super(props);
 
     this.onRedirect = this.onRedirect.bind(this);
-  }
-
-  formattedDuration(value) {
-    if (!value || parseInt(value, 10) === 0) {
-      return '00:00';
-    }
-    const time = moment.duration(value, 'seconds').asMinutes();
-
-    let hours = Math.floor(time / 60);
-    let minutes = time % 60;
-
-    if (hours < 10) hours = `0${hours}`;
-    if (minutes < 10) minutes = `0${minutes}`;
-
-    return `${hours}:${minutes}`;
   }
 
   onRedirect(e) {
@@ -35,7 +20,7 @@ class ReportProjectRecord extends React.Component {
       <div className="panel panel-default">
         <div className="panel-heading">
           <h4>
-            <span className="badge">{this.formattedDuration(overallData.project_duration)}</span>
+            <span className="badge">{formattedDuration(overallData.project_duration)}</span>
             <i className="glyphicon glyphicon-user" />
             {overallData.project_name}
             <a href={`/reports/project.csv?from=${from}&to=${to}&id=${overallData.project_id}`}><i className="calendar icon" /></a>
@@ -50,7 +35,7 @@ class ReportProjectRecord extends React.Component {
               (
               {Math.floor(row.duration * 10000 / row.project_duration) / 100}
 %)
-              <span className="badge">{this.formattedDuration(row.duration)}</span>
+              <span className="badge">{formattedDuration(row.duration)}</span>
             </li>
           )) }
         </ul>

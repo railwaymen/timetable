@@ -51,3 +51,18 @@ export const displayDayInfo = (day) => {
   }
   return displayDate(day);
 };
+
+export const formattedDuration = (value) => {
+  if (!value || parseInt(value, 10) === 0) {
+    return '00:00';
+  }
+  const time = moment.duration(value, 'seconds').asMinutes();
+
+  let hours = Math.floor(time / 60);
+  let minutes = time % 60;
+
+  if (hours < 10) hours = `0${hours}`;
+  if (minutes < 10) minutes = `0${minutes}`;
+
+  return `${hours}:${minutes}`;
+};

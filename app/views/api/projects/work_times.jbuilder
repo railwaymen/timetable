@@ -18,3 +18,5 @@ end
 json.tag_reports do
   json.array! @tag_report
 end
+
+json.tags_disabled TAGS_DISABLED

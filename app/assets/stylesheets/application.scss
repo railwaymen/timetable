@@ -131,10 +131,16 @@ body {
     padding: 5px 15px;
   }
 }
+.row.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
 .sticky-record {
-  position: -webkit-sticky;
   position: sticky;
-  top: 0px;
+  position: -webkit-sticky;
+  top: 10px;
 }
 
 .card {
