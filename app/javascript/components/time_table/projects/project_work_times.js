@@ -108,9 +108,14 @@ export default class ProjectWorkTimes extends React.Component {
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
     return (
       <div className="content-wrapper box">
+        {
+        (currentUser.isSuperUser()
+        && (
         <Link to={`/projects/${projectId}/reports`} className="btn btn-success">
           Reports
         </Link>
+        ))
+      }
         <h1 className="center">{project.name}</h1>
         <div className="clearfix col-md-offset-4">
           <HorizontalArrows onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
