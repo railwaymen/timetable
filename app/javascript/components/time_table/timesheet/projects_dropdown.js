@@ -11,6 +11,7 @@ class ProjectsDropdown extends React.Component {
     this.renderProjectsList = this.renderProjectsList.bind(this);
     this.onChangeProject = this.onChangeProject.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
+    this.onKeyPress = this.onKeyPress.bind(this);
     this.onBlur = this.onBlur.bind(this);
   }
 
@@ -38,6 +39,19 @@ class ProjectsDropdown extends React.Component {
       filter: e.target.value,
       filteredProjects: this.filterProjects(e.target.value),
     });
+  }
+
+  onKeyPress(e) {
+    const { filteredProjects } = this.state;
+    if (e.key === 'Enter' && filteredProjects.length > 0) {
+      const projects = this.filterProjects();
+      const selectedProject = _.find(projects, p => (
+        p.id === filteredProjects[0]
+      )) || projects[0];
+
+      this.props.updateProject(selectedProject);
+      this.expandDropdown();
+    }
   }
 
   filterProjects(filter = this.state.filter) {
@@ -96,7 +110,7 @@ class ProjectsDropdown extends React.Component {
     return (
       <div className="dropdown fluid search ui" style={{ minWidth: '90px' }} onClick={this.expandDropdown}>
         <input type="hidden" name="project" value="12" />
-        <input placeholder="Project +" className="search" name="filter" value={filter} autoComplete="off" tabIndex="0" onChange={this.onFilterChange} id="search-input" />
+        <input placeholder="Project +" className="search" name="filter" value={filter} autoComplete="off" tabIndex="0" onChange={this.onFilterChange} id="search-input" onKeyPress={this.onKeyPress} />
         <div className={`text active ${(isExpanded ? 'hidden' : '')}`} style={{ background: `#${selectedProject.color}` }}>
           <div className="circular empty label ui" style={{ background: `#${selectedProject.color}` }} />
           {selectedProject.name}
