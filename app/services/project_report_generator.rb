@@ -136,10 +136,12 @@ class ProjectReportGenerator
 
     task_name = URI.parse(task).path.split('/').last
     { inline_format: true, content: %(<link href="#{task}">#{task_name}</link>) }
+  rescue URI::InvalidURIError
+    task
   end
 
-  def format_description(task)
-    task.to_s
+  def format_description(description)
+    description
   end
 
   SECONDS_IN_MINUTE = MINUTES_IN_HOUR = 60
