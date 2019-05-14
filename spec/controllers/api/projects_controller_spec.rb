@@ -10,11 +10,7 @@ RSpec.describe Api::ProjectsController do
   let(:admin) { create(:admin) }
   let(:manager) { create(:manager) }
   let(:project_name) { SecureRandom.hex }
-  let(:tags_list) do
-    WorkTime.tags
-            .keys
-            .map { |wt| { key: wt, value: I18n.t("apps.tag.#{wt}") } }
-  end
+  let(:tags_list) { WorkTime.tags.keys }
 
   def prepare_expected_json(projects_json)
     {

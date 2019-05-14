@@ -71,7 +71,7 @@ class WorkHours extends React.Component {
   onCopy() {
     this.props.onCopy({
       ...this.state.workHours,
-      tag: this.state.workHours.tag.key,
+      tag: this.state.workHours.tag,
     });
   }
 
@@ -169,7 +169,7 @@ class WorkHours extends React.Component {
     return (
       <div className="tag-container">
         <div>
-          <TagsDropdown updateTag={this.onTagChange} selectedTag={this.state.workHours.tag.key} tags={this.props.tags} />
+          <TagsDropdown updateTag={this.onTagChange} selectedTag={this.state.workHours.tag} tags={this.props.tags} />
         </div>
       </div>
     );
@@ -195,7 +195,7 @@ class WorkHours extends React.Component {
       project_id: workHours.project_id,
       body: workHours.body,
       task: workHours.task,
-      tag: workHours.tag.key,
+      tag: workHours.tag,
       starts_at: workHours.starts_at,
       ends_at: workHours.ends_at,
     };

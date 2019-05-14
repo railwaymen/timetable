@@ -172,7 +172,7 @@ class Entry extends React.Component {
 
   updateTag(tag_obj) {
     this.setState({
-      tag: tag_obj.key,
+      tag: tag_obj,
     }, () => {
       this.removeErrorsFor('tag');
       this.recountTime();

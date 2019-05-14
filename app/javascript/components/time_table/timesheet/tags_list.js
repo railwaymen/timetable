@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import tagShape from './tag_shape';
 import TagPill from './tag_pill';
 
 function TagsList({ selectedTag, onChangeTag, tags }) {
@@ -15,11 +14,11 @@ function TagsList({ selectedTag, onChangeTag, tags }) {
   return (
     <div className="visible" tabIndex="-1">
       { tags.map((tag) => {
-        if (tag.key === 'dev') {
+        if (tag === 'dev') {
           return null;
         }
         return (
-          <TagPill selected={tag.key === selectedTag} key={tag.key} tag={tag} onClick={() => onClick(tag.key)} />
+          <TagPill selected={tag === selectedTag} key={tag} tag={tag} onClick={() => onClick(tag)} />
         );
       })}
     </div>
@@ -29,7 +28,7 @@ function TagsList({ selectedTag, onChangeTag, tags }) {
 TagsList.propTypes = {
   selectedTag: PropTypes.string.isRequired,
   onChangeTag: PropTypes.func,
-  tags: PropTypes.arrayOf(tagShape).isRequired,
+  tags: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 TagsList.defaultProps = {
