@@ -13,6 +13,7 @@ class ProjectReportGenerator
   LIGHT_GRAY = 'FBFBFB'
   FORMAT_STRING = '%.2f'
   LOGO_PATH = Rails.root.join('public', 'images', 'reports_logo.jpg')
+  FONT_PATH = Rails.root.join('app', 'assets', 'fonts')
 
   def initialize(project_report:)
     @project_report = project_report
@@ -33,10 +34,21 @@ class ProjectReportGenerator
 
   def generate_pdf(file)
     Prawn::Document.generate(file) do |pdf|
+      font_settings(pdf)
       report_header(pdf)
       footers = category_tables(pdf)
       summary(pdf, footers)
     end
+  end
+
+  def font_settings(pdf)
+    pdf.font_families.update('Roboto' => {
+      normal: 'Roboto-Regular.ttf',
+      bold: 'Roboto-Bold.ttf',
+      italic: 'Roboto-Italic.ttf',
+      bold_italic: 'Roboto-BoldItalic.ttf'
+    }.transform_values(&method(:font_path)))
+    pdf.font 'Roboto'
   end
 
   # rubocop:disable MethodLength
@@ -182,6 +194,10 @@ class ProjectReportGenerator
 
   def show_description?
     true
+  end
+
+  def font_path(font)
+    File.join(FONT_PATH, font)
   end
 end
 
