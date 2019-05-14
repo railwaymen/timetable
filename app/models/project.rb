@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class Project < ApplicationRecord
-  has_many :user_roles, dependent: :destroy
-  has_many :users, through: :user_roles
   has_many :metrics, dependent: :destroy
   has_many :work_times, dependent: :nullify
+  has_many :users, through: :work_times
+  has_many :project_reports, dependent: :nullify
   has_one :external_auth, dependent: :destroy
   belongs_to :leader, class_name: 'User'
 
@@ -19,5 +19,9 @@ class Project < ApplicationRecord
     when :inactive then where(active: false)
     else all
     end
+  end
+
+  def users_participating(range)
+    users.joins(:work_times).merge(WorkTime.active).where(work_times: { starts_at: range })
   end
 end

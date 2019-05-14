@@ -79,6 +79,11 @@ pl:
       new: Nowe uwierzytelnienie
       domain: Domena
       token: Token
+    tag:
+      dev: Development
+      ui: Spotkanie wewnętrzne
+      cc: Rozmowa z klientem
+      res: Poszukiwanie informacji
   common:
     rank: 'Ranking'
     add: Dodaj

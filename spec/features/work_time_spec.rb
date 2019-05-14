@@ -30,6 +30,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
       find('#end').click
       fill_in 'end', with: to
       fill_in 'task', with: 'www.example.com/task1'
+      find('input.tags:last-child').click
     end
 
     find(:css, '.fluid div.text').click

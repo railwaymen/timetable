@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190213100847) do
+ActiveRecord::Schema.define(version: 20190425095633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,35 @@ ActiveRecord::Schema.define(version: 20190213100847) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["project_id"], name: "index_external_auths_on_project_id"
+  end
+
+  create_table "project_report_roles", force: :cascade do |t|
+    t.bigint "project_report_id", null: false
+    t.bigint "user_id", null: false
+    t.string "role", default: "developer", null: false
+    t.decimal "hourly_wage", precision: 8, scale: 2, default: "0.0", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_report_id", "user_id"], name: "index_project_report_roles_on_project_report_id_and_user_id", unique: true
+    t.index ["project_report_id"], name: "index_project_report_roles_on_project_report_id"
+    t.index ["user_id"], name: "index_project_report_roles_on_user_id"
+  end
+
+  create_table "project_reports", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.jsonb "initial_body", default: {}, null: false
+    t.jsonb "last_body", default: {}, null: false
+    t.string "state", default: "editing", null: false
+    t.integer "duration_sum", null: false
+    t.decimal "cost", precision: 12, scale: 2, default: "0.0", null: false
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.string "currency", default: "", null: false
+    t.string "name", default: "", null: false
+    t.string "file_path"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_reports_on_project_id"
   end
 
   create_table "projects", id: :serial, force: :cascade do |t|
@@ -115,11 +144,15 @@ ActiveRecord::Schema.define(version: 20190213100847) do
     t.boolean "updated_by_admin", default: false, null: false
     t.string "task"
     t.jsonb "integration_payload"
+    t.string "tag", default: "dev", null: false
   end
 
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"
   add_foreign_key "accounting_periods_recounts", "users"
   add_foreign_key "external_auths", "projects"
+  add_foreign_key "project_report_roles", "project_reports"
+  add_foreign_key "project_report_roles", "users"
+  add_foreign_key "project_reports", "projects"
   add_foreign_key "projects", "users", column: "leader_id"
   add_foreign_key "work_times", "projects", name: "work_times_project_id_fk"
   add_foreign_key "work_times", "users", column: "creator_id", name: "work_times_creator_id_fk"

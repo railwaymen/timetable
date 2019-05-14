@@ -16,6 +16,7 @@ class WorkTimeForm
            :duration,
            :body,
            :task,
+           :tag,
            :preview,
            :user_id,
            :project,

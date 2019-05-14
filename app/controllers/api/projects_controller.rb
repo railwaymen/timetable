@@ -20,6 +20,7 @@ module Api
 
     def simple
       @projects = Project.order(:internal, :name)
+      @tags = WorkTime.tags
       respond_with @projects
     end
 

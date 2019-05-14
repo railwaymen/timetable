@@ -28,6 +28,7 @@ class EntryHistory extends React.Component {
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
+    this.translateTag = this.translateTag.bind(this);
   }
 
   componentDidMount() {
@@ -46,8 +47,9 @@ class EntryHistory extends React.Component {
 
     const linkParams = URI(window.location.href).search(true);
     const filteredUserId = linkParams.user_id;
-
-    let { from, to, project_id } = this.state;
+    let {
+      from, to, project_id,
+    } = this.state;
 
     if (linkParams.from && linkParams.to) {
       from = linkParams.from.replace(' ', '+');
@@ -58,9 +60,13 @@ class EntryHistory extends React.Component {
     if (linkParams.project_id) project_id = linkParams.project_id;
 
     if (filteredUserId) {
-      this.filterWorkHoursByUser(filteredUserId, { from, to, project_id });
+      this.filterWorkHoursByUser(filteredUserId, {
+        from, to, project_id,
+      });
     } else {
-      this.getWorkHours({ from, to, project_id });
+      this.getWorkHours({
+        from, to, project_id,
+      });
     }
   }
 
@@ -181,7 +187,9 @@ class EntryHistory extends React.Component {
         if (lastWorkTime && lastWorkTime.project.name === 'Lunch') {
           // eslint-disable-next-line
           lastWorkTime = this.state.workHours[1];
-          this.props.setLastProject(lastWorkTime.project || {});
+          if (lastWorkTime) {
+            this.props.setLastProject(lastWorkTime.project || {});
+          }
         }
 
         document.dispatchEvent(event);
@@ -274,6 +282,8 @@ class EntryHistory extends React.Component {
             increaseWorkHours={this.increaseWorkHours}
             pushEntry={this.pushEntry}
             projects={this.props.projects}
+            tags={this.props.tags}
+            tags_disabled={this.props.tags_disabled}
             updateWorkHours={this.updateWorkHours}
             assignModalInfo={this.assignModalInfo}
           />
@@ -357,6 +367,11 @@ class EntryHistory extends React.Component {
     return displayDuration(value);
   }
 
+  translateTag(tag_key) {
+    if (tag_key === 'dev') return null;
+    return tag_key && I18n.t(`apps.tag.${tag_key}`);
+  }
+
   onPreviousUserChange() {
     const { from, to, project_id } = this.state;
 
@@ -394,6 +409,11 @@ class EntryHistory extends React.Component {
             { version.body
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{(version.body || '').replace(/\n/g, '<br />')}</span>
               : <span>{(version.body_was || '').replace(/\n/g, '<br />')}</span> }
+          </td>
+          <td>
+            { version.tag
+              ? <span className={(version.event === 'update' ? 'changed' : '')}>{this.translateTag(version.tag)}</span>
+                : <span>{this.translateTag(version.tag_was)}</span> }
           </td>
           <td>
             { version.starts_at
@@ -447,7 +467,6 @@ class EntryHistory extends React.Component {
     /* eslint-disable */
     const { projects } = this.props;
     const { months, from, selectedProject } = this.state;
-
     return (
       <div>
         <div id="months" className="button dropdown right floated scrolling teal ui" tabIndex="0">

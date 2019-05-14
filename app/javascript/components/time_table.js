@@ -15,6 +15,9 @@ import ByUsers from './time_table/reports/by_users';
 import Periods from './time_table/accounting_periods/periods';
 import EditPeriod from './time_table/accounting_periods/edit_period';
 import Timesheet from './time_table/timesheet/timesheet';
+import NewReport from './time_table/project_reports/new_report';
+import EditReport from './time_table/project_reports/edit_report';
+import ProjectReports from './time_table/project_reports/project_reports';
 
 class TimeTable extends React.Component {
   constructor(props) {
@@ -38,6 +41,9 @@ class TimeTable extends React.Component {
             <Route path="/projects/:id/work_times" component={ProjectWorkTimes} />
             <Route path="/projects/:id/edit" component={EditProject} />
             <Route path="/projects/:id/external_authorization" component={ExternalAuth} />
+            <Route path="/projects/:projectId/reports" component={ProjectReports} />
+            <Route path="/projects/:projectId/new_report" component={NewReport} />
+            <Route path="/projects/:projectId/edit_report/:reportId" component={EditReport} />
             <Route path="/projects/new" component={EditProject} />
             <Route path="/reports/work_times/by_projects" component={ByProjects} />
             <Route path="/reports/work_times/by_users" component={ByUsers} />

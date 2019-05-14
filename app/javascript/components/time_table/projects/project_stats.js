@@ -1,13 +1,15 @@
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+
 class ProjectStats extends React.Component {
   projectLabel() {
     const data = this.props.stats[0];
     if (currentUser.canManageProject({ id: data.project_id })) {
       return (
-        <a href={`/projects/${data.project_id}/work_times`}>
+        <Link to={`/projects/${data.project_id}/work_times`}>
           {data.name}
-        </a>
+        </Link>
       );
     }
     return data.name;
