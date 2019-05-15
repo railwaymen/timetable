@@ -48,7 +48,7 @@ class ProjectReportCreator
         wts.map do |wt|
           { owner: wt.owner, task: wt.task, duration: wt.duration,
             id: wt.composed_id, description: wt.body, cost: work_time_cost(wt, user_role_map),
-            tag: wt.tag }
+            user_id: wt.user_id, tag: wt.tag }
         end
       end
     end

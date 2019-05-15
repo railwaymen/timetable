@@ -156,7 +156,8 @@ export default class EditReport extends React.Component {
       currentBody, mergeOwner, mergeTask, mergeDescription,
     }) => {
       const [wtToMerge, otherWt] = partition(currentBody[category], 'toMerge');
-      const oneTag = wtToMerge.find(({ tag }) => tag !== wtToMerge[0].tag) === undefined;
+      const tag = wtToMerge.find(wt => wt.tag !== wtToMerge[0].tag) ? 'various' : wtToMerge[0].tag;
+      const user_id = wtToMerge.find(wt => wt.user_id !== wtToMerge[0].user_id) ? null : wtToMerge[0].user_id;
       const newWt = {
         owner: mergeOwner,
         task: mergeTask,
@@ -165,8 +166,9 @@ export default class EditReport extends React.Component {
         toMerge: false,
         touched: true,
         cost: sumBy(wtToMerge, 'cost'),
-        tag: oneTag ? wtToMerge[0].tag : 'various',
         id: wtToMerge.map(wt => wt.id).join(';'),
+        tag,
+        user_id,
       };
       otherWt.unshift(newWt);
       const newBody = { ...currentBody, [category]: otherWt };
@@ -260,7 +262,7 @@ export default class EditReport extends React.Component {
             </thead>
             <tbody>
               {ancestors.map(({
-                id, duration, task, description, owner, cost,
+                id, duration, task, description, owner, cost, user_id,
               }) => (
                 <tr key={id}>
                   <td>
@@ -276,7 +278,7 @@ export default class EditReport extends React.Component {
                     {displayDuration(duration)}
                   </td>
                   <td>
-                    {this.state.report.roles[owner].hourly_wage}
+                    {this.state.report.roles[user_id].hourly_wage}
                   </td>
                   <td>
                     {this.renderCost(cost)}
