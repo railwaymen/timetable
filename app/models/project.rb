@@ -24,4 +24,8 @@ class Project < ApplicationRecord
   def users_participating(range)
     users.joins(:work_times).merge(WorkTime.active).where(work_times: { starts_at: range })
   end
+
+  def taggable?
+    !(lunch || name == 'Vacation' || name == 'Księgowość')
+  end
 end

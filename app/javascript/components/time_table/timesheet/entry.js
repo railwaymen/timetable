@@ -98,7 +98,7 @@ class Entry extends React.Component {
       body, starts_at, ends_at, project_id, duration, task, tag,
     } = this.state;
 
-    if (project.lunch || project.autofill) {
+    if (!project.taggable || project.autofill) {
       return [];
     }
     const errors = {
@@ -128,7 +128,7 @@ class Entry extends React.Component {
         user_id: userId,
         body,
         task,
-        tag,
+        tag: project.taggable ? tag : 'dev',
         project_id: project.id,
         starts_at: moment(`${date} ${starts_at}`, 'DD/MM/YYYY HH:mm'),
         ends_at: moment(`${date} ${ends_at}`, 'DD/MM/YYYY HH:mm'),
@@ -298,7 +298,7 @@ class Entry extends React.Component {
                 <button type="button" className="btn-start button fluid ui" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
               </div>
             </div>
-            { !this.props.tags_disabled && !project.lunch && (
+            { !this.props.tags_disabled && project.taggable && (
             <div className="field">
               <div className="tag-container" style={{ marginTop: '5px' }}>
                 {errors.tag && <ErrorTooltip errors={errors.tag} />}
