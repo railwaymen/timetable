@@ -17,11 +17,12 @@ class ProjectReportGenerator
 
   def initialize(project_report:)
     @project_report = project_report
-    @wage_hash = Hash[
-      project_report.project_report_roles.includes(:user).map do |role|
-        ["#{role.user.first_name} #{role.user.last_name}", format(FORMAT_STRING, role.hourly_wage)]
-      end
-    ]
+    @wage_hash = Hash[project_report.project_report_roles.map do |role|
+                        [role.user_id, format(FORMAT_STRING, role.hourly_wage)]
+                      end]
+    @name_hash = Hash[project_report.project_report_roles.includes(:user).map do |role|
+                        [role.user_id, "#{role.user.first_name} #{role.user.last_name[0]}."]
+                      end]
   end
 
   def call(file)
@@ -30,7 +31,7 @@ class ProjectReportGenerator
 
   private
 
-  attr_reader :wage_hash
+  attr_reader :wage_hash, :name_hash
 
   def generate_pdf(file)
     Prawn::Document.generate(file) do |pdf|
@@ -75,12 +76,15 @@ class ProjectReportGenerator
     project_report.last_body.map do |key, work_times|
       next if key == 'ignored'
 
-      content = work_times.group_by { |wt| wt['owner'] }.map do |owner, wts|
-        name = if show_cost? && (wage = wage_hash[owner])
-                 "#{owner} (#{wage} #{project_report.currency}/h)"
+      content = work_times.group_by { |wt| [wt['owner'], wt['user_id']] }.map do |(owner, user_id), wts|
+        name = if user_id.nil?
+                 +owner
                else
-                 owner
+                 +name_hash[user_id]
                end
+        if show_cost? && (wage = wage_hash[user_id])
+          name << " (#{wage} #{project_report.currency}/h)"
+        end
         [
           [{ colspan: header_colspan, content: name, align: :center, background_color: STRONG_GRAY, font_style: :bold }],
           header,
