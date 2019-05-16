@@ -26,6 +26,10 @@ class Project < ApplicationRecord
   end
 
   def taggable?
-    !(lunch || name == 'Vacation' || name == 'Księgowość')
+    !(lunch || vacation? || name == 'Księgowość')
+  end
+
+  def vacation?
+    name == 'Vacation'
   end
 end

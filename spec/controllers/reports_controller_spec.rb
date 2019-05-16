@@ -19,6 +19,37 @@ RSpec.describe ReportsController do
       expect(response.code).to eql('403')
     end
 
+    it 'returns vacations report in csv' do
+      sign_in(manager)
+      user = create(:user)
+      vacation = create(
+        :project,
+        name: 'Vacation',
+        work_times_allows_task: true
+      )
+      work_time1 = create(:work_time, task: 'http://example.com/task/24', user: user, project: vacation, starts_at: '2016-01-05 08:00:00', ends_at: '2016-01-05 16:00:00')
+      work_time2 = create(:work_time, task: 'http://example.com/task/24', user: user, project: vacation, starts_at: '2016-01-06 08:00:00', ends_at: '2016-01-06 16:00:00')
+
+      get :project, params: { id: vacation.id, from: '2016-01-01 00:00:00', to: '2016-01-31 23:59:59' }, format: :csv
+
+      expect(response.code).to eql('200')
+
+      require 'csv'
+      csv = CSV.parse(response.body)
+      expect(csv[0]).to eql(
+        ['Developer', 'Date From', 'Date To', 'Duration(Days)']
+      )
+      user_name = "#{user.first_name} #{user.last_name}"
+      expect(csv[1]).to eql(
+        [
+          user_name,
+          work_time1.starts_at.strftime('%Y-%m-%d'),
+          work_time2.ends_at.strftime('%Y-%m-%d'),
+          '2'
+        ]
+      )
+    end
+
     it 'returns project report in csv' do
       sign_in(manager)
       user = create(:user)

@@ -2,11 +2,13 @@
 
 module Reports
   class CsvGeneratorService
+    include Querable
+
     Record = Struct.new(:user_name, :task, :body, :duration, :starts_at, :user_id, :task_sum, :user_sum)
 
-    def initialize(params:, user:)
+    def initialize(params:, user:, project:)
       @params    = params
-      @project   = Project.find(params[:id]) if params.key?(:id)
+      @project   = project
       @user      = user
       @from      = Time.zone.parse(params[:from])
       @to        = Time.zone.parse(params[:to])
@@ -82,11 +84,11 @@ module Reports
     end
 
     def sanitized_sql
-      ApplicationRecord.send(:sanitize_sql_array, [raw_sql, @parameter, @from, @to])
+      sanitize_array([raw_sql, @parameter, @from, @to])
     end
 
     def records
-      @records ||= ActiveRecord::Base.connection.execute(sanitized_sql).map(&method(:assign_record))
+      @records ||= execute_sql(sanitized_sql).map(&method(:assign_record))
     end
 
     def assign_record(row)
@@ -98,7 +100,7 @@ module Reports
     end
 
     def projects_access
-      ActiveRecord::Base.send(:sanitize_sql_array, ['AND w.project_id IN (?)', @user.project_ids]) unless @user.admin? || @user.manager?
+      sanitize_array(['AND w.project_id IN (?)', @user.project_ids]) unless @user.admin? || @user.manager?
     end
 
     def raw_sql
