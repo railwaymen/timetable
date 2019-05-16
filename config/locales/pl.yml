@@ -27,6 +27,8 @@ pl:
       filter_active_label: Pokaż tylko
       work_times_allows_task: Zezwalaj na dodawanie urli do zadań
     reports:
+      new: Nowy Raport
+      remove: Usuń Raport
       sort_by: Sortuj po
       hours: Godzinach
       last_name: Nazwisku
@@ -84,6 +86,7 @@ pl:
       ui: Spotkanie wewnętrzne
       cc: Rozmowa z klientem
       res: Poszukiwanie informacji
+      various: Różne
   common:
     rank: 'Ranking'
     add: Dodaj
@@ -111,6 +114,11 @@ pl:
     name: Nazwa
     external_auth: Integracja z serwisami zewnętrznymi
     custom: Własny
+    state: Status
+    show: Pokaż
+    download: Pobierz
+    range: Zakres
+    remove: Usuń
   errors:
     format: "%{attribute} %{message}"
     messages:

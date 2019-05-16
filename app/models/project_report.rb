@@ -4,7 +4,7 @@ class ProjectReport < ApplicationRecord
   enum state: { editing: 'editing', done: 'done' }
 
   belongs_to :project
-  has_many :project_report_roles, dependent: :nullify
+  has_many :project_report_roles, dependent: :destroy
   accepts_nested_attributes_for :project_report_roles
 
   validates :project, presence: true

@@ -41,6 +41,12 @@ module Api
       respond_with @report
     end
 
+    def destroy
+      @report = @project.project_reports.find(params[:id])
+      authorize @report
+      @report.destroy
+    end
+
     def generate
       @report = @project.project_reports.find(params[:id])
       authorize @report
