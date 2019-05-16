@@ -127,7 +127,7 @@ export default class EditReport extends React.Component {
     });
   }
 
-  onShowMerge(category) {
+  onShowMerge(event, category) {
     this.setState((state) => {
       const tasksToMerge = state.currentBody[category].filter(e => e.toMerge);
       return {
@@ -189,11 +189,28 @@ export default class EditReport extends React.Component {
     });
   }
 
-  renderMergeButton(category, edit) {
+  onShowEdit(event, category) {
+    this.setState(({ currentBody }) => {
+      currentBody[category] = currentBody[category].map((wt) => {
+        if (wt.id === id) wt.toMerge = checkValue;
+        return wt;
+      });
+    }, () => this.onShowMerge(event, category));
+  }
+
+  renderMergeButton(category) {
     return (
-      <button type="button" className="inline" onClick={() => this.onShowMerge(category)}>
-        {edit ? 'Edit' : 'Merge'}
-      </button>
+      <div key="merge" className="action-item info inline" onClick={(e) => this.onShowMerge(e, category)} style={{fontSize: '1.5em'}}>
+          <i className="icon green object-group" />
+      </div>
+    );
+  }
+
+  renderEditButton(category) {
+    return (
+      <div key="edit" className="action-item info inline" onClick={(e) => this.onShowEdit(e, category)} style={{fontSize: '1.5em'}}>
+          <i className="icon blue edit" />
+      </div>
     );
   }
 
@@ -207,20 +224,22 @@ export default class EditReport extends React.Component {
     let result = [];
     if (this.editable()) {
       result = [
-        <p key="merge">
-          <input name="toMerge" type="checkbox" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
-          {toMerge && this.renderMergeButton(category, toMergeTasks.length < 2)}
-        </p>,
-        <button key="ignore" type="button" onClick={e => this.onIgnore(e, category, id)}>
-          Ignore
-        </button>,
+        <div key="merge">
+          <input name="toMerge" type="checkbox" style={{transform: 'scale(1.5)'}} checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
+          {
+            toMerge && toMergeTasks.length >= 2 && this.renderMergeButton(category) || this.renderEditButton(category)
+          }
+        </div>,
+        <div key="ignore" className="action-item destroy" onClick={e => this.onIgnore(e, category, id)} style={{fontSize: '1.5em'}}>
+          <i className="icon red trash" />
+        </div>,
       ];
     }
     if (touched) {
       result.push(
-        <button key="details" type="button" onClick={e => this.onShowWorkTimeModal(e, category, id)}>
-          Show Details
-        </button>,
+        <div key="details" className="action-item info" onClick={e => this.onShowWorkTimeModal(e, category, id)} style={{fontSize: '1.5em'}}>
+          <i className="icon wait" />
+        </div>,
       );
     }
     return result;
