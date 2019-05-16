@@ -27,6 +27,8 @@ en:
       filter_active_label: Show only
       work_times_allows_task: Allow for adding task urls
     reports:
+      new: New Report
+      remove: Remove Report
       sort_by: Sort by
       hours: Hours
       last_name: Last name
@@ -112,6 +114,11 @@ en:
     name: Name
     external_auth: External integration
     custom: Custom
+    state: State
+    show: Show
+    download: Download
+    range: Range
+    remove: Remove
 
   activerecord:
     errors:
