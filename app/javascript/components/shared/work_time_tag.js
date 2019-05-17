@@ -5,10 +5,10 @@ const WorkTimeTag = ({
   onClick, children, workTime, tagEditable,
 }) => {
   if (tagEditable) return children;
-  if (workTime.tag.key === 'dev') return null;
+  if (workTime.tag === 'dev') return null;
   return (
     <div className="tag-container" style={{ marginTop: '16px' }}>
-      <input onClick={onClick} className={`tags ${workTime.tag.key}`} type="button" value={workTime.tag.value.toUpperCase()} />
+      <input onClick={onClick} className={`tags selected clickable ${workTime.tag}`} type="button" value={I18n.t(`apps.tag.${workTime.tag}`).toUpperCase()} />
     </div>
   );
 };
@@ -16,10 +16,7 @@ const WorkTimeTag = ({
 WorkTimeTag.propTypes = {
   onClick: () => {},
   workTime: PropTypes.shape({
-    tag: PropTypes.shape({
-      key: PropTypes.string,
-      value: PropTypes.string,
-    }),
+    tag: PropTypes.string.isRequired,
   }).isRequired,
 };
 

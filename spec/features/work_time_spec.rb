@@ -53,6 +53,14 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     find('.time-container', text: "#{from} - #{to}").click
     find(:css, 'input.start-input').set('15:00')
     find(:css, 'input.end-input').click
+    find(:css, 'input.end-input').set('17:00')
+    find('body').click
+  end
+
+  def invalid_edit_task_hours(from, to)
+    find('.time-container', text: "#{from} - #{to}").click
+    find(:css, 'input.start-input').set('15:00')
+    find(:css, 'input.end-input').click
     find(:css, 'input.end-input').set('15:00')
     find('body').click
   end
@@ -93,7 +101,12 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     create_task(message, from, to)
 
     edit_task_body(message)
+    invalid_edit_task_hours(from, to)
+    expect(page).to have_selector('.error-tooltip')
+
     edit_task_hours(from, to)
+    expect(page).not_to have_selector('.error-tooltip')
+
     edit_task_project
 
     delete_task

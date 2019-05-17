@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-# frozen_literal_string: true
+require_relative 'querable'
 
 class ProjectRateQuery
+  include Querable
+
   def initialize(active:, starts_at: Time.current - 30.days, ends_at: Time.current)
     @active    = active
     @starts_at = starts_at
@@ -10,7 +12,7 @@ class ProjectRateQuery
   end
 
   def results
-    ActiveRecord::Base.connection.execute(sanitized_sql).map(&method(:assign_to_class))
+    execute_sql(sanitized_sql).map(&method(:assign_to_class))
   end
 
   private
@@ -20,7 +22,7 @@ class ProjectRateQuery
   end
 
   def sanitized_sql
-    ActiveRecord::Base.send :sanitize_sql_array, [raw, @active, @starts_at, @ends_at]
+    sanitize_array [raw, @active, @starts_at, @ends_at]
   end
 
   # rubocop:disable Metrics/MethodLength

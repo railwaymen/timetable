@@ -51,3 +51,12 @@ export const displayDayInfo = (day) => {
   }
   return displayDate(day);
 };
+
+export const formattedDuration = (value) => {
+  if (!value || parseInt(value, 10) === 0) {
+    return '00:00';
+  }
+  return displayDuration(value);
+};
+
+export const countDurationPercentage = (duration, total) => `${Math.floor(duration * 10000 / total) / 100}%`;
