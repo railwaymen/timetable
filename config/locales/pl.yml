@@ -83,6 +83,7 @@ pl:
       token: Token
     tag:
       dev: Inne
+      im: Spotkanie wewnętrzne
       ui: Spotkanie wewnętrzne
       cc: Rozmowa z klientem
       res: Poszukiwanie informacji

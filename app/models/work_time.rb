@@ -11,7 +11,7 @@ class WorkTime < ApplicationRecord
 
   enum tag: {
     'dev': 'dev',
-    'ui': 'ui',
+    'im': 'im',
     'cc': 'cc',
     'res': 'res'
   }

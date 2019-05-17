@@ -84,6 +84,7 @@ en:
     tag:
       dev: Others
       ui: Internal Meeting
+      im: Internal Meeting
       cc: Client Communication
       res: Research
       various: Various
