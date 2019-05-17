@@ -1,9 +1,11 @@
 import React from 'react';
 import { func, bool, string } from 'prop-types';
 
-const TagPill = ({ tag, selected, onClick }) => (
+const TagPill = ({
+  tag, selected, onClick, bold = true,
+}) => (
   <input
-    className={selected ? `tags clickable selected ${tag}` : `tags clickable ${tag}`}
+    className={(selected ? `tags clickable selected ${tag}` : `tags clickable ${tag}`) + (bold ? ' bolded' : '')}
     onClick={onClick}
     name="tag-item"
     type="button"

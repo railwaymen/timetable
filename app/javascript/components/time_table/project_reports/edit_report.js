@@ -312,13 +312,6 @@ export default class EditReport extends React.Component {
     );
   }
 
-  createTagObject(tag) {
-    return {
-      key: tag,
-      value: I18n.t(`apps.tag.${tag}`),
-    };
-  }
-
   selectAllWithTag(category, tag) {
     this.setState(({ currentBody }) => {
       const newBody = currentBody[category].map((wt) => {
@@ -374,7 +367,7 @@ export default class EditReport extends React.Component {
               id, task, duration, owner, toMerge, description, cost, touched, tag,
             }) => (
               <tr key={id}>
-                <td><TagPill tag={this.createTagObject(tag)} onClick={() => this.selectAllWithTag(category, tag)} /></td>
+                <td><TagPill tag={tag} onClick={() => this.selectAllWithTag(category, tag)} bold={false} /></td>
                 <td>{task}</td>
                 <td>{description}</td>
                 <td>{owner}</td>
