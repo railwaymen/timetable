@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require_relative 'querable'
+
 class ReportUserRecordQuery
+  include Querable
+
   def initialize(from:, to:, user:, action: :self)
     @from   = from
     @to     = to
@@ -9,7 +13,7 @@ class ReportUserRecordQuery
   end
 
   def results
-    @results ||= ActiveRecord::Base.connection.execute(sanitized_sql).map(&method(:assign_to_class))
+    @results ||= execute_sql(sanitized_sql).map(&method(:assign_to_class))
   end
 
   private
@@ -26,7 +30,7 @@ class ReportUserRecordQuery
   end
 
   def sanitized_sql
-    ActiveRecord::Base.send :sanitize_sql_array, [raw, @from, @to]
+    sanitize_array [raw, @from, @to]
   end
 
   def projects_access
@@ -39,11 +43,11 @@ class ReportUserRecordQuery
   end
 
   def user_access
-    ActiveRecord::Base.send(:sanitize_sql_array, ['AND work_times.user_id = ?', @user.id])
+    sanitize_array(['AND work_times.user_id = ?', @user.id])
   end
 
   def leader_access
-    ActiveRecord::Base.send(:sanitize_sql_array, ['AND projects.id IN (?)', @user.project_ids])
+    sanitize_array(['AND projects.id IN (?)', @user.project_ids])
   end
 
   # rubocop:disable Metrics/MethodLength

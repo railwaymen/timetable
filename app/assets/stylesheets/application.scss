@@ -121,6 +121,28 @@ body {
   margin-bottom: 20px;
 }
 
+.panel-heading {
+  .badge {
+    float: right;
+  }
+}
+.list-group-item {
+  &.record {
+    padding: 5px 15px;
+  }
+}
+.row.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.sticky-record {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 10px;
+}
+
 .card {
   background-color: #EDE8E1;
   border-radius: 5px;

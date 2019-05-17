@@ -74,6 +74,19 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
     end
   end
 
+  describe 'DELETE #destroy' do
+    it 'deletes project report' do
+      project_report = create(:project_report, project: project)
+      delete :destroy, params: {
+        format: 'json',
+        project_id: project.id,
+        id: project_report.id
+      }
+      expect(response).to be_success
+      expect(ProjectReport.find_by(id: project_report.id)).to be_nil
+    end
+  end
+
   describe 'GET #roles' do
     context 'no previous roles' do
       it 'returns users without role suggestion' do

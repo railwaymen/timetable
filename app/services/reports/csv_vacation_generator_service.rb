@@ -1,0 +1,99 @@
+# frozen_string_literal: true
+
+module Reports
+  class CsvVacationGeneratorService
+    include Querable
+
+    Record = Struct.new(
+      :user_name,
+      :project_id,
+      :duration,
+      :starts_at,
+      :ends_at,
+      :user_id
+    )
+
+    def initialize(params:, user:, project:)
+      @params    = params
+      @project   = project
+      @user      = user
+      @from      = Time.zone.parse(params[:from])
+      @to        = Time.zone.parse(params[:to])
+    end
+
+    # rubocop:disable Metrics/MethodLength
+    def generate
+      CSV.generate(headers: true) do |csv|
+        headers = ['Developer', 'Date From', 'Date To', 'Duration(Days)']
+
+        csv << headers
+
+        vacation_id = @params[:id].to_i
+        temp_rows = []
+
+        records.each_with_index do |record, index|
+          next_record = records[index + 1] if index + 1 < records.to_a.size
+
+          temp_rows << record if record.project_id == vacation_id
+
+          unless (next_record&.project_id != vacation_id ||
+                  next_record&.user_id != record.user_id) && !temp_rows.empty?
+            next
+          end
+
+          csv << prepare_row(temp_rows, record.user_name)
+          temp_rows = []
+        end
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
+
+    def filename
+      [
+        @project.name.underscore,
+        @from.strftime('%Y/%m/%d'),
+        @to.strftime('%Y/%m/%d'),
+        'work_times_report.csv'
+      ].join('_')
+    end
+
+    private
+
+    def prepare_row(temp_rows, user_name)
+      [
+        user_name,
+        temp_rows.first.starts_at.to_date,
+        temp_rows.last.ends_at.to_date,
+        format_duration(
+          temp_rows.reduce(0) { |sum, tr| sum + tr.duration }
+        )
+      ]
+    end
+
+    def format_duration(duration)
+      (duration.to_f / (3600 * 8)).to_i
+    end
+
+    def sanitized_sql
+      sanitize_array([raw_sql, @from, @to])
+    end
+
+    def records
+      @records ||= execute_sql(sanitized_sql).map(&method(:assign_record))
+    end
+
+    def assign_record(row)
+      Record.new(*row.values)
+    end
+
+    def raw_sql
+      %(
+        SELECT
+          (u.first_name || ' ' || u.last_name) as user_name, project_id, duration, starts_at, ends_at, u.id as user_id
+        FROM work_times w JOIN users u on w.user_id = u.id
+        WHERE w.active = 't' AND w.starts_at >= ? AND w.ends_at <= ?
+        ORDER BY user_name, starts_at
+      )
+    end
+  end
+end

@@ -10,11 +10,7 @@ RSpec.describe Api::ProjectsController do
   let(:admin) { create(:admin) }
   let(:manager) { create(:manager) }
   let(:project_name) { SecureRandom.hex }
-  let(:tags_list) do
-    WorkTime.tags
-            .keys
-            .map { |wt| { key: wt, value: I18n.t("apps.tag.#{wt}") } }
-  end
+  let(:tags_list) { WorkTime.tags.keys }
 
   def prepare_expected_json(projects_json)
     {
@@ -217,7 +213,7 @@ RSpec.describe Api::ProjectsController do
         'id', 'name', 'internal', 'active',
         'work_times_allows_task', 'color', 'autofill',
         'lunch', 'count_duration'
-      )
+      ).merge(taggable: project.taggable?)
     end
 
     it 'authenticates user' do
@@ -413,7 +409,7 @@ RSpec.describe Api::ProjectsController do
         work_time = FactoryGirl.create :work_time, user: user, project: project, starts_at: time, ends_at: time + 30.minutes
         FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.zone.now, ends_at: Time.zone.now + 1.hour
 
-        get :work_times, params: { id: project, from: time, to: time + 2.days }, format: :json
+        get :work_times, params: { id: project, from: time, to: time + 2.days, user_id: user.id }, format: :json
         expect(response).to be_ok
         parsed_body = JSON.parse(response.body)
         expect(parsed_body.dig('project', 'name')).to eq project.name

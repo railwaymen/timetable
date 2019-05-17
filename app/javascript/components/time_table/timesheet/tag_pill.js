@@ -1,20 +1,19 @@
 import React from 'react';
-import { func, bool } from 'prop-types';
-import tagShape from './tag_shape';
+import { func, bool, string } from 'prop-types';
 
 const TagPill = ({ tag, selected, onClick }) => (
   <input
-    className={selected ? `tags selected ${tag.key}` : `tags ${tag.key}`}
+    className={selected ? `tags clickable selected ${tag}` : `tags clickable ${tag}`}
     onClick={onClick}
     name="tag-item"
     type="button"
-    key={tag.key}
-    value={tag.value.toUpperCase()}
+    key={tag}
+    value={I18n.t(`apps.tag.${tag}`).toUpperCase()}
   />
 );
 
 TagPill.propTypes = {
-  tag: tagShape.isRequired,
+  tag: string,
   selected: bool,
   onClick: func,
 };

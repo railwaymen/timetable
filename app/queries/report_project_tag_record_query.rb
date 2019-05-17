@@ -2,7 +2,7 @@
 
 require_relative 'record_query'
 
-class ReportProjectRecordQuery < RecordQuery
+class ReportProjectTagRecordQuery < RecordQuery
   def results
     @results ||= super.map(&method(:assign_to_class))
   end
@@ -10,7 +10,7 @@ class ReportProjectRecordQuery < RecordQuery
   private
 
   def assign_to_class(row)
-    ReportProjectRecord.new(row.symbolize_keys)
+    ReportProjectTagRecord.new(row.symbolize_keys)
   end
 
   # rubocop:disable Metrics/MethodLength
@@ -19,11 +19,9 @@ class ReportProjectRecordQuery < RecordQuery
       SELECT DISTINCT
         projects.id AS project_id,
         projects.name AS project_name,
-        work_times.user_id AS user_id,
-        SUM(work_times.duration) OVER(PARTITION BY projects.id, work_times.user_id) AS duration,
-        SUM(work_times.duration) OVER(PARTITION BY projects.id) AS project_duration,
-        users.last_name AS last_name,
-        CONCAT(users.last_name, ' ', users.first_name) AS user_name
+        work_times.tag AS tag,
+        SUM(work_times.duration) OVER(PARTITION BY projects.id, work_times.tag) AS duration,
+        SUM(work_times.duration) OVER(PARTITION BY projects.id) AS project_duration
       FROM projects
       INNER JOIN work_times ON projects.id = work_times.project_id
       INNER JOIN users ON users.id = work_times.user_id

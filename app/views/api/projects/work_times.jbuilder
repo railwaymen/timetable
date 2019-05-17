@@ -14,3 +14,9 @@ json.reports do
     json.user_name user_record.user_name
   end
 end
+
+json.tag_reports do
+  json.array! @tag_report
+end
+
+json.tags_disabled TAGS_DISABLED

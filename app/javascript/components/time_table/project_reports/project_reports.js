@@ -5,6 +5,12 @@ import * as Api from '../../shared/api';
 
 const simpleDateFormat = date => moment(date).format('YYYY/MM/DD');
 export default class ProjectReports extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onDelete = this.onDelete.bind(this);
+  }
+
   state = {
     projectId: parseInt(this.props.match.params.projectId, 10),
     reports: [],
@@ -12,6 +18,18 @@ export default class ProjectReports extends React.Component {
 
   componentDidMount() {
     this.getReports();
+  }
+
+  onDelete(e) {
+    e.preventDefault();
+
+    if (window.confirm('Are you sure?')) {
+      Api.makeDeleteRequest({ url: e.target.href }).then((data) => {
+        if (parseInt(data.status, 10) === 204) {
+          this.getReports();
+        }
+      });
+    }
   }
 
   getReports() {
@@ -26,16 +44,17 @@ export default class ProjectReports extends React.Component {
     return (
       <div>
         <Link to={`/projects/${projectId}/new_report`} className="btn btn-success">
-          New report
+          {I18n.t('apps.reports.new')}
         </Link>
         <table className="table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>State</th>
-              <th>Show</th>
-              <th>Download</th>
-              <th>Range</th>
+              <th>{I18n.t('common.name')}</th>
+              <th>{I18n.t('common.state')}</th>
+              <th>{I18n.t('common.show')}</th>
+              <th>{I18n.t('common.download')}</th>
+              <th>{I18n.t('common.range')}</th>
+              <th>{I18n.t('common.remove')}</th>
             </tr>
           </thead>
           <tbody>
@@ -63,13 +82,18 @@ export default class ProjectReports extends React.Component {
                   {generated
                     && (
                     <a href={`/api/projects/${projectId}/project_reports/${id}/file`}>
-                      Download
+                      {I18n.t('common.download')}
                     </a>
                     )
                   }
                 </td>
                 <td>
                   {`${simpleDateFormat(starts_at)}-${simpleDateFormat(ends_at)}`}
+                </td>
+                <td>
+                  <a onClick={this.onDelete} href={`/api/projects/${projectId}/project_reports/${id}`}>
+                    {I18n.t('apps.reports.remove')}
+                  </a>
                 </td>
               </tr>
             ))}

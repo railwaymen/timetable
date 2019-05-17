@@ -17,6 +17,10 @@ class ProjectReportPolicy < ApplicationPolicy
     create?
   end
 
+  def destroy?
+    create?
+  end
+
   def roles?
     create?
   end
