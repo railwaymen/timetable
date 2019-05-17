@@ -40,25 +40,29 @@ export default class NewReport extends React.Component {
   getRoles() {
     Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}/project_reports/roles?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}` })
       .then(({ data }) => {
-        this.setState({ userRoles: data.user_roles, currency: data.currency || this.state.currency });
+        this.setState(({ currency }) => ({ userRoles: data.user_roles, currency: currency || data.currency }));
       });
   }
 
   onRoleChange(event, userId) {
     const { value } = event.target;
     this.setState(({ userRoles }) => {
-      const idxInArray = userRoles.findIndex(({ id }) => id === userId);
-      userRoles[idxInArray].role = value;
-      return { userRoles };
+      const newUserRoles = userRoles.map((userRole) => {
+        if (userRole.id === userId) return { ...userRole, role: value };
+        return { ...userRole };
+      });
+      return { userRoles: newUserRoles };
     });
   }
 
   onWageChange(event, userId) {
     const { value } = event.target;
     this.setState(({ userRoles }) => {
-      const idxInArray = userRoles.findIndex(({ id }) => id === userId);
-      userRoles[idxInArray].hourly_wage = value;
-      return { userRoles };
+      const newUserRoles = userRoles.map((userRole) => {
+        if (userRole.id === userId) return { ...userRole, hourly_wage: value };
+        return { ...userRole };
+      });
+      return { userRoles: newUserRoles };
     });
   }
 
