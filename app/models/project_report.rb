@@ -29,8 +29,8 @@ class ProjectReport < ApplicationRecord
 
   def body_did_not_change_cost
     sum = last_body.inject(0.to_r) do |acc, (_, value)|
-      acc + value.sum { |wt| wt['cost'].to_r }
+      acc + value.inject(0.to_r) { |mem, wt| mem + wt['cost'].to_f }
     end.round(2).to_f
-    errors.add(:last_body, 'Changed cost') if sum != cost.round(2)
+    errors.add(:last_body, 'Changed cost') if sum != cost
   end
 end
