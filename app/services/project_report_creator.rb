@@ -13,7 +13,7 @@ class ProjectReportCreator
     project_report.assign_attributes(
       project_report_roles_attributes: report_roles.map(&method(:transform_param)),
       duration_sum: work_times.inject(0) { |sum, wt| sum + wt.duration },
-      cost: work_times.inject(0.to_r) { |sum, wt| sum + work_time_cost(wt, user_role_map) }.round(2).to_f
+      cost: work_times.inject(0.to_r) { |sum, wt| sum + work_time_cost(wt, user_role_map) }.to_f.round(2)
     )
     project_report.tap(&:save!)
   end
@@ -56,7 +56,7 @@ class ProjectReportCreator
 
   def work_time_cost(work_time, user_role_map)
     duration_in_hours = work_time.duration.to_r / SECONDS_IN_HOUR
-    (duration_in_hours * user_role_map[work_time.user_id][:hourly_wage].to_f).round(2).to_f
+    (duration_in_hours * user_role_map[work_time.user_id][:hourly_wage].to_f).to_f.round(2)
   end
 
   def transform_param(param)
