@@ -121,17 +121,19 @@ class ProjectReportGenerator
       el[2] = format_cost(el[2])
     end
     header = (%w[duration cost] & allowed_categories).map(&:capitalize).unshift('Category')
-    pdf.table([
-                header,
-                *footers.map(&:compact),
-                ['Sum', format_duration(sum_duration), format_cost(sum_cost)].compact
-              ], position: :right, width: 300) do
+    summary_table = pdf.make_table([
+                                     header,
+                                     *footers.map(&:compact),
+                                     ['Sum', format_duration(sum_duration), format_cost(sum_cost)].compact
+                                   ], position: :right, width: 300) do
       row(0).background_color = LIGHT_GRAY
       row(0).font_style = :bold
       row(-1).background_color = STRONG_GRAY
       row(-1).font_style = :bold
       column(1..-1).align = :center
     end
+    pdf.start_new_page if pdf.cursor < summary_table.height
+    summary_table.draw
   end
   # rubocop:enable MethodLength
 
