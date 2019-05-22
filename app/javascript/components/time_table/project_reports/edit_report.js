@@ -127,7 +127,7 @@ export default class EditReport extends React.Component {
     });
   }
 
-  onShowMerge(category) {
+  onShowMerge(event, category) {
     this.setState((state) => {
       const tasksToMerge = state.currentBody[category].filter(e => e.toMerge);
       return {
@@ -181,19 +181,38 @@ export default class EditReport extends React.Component {
   handleMergeChange(event, category, id) {
     const checkValue = event.target.checked;
     this.setState(({ currentBody }) => {
-      currentBody[category] = currentBody[category].map((wt) => {
+      const newCurrentBody = currentBody[category].map((wt) => {
         if (wt.id === id) wt.toMerge = checkValue;
         return wt;
       });
-      return { currentBody };
+      return { currentBody: { ...currentBody, [category]: newCurrentBody } };
     });
   }
 
-  renderMergeButton(category, edit) {
+  onShowEdit(event, category, id) {
+    this.setState(({ currentBody }) => {
+      const newCurrentBody = currentBody[category].map((wt) => {
+        if (wt.id === id) return { ...wt, toMerge: true };
+        return wt;
+      });
+
+      return { currentBody: { ...currentBody, [category]: newCurrentBody } };
+    }, () => this.onShowMerge(event, category));
+  }
+
+  renderMergeButton(category) {
     return (
-      <button type="button" className="inline" onClick={() => this.onShowMerge(category)}>
-        {edit ? 'Edit' : 'Merge'}
-      </button>
+      <div key="merge" className="action-item info inline" onClick={e => this.onShowMerge(e, category)} style={{ fontSize: '1.5em' }}>
+        <i className="icon green object group" />
+      </div>
+    );
+  }
+
+  renderEditButton(category, id) {
+    return (
+      <div key="edit" className="action-item info inline" onClick={e => this.onShowEdit(e, category, id)} style={{ fontSize: '1.5em' }}>
+        <i className="icon blue edit" />
+      </div>
     );
   }
 
@@ -207,20 +226,22 @@ export default class EditReport extends React.Component {
     let result = [];
     if (this.editable()) {
       result = [
-        <p key="merge">
-          <input name="toMerge" type="checkbox" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
-          {toMerge && this.renderMergeButton(category, toMergeTasks.length < 2)}
-        </p>,
-        <button key="ignore" type="button" onClick={e => this.onIgnore(e, category, id)}>
-          Ignore
-        </button>,
+        <div key="merge">
+          <input name="toMerge" type="checkbox" className="merge-check-box" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
+          {
+            (toMerge && toMergeTasks.length >= 2 && this.renderMergeButton(category)) || this.renderEditButton(category, id)
+          }
+        </div>,
+        <div key="ignore" className="action-item destroy" onClick={e => this.onIgnore(e, category, id)} style={{ fontSize: '1.5em' }}>
+          <i className="icon red trash" />
+        </div>,
       ];
     }
     if (touched) {
       result.push(
-        <button key="details" type="button" onClick={e => this.onShowWorkTimeModal(e, category, id)}>
-          Show Details
-        </button>,
+        <div key="details" className="action-item info" onClick={e => this.onShowWorkTimeModal(e, category, id)} style={{ fontSize: '1.5em' }}>
+          <i className="icon wait" />
+        </div>,
       );
     }
     return result;
@@ -312,13 +333,6 @@ export default class EditReport extends React.Component {
     );
   }
 
-  createTagObject(tag) {
-    return {
-      key: tag,
-      value: I18n.t(`apps.tag.${tag}`),
-    };
-  }
-
   selectAllWithTag(category, tag) {
     this.setState(({ currentBody }) => {
       const newBody = currentBody[category].map((wt) => {
@@ -374,7 +388,7 @@ export default class EditReport extends React.Component {
               id, task, duration, owner, toMerge, description, cost, touched, tag,
             }) => (
               <tr key={id}>
-                <td><TagPill tag={this.createTagObject(tag)} onClick={() => this.selectAllWithTag(category, tag)} /></td>
+                <td><TagPill tag={tag} onClick={() => this.selectAllWithTag(category, tag)} bold={false} /></td>
                 <td>{task}</td>
                 <td>{description}</td>
                 <td>{owner}</td>

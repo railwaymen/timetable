@@ -2,6 +2,7 @@
   "dependencies": {
     "@rails/webpacker": "3.5",
     "babel-preset-react": "^6.24.1",
+    "classnames": "^2.2.6",
     "component-webpack-plugin": "^0.2.1",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
