@@ -1,9 +1,15 @@
 import React from 'react';
 import { func, bool, string } from 'prop-types';
 
-const TagPill = ({ tag, selected, onClick }) => (
+const classNames = require('classnames');
+
+const TagPill = ({
+  tag, selected, onClick, bold = true,
+}) => (
   <input
-    className={selected ? `tags clickable selected ${tag}` : `tags clickable ${tag}`}
+    className={classNames(tag, {
+      tags: true, clickable: true, selected, bolded: bold,
+    })}
     onClick={onClick}
     name="tag-item"
     type="button"
