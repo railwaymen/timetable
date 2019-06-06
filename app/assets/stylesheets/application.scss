@@ -4,6 +4,17 @@
 @import "jquery.tokenize";
 @import "semantic-ui";
 
+@import 'variables';
+@import 'colors';
+
+@import 'application/body';
+@import 'application/horizontal-arrows';
+@import 'application/date-range-filter';
+
+@import 'pages/projects';
+@import 'pages/reports';
+
+
 @import 'timesheet/*';
 @import 'timesheet/blocks/*';
 @import 'timer';
@@ -75,12 +86,6 @@ div.Tokenize ul.TokensContainer {
   min-height: 30px;
   min-width: 800px;
   height: auto;
-}
-
-.current-month {
-  width: 240px;
-  margin: 0 20px 20px 20px;
-  text-align: center;
 }
 
 .timesheet .row.summary:hover .actions *, .timesheet .item:hover .actions * {

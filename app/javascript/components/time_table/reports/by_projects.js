@@ -76,36 +76,38 @@ class ByProjects extends Report {
 
     return (
       <div id="content">
-        <div className="pull-left">
-          <p style={{ padding: '6px' }}>
-            {I18n.t('apps.reports.sort_by')}
-:
-          </p>
-          <div className="pull-left">
-            <select className="form-control" name="order" onChange={this.onOrderChange} value={order}>
-              <option value="duration">{I18n.t('apps.reports.hours')}</option>
-              <option value="last_name">{I18n.t('apps.reports.last_name')}</option>
-            </select>
+        <header className="page-header reports-header row">
+          <div className="col-md-3">
+              <p style={{ padding: '6px' }}>
+                {I18n.t('apps.reports.sort_by')}:
+              </p>
+              <select className="form-control" name="order" onChange={this.onOrderChange} value={order}>
+                <option value="duration">{I18n.t('apps.reports.hours')}</option>
+                <option value="last_name">{I18n.t('apps.reports.last_name')}</option>
+              </select>
           </div>
+          <div className="col-md-6 text-muted text-center">
+              <HorizontalArrows onLeftClick={this.prevMonth} onRightClick={this.nextMonth}>
+                <h3 className="current-month">{this.detectMonth(from, to)}</h3>
+              </HorizontalArrows>
+              <DateRangeFilter from={from} to={to} onFilter={this.onFilter} onFromChange={this.onFromDateChange} onToChange={this.onToDateChange} />
+          </div>
+          <div className="col-md-3">
+            <div className="btn-group pull-right">
+              <span className="btn btn-default active">{I18n.t('apps.reports.by_projects')}</span>
+              <NavLink className="btn btn-default" to="/reports/work_times/by_users">{I18n.t('apps.reports.by_people')}</NavLink>
+            </div>
+          </div>
+        </header>
+        <div className='row'>
+          {/* eslint-disable */}
+          { projects.map((project, index) => (
+            <div className="col-md-4">
+              <ReportProjectRecord key={index} reportRows={reports[project]} from={from} to={to} redirectTo={this.redirectTo} />
+            </div>
+          )) }
+          {/* eslint-enable */}
         </div>
-        <h3 className="clearfix col-md-offset-4 text-muted">
-          <div className="btn-group pull-right">
-            <div className="btn btn-default active">{I18n.t('apps.reports.by_projects')}</div>
-            <NavLink className="btn btn-default" to="/reports/work_times/by_users">{I18n.t('apps.reports.by_people')}</NavLink>
-          </div>
-          <HorizontalArrows onLeftClick={this.prevMonth} onRightClick={this.nextMonth}>
-            <div className="current-month pull-left">{this.detectMonth(from, to)}</div>
-          </HorizontalArrows>
-          <DateRangeFilter className="clearfix" from={from} to={to} onFilter={this.onFilter} onFromChange={this.onFromDateChange} onToChange={this.onToDateChange} />
-        </h3>
-        {/* eslint-disable */}
-        { projects.map((project, index) => (
-          <div className="col-md-4">
-            <ReportProjectRecord key={index} reportRows={reports[project]} from={from} to={to} redirectTo={this.redirectTo} />
-          </div>
-        )) }
-        {/* eslint-enable */}
-        <div className="col-mid-offset-1" />
       </div>
     );
   }

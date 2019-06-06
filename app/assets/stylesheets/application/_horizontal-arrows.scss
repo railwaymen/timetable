@@ -1,0 +1,14 @@
+.horizontal-arrows {
+  position: relative;
+  .previous, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .previous {
+    left: 0;
+  }
+  .next {
+    right: 0;
+  }
+}

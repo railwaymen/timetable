@@ -131,27 +131,26 @@ export default class ProjectWorkTimes extends React.Component {
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
 
     return (
-      <div className="content-wrapper box">
-        {
-        (currentUser.isSuperUser()
-        && (
-        <Link to={this.reportsUrl()} className="btn btn-success">
-          Reports
-        </Link>
-        ))
-      }
-        <h1 className="center">{project.name}</h1>
-        <div className="row">
-          <div className="clearfix col-md-offset-4">
-            <HorizontalArrows onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
-              <DateRangeFilter className="pull-left" from={from} to={to} onFromChange={this.onFromChange} onToChange={this.onToChange} onFilter={() => this.getWorkTimes(this.state)}>
+        <header className="page-header projects-header row text-center">
+          <h1 className="project-title">
+            {project.name}
+            {
+              (currentUser.isSuperUser()
+              && (
+                <Link to={this.reportsUrl()} className="btn btn-success">
+                Reports
+                </Link>
+              ))
+            }
+          </h1>
+          <HorizontalArrows className="row" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
+            <DateRangeFilter className="col-md-6 col-md-offset-3" from={from} to={to} onFromChange={this.onFromChange} onToChange={this.onToChange} onFilter={() => this.getWorkTimes(this.state)}>
                 <button type="button" className="btn btn-default" onClick={this.allUsers}>
-                  {I18n.t('apps.reports.all')}
-                </button>
-              </DateRangeFilter>
-            </HorizontalArrows>
-          </div>
-        </div>
+                {I18n.t('apps.reports.all')}
+              </button>
+            </DateRangeFilter>
+          </HorizontalArrows>
+        </header>
         <div className="row row-eq-height">
           <div className="col-md-8">
             {dayKeys.map(dayKey => (
