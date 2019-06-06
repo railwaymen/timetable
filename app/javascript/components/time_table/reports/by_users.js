@@ -113,9 +113,9 @@ class ByUsers extends Report {
                   <span className="btn btn-default active">{I18n.t('apps.reports.by_people')}</span>
                 </div>
               ) : null }
-          </div>          
+          </div>
         </header>
-        <div className='row'>
+        <div className="row">
           {/* eslint-disable */}
           { users.map((user, index) => (
             <ReportUserRecord key={index} reportRows={reports[user]} from={from} to={to} redirectTo={this.redirectTo} />

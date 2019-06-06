@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-const HorizontalArrows = ({ onLeftClick, onRightClick, children, className }) => (
-  <div className={'horizontal-arrows '+(className ? className : '')}>
+const HorizontalArrows = ({
+  onLeftClick, onRightClick, children, className = '',
+}) => (
+  <div className={`horizontal-arrows ${className}`}>
     <a key={0} className="glyphicon glyphicon-chevron-left previous" href="javascript:void(0)" onClick={onLeftClick} />
     {children}
     <a key={1} className="glyphicon glyphicon-chevron-right next" href="javascript:void(0)" onClick={onRightClick} />

@@ -78,19 +78,20 @@ class ByProjects extends Report {
       <div id="content">
         <header className="page-header reports-header row">
           <div className="col-md-3">
-              <p style={{ padding: '6px' }}>
-                {I18n.t('apps.reports.sort_by')}:
-              </p>
-              <select className="form-control" name="order" onChange={this.onOrderChange} value={order}>
-                <option value="duration">{I18n.t('apps.reports.hours')}</option>
-                <option value="last_name">{I18n.t('apps.reports.last_name')}</option>
-              </select>
+            <p style={{ padding: '6px' }}>
+              {I18n.t('apps.reports.sort_by')}
+              :
+            </p>
+            <select className="form-control" name="order" onChange={this.onOrderChange} value={order}>
+              <option value="duration">{I18n.t('apps.reports.hours')}</option>
+              <option value="last_name">{I18n.t('apps.reports.last_name')}</option>
+            </select>
           </div>
           <div className="col-md-6 text-muted text-center">
-              <HorizontalArrows onLeftClick={this.prevMonth} onRightClick={this.nextMonth}>
-                <h3 className="current-month">{this.detectMonth(from, to)}</h3>
-              </HorizontalArrows>
-              <DateRangeFilter from={from} to={to} onFilter={this.onFilter} onFromChange={this.onFromDateChange} onToChange={this.onToDateChange} />
+            <HorizontalArrows onLeftClick={this.prevMonth} onRightClick={this.nextMonth}>
+              <h3 className="current-month">{this.detectMonth(from, to)}</h3>
+            </HorizontalArrows>
+            <DateRangeFilter from={from} to={to} onFilter={this.onFilter} onFromChange={this.onFromDateChange} onToChange={this.onToDateChange} />
           </div>
           <div className="col-md-3">
             <div className="btn-group pull-right">
@@ -99,7 +100,7 @@ class ByProjects extends Report {
             </div>
           </div>
         </header>
-        <div className='row'>
+        <div className="row">
           {/* eslint-disable */}
           { projects.map((project, index) => (
             <div className="col-md-4">
