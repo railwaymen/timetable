@@ -3,7 +3,40 @@ html {
 }
 body {
   color: $text-black;
+  background-color: $application-background-color;
 }
 .page-header {
   margin-bottom: 2rem;
+}
+.form-control {
+  caret-color: $brand-color;
+}
+.card {
+  padding: 15px 15px 25px;
+  margin-bottom: 30px;
+  background-color: $card-background-color;
+  border-radius: $border-radius;
+  border: 1px solid $border-color;
+  box-shadow: 0px 20px 30px -25px rgba(black, .3);
+  transition: .3s;
+  &:hover {
+    box-shadow: 0px 35px 45px -45px rgba(black, .5);
+  }
+  .person {
+    margin: 15px 0;
+  }
+  ul {
+    li {
+      list-style: none;
+      .badge {
+        float: right;
+      }
+    }
+  }
+  .center {
+    text-align: center;
+  }
+  .badge {
+    float: right;
+  }
 }

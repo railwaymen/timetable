@@ -1,0 +1,30 @@
+.error-tooltip {
+  position: absolute;
+  left: 15px;
+  bottom: 100%;
+  z-index: 150;
+  width: auto;
+  max-width: calc(100% - 30px);
+  padding: 5px 15px;
+  border-radius: $border-radius;
+  font-size: 14px;
+  color: $error-color;
+  background-color: $error-background-color;
+  text-align: left;
+  ul {
+    list-style: none;
+  }
+  animation: errorTooltipPopUp .2s ease-in-out;
+  transition: .3s;
+}
+
+@keyframes errorTooltipPopUp {
+  0% {
+    transform: scale(.3);
+    margin-bottom: 25px;
+  }
+  100% {
+    transform: scale(1);
+    margin-bottom: 0;
+  }
+}
