@@ -105,14 +105,14 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
                                                              'first_name' => user.first_name,
                                                              'last_name' => user.last_name,
                                                              'role' => nil,
-                                                             'hourly_wage' => 0.0
+                                                             'hourly_wage' => 0.0.to_s
                                                            },
                                                            {
                                                              'id' => worker.id,
                                                              'first_name' => worker.first_name,
                                                              'last_name' => worker.last_name,
                                                              'role' => nil,
-                                                             'hourly_wage' => 0.0
+                                                             'hourly_wage' => 0.0.to_s
                                                            }
                                                          ])
 
@@ -121,7 +121,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
     end
 
     context 'previous roles' do
-      it 'return users with role_suggestions' do
+      it 'return users with role suggestions' do
         time = Time.zone.now
         user = create(:user, first_name: 'Jan', last_name: 'Nowak')
         worker = create(:user, first_name: 'Tomasz', last_name: 'Kowalski')
@@ -146,6 +146,51 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
                                                              'id' => worker.id,
                                                              'first_name' => worker.first_name,
                                                              'last_name' => worker.last_name,
+                                                             'role' => nil,
+                                                             'hourly_wage' => 0.0.to_s
+                                                           }
+                                                         ])
+        expect(parsed_body['currency']).to eq 'd'
+      end
+    end
+
+    context 'user in old reports but not in recent report' do
+      it 'return users with role suggestions' do
+        time = Time.zone.now
+        user = create(:user, first_name: 'Jan', last_name: 'Nowak')
+        user_not_in_recent_report = create(:user, first_name: 'Tomasz', last_name: 'Kowalski')
+        new_user = create(:user, first_name: 'Michał', last_name: 'Malinowski')
+        FactoryGirl.create :work_time, user: user_not_in_recent_report, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryGirl.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryGirl.create :work_time, user: new_user, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
+        old_report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
+        old_report.project_report_roles.create!(user: user_not_in_recent_report, role: 'developer', hourly_wage: 31)
+
+        report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
+        report.project_report_roles.create!(user: user, role: 'developer', hourly_wage: 30)
+
+        get :roles, params: { format: 'json', project_id: project, starts_at: (time - 2.days).beginning_of_day, ends_at: (time + 2.days).beginning_of_day }
+        expect(response).to be_ok
+        parsed_body = JSON.parse(response.body)
+        expect(parsed_body['user_roles']).to match_array([
+                                                           {
+                                                             'id' => user.id,
+                                                             'first_name' => user.first_name,
+                                                             'last_name' => user.last_name,
+                                                             'role' => 'developer',
+                                                             'hourly_wage' => 30.0.to_s
+                                                           },
+                                                           {
+                                                             'id' => user_not_in_recent_report.id,
+                                                             'first_name' => user_not_in_recent_report.first_name,
+                                                             'last_name' => user_not_in_recent_report.last_name,
+                                                             'role' => 'developer',
+                                                             'hourly_wage' => 31.0.to_s
+                                                           },
+                                                           {
+                                                             'id' => new_user.id,
+                                                             'first_name' => new_user.first_name,
+                                                             'last_name' => new_user.last_name,
                                                              'role' => nil,
                                                              'hourly_wage' => 0.0.to_s
                                                            }
