@@ -63,22 +63,17 @@ module Api
       send_file @report.file_path
     end
 
-    # rubocop:disable MethodLength
     def roles
       authorize :project_report
       users = @project.users_participating(params[:starts_at]..params[:ends_at])
       last_report = @project.project_reports.done.order(id: :desc).first
       @currency = last_report&.currency || ''
-      @user_roles = if last_report
-                      users
-                        .left_joins(:project_report_roles)
-                        .where('project_report_roles.id IS NULL OR project_report_roles.project_report_id=?', last_report.id) # either role from report or no role
-                        .distinct.select('users.*, project_report_roles.role, COALESCE(project_report_roles.hourly_wage, 0) AS hourly_wage')
-                    else
-                      users.distinct.select('users.*, NULL AS role, 0 AS hourly_wage')
-                    end
+      project_reports = @project.project_reports.select('project_reports.id').to_sql
+      @user_roles = users.joins("LEFT OUTER JOIN project_report_roles prr1 ON prr1.user_id=users.id AND prr1.project_report_id IN (#{project_reports})") # join project_report_roles from given project
+                         .joins("LEFT OUTER JOIN project_report_roles prr2 ON prr2.user_id=users.id AND prr1.id < prr2.id AND prr2.project_report_id IN (#{project_reports})")
+                         .where('prr2.id IS NULL') # select role with highest id
+                         .distinct.select('users.*, prr1.role, COALESCE(prr1.hourly_wage, 0) AS hourly_wage')
     end
-    # rubocop:enable MethodLength
 
     private
 

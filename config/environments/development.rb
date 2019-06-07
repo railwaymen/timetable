@@ -30,5 +30,7 @@ TimeTable::Application.configure do
   # number of complex assets.
   config.assets.debug = true
 
-  BetterErrors::Middleware.allow_ip! '192.168.100.0/24'
+  config.webpacker.check_yarn_integrity = false
+
+  BetterErrors::Middleware.allow_ip! '0.0.0.0/0'
 end
