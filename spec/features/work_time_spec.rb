@@ -147,21 +147,21 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     expect(page).to have_content('Rank')
     expect(page).to have_selector('select')
     expect(page).to have_selector('select > option', count: 3)
-    expect(page).to have_selector('.grid.ui > .card.column.five.wide', count: 1)
+    expect(page).to have_selector('.projects-cards > .projects-card', count: 1)
 
     aggregate_failures 'properly filter' do
       find('select > option', text: 'Last 60 days').click
-      expect(page).to have_selector('.grid.ui > .card.column.five.wide', count: 2)
+      expect(page).to have_selector('.projects-cards > .projects-card', count: 2)
     end
 
     aggregate_failures 'properly filter' do
       find('select > option', text: 'Last 90 days').click
-      expect(page).to have_selector('.grid.ui > .card.column.five.wide', count: 3)
+      expect(page).to have_selector('.projects-cards > .projects-card', count: 3)
     end
 
     aggregate_failures 'properly filter' do
       find('select > option', text: 'Last 30 days').click
-      expect(page).to have_selector('.grid.ui > .card.column.five.wide', count: 1)
+      expect(page).to have_selector('.projects-cards > .projects-card', count: 1)
     end
 
     aggregate_failures 'projects listing - active' do

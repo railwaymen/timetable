@@ -162,7 +162,7 @@ export default class ProjectWorkTimes extends React.Component {
                     <div className="time-entries-list-container">
                       <ul className="time-entries-list">
                         {groupedWorkTimes[dayKey].map(workTime => (
-                          <li className={`entry ${workTime.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workTime.id}`} key={workTime.id}>
+                          <li className={`time-entry entry ${workTime.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workTime.id}`} key={workTime.id}>
                             <div className="col-md-2 project-container">{`${workTime.user.first_name} ${workTime.user.last_name}`}</div>
                             <div className="col-md-4 description-container" style={{ cursor: 'inherit' }}>
                               <span className="description-text">

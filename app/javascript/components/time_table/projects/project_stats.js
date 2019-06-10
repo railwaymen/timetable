@@ -22,27 +22,25 @@ class ProjectStats extends React.Component {
     return (
       <div className="col-lg-4 card-container project-card">
         <div className="card h-100">
-          <div className="title">
-            <h3>
-              {this.projectLabel()}
-              <div
-                className="badge"
-                style={{
-                  backgroundColor: `#${data.color}`, width: '18px', height: '18px', display: 'block',
-                }}
-              />
-            </h3>
-            <p className="center">
-              {data.leader ? data.leader.name : ''}
-            </p>
-            <ul>
-              { stats.map((stat, index) => (
-                <li className="person" key={index}> {/* eslint-disable-line */}
-                  {stat.user.name}
-                </li>
-              )) }
-            </ul>
-          </div>
+          <h3 className="title">
+            {this.projectLabel()}
+            <div
+              className="badge"
+              style={{
+                backgroundColor: `#${data.color}`, width: '18px', height: '18px', display: 'block',
+              }}
+            />
+          </h3>
+          <p className="text-center">
+            {data.leader ? data.leader.name : ''}
+          </p>
+          <ul>
+            { stats.map((stat, index) => (
+              <li className="person" key={index}> {/* eslint-disable-line */}
+                {stat.user.name}
+              </li>
+            )) }
+          </ul>
         </div>
       </div>
     );

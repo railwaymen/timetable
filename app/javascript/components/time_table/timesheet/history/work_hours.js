@@ -154,7 +154,7 @@ class WorkHours extends React.Component {
     return (
       <div>
         {/* eslint-disable-next-line */}
-        <textarea autoFocus name="body" type="text" value={_.unescape(this.state.workHours.body)} onChange={this.onChange} />
+        <textarea autoFocus className="form-control" name="body" type="text" value={_.unescape(this.state.workHours.body)} onChange={this.onChange} />
         { this.props.workHours.project.work_times_allows_task
           ? (
             <div className="task-edit">
@@ -168,9 +168,7 @@ class WorkHours extends React.Component {
   renderTagEditable() {
     return (
       <div className="tag-container">
-        <div>
-          <TagsDropdown updateTag={this.onTagChange} selectedTag={this.state.workHours.tag} tags={this.props.tags} />
-        </div>
+        <TagsDropdown updateTag={this.onTagChange} selectedTag={this.state.workHours.tag} tags={this.props.tags} />
       </div>
     );
   }
@@ -178,9 +176,10 @@ class WorkHours extends React.Component {
   renderDateEditable() {
     return (
       <div className="edit-time">
-        <input className="start-input" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
-        <input className="end-input" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
-        <div className="edit-date input ui">
+        <input className="start-input form-control" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
+        <span className="time-divider">-</span>
+        <input className="end-input form-control" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
+        <div className="edit-date">
           <DatePicker {...defaultDatePickerProps} value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
         </div>
       </div>
@@ -338,44 +337,46 @@ class WorkHours extends React.Component {
     } = this.state;
 
     return (
-      <div className="time-entries-list-container" style={!_.isEmpty(errors) ? { backgroundColor: '#FF9177', position: 'relative' } : {}}>
+      <div className="time-entries-list-container" style={!_.isEmpty(errors) ? { backgroundColor: '#ffb6b6', position: 'relative' } : {}}>
         {/* eslint-disable-next-line */}
         { errors.map((error, index) => (<ErrorTooltip key={index} errors={error} />)) }
         <ul className="time-entries-list">
-          <li className={`entry ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
+          <li className={`time-entry time-entry-main entry ${editing ? 'card edit-mode' : ''} ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
             { !_.isEmpty(errors) ? <div className="error-info-container"><i className="glyphicon glyphicon-warning-sign" /></div> : null }
             <WorkTimeTask workTime={workHours} />
-            <div className="description-container" onClick={this.toggleEdit}>
-              {this.descriptionText()}
-              { editing ? this.renderBodyEditable() : null }
-            </div>
-            <div className="project-container" onClick={this.toggleProjectEdit}>
-              <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
-                {workHours.project.name}
-              </span>
-              <div className="projects-region">
-                { projectEditable
-                  ? (
-                    <div>
-                      <div className="dropdown fluid search ui active visible">
-                        <input type="hidden" name="project" value="12" />
-                        <input className="search" autoComplete="off" tabIndex="0" />
-                        <div className="text">
-                          <div className="circular empty label ui" style={{ background: `#${workHours.project.color}` }} />
-                          {workHours.project.name}
-                        </div>
-                        <ProjectsList projects={projects} currentProject={workHours.project} onChangeProject={this.onChangeProject} />
-                      </div>
-                    </div>
-                  ) : null }
+            <div className="task-content">
+              <div className="description-container" onClick={this.toggleEdit}>
+                {this.descriptionText()}
+                { editing ? this.renderBodyEditable() : null }
               </div>
+              <div className="project-container" onClick={this.toggleProjectEdit}>
+                <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
+                  {workHours.project.name}
+                </span>
+                <div className="projects-region">
+                  { projectEditable
+                    ? (
+                      <div>
+                        <div className="dropdown fluid search ui active visible">
+                          <input type="hidden" name="project" value="12" />
+                          <input className="search" autoComplete="off" tabIndex="0" />
+                          <div className="text">
+                            <div className="circular empty label ui" style={{ background: `#${workHours.project.color}` }} />
+                            {workHours.project.name}
+                          </div>
+                          <ProjectsList projects={projects} currentProject={workHours.project} onChangeProject={this.onChangeProject} />
+                        </div>
+                      </div>
+                    ) : null }
+                </div>
+              </div>
+              { !tags_disabled && workHours.project.taggable && (
+              <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>
+                { tagEditable && this.renderTagEditable() }
+              </WorkTimeTag>
+              )
+              }
             </div>
-            { !tags_disabled && workHours.project.taggable && (
-            <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>
-              { tagEditable && this.renderTagEditable() }
-            </WorkTimeTag>
-            )
-            }
             <div className="actions-container">
               <div className="action-item destroy" onClick={this.onDelete}>
                 <i className="icon red trash" />
@@ -387,10 +388,13 @@ class WorkHours extends React.Component {
                 <i className="glyphicon glyphicon-paste" />
               </div>
             </div>
-            <WorkTimeDuration workTime={workHours} />
-            <WorkTimeTime workTime={workHours} onClick={this.toggleEdit}>
-              { editing ? this.renderDateEditable() : null }
-            </WorkTimeTime>
+            {editing ? this.renderDateEditable() : (
+              <React.Fragment>
+                <WorkTimeDuration workTime={workHours} />
+                <WorkTimeTime workTime={workHours} onClick={this.toggleEdit} />
+              </React.Fragment>
+            )
+            }
           </li>
         </ul>
       </div>
