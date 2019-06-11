@@ -154,11 +154,11 @@ class WorkHours extends React.Component {
     return (
       <div>
         {/* eslint-disable-next-line */}
-        <textarea autoFocus className="form-control" name="body" type="text" value={_.unescape(this.state.workHours.body)} onChange={this.onChange} />
+        <textarea autoFocus className="form-control" name="body" type="text" placeholder={I18n.t('apps.timesheet.what_have_you_done')} value={_.unescape(this.state.workHours.body)} onChange={this.onChange} />
         { this.props.workHours.project.work_times_allows_task
           ? (
             <div className="task-edit">
-              <input className="task-input" name="task" value={this.state.workHours.task} onChange={this.onChange} />
+              <input className="form-control task-input" name="task" placeholder={I18n.t('apps.timesheet.task_url')} value={this.state.workHours.task} onChange={this.onChange} />
             </div>
           ) : null }
       </div>

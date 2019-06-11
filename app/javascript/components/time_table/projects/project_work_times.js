@@ -157,8 +157,12 @@ export default class ProjectWorkTimes extends React.Component {
               <section key={dayKey} className="time-entries-day">
                 <header>
                   <div className="date-container">
-                    <span className="title">{displayDayInfo(groupedWorkTimes[dayKey][0].starts_at)}</span>
-                    <span className="super">{displayDuration(_.sumBy(groupedWorkTimes[dayKey], w => w.duration))}</span>
+                    <h3 className="title">
+                      {displayDayInfo(groupedWorkTimes[dayKey][0].starts_at)}
+                      <span className="super">
+                        {displayDuration(_.sumBy(groupedWorkTimes[dayKey], w => w.duration))}
+                      </span>
+                    </h3>
                     <div className="time-entries-list-container">
                       <ul className="time-entries-list">
                         {groupedWorkTimes[dayKey].map(workTime => (

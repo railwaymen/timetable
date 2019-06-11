@@ -258,7 +258,7 @@ class Entry extends React.Component {
                 {errors.body ? <ErrorTooltip errors={errors.body} /> : null}
                 <div className="form-group">
                   {project.lunch
-                    ? <div className="easter" style={{ backgroundImage: `url(${this.renderEasterEgg()})` }} />
+                    ? <img className="easter" src={this.renderEasterEgg()} alt="" />
                     : <textarea className="form-control" placeholder={I18n.t('apps.timesheet.what_have_you_done')} name="body" value={body} onChange={this.onChange} onKeyPress={this.onKeyPress} />
                   }
                 </div>

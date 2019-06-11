@@ -13,7 +13,7 @@
   }
   justify-content: space-between;
   align-items: center;
-  padding: 0 15px;
+  padding: 0 0;
 
   font-size: 14px;
 
@@ -102,6 +102,24 @@
   input {
     text-align: center;
   }
+  .task-container  {
+    a {
+      margin-right: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+      max-width: 65px;
+      display: block;
+      text-overflow: ellipsis;
+      left: 0;
+      overflow: hidden;
+      color: $brand-color;
+      transition: .3s;
+      &:hover {
+        overflow: visible;
+        color: $brand-color-75;
+      }
+    }
+  }
   .task-content {
     display: flex;
     flex-flow: row wrap;
@@ -132,6 +150,9 @@
       text-align: left;
       font-size: 16px;
       color: $text-black;
+    }
+    .task-input {
+      text-align: left;
     }
   }
   .edit-time {
