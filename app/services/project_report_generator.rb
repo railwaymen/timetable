@@ -9,8 +9,9 @@ require 'uri'
 class ProjectReportGenerator
   attr_reader :project_report
 
-  STRONG_GRAY = 'F6F6F6'
-  LIGHT_GRAY = 'FBFBFB'
+  STRONG_GRAY = 'B6B6B6'
+  LIGHT_GRAY = 'EFEFEF'
+  BORDER_COLOR = '808080'
   FORMAT_STRING = '%.2f'
   LOGO_PATH = Rails.root.join('public', 'images', 'reports_logo.jpg')
   FONT_PATH = Rails.root.join('app', 'assets', 'fonts')
@@ -72,9 +73,11 @@ class ProjectReportGenerator
   # rubocop:disable MethodLength
   # rubocop:disable BlockLength
   def category_tables(pdf)
-    header = allowed_categories.map { |content| { content: content.capitalize, background_color: LIGHT_GRAY, font_style: :bold } }
+    header = allowed_categories.map { |content| { content: content.capitalize, text_color: '404040' } }
     project_report.last_body.map do |key, work_times|
       next if key == 'ignored'
+
+      translated_key = translate_role(key)
 
       content = work_times.group_by { |wt| [wt['owner'], wt['user_id']] }.map do |(owner, user_id), wts|
         name = if user_id.nil?
@@ -86,27 +89,29 @@ class ProjectReportGenerator
           name << " (#{wage} #{project_report.currency}/h)"
         end
         [
-          [{ colspan: header_colspan, content: name, align: :center, background_color: STRONG_GRAY, font_style: :bold }],
+          [{ colspan: header_colspan, content: name, background_color: LIGHT_GRAY, font_style: :bold }],
           header,
           *wts.map { |wt| allowed_categories.map { |k| send("format_#{k}", wt[k]) } }
         ]
       end
       sum_duration = work_times.sum { |e| e['duration'] }
       sum_cost = work_times.sum { |e| e['cost'].to_r }
-      footer = ['', '', format_duration(sum_duration), format_cost(sum_cost)].compact.map do |str|
+      footer = ['', "#{translated_key} Total:", format_duration(sum_duration), format_cost(sum_cost)].compact.map do |str|
         { content: str, background_color: STRONG_GRAY }
       end
+      footer[1][:align] = :right
+      pdf.formatted_text [{ text: translated_key, size: 20, styles: [:bold] }]
       pdf.table([
-                  [{ content: key.upcase, size: 25, colspan: header_colspan, font_style: :bold }],
                   *content.flatten(1),
                   footer.compact
                 ], width: pdf.bounds.width) do |t|
         t.cells.size = 10
         t.columns(2..-1).align = :center
         t.column_widths = column_widths(pdf)
+        t.cell_style = { borders: [:bottom], border_color: BORDER_COLOR }
       end
       pdf.move_down 20
-      [key, sum_duration, sum_cost]
+      [translated_key, sum_duration, sum_cost]
     end.compact
   end
   # rubocop:enable MethodLength
@@ -121,11 +126,16 @@ class ProjectReportGenerator
       el[2] = format_cost(el[2])
     end
     header = (%w[duration cost] & allowed_categories).map(&:capitalize).unshift('Category')
-    summary_table = pdf.make_table([
-                                     header,
-                                     *footers.map(&:compact),
-                                     ['Sum', format_duration(sum_duration), format_cost(sum_cost)].compact
-                                   ], position: :right, width: 300) do
+    summary_table = pdf.make_table(
+      [
+        header,
+        *footers.map(&:compact),
+        ['Sum', format_duration(sum_duration), format_cost(sum_cost)].compact
+      ],
+      position: :right,
+      width: 300,
+      cell_style: { borders: [:bottom], border_color: BORDER_COLOR }
+    ) do
       row(0).background_color = LIGHT_GRAY
       row(0).font_style = :bold
       row(-1).background_color = STRONG_GRAY
@@ -206,6 +216,10 @@ class ProjectReportGenerator
 
   def font_path(font)
     File.join(FONT_PATH, font)
+  end
+
+  def translate_role(role)
+    I18n.t(role, scope: 'apps.project_report_roles')
   end
 end
 
