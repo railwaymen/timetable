@@ -86,6 +86,8 @@ export default class NewReport extends React.Component {
           state: { report: data },
         },
       });
+    }).catch(() => {
+      alert('Failed to create report');
     });
   }
 
@@ -131,6 +133,7 @@ export default class NewReport extends React.Component {
                 </td>
                 <td>
                   <input type="number" min="0" step="0.01" value={user.hourly_wage} onChange={e => this.onWageChange(e, user.id)} />
+                  {user.hourly_wage === '' && <span style={{ color: 'red', fontWeight: 'bold' }}>Invalid format</span>}
                 </td>
               </tr>
             ))}
