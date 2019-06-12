@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Redirect } from 'react-router-dom';
+import URI from 'urijs';
 import bindAll from 'lodash/bindAll';
 import * as Api from '../../shared/api';
 import DateRangeFilter from '../../shared/date_range_filter';
@@ -24,7 +25,13 @@ export default class NewReport extends React.Component {
   }
 
   componentDidMount() {
-    this.getRoles();
+    const base = URI(window.location.href);
+    const { from, to } = base.query(true);
+    if (from && to) {
+      this.setState({ startsAt: moment(from), endsAt: moment(to) }, this.getRoles);
+    } else {
+      this.getRoles();
+    }
   }
 
   onRangeStartChange(time) {

@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import URI from 'urijs';
 import * as Api from '../../shared/api';
 
 const simpleDateFormat = date => moment(date).format('YYYY/MM/DD');
@@ -14,10 +15,20 @@ export default class ProjectReports extends React.Component {
   state = {
     projectId: parseInt(this.props.match.params.projectId, 10),
     reports: [],
+    from: '',
+    to: '',
   }
 
   componentDidMount() {
     this.getReports();
+    const base = URI(window.location.href);
+    const { from, to } = base.query(true);
+    this.setState({ from, to });
+  }
+
+  newReportLink() {
+    const { from, to, projectId } = this.state;
+    return `/projects/${projectId}/new_report?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
   }
 
   onDelete(e) {
@@ -43,7 +54,7 @@ export default class ProjectReports extends React.Component {
     const { projectId, reports } = this.state;
     return (
       <div>
-        <Link to={`/projects/${projectId}/new_report`} className="btn btn-success">
+        <Link to={this.newReportLink()} className="btn btn-success">
           {I18n.t('apps.reports.new')}
         </Link>
         <table className="table">
