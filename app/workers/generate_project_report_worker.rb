@@ -17,6 +17,10 @@ class GenerateProjectReportWorker
   def file_path(project_report)
     dir = Rails.root.join('system', 'uploads', 'reports', project_report.project_id.to_s)
     FileUtils.mkdir_p(dir)
-    File.join(dir, "#{project_report.id}.pdf")
+    file_name = [project_report.project.name, project_report.name, project_report.id.to_s]
+                .map { |str| str.parameterize(separator: '_', preserve_case: true) }
+                .join('-')
+                .concat('.pdf')
+    File.join(dir, file_name)
   end
 end
