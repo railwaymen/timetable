@@ -130,7 +130,7 @@ class ProjectReportGenerator
       [
         header,
         *footers.map(&:compact),
-        ['Sum', format_duration(sum_duration), format_cost(sum_cost)].compact
+        ['Total:', format_duration(sum_duration), format_cost(sum_cost)].compact
       ],
       position: :right,
       width: 300,
