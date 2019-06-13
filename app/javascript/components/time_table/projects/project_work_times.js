@@ -75,6 +75,11 @@ export default class ProjectWorkTimes extends React.Component {
     return ['TimeTable', 'TimeTable', newUrl];
   }
 
+  reportsUrl() {
+    const { from, to, projectId } = this.state;
+    return `/projects/${projectId}/reports?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+  }
+
   arrowsLabel() {
     return moment(this.state.from).format('MMMM YYYY');
   }
@@ -121,7 +126,7 @@ export default class ProjectWorkTimes extends React.Component {
 
   render() {
     const {
-      groupedWorkTimes, from, to, project, reports, tag_reports, projectId, tags_disabled,
+      groupedWorkTimes, from, to, project, reports, tag_reports, tags_disabled,
     } = this.state;
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
 
@@ -130,7 +135,7 @@ export default class ProjectWorkTimes extends React.Component {
         {
         (currentUser.isSuperUser()
         && (
-        <Link to={`/projects/${projectId}/reports`} className="btn btn-success">
+        <Link to={this.reportsUrl()} className="btn btn-success">
           Reports
         </Link>
         ))

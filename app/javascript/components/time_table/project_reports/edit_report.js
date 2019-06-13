@@ -333,15 +333,12 @@ export default class EditReport extends React.Component {
     );
   }
 
-  selectAllWithTag(category, tag) {
+  handleTagPillClick(category, tag) {
     this.setState(({ currentBody }) => {
+      const toMergeValue = !currentBody[category].find(wt => wt.toMerge && wt.tag === tag);
       const newBody = currentBody[category].map((wt) => {
-        const workTime = cloneDeep(wt);
-        if (workTime.tag === tag) {
-          workTime.toMerge = true;
-        } else {
-          delete workTime.toMerge;
-        }
+        const { toMerge, ...workTime } = wt;
+        workTime.toMerge = toMergeValue && workTime.tag === tag;
         return workTime;
       });
       return { currentBody: { ...currentBody, [category]: newBody } };
@@ -388,7 +385,7 @@ export default class EditReport extends React.Component {
               id, task, duration, owner, toMerge, description, cost, touched, tag,
             }) => (
               <tr key={id}>
-                <td><TagPill tag={tag} onClick={() => this.selectAllWithTag(category, tag)} bold={false} /></td>
+                <td><TagPill tag={tag} onClick={() => this.handleTagPillClick(category, tag)} bold={false} /></td>
                 <td>{task}</td>
                 <td>{description}</td>
                 <td>{owner}</td>
