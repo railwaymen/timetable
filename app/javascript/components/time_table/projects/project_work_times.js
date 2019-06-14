@@ -131,6 +131,7 @@ export default class ProjectWorkTimes extends React.Component {
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
 
     return (
+      <div className="content-wrapper box">
         <header className="page-header projects-header row text-center">
           <h1 className="project-title">
             {project.name}
@@ -145,7 +146,7 @@ export default class ProjectWorkTimes extends React.Component {
           </h1>
           <HorizontalArrows className="row" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
             <DateRangeFilter className="col-md-6 col-md-offset-3" from={from} to={to} onFromChange={this.onFromChange} onToChange={this.onToChange} onFilter={() => this.getWorkTimes(this.state)}>
-                <button type="button" className="btn btn-default" onClick={this.allUsers}>
+              <button type="button" className="btn btn-default" onClick={this.allUsers}>
                 {I18n.t('apps.reports.all')}
               </button>
             </DateRangeFilter>
@@ -157,16 +158,12 @@ export default class ProjectWorkTimes extends React.Component {
               <section key={dayKey} className="time-entries-day">
                 <header>
                   <div className="date-container">
-                    <h3 className="title">
-                      {displayDayInfo(groupedWorkTimes[dayKey][0].starts_at)}
-                      <span className="super">
-                        {displayDuration(_.sumBy(groupedWorkTimes[dayKey], w => w.duration))}
-                      </span>
-                    </h3>
+                    <span className="title">{displayDayInfo(groupedWorkTimes[dayKey][0].starts_at)}</span>
+                    <span className="super">{displayDuration(_.sumBy(groupedWorkTimes[dayKey], w => w.duration))}</span>
                     <div className="time-entries-list-container">
                       <ul className="time-entries-list">
                         {groupedWorkTimes[dayKey].map(workTime => (
-                          <li className={`time-entry entry ${workTime.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workTime.id}`} key={workTime.id}>
+                          <li className={`entry ${workTime.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workTime.id}`} key={workTime.id}>
                             <div className="col-md-2 project-container">{`${workTime.user.first_name} ${workTime.user.last_name}`}</div>
                             <div className="col-md-4 description-container" style={{ cursor: 'inherit' }}>
                               <span className="description-text">

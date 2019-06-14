@@ -119,6 +119,7 @@ div.Tokenize ul.TokensContainer {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  flex-flow: wrap;
 }
 .sticky-record {
   position: sticky;

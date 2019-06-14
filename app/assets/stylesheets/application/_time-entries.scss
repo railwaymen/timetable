@@ -61,12 +61,12 @@
 
 @keyframes slide {
   0% {
-    margin-left: 100%;
+    margin-left: 0;
     opacity: 1;
   }
   100% {
     opacity: 1;
-    margin-left: 0px;
+    margin-left: 0;
   }
 }
 
@@ -154,6 +154,13 @@
     .task-input {
       text-align: left;
     }
+  }
+  .time-container {
+    position: relative;
+    z-index: 50;
+    margin-left: 10px;
+    color: $text-black;
+    white-space: nowrap;
   }
   .edit-time {
     align-self: stretch;
