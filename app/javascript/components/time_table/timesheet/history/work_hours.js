@@ -165,8 +165,6 @@ class WorkHours extends React.Component {
     );
   }
 
-work
-
 renderTagEditable() {
   return (
     <div className="tag-container">
