@@ -133,6 +133,7 @@ export default class EditReport extends React.Component {
       return {
         mergeTask: uniq(tasksToMerge.map(wt => wt.task)).join(', '),
         mergeOwner: uniq(tasksToMerge.map(wt => wt.owner)).join(', '),
+        mergeDescription: uniq(tasksToMerge.map(wt => wt.description)).join(', '),
       };
     }, () => $(`#modal-${category}`).toggle());
   }
