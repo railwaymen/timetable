@@ -27,7 +27,7 @@ $ ->
     $(this).find('.menu').toggle()
 
   $('body').on 'click', '#generate, .modal-backdrop', ->
-    $('#modal:visible').add('.unique-modal-class:visible').toggle()
+    $('#modal').add('.unique-modal-class:visible').toggle()
 
   $(document).on 'push-entry', (e) ->
     $("#work-time-#{e.detail.id}").addClass('new')
