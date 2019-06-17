@@ -17,7 +17,11 @@ describe GenerateProjectReportWorker do
       allow(Rails.root).to receive(:join) do |*arguments|
         File.join(__dir__, *arguments)
       end
-      file_path = File.join(__dir__, 'system', 'uploads', 'reports', project_report.project_id.to_s, "#{project_report.id}.pdf")
+      file_name = [project_report.project.name, project_report.name, project_report.id.to_s]
+                  .map { |str| str.parameterize(separator: '_', preserve_case: true) }
+                  .join('-')
+                  .concat('.pdf')
+      file_path = File.join(__dir__, 'system', 'uploads', 'reports', project_report.project_id.to_s, file_name)
       begin
         described_class.new.perform(project_report.id)
 

@@ -19,7 +19,7 @@ module Api
     end
 
     def index
-      @reports = @project.project_reports
+      @reports = @project.project_reports.order(id: :desc)
       authorize @reports
     end
 

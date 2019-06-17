@@ -88,6 +88,12 @@ en:
       cc: Client Communication
       res: Research
       various: Various
+    project_report_roles:
+      developer: Development
+      qa: Quality Assurance
+      ux: User Experience
+      pm: Project Management
+      ignored: Ignored
   common:
     rank: 'Rank'
     add: Add
