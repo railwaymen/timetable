@@ -88,6 +88,12 @@ pl:
       cc: Rozmowa z klientem
       res: Poszukiwanie informacji
       various: Różne
+    project_report_roles:
+      developer: Development
+      qa: Quality Assurance
+      ux: User Experience
+      pm: Project Management
+      ignored: Ignored
   common:
     rank: 'Ranking'
     add: Dodaj
