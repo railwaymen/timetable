@@ -18,8 +18,8 @@ class ReportUserRecord extends React.Component {
     const overallData = reportRows[0];
 
     return (
-      <div className="col-md-4">
-        <div className="panel panel-default">
+      <div className="col-12 col-md-4">
+        <div className="card panel-default">
           <div className="panel-heading">
             <h4>
               <i className="glyphicon glyphicon-user" />

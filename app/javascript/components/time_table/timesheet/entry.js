@@ -295,7 +295,7 @@ class Entry extends React.Component {
                 <DatePicker {...defaultDatePickerProps} className="form-control" selected={moment(date, 'DD/MM/YYYY')} value={moment(date, 'DD/MM/YYYY').format('DD/MM')} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange} />
               </div>
               <div className="col-sm-12 col-md-2 action">
-                <button type="button" className="btn-start button fluid ui" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
+                <button type="button" className="bt bt-main bt-submit" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
               </div>
             </div>
             { !this.props.tags_disabled && project.taggable && (

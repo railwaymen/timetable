@@ -35,7 +35,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
     find(:css, '.fluid div.text').click
     find(:css, '.menu.visible > .item:last-child').click
-    page.find('#content button.btn-start.button.fluid.ui', text: 'Save').click
+    page.find('#content button.bt-submit', text: 'Save').click
 
     expect(page).to have_content message
   end

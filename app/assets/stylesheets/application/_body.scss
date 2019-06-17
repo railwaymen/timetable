@@ -6,8 +6,12 @@ html {
   font-size: 14px;
 }
 body {
+  font-family: $font-family;
   color: $text-black;
   background-color: $application-background-color;
+}
+button, input, optgroup, select, textarea {
+  font-family: $font-family;
 }
 .page-header {
   margin-bottom: 2rem;

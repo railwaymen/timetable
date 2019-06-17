@@ -61,12 +61,12 @@
 
 @keyframes slide {
   0% {
-    margin-left: 0;
+    top: 100%;
     opacity: 1;
   }
   100% {
     opacity: 1;
-    margin-left: 0;
+    top: 0;
   }
 }
 
@@ -153,6 +153,12 @@
     }
     .task-input {
       text-align: left;
+    }
+  }
+  .duration-container {
+    .duration {
+      font-weight: 500;
+      color: $text-black;
     }
   }
   .time-container {

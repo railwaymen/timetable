@@ -100,7 +100,7 @@ class ByProjects extends Report {
             </div>
           </div>
         </header>
-        <div className="row">
+        <div className="row row-eq-height">
           {/* eslint-disable */}
           { projects.map((project, index) => (
             <div className="col-md-4">

@@ -115,7 +115,7 @@ class ByUsers extends Report {
               ) : null }
           </div>
         </header>
-        <div className="row">
+        <div className="row row-eq-height">
           {/* eslint-disable */}
           { users.map((user, index) => (
             <ReportUserRecord key={index} reportRows={reports[user]} from={from} to={to} redirectTo={this.redirectTo} />
