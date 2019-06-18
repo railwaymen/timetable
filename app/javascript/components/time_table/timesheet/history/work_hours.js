@@ -337,12 +337,12 @@ class WorkHours extends React.Component {
     } = this.state;
 
     return (
-      <div className="time-entries-list-container" style={!_.isEmpty(errors) ? { backgroundColor: '#ffb6b6', position: 'relative' } : {}}>
+      <div className={`time-entries-list-container ${!_.isEmpty(errors) ? 'has-error' : ''}`}>
         {/* eslint-disable-next-line */}
         { errors.map((error, index) => (<ErrorTooltip key={index} errors={error} />)) }
         <ul className="time-entries-list">
           <li className={`time-entry time-entry-main entry ${editing ? 'card edit-mode' : ''} ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
-            { !_.isEmpty(errors) ? <div className="error-info-container"><i className="glyphicon glyphicon-warning-sign" /></div> : null }
+            { !_.isEmpty(errors) ? <div className="error-info-container"><i className="fa fa-exclamation-circle" /></div> : null }
             <WorkTimeTask workTime={workHours} />
             <div className="task-content">
               <div className="description-container" onClick={this.toggleEdit}>
@@ -377,15 +377,15 @@ class WorkHours extends React.Component {
               }
             </div>
             <div className="actions-container">
-              <div className="action-item destroy" onClick={this.onDelete}>
-                <i className="icon red trash" />
-              </div>
-              <div className="action-item history" onClick={this.getInfo}>
-                <i className="icon wait" />
-              </div>
-              <div className="action-item copy" onClick={this.onCopy}>
-                <i className="glyphicon glyphicon-paste" />
-              </div>
+              <span className="action-item copy" onClick={this.onCopy}>
+                <i className="symbol fa fa-external-link-square" />
+              </span>
+              <span className="action-item history" onClick={this.getInfo}>
+                <i className="symbol fa fa-clock-o" />
+              </span>
+              <span className="action-item destroy" onClick={this.onDelete}>
+                <i className="symbol fa fa-trash-o" />
+              </span>
             </div>
             {editing ? this.renderDateEditable() : (
               <React.Fragment>

@@ -1,5 +1,8 @@
-.time-entries-list {
-
+.time-entries-list-container {
+  position: relative;
+  &.has-error {
+    background-color: white;
+  }
 }
 .time-entry {
   
@@ -56,7 +59,48 @@
       display: block;
     }
   }
-
+  .actions-container {
+    white-space: nowrap;
+    margin: 0 10px;
+    .action-item {
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
+      border: none;
+      cursor: pointer;
+      min-width: 25px;
+      height: 25px;
+      line-height: 25px;
+      border-radius: 25px;
+      transform: scale(0);
+      color: white;
+      background-color: #3883d7;
+      opacity: 0;      
+      transition: .3s .3s ease-in-out;
+      
+      margin-right: 5px;
+      &:last-child {
+        margin-right: 0;
+      }
+      * {
+        margin: 0;
+      }
+    }
+    .destroy {
+      color: $error-background-color;
+      background-color: $error-color;
+    }
+  }
+  &:hover, &.edit-mode {
+    .action-item {
+      transform: scale(1);
+      opacity: 1;
+      &:nth-child(1) { transition-delay: 0s; }
+      &:nth-child(2) { transition-delay: .1s; }
+      &:nth-child(3) { transition-delay: .2s; }
+      &:nth-child(4) { transition-delay: .3s; }
+    }
+  }
 }
 
 @keyframes slide {
@@ -105,6 +149,11 @@
   .task-container  {
     a {
       margin-right: 10px;
+      margin: 0 10px;
+      &:empty {
+        margin-left: 0;
+      }
+
       font-weight: bold;
       text-transform: uppercase;
       max-width: 65px;
@@ -162,11 +211,14 @@
     }
   }
   .time-container {
+    min-width: 90px;
     position: relative;
-    z-index: 50;
     margin-left: 10px;
     color: $text-black;
     white-space: nowrap;
+    time {
+      text-align: center;
+    }
   }
   .edit-time {
     align-self: stretch;
