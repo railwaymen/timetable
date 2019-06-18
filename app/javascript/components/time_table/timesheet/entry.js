@@ -254,7 +254,7 @@ class Entry extends React.Component {
         <div className="timer">
           <div className="card">
             <div className="row">
-              <div className="col-sm-8 col-md-4 description">
+              <div className="col-sm-8 col-md-6 description">
                 {errors.body ? <ErrorTooltip errors={errors.body} /> : null}
                 <div className="form-group">
                   {project.lunch
@@ -294,9 +294,6 @@ class Entry extends React.Component {
                 </div>
                 <DatePicker {...defaultDatePickerProps} className="form-control" selected={moment(date, 'DD/MM/YYYY')} value={moment(date, 'DD/MM/YYYY').format('DD/MM')} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange} />
               </div>
-              <div className="col-sm-12 col-md-2 action">
-                <button type="button" className="bt bt-main bt-submit" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
-              </div>
             </div>
             { !this.props.tags_disabled && project.taggable && (
               <div className="tag-container">
@@ -305,6 +302,10 @@ class Entry extends React.Component {
               </div>
             )
             }
+            <button type="button" className="bt bt-big bt-main bt-submit" onClick={this.onSubmit}>
+              <i className="symbol fa fa-calendar-plus-o" />
+              <span className="bt-txt">{I18n.t('common.save')}</span>
+            </button>
           </div>
         </div>
       </div>

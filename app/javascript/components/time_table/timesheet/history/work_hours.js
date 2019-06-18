@@ -165,197 +165,196 @@ class WorkHours extends React.Component {
     );
   }
 
-renderTagEditable() {
-  return (
-    <div className="tag-container">
-      <TagsDropdown updateTag={this.onTagChange} selectedTag={this.state.workHours.tag} tags={this.props.tags} />
-    </div>
-  );
-}
-
-renderDateEditable() {
-  return (
-    <div className="edit-time">
-      <div className="edit-date">
-        <DatePicker {...defaultDatePickerProps} value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
+  renderTagEditable() {
+    return (
+      <div className="tag-container">
+        <TagsDropdown updateTag={this.onTagChange} selectedTag={this.state.workHours.tag} tags={this.props.tags} />
       </div>
-      <input className="start-input form-control" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
-      <span className="time-divider">-</span>
-      <input className="end-input form-control" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
-    </div>
-  );
-}
+    );
+  }
 
-workHoursJsonApi() {
-  const { workHours } = this.state;
+  renderDateEditable() {
+    return (
+      <div className="edit-time">
+        <div className="edit-date">
+          <DatePicker {...defaultDatePickerProps} value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
+        </div>
+        <input className="start-input form-control" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
+        <span className="time-divider">-</span>
+        <input className="end-input form-control" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
+      </div>
+    );
+  }
 
-  return {
-    id: workHours.id,
-    project_id: workHours.project_id,
-    body: workHours.body,
-    task: workHours.task,
-    tag: workHours.tag,
-    starts_at: workHours.starts_at,
-    ends_at: workHours.ends_at,
-  };
-}
+  workHoursJsonApi() {
+    const { workHours } = this.state;
 
-disableEdit(e) {
-  const { localName } = e.target;
-  const properly = ['textarea', 'input'];
+    return {
+      id: workHours.id,
+      project_id: workHours.project_id,
+      body: workHours.body,
+      task: workHours.task,
+      tag: workHours.tag,
+      starts_at: workHours.starts_at,
+      ends_at: workHours.ends_at,
+    };
+  }
 
-  if (!properly.includes(localName)) {
-    document.removeEventListener('click', this.disableEdit);
+  disableEdit(e) {
+    const { localName } = e.target;
+    const properly = ['textarea', 'input'];
+
+    if (!properly.includes(localName)) {
+      document.removeEventListener('click', this.disableEdit);
+
+      this.setState({
+        editing: false,
+        tagEditable: false,
+      }, () => {
+        if (!this.state.editing) {
+          this.saveWorkHours();
+        }
+      });
+    }
+  }
+
+  toggleEdit() {
+    this.setState({
+      editing: true,
+      tagEditable: true,
+      errors: [],
+    }, () => {
+      document.addEventListener('click', this.disableEdit);
+    });
+  }
+
+  toggleProjectEdit() {
+    const { projectEditable } = this.state;
+
+    if (!projectEditable) {
+      document.addEventListener('click', this.toggleProjectEdit);
+    } else {
+      document.removeEventListener('click', this.toggleProjectEdit);
+    }
+
+    this.setState({
+      projectEditable: !projectEditable,
+    });
+  }
+
+  toggleTagEdit() {
+    const { tagEditable } = this.state;
+
+    if (!tagEditable) {
+      document.addEventListener('click', this.toggleTagEdit);
+    } else {
+      document.removeEventListener('click', this.toggleTagEdit);
+    }
 
     this.setState({
       editing: false,
-      tagEditable: false,
-    }, () => {
-      if (!this.state.editing) {
-        this.saveWorkHours();
-      }
+      tagEditable: !tagEditable,
     });
   }
-}
 
-toggleEdit() {
-  this.setState({
-    editing: true,
-    tagEditable: true,
-    errors: [],
-  }, () => {
-    document.addEventListener('click', this.disableEdit);
-  });
-}
+  saveWorkHours() {
+    const {
+      workHours, ends_at_hours, starts_at_hours, date,
+    } = this.state;
 
-toggleProjectEdit() {
-  const { projectEditable } = this.state;
-
-  if (!projectEditable) {
-    document.addEventListener('click', this.toggleProjectEdit);
-  } else {
-    document.removeEventListener('click', this.toggleProjectEdit);
-  }
-
-  this.setState({
-    projectEditable: !projectEditable,
-  });
-}
-
-toggleTagEdit() {
-  const { tagEditable } = this.state;
-
-  if (!tagEditable) {
-    document.addEventListener('click', this.toggleTagEdit);
-  } else {
-    document.removeEventListener('click', this.toggleTagEdit);
-  }
-
-  this.setState({
-    editing: false,
-    tagEditable: !tagEditable,
-  });
-}
-
-saveWorkHours() {
-  const {
-    workHours, ends_at_hours, starts_at_hours, date,
-  } = this.state;
-
-  const formattedStartsAtTime = moment(workHours.starts_at).format('HH:mm');
-  const formattedEndsAtTime = moment(workHours.ends_at).format('HH:mm');
-  const starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
-  const ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
-  const oldDuration = workHours.duration;
-  Api.makePutRequest({
-    url: `/api/work_times/${this.state.workHours.id}`,
-    body: {
-      work_time: {
-        ...this.workHoursJsonApi(), starts_at, ends_at,
+    const formattedStartsAtTime = moment(workHours.starts_at).format('HH:mm');
+    const formattedEndsAtTime = moment(workHours.ends_at).format('HH:mm');
+    const starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
+    const ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
+    const oldDuration = workHours.duration;
+    Api.makePutRequest({
+      url: `/api/work_times/${this.state.workHours.id}`,
+      body: {
+        work_time: {
+          ...this.workHoursJsonApi(), starts_at, ends_at,
+        },
       },
-    },
-  }).then((response) => {
-    const { data } = response;
-    const durationDeviation = data.duration - oldDuration;
+    }).then((response) => {
+      const { data } = response;
+      const durationDeviation = data.duration - oldDuration;
 
-    this.setState({
-      workHours: data,
-      date: moment(data.starts_at).format('DD/MM/YYYY'),
-      errors: [],
-    }, () => {
-      this.props.updateWorkHours(this, durationDeviation);
-      const event = new CustomEvent(
-        'edit-entry',
-        { detail: { id: workHours.id, success: true } },
-      );
+      this.setState({
+        workHours: data,
+        date: moment(data.starts_at).format('DD/MM/YYYY'),
+        errors: [],
+      }, () => {
+        this.props.updateWorkHours(this, durationDeviation);
+        const event = new CustomEvent(
+          'edit-entry',
+          { detail: { id: workHours.id, success: true } },
+        );
 
-      document.dispatchEvent(event);
+        document.dispatchEvent(event);
+      });
+    }).catch((e) => {
+      this.setState({
+        starts_at_hours: formattedStartsAtTime,
+        ends_at_hours: formattedEndsAtTime,
+        errors: Object.values(e.errors),
+      }, () => {
+        const event = new CustomEvent(
+          'edit-entry',
+          { detail: { id: workHours.id, success: false } },
+        );
+
+        document.dispatchEvent(event);
+      });
     });
-  }).catch((e) => {
-    this.setState({
-      starts_at_hours: formattedStartsAtTime,
-      ends_at_hours: formattedEndsAtTime,
-      errors: Object.values(e.errors),
-    }, () => {
-      const event = new CustomEvent(
-        'edit-entry',
-        { detail: { id: workHours.id, success: false } },
-      );
-
-      document.dispatchEvent(event);
-    });
-  });
-}
-
-getInfo() {
-  this.props.assignModalInfo(undefined);
-
-  return Api.makeGetRequest({ url: `/api/work_times/${this.state.workHours.id}` })
-    .then(response => this.props.assignModalInfo(response.data));
-}
-
-descriptionText() {
-  const { workHours, editing } = this.state;
-  if (editing) {
-    return null;
   }
-  return (
-    <span className="description-text">
-      {
+
+  getInfo() {
+    this.props.assignModalInfo(undefined);
+
+    return Api.makeGetRequest({ url: `/api/work_times/${this.state.workHours.id}` })
+      .then(response => this.props.assignModalInfo(response.data));
+  }
+
+  descriptionText() {
+    const { workHours, editing } = this.state;
+    if (editing) {
+      return null;
+    }
+    return (
+      <span className="description-text">
+        {
           workHours.project.lunch
             ? 'Omnonmonmonmnomnonmonmn'
             : WorkTimeDescription(workHours)
         }
-    </span>
-  );
-}
+      </span>
+    );
+  }
 
-render() {
-  const { projects, tags_disabled } = this.props;
-  const {
-    workHours, projectEditable, editing, errors, tagEditable,
-  } = this.state;
+  render() {
+    const { projects, tags_disabled } = this.props;
+    const {
+      workHours, projectEditable, editing, errors, tagEditable,
+    } = this.state;
 
-  return (
-    <div className="time-entries-list-container" style={!_.isEmpty(errors) ? { backgroundColor: '#ffb6b6', position: 'relative' } : {}}>
-      {/* eslint-disable-next-line */}
+    return (
+      <div className="time-entries-list-container" style={!_.isEmpty(errors) ? { backgroundColor: '#ffb6b6', position: 'relative' } : {}}>
+        {/* eslint-disable-next-line */}
         { errors.map((error, index) => (<ErrorTooltip key={index} errors={error} />)) }
-      <ul className="time-entries-list">
-        <li className={`time-entry time-entry-main entry ${editing ? 'card edit-mode' : ''} ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
-          { !_.isEmpty(errors) ? <div className="error-info-container"><i className="glyphicon glyphicon-warning-sign" /></div> : null }
-          <WorkTimeTask workTime={workHours} />
-          <div className="task-content">
-            <div className="description-container" onClick={this.toggleEdit}>
-              {this.descriptionText()}
-              { editing ? this.renderBodyEditable() : null }
-            </div>
-            <div className="project-container" onClick={this.toggleProjectEdit}>
-              <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
-                {workHours.project.name}
-              </span>
-              <div className="projects-region">
-                { projectEditable
-                  ? (
+        <ul className="time-entries-list">
+          <li className={`time-entry time-entry-main entry ${editing ? 'card edit-mode' : ''} ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
+            { !_.isEmpty(errors) ? <div className="error-info-container"><i className="glyphicon glyphicon-warning-sign" /></div> : null }
+            <WorkTimeTask workTime={workHours} />
+            <div className="task-content">
+              <div className="description-container" onClick={this.toggleEdit}>
+                {this.descriptionText()}
+                { editing ? this.renderBodyEditable() : null }
+              </div>
+              <div className="project-container" onClick={this.toggleProjectEdit}>
+                <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
+                  {workHours.project.name}
+                </span>
+                <div className="projects-region">
+                  { projectEditable ? (
                     <div>
                       <div className="dropdown fluid search ui active visible">
                         <input type="hidden" name="project" value="12" />
@@ -368,38 +367,38 @@ render() {
                       </div>
                     </div>
                   ) : null }
+                </div>
               </div>
-            </div>
-            { !tags_disabled && workHours.project.taggable && (
+              { !tags_disabled && workHours.project.taggable && (
               <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>
                 { tagEditable && this.renderTagEditable() }
               </WorkTimeTag>
-            )
+              )
               }
-          </div>
-          <div className="actions-container">
-            <div className="action-item destroy" onClick={this.onDelete}>
-              <i className="icon red trash" />
             </div>
-            <div className="action-item history" onClick={this.getInfo}>
-              <i className="icon wait" />
+            <div className="actions-container">
+              <div className="action-item destroy" onClick={this.onDelete}>
+                <i className="icon red trash" />
+              </div>
+              <div className="action-item history" onClick={this.getInfo}>
+                <i className="icon wait" />
+              </div>
+              <div className="action-item copy" onClick={this.onCopy}>
+                <i className="glyphicon glyphicon-paste" />
+              </div>
             </div>
-            <div className="action-item copy" onClick={this.onCopy}>
-              <i className="glyphicon glyphicon-paste" />
-            </div>
-          </div>
-          {editing ? this.renderDateEditable() : (
-            <React.Fragment>
-              <WorkTimeDuration workTime={workHours} />
-              <WorkTimeTime workTime={workHours} onClick={this.toggleEdit} />
-            </React.Fragment>
-          )
+            {editing ? this.renderDateEditable() : (
+              <React.Fragment>
+                <WorkTimeDuration workTime={workHours} />
+                <WorkTimeTime workTime={workHours} onClick={this.toggleEdit} />
+              </React.Fragment>
+            )
             }
-        </li>
-      </ul>
-    </div>
-  );
-}
+          </li>
+        </ul>
+      </div>
+    );
+  }
 }
 
 export default WorkHours;

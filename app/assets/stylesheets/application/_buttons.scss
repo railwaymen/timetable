@@ -13,8 +13,11 @@ $main-color: white;
   font-weight: 600;
 
   padding: 8px 16px;
+  &.bt-big {
+    padding: 12px 32px;
+  }
   border: none;
-  border-radius: 3px;
+  border-radius: 50px;
   
   color: white;
 
@@ -23,7 +26,6 @@ $main-color: white;
     background-repeat: no-repeat;
     background-position: 0 50%;
     background-size: 0 100%;
-    border: 1px solid darken( $main-background-color, 4);
     color: $main-color;
     transform: scale(1);
     &:hover {
@@ -35,6 +37,8 @@ $main-color: white;
   }
   .symbol {
     height: auto;
+    font-size: 130%;
+    transition: .5s ease-in-out;
     &:first-child {
       margin-right: 12px;
     }
