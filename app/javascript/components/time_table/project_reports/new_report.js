@@ -21,7 +21,7 @@ export default class NewReport extends React.Component {
 
   constructor(props) {
     super(props);
-    bindAll(this, ['onRangeStartChange', 'onRangeEndChange', 'getRoles', 'onRoleChange', 'onSubmit', 'onWageChange']);
+    bindAll(this, ['onRangeStartChange', 'onRangeEndChange', 'getRoles', 'onSubmit', 'onFieldChange']);
   }
 
   componentDidMount() {
@@ -51,22 +51,11 @@ export default class NewReport extends React.Component {
       });
   }
 
-  onRoleChange(event, userId) {
+  onFieldChange(event, field, userId) {
     const { value } = event.target;
     this.setState(({ userRoles }) => {
       const newUserRoles = userRoles.map((userRole) => {
-        if (userRole.id === userId) return { ...userRole, role: value };
-        return { ...userRole };
-      });
-      return { userRoles: newUserRoles };
-    });
-  }
-
-  onWageChange(event, userId) {
-    const { value } = event.target;
-    this.setState(({ userRoles }) => {
-      const newUserRoles = userRoles.map((userRole) => {
-        if (userRole.id === userId) return { ...userRole, hourly_wage: value };
+        if (userRole.id === userId) return { ...userRole, [field]: value };
         return { ...userRole };
       });
       return { userRoles: newUserRoles };
@@ -119,6 +108,7 @@ export default class NewReport extends React.Component {
               <th>Last name</th>
               <th>Role</th>
               <th>Hourly wage</th>
+              <th>Description</th>
             </tr>
           </thead>
           <tbody>
@@ -131,7 +121,7 @@ export default class NewReport extends React.Component {
                   {user.last_name}
                 </td>
                 <td>
-                  <select value={user.role || ''} onChange={e => this.onRoleChange(e, user.id)}>
+                  <select value={user.role || ''} onChange={e => this.onFieldChange(e, 'role', user.id)}>
                     <option value="" />
                     {this.constructor.roles.map(role => (
                       <option key={role} value={role}>{role}</option>
@@ -139,8 +129,11 @@ export default class NewReport extends React.Component {
                   </select>
                 </td>
                 <td>
-                  <input type="number" min="0" step="0.01" value={user.hourly_wage} onChange={e => this.onWageChange(e, user.id)} />
+                  <input type="number" min="0" step="0.01" value={user.hourly_wage} onChange={e => this.onFieldChangeChange(e, 'hourly_wage', user.id)} />
                   {user.hourly_wage === '' && <span style={{ color: 'red', fontWeight: 'bold' }}>Invalid format</span>}
+                </td>
+                <td>
+                  <input type="text" value={user.description} onChange={e => this.onFieldChange(e, 'description', user.id)} />
                 </td>
               </tr>
             ))}
