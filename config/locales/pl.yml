@@ -112,6 +112,7 @@ pl:
     save: Zapisz
     submit: Wyślij
     generate: Generuj
+    fill_save: Zapisz z wypełnieniem
     cancel: Anuluj
     edit: Edytuj
     destroy: Usuń
@@ -215,3 +216,6 @@ pl:
       models:
         work_time_form:
           <<: *worktime
+        work_time_fill_gaps_form:
+          <<: *worktime
+          no_gaps_to_fill: Brak luk do uzupełnienia

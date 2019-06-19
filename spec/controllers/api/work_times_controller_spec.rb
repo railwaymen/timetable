@@ -210,6 +210,92 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     end
   end
 
+  describe '#create_filling_gaps' do
+    it 'creates correctly when no task in range' do
+      sign_in(user)
+      project = create(:project)
+      post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+      expect(response.code).to eql('200')
+      work_time = user.work_times.first!
+      expect(work_time.body).to eql(body)
+      expect(work_time.starts_at).to eql(starts_at)
+      expect(work_time.ends_at).to eql(ends_at)
+      expect(response.body).to be_json_eql([work_time].map(&method(:work_time_response)).to_json)
+    end
+
+    it 'creates correctly when one task in range' do
+      sign_in(user)
+      project = create(:project)
+      create(:work_time, user: user, starts_at: starts_at + 30.minutes, ends_at: ends_at - 30.minutes)
+      expect do
+        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+      end.to change(user.work_times, :count).by(2)
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql(WorkTime.last(2).map(&method(:work_time_response)).to_json)
+    end
+
+    it 'creates correctly when many tasks in range' do
+      sign_in(user)
+      project = create(:project)
+      create(:work_time, user: user, starts_at: starts_at + 15.minutes, ends_at: starts_at + 30.minutes)
+      create(:work_time, user: user, starts_at: starts_at + 40.minutes, ends_at: starts_at + 50.minutes)
+      create(:work_time, user: user, starts_at: starts_at + 50.minutes, ends_at: starts_at + 60.minutes) # there should be no gaps between second and third wt
+      expect do
+        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+      end.to change(user.work_times, :count).by(3)
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql(WorkTime.last(3).map(&method(:work_time_response)).to_json)
+    end
+
+    it 'does not create work time when invalid task url' do
+      module ExternalAuthStrategy
+        class Sample < Base; def self.from_data(*args); end; end
+      end
+      auth = create(:external_auth, provider: 'Sample')
+      sign_in(user)
+      strategy_double = double('strategy')
+      allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
+      expect(strategy_double).to receive(:integration_payload) { nil }
+      post :create_filling_gaps, params: { work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      expect(response.code).to eql('422')
+    end
+
+    it 'updates external service whan valid task' do
+      module ExternalAuthStrategy
+        class Sample < Base; def self.from_data(*args); end; end
+      end
+      auth = create(:external_auth, provider: 'Sample')
+      sign_in(user)
+      strategy_double = double('strategy')
+      allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
+      expect(strategy_double).to receive(:integration_payload) { { 'task_id' => 1 } }
+      expect(UpdateExternalAuthWorker).to receive(:perform_async)
+      post :create_filling_gaps, params: { work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      expect(response.code).to eql('200')
+    end
+
+    it 'creates when admin' do
+      sign_in(admin)
+      other_user = create(:user)
+      project = create(:project)
+      post :create_filling_gaps, params: { work_time: { user_id: other_user.id, project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+      expect(response.code).to eql('200')
+      work_time = other_user.work_times.first!
+      expect(work_time.updated_by_admin).to be true
+      expect(work_time.body).to eql(body)
+      expect(work_time.starts_at).to eql(starts_at)
+      expect(work_time.ends_at).to eql(ends_at)
+      expect(response.body).to be_json_eql([work_time_response(work_time)].to_json)
+    end
+
+    it 'does not create work time when invalid params' do
+      sign_in(user)
+      project = create(:project)
+      post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: starts_at } }, format: :json
+      expect(response.code).to eql('422')
+    end
+  end
+
   describe '#update' do
     it 'authenticates user' do
       put :update, params: { id: 1 }, format: :json

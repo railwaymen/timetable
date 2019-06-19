@@ -112,6 +112,7 @@ en:
     save: Save
     submit: Submit
     generate: Generate
+    fill_save: Save with filling
     cancel: Cancel
     edit: Edit
     destroy: Delete
@@ -170,3 +171,6 @@ en:
       models:
         work_time_form:
           <<: *worktime
+        work_time_fill_gaps_form:
+          <<: *worktime
+          no_gaps_to_fill: No gaps to fill

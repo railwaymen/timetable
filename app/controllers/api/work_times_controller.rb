@@ -20,16 +20,16 @@ module Api
     end
 
     def create
-      if current_user.admin?
-        @work_time = WorkTime.new(work_time_create_params)
-        @work_time.updated_by_admin = true if @work_time.user_id != current_user.id
-      else
-        @work_time = current_user.work_times.build(work_time_params)
-      end
-      @work_time.creator = current_user
-      @work_time = WorkTimeForm.new(work_time: @work_time)
+      @work_time = WorkTimeForm.new(work_time: build_new_work_time)
       @work_time.save(work_hours_save_params)
       increase_work_time(@work_time, @work_time.duration) if @work_time.valid?(context)
+      respond_with @work_time
+    end
+
+    def create_filling_gaps
+      @work_time = WorkTimeFillGapsForm.new(work_time: build_new_work_time)
+      saved = @work_time.save(work_hours_save_params)
+      increase_work_time(@work_time, @work_time.saved.sum(&:duration)) if saved
       respond_with @work_time
     end
 
@@ -63,6 +63,19 @@ module Api
 
     def work_hours_save_params
       current_user.admin? ? {} : { context: :user }
+    end
+
+    def build_new_work_time
+      if current_user.admin?
+        WorkTime.new(work_time_create_params).tap do |work_time|
+          work_time.updated_by_admin = true if work_time.user_id != current_user.id
+          work_time.creator = current_user
+        end
+      else
+        current_user.work_times.build(work_time_params).tap do |work_time|
+          work_time.creator = current_user
+        end
+      end
     end
 
     def permitted_search_params
