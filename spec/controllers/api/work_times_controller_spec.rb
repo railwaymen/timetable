@@ -256,7 +256,9 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { nil }
-      post :create_filling_gaps, params: { work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      expect do
+        post :create_filling_gaps, params: { work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      end.not_to change(user.work_times, :count)
       expect(response.code).to eql('422')
     end
 
@@ -291,7 +293,19 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'does not create work time when invalid params' do
       sign_in(user)
       project = create(:project)
-      post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: starts_at } }, format: :json
+      expect do
+        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: starts_at } }, format: :json
+      end.not_to change(user.work_times, :count)
+      expect(response.code).to eql('422')
+    end
+
+    it 'does not create when no gaps to fill' do
+      sign_in(user)
+      project = create(:project)
+      create(:work_time, user: user, starts_at: starts_at, ends_at: ends_at)
+      expect do
+        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+      end.not_to change(user.work_times, :count)
       expect(response.code).to eql('422')
     end
   end

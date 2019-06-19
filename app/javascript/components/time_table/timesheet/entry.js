@@ -327,7 +327,10 @@ class Entry extends React.Component {
               </div>
             )
             }
-            <button type="button" className="bt bt-big bt-main bt-submit" onClick={this.onSubmit}>
+            <button type="button" className="bt bt-big bt-main" style={{ marginTop: '5px' }} onClick={() => this.onSubmit('/api/work_times/create_filling_gaps')}>
+              {I18n.t('common.fill_save')}
+            </button>
+            <button type="button" className="bt bt-big bt-main bt-submit" onClick={() => this.onSubmit('/api/work_times')}>
               <i className="symbol fa fa-calendar-plus-o" />
               <span className="bt-txt">{I18n.t('common.save')}</span>
             </button>
