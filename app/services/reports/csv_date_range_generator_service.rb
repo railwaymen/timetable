@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 module Reports
-  class CsvVacationGeneratorService
+  class CsvDateRangeGeneratorService
     include Querable
 
     Record = Struct.new(
       :user_name,
       :project_id,
+      :body,
       :duration,
       :starts_at,
       :ends_at,
@@ -24,19 +25,19 @@ module Reports
     # rubocop:disable Metrics/MethodLength
     def generate
       CSV.generate(headers: true) do |csv|
-        headers = ['Developer', 'Date From', 'Date To', 'Duration(Days)']
+        headers = ['Developer', 'Description', 'Date From', 'Date To', 'Duration(Days)']
 
         csv << headers
 
-        vacation_id = @params[:id].to_i
+        project_id = @params[:id].to_i
         temp_rows = []
 
         records.each_with_index do |record, index|
           next_record = records[index + 1] if index + 1 < records.to_a.size
 
-          temp_rows << record if record.project_id == vacation_id
+          temp_rows << record if record.project_id == project_id
 
-          unless (next_record&.project_id != vacation_id ||
+          unless (next_record&.project_id != project_id ||
                   next_record&.user_id != record.user_id) && !temp_rows.empty?
             next
           end
@@ -62,6 +63,7 @@ module Reports
     def prepare_row(temp_rows, user_name)
       [
         user_name,
+        temp_rows.first.body || temp_rows.last.body,
         temp_rows.first.starts_at.to_date,
         temp_rows.last.ends_at.to_date,
         format_duration(
@@ -89,7 +91,7 @@ module Reports
     def raw_sql
       %(
         SELECT
-          (u.first_name || ' ' || u.last_name) as user_name, project_id, duration, starts_at, ends_at, u.id as user_id
+          (u.first_name || ' ' || u.last_name) as user_name, project_id, body, duration, starts_at, ends_at, u.id as user_id
         FROM work_times w JOIN users u on w.user_id = u.id
         WHERE w.active = 't' AND w.starts_at >= ? AND w.ends_at <= ?
         ORDER BY user_name, starts_at
