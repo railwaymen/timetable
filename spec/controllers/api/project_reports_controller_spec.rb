@@ -105,14 +105,16 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
                                                              'first_name' => user.first_name,
                                                              'last_name' => user.last_name,
                                                              'role' => nil,
-                                                             'hourly_wage' => 0.0.to_s
+                                                             'hourly_wage' => 0.0.to_s,
+                                                             'description' => ''
                                                            },
                                                            {
                                                              'id' => worker.id,
                                                              'first_name' => worker.first_name,
                                                              'last_name' => worker.last_name,
                                                              'role' => nil,
-                                                             'hourly_wage' => 0.0.to_s
+                                                             'hourly_wage' => 0.0.to_s,
+                                                             'description' => ''
                                                            }
                                                          ])
 
@@ -129,7 +131,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         FactoryGirl.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
         report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
-        report.project_report_roles.create!(user: user, role: 'developer', hourly_wage: 30)
+        report.project_report_roles.create!(user: user, role: 'developer', hourly_wage: 30, description: 'Frontend')
 
         get :roles, params: { format: 'json', project_id: project, starts_at: (time - 2.days).beginning_of_day, ends_at: (time + 2.days).beginning_of_day }
         expect(response).to be_ok
@@ -140,14 +142,16 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
                                                              'first_name' => user.first_name,
                                                              'last_name' => user.last_name,
                                                              'role' => 'developer',
-                                                             'hourly_wage' => 30.0.to_s
+                                                             'hourly_wage' => 30.0.to_s,
+                                                             'description' => 'Frontend'
                                                            },
                                                            {
                                                              'id' => worker.id,
                                                              'first_name' => worker.first_name,
                                                              'last_name' => worker.last_name,
                                                              'role' => nil,
-                                                             'hourly_wage' => 0.0.to_s
+                                                             'hourly_wage' => 0.0.to_s,
+                                                             'description' => ''
                                                            }
                                                          ])
         expect(parsed_body['currency']).to eq 'd'
@@ -164,10 +168,10 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         FactoryGirl.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryGirl.create :work_time, user: new_user, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
         old_report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
-        old_report.project_report_roles.create!(user: user_not_in_recent_report, role: 'developer', hourly_wage: 31)
+        old_report.project_report_roles.create!(user: user_not_in_recent_report, role: 'developer', hourly_wage: 31, description: 'Frontend')
 
         report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
-        report.project_report_roles.create!(user: user, role: 'developer', hourly_wage: 30)
+        report.project_report_roles.create!(user: user, role: 'developer', hourly_wage: 30, description: 'Backend')
 
         get :roles, params: { format: 'json', project_id: project, starts_at: (time - 2.days).beginning_of_day, ends_at: (time + 2.days).beginning_of_day }
         expect(response).to be_ok
@@ -178,21 +182,24 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
                                                              'first_name' => user.first_name,
                                                              'last_name' => user.last_name,
                                                              'role' => 'developer',
-                                                             'hourly_wage' => 30.0.to_s
+                                                             'hourly_wage' => 30.0.to_s,
+                                                             'description' => 'Backend'
                                                            },
                                                            {
                                                              'id' => user_not_in_recent_report.id,
                                                              'first_name' => user_not_in_recent_report.first_name,
                                                              'last_name' => user_not_in_recent_report.last_name,
                                                              'role' => 'developer',
-                                                             'hourly_wage' => 31.0.to_s
+                                                             'hourly_wage' => 31.0.to_s,
+                                                             'description' => 'Frontend'
                                                            },
                                                            {
                                                              'id' => new_user.id,
                                                              'first_name' => new_user.first_name,
                                                              'last_name' => new_user.last_name,
                                                              'role' => nil,
-                                                             'hourly_wage' => 0.0.to_s
+                                                             'hourly_wage' => 0.0.to_s,
+                                                             'description' => ''
                                                            }
                                                          ])
         expect(parsed_body['currency']).to eq 'd'

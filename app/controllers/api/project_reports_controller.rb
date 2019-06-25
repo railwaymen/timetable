@@ -72,7 +72,7 @@ module Api
       @user_roles = users.joins("LEFT OUTER JOIN project_report_roles prr1 ON prr1.user_id=users.id AND prr1.project_report_id IN (#{project_reports})") # join project_report_roles from given project
                          .joins("LEFT OUTER JOIN project_report_roles prr2 ON prr2.user_id=users.id AND prr1.id < prr2.id AND prr2.project_report_id IN (#{project_reports})")
                          .where('prr2.id IS NULL') # select role with highest id
-                         .distinct.select('users.*, prr1.role, COALESCE(prr1.hourly_wage, 0) AS hourly_wage')
+                         .distinct.select("users.*, prr1.role, COALESCE(prr1.description, '') AS description, COALESCE(prr1.hourly_wage, 0) AS hourly_wage")
     end
 
     private

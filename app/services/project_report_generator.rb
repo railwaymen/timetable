@@ -18,10 +18,12 @@ class ProjectReportGenerator
 
   def initialize(project_report:)
     @project_report = project_report
-    @wage_hash = Hash[project_report.project_report_roles.map do |role|
+    roles = project_report.project_report_roles
+    @wage_hash = Hash[roles.map do |role|
                         [role.user_id, format(FORMAT_STRING, role.hourly_wage)]
                       end]
-    @name_hash = Hash[project_report.project_report_roles.includes(:user).map do |role|
+    @description_hash = Hash[roles.map { |role| [role.user_id, role.description] }]
+    @name_hash = Hash[roles.includes(:user).map do |role|
                         [role.user_id, "#{role.user.first_name} #{role.user.last_name[0]}."]
                       end]
   end
@@ -32,7 +34,7 @@ class ProjectReportGenerator
 
   private
 
-  attr_reader :wage_hash, :name_hash
+  attr_reader :wage_hash, :name_hash, :description_hash
 
   def generate_pdf(file)
     Prawn::Document.generate(file) do |pdf|
@@ -85,6 +87,9 @@ class ProjectReportGenerator
                else
                  +name_hash[user_id]
                end
+        if (description = description_hash[user_id]).present?
+          name << "- #{description}"
+        end
         if show_cost? && (wage = wage_hash[user_id])
           name << " (#{wage} #{project_report.currency}/h)"
         end

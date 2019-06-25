@@ -2,8 +2,9 @@
 
 FactoryGirl.define do
   factory :project_report_role do
-    project_report nil
-    user nil
-    role 'MyString'
+    project_report
+    user
+    role 'dev'
+    description 'Frontent'
   end
 end
