@@ -66,22 +66,24 @@ class Projects extends React.Component {
 
     return (
       <div>
-        <div className="ui grid">
-          <div className="sixteen wide column">
-            <div className="btn-group pull-right">
-              <NavLink className="btn btn-default active" exact to="/projects">{I18n.t('common.rank')}</NavLink>
-              <NavLink className="btn btn-default" to="/projects/list">{I18n.t('common.all')}</NavLink>
-            </div>
-            <div className="btn-group pull-left">
-              <select id="range" value={range} className="form-control" onChange={this.changeRange}>
-                {this.renderOption(30)}
-                {this.renderOption(60)}
-                {this.renderOption(90)}
-              </select>
+        <header className="page-header">
+          <div className="ui grid">
+            <div className="sixteen wide column">
+              <div className="btn-group pull-right">
+                <NavLink className="btn btn-default active" exact to="/projects">{I18n.t('common.rank')}</NavLink>
+                <NavLink className="btn btn-default" to="/projects/list">{I18n.t('common.all')}</NavLink>
+              </div>
+              <div className="btn-group pull-left">
+                <select id="range" value={range} className="form-control" onChange={this.changeRange}>
+                  {this.renderOption(30)}
+                  {this.renderOption(60)}
+                  {this.renderOption(90)}
+                </select>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="ui grid">
+        </header>
+        <div className="row row-eq-height projects-cards">
           { !_.isEmpty(projectsStats) ? this.renderGroupedRecords() : null }
         </div>
       </div>

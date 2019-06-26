@@ -1,0 +1,33 @@
+html, body {
+  height: auto;
+  min-height: 100%;
+}
+html {
+  font-size: 14px;
+}
+body {
+  font-family: $font-family;
+  color: $text-black;
+  background-color: $application-background-color;
+}
+button, input, optgroup, select, textarea {
+  font-family: $font-family;
+}
+.page-header {
+  margin-bottom: 2rem;
+}
+.form-control {
+  caret-color: $border-radius;
+}
+.card {
+  padding: 15px;
+  margin-bottom: 30px;
+  background-color: $card-background-color;
+  border-radius: $border-radius;
+  border: 1px solid $border-color;
+  box-shadow: 0px 20px 30px -25px rgba(black, .3);
+  transition: .3s;
+  &:hover {
+    box-shadow: 0px 35px 45px -45px rgba(black, .5);
+  }
+}

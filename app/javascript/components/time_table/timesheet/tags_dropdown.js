@@ -7,7 +7,6 @@ class TagsDropdown extends React.Component {
   constructor(props) {
     super(props);
 
-    this.renderTagsList = this.renderTagsList.bind(this);
     this.onChangeTag = this.onChangeTag.bind(this);
   }
 
@@ -25,17 +24,9 @@ class TagsDropdown extends React.Component {
     this.props.updateTag(selectedTagKey);
   }
 
-  renderTagsList() {
-    return (
-      <TagsList tags={this.props.tags} selectedTag={this.props.selectedTag} onChangeTag={this.onChangeTag} />
-    );
-  }
-
   render() {
     return (
-      <div style={{ minWidth: '150px' }}>
-        { this.renderTagsList() }
-      </div>
+      <TagsList tags={this.props.tags} selectedTag={this.props.selectedTag} onChangeTag={this.onChangeTag} />
     );
   }
 }

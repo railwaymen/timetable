@@ -7,7 +7,7 @@ const WorkTimeTag = ({
   if (tagEditable) return children;
   if (workTime.tag === 'dev') return null;
   return (
-    <div className="tag-container" style={{ marginTop: '16px' }}>
+    <div className="tag-container">
       <input onClick={onClick} className={`tags selected clickable ${workTime.tag}`} type="button" value={I18n.t(`apps.tag.${workTime.tag}`).toUpperCase()} />
     </div>
   );

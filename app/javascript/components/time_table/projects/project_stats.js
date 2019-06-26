@@ -20,9 +20,9 @@ class ProjectStats extends React.Component {
     const data = stats[0];
 
     return (
-      <div className="five wide column card">
-        <div className="title">
-          <h3>
+      <div className="col-lg-4 card-container project-card">
+        <div className="card h-100">
+          <h3 className="title">
             {this.projectLabel()}
             <div
               className="badge"
@@ -31,7 +31,7 @@ class ProjectStats extends React.Component {
               }}
             />
           </h3>
-          <p className="center">
+          <p className="text-center">
             {data.leader ? data.leader.name : ''}
           </p>
           <ul>

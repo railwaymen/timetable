@@ -4,6 +4,26 @@
 @import "jquery.tokenize";
 @import "semantic-ui";
 
+@import 'variables';
+@import 'colors';
+
+@import 'application/helpers';
+
+@import 'application/body';
+@import 'application/buttons';
+@import 'application/error-tooltip';
+@import 'application/tag';
+@import 'application/horizontal-arrows';
+@import 'application/date-range-filter';
+
+@import 'application/new-entry';
+@import 'application/project-card';
+@import 'application/time-entries';
+
+@import 'pages/projects';
+@import 'pages/reports';
+@import 'pages/sign_in';
+
 @import 'timesheet/*';
 @import 'timesheet/blocks/*';
 @import 'timer';
@@ -23,31 +43,6 @@ div.react-datepicker__input-container {
 
 .react-datepicker-popper {
   z-index: 19;
-}
-
-.error-tooltip {
-  position: absolute;
-  color: #FF5744;
-  width: 100%;
-  padding: 8px 5px;
-  text-align: left;
-  left: 0;
-  box-sizing: border-box;
-  bottom: 100%;
-  border-radius: 12px;
-  font-weight: 800;
-  font-size: 15px;
-  transition-duration: 0.3s;
-  z-index: 150;
-  ul {
-    list-style-type: none;
-  }
-  li {
-    background-color: #f5f5f5;
-    border-bottom: 3px solid #ffacac;
-    padding: 5px;
-    box-sizing: border-box;
-  }
 }
 
 .circle {
@@ -75,12 +70,6 @@ div.Tokenize ul.TokensContainer {
   min-height: 30px;
   min-width: 800px;
   height: auto;
-}
-
-.current-month {
-  width: 240px;
-  margin: 0 20px 20px 20px;
-  text-align: center;
 }
 
 .timesheet .row.summary:hover .actions *, .timesheet .item:hover .actions * {
@@ -113,10 +102,6 @@ div.Tokenize ul.TokensContainer {
 
 .history-modal .modal-dialog { width: 70%; }
 
-body {
-  background: #f5f5f5
-}
-
 .vert-offset-bottom {
   margin-bottom: 20px;
 }
@@ -136,39 +121,12 @@ body {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  flex-flow: wrap;
 }
 .sticky-record {
   position: sticky;
   position: -webkit-sticky;
   top: 10px;
-}
-
-.card {
-  background-color: #EDE8E1;
-  border-radius: 5px;
-  margin: 14px 10px;
-  border: 1px solid #D6D0C1;
-  box-sizing: border-box;
-  .person {
-    margin: 15px 0;
-  }
-  ul {
-    li {
-      list-style: none;
-      .badge {
-        float: right;
-      }
-    }
-  }
-  .center {
-    text-align: center;
-  }
-  .badge {
-    float: right;
-  }
-  .title {
-    padding: 12px;
-  }
 }
 
 ol.projects {

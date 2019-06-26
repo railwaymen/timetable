@@ -63,10 +63,12 @@ class WorkHoursDay extends React.Component {
       <section className="time-entries-day">
         <header>
           <div className="date-container">
-            <span className="title">
+            <h3 className="title">
               { displayDayInfo(day ? day[0].starts_at : undefined) }
-            </span>
-            <span className="super">{total}</span>
+              <span className="super">
+                {total}
+              </span>
+            </h3>
             {/* eslint-disable */}
             { day.map((workHours, index) => (
               <WorkHours

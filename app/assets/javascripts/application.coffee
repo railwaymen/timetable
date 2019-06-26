@@ -11,7 +11,7 @@
 #= require lodash
 
 $ ->
-  $('body').on 'click', '.icon.wait', ->
+  $('body').on 'click', '.action-item.history', ->
     $('#modal-info').addClass('active visible')
 
   $('body').on 'click', '#modal-info .button.cancel, .modal-backdrop', ->

@@ -1,0 +1,11 @@
+.date-range-filter {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  > * {
+    margin-right: 12px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
