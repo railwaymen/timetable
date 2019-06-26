@@ -1,0 +1,30 @@
+.project-card {
+  margin-bottom: 30px;
+  .card {
+    position: relative;
+  }
+  .title {
+    a {
+      color: $brand-color;
+      &:hover {
+        color: $brand-color-75;
+      }
+    }
+  }
+  .badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+  ul {
+    li {
+      list-style: none;
+      .badge {
+        float: right;
+      }
+    }
+  }
+  .person {
+    margin: 15px 0;
+  }
+}

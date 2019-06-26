@@ -1,0 +1,20 @@
+$border-radius: 3px;
+
+$box-shadow-opacity: .07;
+$box-shadow-range: 10px;
+$box-shadow: 0 0 $box-shadow-range rgba(black, $box-shadow-opacity);
+
+$font-family: 'Hind Vadodara', sans-serif;
+
+$sm: "only screen and (min-width : 768px)"; 
+$md: "only screen and (min-width : 992px)"; 
+$lg: "only screen and (min-width : 1200px)";
+$xxl: "only screen and (min-width : 1350px)";
+$fhd: "only screen and (min-width : 1650px)";
+$uhd: "only screen and (min-width : 3840px)";
+
+$max-sm: "only screen and (max-width : 767px)"; 
+$max-md: "only screen and (max-width : 991px)"; 
+$max-lg: "only screen and (max-width : 1199px)";
+
+$ie: "all and (-ms-high-contrast: none), (-ms-high-contrast: active)" /* IE10+ CSS */

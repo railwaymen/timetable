@@ -1,0 +1,81 @@
+.new-entry {
+  .card {
+    position: relative;   
+    margin-bottom: 60px; 
+    padding-bottom: 35px;
+    .bt-submit {
+      position: absolute;
+      bottom: 0;
+      right: 25px;
+      transform: translateY(50%);
+    }
+  }
+  .card > .row {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    > div {
+      @media #{$max-sm} {
+        width: 100%;
+      }
+      margin-bottom: 12px;
+    }
+  }
+  .form-group {
+    margin-bottom: 0;
+  }
+  .easter {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto -12px;
+  }
+  .form-control {
+    border: none;
+    box-shadow: none;
+    &::placeholder {
+      color: $placeholder-color;
+    }
+  }
+  .description {
+    textarea {
+      min-height: 50px;
+      font-size: 24px;
+      resize: vertical;
+    }
+  }
+  .project {
+    .active .label {
+      display: none;
+    }
+  }
+  .date, .time {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .date {
+    padding: 0;
+    font-size: 14px;
+    .form-control {
+      text-align: center;
+      @media #{$sm} {
+        font-size: 20px;
+      }
+      &::placeholder {
+        font-size: 12px;
+      }
+    }
+  }
+  .time {
+  }
+  .time-divider {
+    font-size: 18px;
+    color: $text-gray;
+  }
+  .duration {
+    @media #{$sm} {
+      font-size: 28px;
+    }
+  }
+}

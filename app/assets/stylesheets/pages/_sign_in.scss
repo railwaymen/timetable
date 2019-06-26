@@ -1,0 +1,36 @@
+.sign-in-intro {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-image: url('https://source.unsplash.com/featured/1600x900/?office,cat,dog');
+  background-position: center;
+  background-size: cover;
+  &::before {
+    content: '';
+    z-index: 1;
+    background: linear-gradient(to right, #c04848, #480048);
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: .3;
+  }
+  .card {
+    padding: 25px 35px;
+    position: absolute;
+    z-index: 5;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 320px;
+    @media #{$md} {
+      width: 450px;
+    }
+  }
+  .sign-in-title {
+    margin: 0;
+    margin-bottom: 25px;
+  }
+}

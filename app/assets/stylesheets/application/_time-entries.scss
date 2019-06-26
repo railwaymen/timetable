@@ -1,0 +1,251 @@
+.time-entries-list-container {
+  position: relative;
+  &.has-error {
+    background-color: white;
+  }
+}
+.time-entry {
+  
+}
+
+.time-entries-list > .entry {
+  display: flex;
+  flex-flow: row wrap;
+  @media #{$md} {
+    flex-flow: row nowrap;
+  }
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0;
+
+  font-size: 14px;
+
+  border-bottom: 1px solid $border-color;
+  border-right: 3px solid transparent;
+
+  box-shadow: 0 0 0 0 rgba(black, 0);
+  position: relative;
+
+  &.new {
+    animation-name: slide;
+    animation-duration: 0.6s;
+  }
+  &.updated {
+    border-right-color: #FF9A9A
+  }
+  &.hotline-bling {
+    animation-name: blink;
+    animation-duration: 2s;
+  }
+
+  .error-info-container {
+    font-size: 22px;
+    margin: 0 15px;
+    color: $text-black;
+  }
+  
+  .task-content {
+    flex-basis: 100%;
+  }
+  
+  .description-container {
+    cursor: pointer;
+  }
+
+  .tag-container {
+    padding: 0 8px;
+    .tags {
+      margin: 4px 0;
+      display: block;
+    }
+  }
+  .actions-container {
+    white-space: nowrap;
+    margin: 0 10px;
+    .action-item {
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
+      border: none;
+      cursor: pointer;
+      min-width: 25px;
+      height: 25px;
+      line-height: 25px;
+      border-radius: 25px;
+      transform: scale(0);
+      color: white;
+      background-color: #3883d7;
+      opacity: 0;      
+      transition: .3s .3s ease-in-out;
+      
+      margin-right: 5px;
+      &:last-child {
+        margin-right: 0;
+      }
+      * {
+        margin: 0;
+      }
+    }
+    .destroy {
+      color: $error-background-color;
+      background-color: $error-color;
+    }
+  }
+  &:hover, &.edit-mode {
+    .action-item {
+      transform: scale(1);
+      opacity: 1;
+      &:nth-child(1) { transition-delay: 0s; }
+      &:nth-child(2) { transition-delay: .1s; }
+      &:nth-child(3) { transition-delay: .2s; }
+      &:nth-child(4) { transition-delay: .3s; }
+    }
+  }
+}
+
+@keyframes slide {
+  0% {
+    top: 100%;
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    top: 0;
+  }
+}
+
+@keyframes blink {
+  0% {
+    border-bottom: 1px solid rgba(65, 232, 88, 0.1);
+  }
+  25% {
+    border-bottom: 4px solid rgba(65, 232, 88, 1);
+  }
+  50% {
+    border-bottom: 4px solid rgba(65, 232, 88, 0.1);
+  }
+  75% {
+    border-bottom: 4px solid rgba(65, 232, 88, 1);
+  }
+  100% {
+    border-bottom: 1px solid rgba(65, 232, 88, 0.0);
+  }
+}
+
+.time-entry-main {
+  border: 1px solid transparent;
+  transition: 0;
+  .form-control {
+    padding-left: 0;
+    padding-right: 0;
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+    text-align: center;
+  }
+  input {
+    text-align: center;
+  }
+  .task-container  {
+    a {
+      margin-right: 10px;
+      margin: 0 10px;
+      &:empty {
+        margin-left: 0;
+      }
+
+      font-weight: bold;
+      text-transform: uppercase;
+      max-width: 65px;
+      display: block;
+      text-overflow: ellipsis;
+      left: 0;
+      overflow: hidden;
+      color: $brand-color;
+      transition: .3s;
+      &:hover {
+        overflow: visible;
+        color: $brand-color-75;
+      }
+    }
+  }
+  .task-content {
+    display: flex;
+    flex-flow: row wrap;
+    @media #{$md} {
+      flex-flow: row nowrap;
+    }
+    align-items: center;
+    justify-content: flex-start;
+    .description-container { 
+      padding-right: 15px;
+    }
+    .description-text {
+      p {
+        font-size: 13px;
+        line-height: 16px;
+      }
+    }
+    .project-container,
+    .tag-container {
+      flex-basis: auto;
+      flex-shrink: 0;
+    }
+    textarea {
+      min-height: 30px;
+      height: 100%;
+      resize: vertical;
+      overflow: hidden;
+      text-align: left;
+      font-size: 16px;
+      color: $text-black;
+    }
+    .task-input {
+      text-align: left;
+    }
+  }
+  .duration-container {
+    .duration {
+      font-weight: 500;
+      color: $text-black;
+    }
+  }
+  .time-container {
+    min-width: 90px;
+    position: relative;
+    margin-left: 10px;
+    color: $text-black;
+    white-space: nowrap;
+    time {
+      text-align: center;
+    }
+  }
+  .edit-time {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .start-input,
+    .end-input {
+      width: 80px;
+      height: 100%;
+      font-size: 20px;
+    }
+    .edit-date {
+      width: 100px;
+      input {
+        width: 100%;
+        padding: 10px 0;
+        border: none;
+        font-size: 15px;
+      }
+    }
+  }
+  &.edit-mode {
+    margin-top: 5px;
+    border: 1px solid $border-color;
+    .description-container {
+      flex-basis: 100%;
+    }
+  }
+}

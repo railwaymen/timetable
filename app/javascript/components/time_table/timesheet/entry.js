@@ -252,25 +252,25 @@ class Entry extends React.Component {
     return (
       <div className="new-entry" id="content">
         <div className="timer">
-          <div className="segment ui">
-            <div className="field">
-              <div className="desc">
+          <div className="card">
+            <div className="row">
+              <div className="col-sm-8 col-md-6 description">
                 {errors.body ? <ErrorTooltip errors={errors.body} /> : null}
-                <div className="input transparent ui" onKeyPress={this.onKeyPress}>
+                <div className="form-group">
                   {project.lunch
-                    ? <div className="easter" style={{ backgroundImage: `url(${this.renderEasterEgg()})` }} />
-                    : <textarea className="description auto-focus" placeholder={I18n.t('apps.timesheet.what_have_you_done')} name="body" value={body} onChange={this.onChange} />
+                    ? <img className="easter" src={this.renderEasterEgg()} alt="" />
+                    : <textarea className="form-control" placeholder={I18n.t('apps.timesheet.what_have_you_done')} name="body" value={body} onChange={this.onChange} onKeyPress={this.onKeyPress} />
                   }
                 </div>
                 {project.work_times_allows_task
                   ? (
-                    <div className="input task-url transparent ui">
+                    <div className="form-group">
                       {errors.task ? <ErrorTooltip errors={errors.task} /> : null}
-                      <input onKeyPress={this.onKeyPress} className="task" placeholder={I18n.t('apps.timesheet.task_url')} type="text" name="task" value={task} onChange={this.onChange} />
+                      <input className="form-control task-url" placeholder={I18n.t('apps.timesheet.task_url')} type="text" name="task" value={task} onChange={this.onChange} onKeyPress={this.onKeyPress} />
                     </div>
                   ) : null}
               </div>
-              <div className="projects">
+              <div className="col-sm-4 col-md-2 project">
                 <div className="project-dropdown">
                   {errors.project_id ? <ErrorTooltip errors={errors.project_id} /> : null}
                   <div>
@@ -278,35 +278,34 @@ class Entry extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="time">
-                <div className="input transparent ui">
-                  <input className="auto-focus" id="start" type="text" name="starts_at" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onClick={this.onFocus} onBlur={() => this.recountTime()} value={starts_at} />
+              <div className="col-sm-12 col-md-4 date">
+                <div className="time">
+                  <div className="form-group">
+                    <input className="form-control" id="start" type="text" name="starts_at" placeholder="830 → 8:30" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onClick={this.onFocus} onBlur={() => this.recountTime()} value={starts_at} />
+                  </div>
+                  <span className="time-divider">-</span>
+                  <div className="form-group">
+                    <input className="form-control" id="end" type="text" name="ends_at" placeholder="1215 → 12:15" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onClick={this.onFocus} onBlur={() => this.recountTime()} value={ends_at} />
+                  </div>
                 </div>
-                <span>-</span>
-                <div className="input transparent ui">
-                  <input className="auto-focus" id="end" type="text" name="ends_at" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onClick={this.onFocus} onBlur={() => this.recountTime()} value={ends_at} />
+                <div className="duration manual">
+                  {errors.duration ? <ErrorTooltip errors={errors.duration} /> : null}
+                  <span id="duration">{durationHours}</span>
                 </div>
-              </div>
-              <div className="duration manual">
-                {errors.duration ? <ErrorTooltip errors={errors.duration} /> : null}
-                <span id="duration">{durationHours}</span>
-              </div>
-              <div className="date">
-                <DatePicker {...defaultDatePickerProps} selected={moment(date, 'DD/MM/YYYY')} className="datepicker" value={moment(date, 'DD/MM/YYYY').format('DD/MM')} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange} />
-              </div>
-              <div className="action">
-                <button type="button" className="btn-start button fluid ui" onClick={this.onSubmit}>{I18n.t('common.save')}</button>
+                <DatePicker {...defaultDatePickerProps} className="form-control" selected={moment(date, 'DD/MM/YYYY')} value={moment(date, 'DD/MM/YYYY').format('DD/MM')} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange} />
               </div>
             </div>
             { !this.props.tags_disabled && project.taggable && (
-            <div className="field">
-              <div className="tag-container" style={{ marginTop: '5px' }}>
+              <div className="tag-container">
                 {errors.tag && <ErrorTooltip errors={errors.tag} />}
                 <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />
               </div>
-            </div>
             )
             }
+            <button type="button" className="bt bt-big bt-main bt-submit" onClick={this.onSubmit}>
+              <i className="symbol fa fa-calendar-plus-o" />
+              <span className="bt-txt">{I18n.t('common.save')}</span>
+            </button>
           </div>
         </div>
       </div>

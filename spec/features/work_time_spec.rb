@@ -35,7 +35,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
     find(:css, '.fluid div.text').click
     find(:css, '.menu.visible > .item:last-child').click
-    page.find('#content button.btn-start.button.fluid.ui', text: 'Save').click
+    page.find('#content button.bt-submit', text: 'Save').click
 
     expect(page).to have_content message
   end
@@ -50,19 +50,21 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   end
 
   def edit_task_hours(from, to)
-    find('.time-container', text: "#{from} - #{to}").click
+    page.execute_script("$('body').trigger('click')")
+    find('.time-container .time', text: "#{from} - #{to}").click
     find(:css, 'input.start-input').set('15:00')
     find(:css, 'input.end-input').click
     find(:css, 'input.end-input').set('17:00')
-    find('body').click
+    page.execute_script("$('body').trigger('click')")
   end
 
   def invalid_edit_task_hours(from, to)
-    find('.time-container', text: "#{from} - #{to}").click
+    page.execute_script("$('body').trigger('click')")
+    find('.time-container .time', text: "#{from} - #{to}").click
     find(:css, 'input.start-input').set('15:00')
     find(:css, 'input.end-input').click
     find(:css, 'input.end-input').set('15:00')
-    find('body').click
+    page.execute_script("$('body').trigger('click')")
   end
 
   def edit_task_project
@@ -147,21 +149,21 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     expect(page).to have_content('Rank')
     expect(page).to have_selector('select')
     expect(page).to have_selector('select > option', count: 3)
-    expect(page).to have_selector('.grid.ui > .card.column.five.wide', count: 1)
+    expect(page).to have_selector('.projects-cards > .project-card', count: 1)
 
     aggregate_failures 'properly filter' do
       find('select > option', text: 'Last 60 days').click
-      expect(page).to have_selector('.grid.ui > .card.column.five.wide', count: 2)
+      expect(page).to have_selector('.projects-cards > .project-card', count: 2)
     end
 
     aggregate_failures 'properly filter' do
       find('select > option', text: 'Last 90 days').click
-      expect(page).to have_selector('.grid.ui > .card.column.five.wide', count: 3)
+      expect(page).to have_selector('.projects-cards > .project-card', count: 3)
     end
 
     aggregate_failures 'properly filter' do
       find('select > option', text: 'Last 30 days').click
-      expect(page).to have_selector('.grid.ui > .card.column.five.wide', count: 1)
+      expect(page).to have_selector('.projects-cards > .project-card', count: 1)
     end
 
     aggregate_failures 'projects listing - active' do
