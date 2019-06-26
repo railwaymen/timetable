@@ -129,7 +129,7 @@ export default class NewReport extends React.Component {
                   </select>
                 </td>
                 <td>
-                  <input type="number" min="0" step="0.01" value={user.hourly_wage} onChange={e => this.onFieldChangeChange(e, 'hourly_wage', user.id)} />
+                  <input type="number" min="0" step="0.01" value={user.hourly_wage} onChange={e => this.onFieldChange(e, 'hourly_wage', user.id)} />
                   {user.hourly_wage === '' && <span style={{ color: 'red', fontWeight: 'bold' }}>Invalid format</span>}
                 </td>
                 <td>
