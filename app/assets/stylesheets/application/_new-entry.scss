@@ -13,8 +13,12 @@
   .card > .row {
     display: flex;
     flex-flow: row wrap;
+    &::before, &::after {
+      display: none;
+    }
     align-items: center;
     > div {
+      float: none;
       @media #{$max-sm} {
         width: 100%;
       }

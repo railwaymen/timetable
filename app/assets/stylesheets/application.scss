@@ -122,6 +122,14 @@ div.Tokenize ul.TokensContainer {
   display: -ms-flexbox;
   display: flex;
   flex-flow: wrap;
+  justify-content: flex-start;
+  align-items: start;
+  &::before, &::after {
+    display: none;
+  }
+  & > * {
+    float: none;
+  }
 }
 .sticky-record {
   position: sticky;
