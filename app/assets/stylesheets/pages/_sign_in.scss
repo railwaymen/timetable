@@ -2,7 +2,6 @@
   position: relative;
   min-height: 100vh;
   width: 100%;
-  background-image: url('https://source.unsplash.com/featured/1600x900/?office,cat,dog');
   background-position: center;
   background-size: cover;
   &::before {
@@ -14,10 +13,10 @@
     left: 0;
     height: 100%;
     width: 100%;
+    pointer-events: none;
     opacity: .3;
   }
   .card {
-    padding: 25px 35px;
     position: absolute;
     z-index: 5;
     top: 50%;
@@ -25,8 +24,15 @@
     transform: translate(-50%, -50%);
     text-align: center;
     width: 320px;
+    padding: 25px 35px;
     @media #{$md} {
       width: 450px;
+      padding: 25px 60px;
+    }
+    .bt-main {
+      margin-top: 8px;
+      margin-bottom: 16px;
+      font-size: 24px;
     }
   }
   .sign-in-title {

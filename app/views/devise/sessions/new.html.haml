@@ -1,4 +1,6 @@
-.sign-in-intro
+
+- randomPhoto = image_path "signin/#{rand(1..13)}.jpg"
+.sign-in-intro{ style: "background-image: url( '#{randomPhoto}' )" }
   = form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'card' }) do
     %h1.sign-in-title
       = t('apps.header.login')
@@ -8,10 +10,12 @@
       %input.form-control{type: 'text', name: 'user[email]', placeholder: t('apps.header.username'), autofocus: true}
     .form-group
       %input.form-control{type: 'password', name: 'user[password]', placeholder: t('apps.header.password')}
-    - if Rails.application.secrets.ldap && Rails.application.secrets.ldap[:enabled] == false
-      .field
-        %a{href: '/users/password/new'}= t('apps.header.forgot_password')
     .actions
-      %button.bt.bt-main{type: :submit, id: 'sign_in'}
+      %button.bt.bt-big.bt-main{type: :submit, id: 'sign_in'}
         %span.txt= t('common.sign_in')
-        %i.symbol.sign.in.icon
+        %i.symbol.fa.fa-paper-plane
+      - if Rails.application.secrets.ldap && Rails.application.secrets.ldap[:enabled] == false
+        %p
+          %a.ln.ln-main{href: '/users/password/new'}
+            %i.symbol.fa.fa-unlock-alt
+            %span.txt= t('apps.header.forgot_password')
