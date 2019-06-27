@@ -120,14 +120,13 @@ class WorkHours extends React.Component {
   }
 
   onTimeWheel(e) {
-    e.preventDefault();
+    e.preventDefault(); 
     const { name } = e.target;
     if (e.deltaY < 0) {
       this.setState({
         [name]: moment(e.target.value, 'HH:mm').add(1, 'minutes').format('HH:mm'),
       });
-    }
-    if (e.deltaY > 0) {
+    } else if (e.deltaY > 0) {
       this.setState({
         [name]: moment(e.target.value, 'HH:mm').subtract(1, 'minutes').format('HH:mm'),
       });
