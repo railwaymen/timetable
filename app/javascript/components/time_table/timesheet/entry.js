@@ -28,6 +28,7 @@ class Entry extends React.Component {
     this.paste = this.paste.bind(this);
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onTimeKeyPress = this.onTimeKeyPress.bind(this);
+    this.onTimeWheel = this.onTimeWheel.bind(this);
   }
 
   static propTypes = {
@@ -67,6 +68,21 @@ class Entry extends React.Component {
 
   onTimeKeyPress(e) {
     if (e.key === 'Enter') this.recountTime(this.onSubmit);
+  }
+
+  onTimeWheel(e) {
+    e.preventDefault();
+    const { name } = e.target;
+    if (e.deltaY < 0) {
+      this.setState({
+        [name]: moment(e.target.value, 'HH:mm').add(1, 'minutes').format('HH:mm'),
+      });
+    }
+    if (e.deltaY > 0) {
+      this.setState({
+        [name]: moment(e.target.value, 'HH:mm').subtract(1, 'minutes').format('HH:mm'),
+      });
+    }
   }
 
   onDateChange(e) {
@@ -281,11 +297,11 @@ class Entry extends React.Component {
               <div className="col-sm-12 col-md-4 date">
                 <div className="time">
                   <div className="form-group">
-                    <input className="form-control" id="start" type="text" name="starts_at" placeholder="830 → 8:30" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onClick={this.onFocus} onBlur={() => this.recountTime()} value={starts_at} />
+                    <input className="form-control" id="start" type="text" name="starts_at" placeholder="830 → 8:30" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onWheel={this.onTimeWheel} onClick={this.onFocus} onBlur={() => this.recountTime()} value={starts_at} />
                   </div>
                   <span className="time-divider">-</span>
                   <div className="form-group">
-                    <input className="form-control" id="end" type="text" name="ends_at" placeholder="1215 → 12:15" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onClick={this.onFocus} onBlur={() => this.recountTime()} value={ends_at} />
+                    <input className="form-control" id="end" type="text" name="ends_at" placeholder="1215 → 12:15" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onWheel={this.onTimeWheel} onClick={this.onFocus} onBlur={() => this.recountTime()} value={ends_at} />
                   </div>
                 </div>
                 <div className="duration manual">
