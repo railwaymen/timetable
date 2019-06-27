@@ -120,7 +120,7 @@ class WorkHours extends React.Component {
   }
 
   onTimeWheel(e) {
-    e.preventDefault(); 
+    e.preventDefault();
     const { name } = e.target;
     if (e.deltaY < 0) {
       this.setState({
