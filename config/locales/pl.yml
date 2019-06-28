@@ -38,6 +38,12 @@ pl:
       all: 'Wszystkie'
       my_projects: 'Moje projekty'
       my_work_hours: 'Moje godziny pracy'
+      currency: Waluta
+      roles: Role
+      role: Rola
+      owner: Pracownik
+      owners_hourly_wage: Stawka godzinowa pracownika
+      hourly_wage: Stawka godzinowa
     accounting_periods:
       add: Dodaj okres rozliczeniowy
       note: Notatka
@@ -98,6 +104,7 @@ pl:
     rank: 'Ranking'
     add: Dodaj
     save: Zapisz
+    submit: Wyślij
     cancel: Anuluj
     edit: Edytuj
     destroy: Usuń
@@ -123,6 +130,7 @@ pl:
     custom: Własny
     state: Status
     show: Pokaż
+    description: Opis
     download: Pobierz
     range: Zakres
     remove: Usuń

@@ -38,6 +38,12 @@ en:
       all: 'All'
       my_projects: 'My projects'
       my_work_hours: 'My work hours'
+      currency: Currency
+      roles: Roles
+      role: Role
+      owner: Owner
+      owners_hourly_wage: Owner's hourly wage
+      hourly_wage: Hourly wage
     accounting_periods:
       add: Add accounting period
       note: Note
@@ -98,6 +104,7 @@ en:
     rank: 'Rank'
     add: Add
     save: Save
+    submit: Submit
     cancel: Cancel
     edit: Edit
     destroy: Delete
@@ -123,6 +130,7 @@ en:
     custom: Custom
     state: State
     show: Show
+    description: Description
     download: Download
     range: Range
     remove: Remove
