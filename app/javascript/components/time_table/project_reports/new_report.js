@@ -90,7 +90,11 @@ export default class NewReport extends React.Component {
   render() {
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
     return (
-      <div>
+      <div className="new-project-report">
+        <div className="form-group">
+          <label>Name</label>
+          <input className="form-control" value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
+        </div>
         <h2>
           Name
         </h2>
