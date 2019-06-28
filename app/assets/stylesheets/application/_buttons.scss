@@ -1,5 +1,6 @@
 $softBounce: cubic-bezier(0.68, -0.55, 0.265, 1.30);
 $main-background-color: #d2501d;
+$main-background-color-active: darken($main-background-color, 8);
 $main-color: white;
 
 .bt {
@@ -28,11 +29,11 @@ $main-color: white;
     background-size: 0 100%;
     color: $main-color;
     transform: scale(1);
-    &:hover {
+    &:hover, &:focus {
       animation: shadow-pulse 1s infinite;
     }
-    &:active, &:focus {
-      background-color: darken($main-background-color, 8);
+    &:active {
+      background-color: $main-background-color-active;
     }
   }
   .symbol {
@@ -44,6 +45,37 @@ $main-color: white;
     }
     &:last-child {
       margin-left: 12px;
+    }
+  }
+  transition: .3s ease-in-out;
+  transition: .3s $softBounce;
+}
+
+.ln {
+  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+
+  cursor: pointer;
+  line-height: 16px;
+  font-size: 13px;
+  font-weight: 500;
+
+  &.ln-main {  
+    color: $main-background-color;
+    &:hover {
+      color: $main-background-color-active;
+    }
+  }
+  .symbol {
+    height: auto;
+    font-size: 130%;
+    transition: .5s ease-in-out;
+    &:first-child {
+      margin-right: 8px;
+    }
+    &:last-child {
+      margin-left: 8px;
     }
   }
   transition: .3s ease-in-out;
