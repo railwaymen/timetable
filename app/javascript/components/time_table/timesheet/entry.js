@@ -72,16 +72,10 @@ class Entry extends React.Component {
 
   onTimeWheel(e) {
     e.preventDefault();
-    const { name } = e.target;
-    if (e.deltaY < 0) {
-      this.setState({
-        [name]: moment(e.target.value, 'HH:mm').add(1, 'minutes').format('HH:mm'),
-      });
-    } else if (e.deltaY > 0) {
-      this.setState({
-        [name]: moment(e.target.value, 'HH:mm').subtract(1, 'minutes').format('HH:mm'),
-      });
-    }
+    const { name, value } = e.target;
+    this.setState({
+      [name]: moment(value, 'HH:mm').subtract(Math.sign(e.deltaY), 'minutes').format('HH:mm'),
+    });
   }
 
   onDateChange(e) {
