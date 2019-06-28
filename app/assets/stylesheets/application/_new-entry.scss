@@ -13,8 +13,12 @@
   .card > .row {
     display: flex;
     flex-flow: row wrap;
+    &::before, &::after {
+      display: none;
+    }
     align-items: center;
     > div {
+      float: none;
       @media #{$max-sm} {
         width: 100%;
       }
@@ -26,9 +30,10 @@
   }
   .easter {
     display: block;
+    width: auto;
+    max-height: 200px;
     max-width: 100%;
-    height: auto;
-    margin: 0 auto -12px;
+    margin: 0 auto;
   }
   .form-control {
     border: none;
