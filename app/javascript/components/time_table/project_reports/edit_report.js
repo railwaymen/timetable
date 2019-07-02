@@ -380,10 +380,10 @@ export default class EditReport extends React.Component {
               <th>
                 {I18n.t('apps.reports.owner')}
               </th>
-              <th>
+              <th className="text-right">
                 {I18n.t('apps.reports.time_spent')}
               </th>
-              <th>
+              <th className="text-right">
                 {I18n.t('apps.reports.cost')}
               </th>
               <th />
@@ -398,9 +398,9 @@ export default class EditReport extends React.Component {
                 <td>{task}</td>
                 <td>{description}</td>
                 <td>{owner}</td>
-                <td>{displayDuration(duration)}</td>
-                <td>{this.renderCost(cost)}</td>
-                <td className="report-actions">
+                <td className="text-right">{displayDuration(duration)}</td>
+                <td className="text-right">{this.renderCost(cost)}</td>
+                <td className="task-actions">
                   {this.renderRowActions({ id, toMerge, touched }, category, toMergeTasks)}
                 </td>
               </tr>
@@ -467,10 +467,10 @@ export default class EditReport extends React.Component {
               <th>
                 {I18n.t('apps.reports.owner')}
               </th>
-              <th>
+              <th className="text-right">
                 {I18n.t('apps.reports.time_spent')}
               </th>
-              <th>
+              <th className="text-right">
                 {I18n.t('apps.reports.cost')}
               </th>
             </tr>
@@ -483,8 +483,8 @@ export default class EditReport extends React.Component {
                 <td>{task}</td>
                 <td>{description}</td>
                 <td>{owner}</td>
-                <td>{displayDuration(duration)}</td>
-                <td>{this.renderCost(cost)}</td>
+                <td className="text-right">{displayDuration(duration)}</td>
+                <td className="text-right">{this.renderCost(cost)}</td>
               </tr>
             ))}
           </tbody>
@@ -505,7 +505,7 @@ export default class EditReport extends React.Component {
     const categoriesDurationSum = categories.map(category => sumBy(currentBody[category], 'duration'));
     const categoriesCostSum = categories.map(category => sumBy(currentBody[category], 'cost'));
     return (
-      <div className="edit-report-summary">
+      <div className="edit-report-summary card">
         <h2>{report.project_name}</h2>
         <p>
           <strong>
@@ -514,45 +514,52 @@ export default class EditReport extends React.Component {
             {moment(report.ends_at).format('MM.DD')}
           </strong>
         </p>
-        <table className="table">
-          <tbody>
-            {categories.map((category, idx) => (
-              <tr key={category}>
-                <td>
-                  {category}
-                </td>
-                <td>
-                  {displayDuration(categoriesDurationSum[idx])}
-                </td>
-                <td>
-                  {this.renderCost(categoriesCostSum[idx])}
-                </td>
+        <div className="table-responsive">
+          <table className="table">
+            <tbody>
+              {categories.map((category, idx) => (
+                <tr key={category}>
+                  <td>
+                    {category}
+                  </td>
+                  <td>
+                    {displayDuration(categoriesDurationSum[idx])}
+                  </td>
+                  <td>
+                    {this.renderCost(categoriesCostSum[idx])}
+                  </td>
+                </tr>
+              ))}
+              <tr>
+                <th>Total</th>
+                <th>{displayDuration(sumBy(categoriesDurationSum))}</th>
+                <th>{this.renderCost(sumBy(categoriesCostSum))}</th>
               </tr>
-            ))}
-            <tr className="active">
-              <th>Total</th>
-              <th>{displayDuration(sumBy(categoriesDurationSum))}</th>
-              <th>{this.renderCost(sumBy(categoriesCostSum))}</th>
-            </tr>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
         {this.editable()
-          && [
-            <hr key="hr" />,
+          && (
+          <div className="report-main-actions">
             <button key="submit" className="bt bt-main bt-big" type="button" onClick={this.onSubmit}>
-              <span className="txt">{I18n.t('common.submit')}</span>
-              <i className="symbol fa fa-paper-plane" />
-            </button>,
-            <button key="generate" className="bt bt-main bt-big" type="button" onClick={this.onGenerate}>
+              <span className="txt">{I18n.t('common.save')}</span>
+              <i className="symbol fa fa-check" />
+            </button>
+            <button key="generate" className="bt bt-second bt-big" type="button" onClick={this.onGenerate}>
               <span className="txt">{I18n.t('common.generate')}</span>
-              <i className="symbol fa fa-flag-checkered" />
-            </button>,
-          ]}
+              <i className="symbol fa fa-file-pdf-o" />
+            </button>
+          </div>
+          )
+        }
         {report.generated
           && (
-          <a href={`/api/projects/${projectId}/project_reports/${reportId}/file`}>
-            <span className="txt">{I18n.t('common.task')}</span>
-          </a>
+          <div className="report-download-actions">
+            <a className="bt bt-second bt-big bt-download" href={`/api/projects/${projectId}/project_reports/${reportId}/file`}>
+              <i className="symbol fa fa-file-pdf-o" />
+              <span className="txt">{I18n.t('common.download')}</span>
+            </a>
+          </div>
           )
         }
         {this.editable()

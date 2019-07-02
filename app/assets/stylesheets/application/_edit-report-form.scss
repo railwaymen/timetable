@@ -1,6 +1,8 @@
 .edit-report-form {
-  .report-actions {
+  .task-actions {
+    max-width: 170px;
     text-align: right;
+    white-space: nowrap;
     label, button {
       margin: 0;
       &:not(:last-child) {
@@ -15,8 +17,10 @@
     button {
       cursor: pointer;
       border: none;
-      min-width: 25px;
+      width: 25px;
       height: 25px;
+      padding: 0;
+      text-align: center;
       line-height: 25px;
       border-radius: 25px;
       color: white;
@@ -44,6 +48,46 @@
         color: $error-background-color;
         background-color: $error-color;
       }
+    }
+  }
+
+}
+.edit-report-summary {
+  text-align: center;
+  width: 400px;
+  max-width: 400px; 
+  margin: 20px auto;
+  @media only screen and (min-width : 1900px) {
+    width: 350px; 
+    position: fixed;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    margin: 0;
+  }
+  .bt, .ln {
+    margin-bottom: 6px;
+    &:not(:last-child) {
+      margin-right: 12px;
+    } 
+  }
+  .table {
+    td, th {
+      border: none;
+      text-align: right;
+      &:first-child {
+        text-align: center;
+      }
+    }
+    th {
+      font-weight: 600;
+    }
+  }
+  .report-main-actions,
+  .report-download-actions, 
+  .report-undo-actions {
+    &:not(:last-child) {
+      margin-bottom: 15px;
     }
   }
 }

@@ -71,6 +71,11 @@ $second-bt-color: #818181;
     &:hover, &:focus {
       animation: shadow-pulse 1s infinite;
     }
+    &:hover {
+      .symbol {
+        color: $main-bt-bg-active;
+      }
+    }
     &:active {
       background-color: $second-bt-bg-active;
     }
