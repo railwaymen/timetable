@@ -54,7 +54,11 @@
       }
     }
   }
-
+  .table-responsive {
+    @media #{$lg} {
+      overflow: visible;
+    }
+  }
 }
 .edit-report-summary {
   text-align: center;
