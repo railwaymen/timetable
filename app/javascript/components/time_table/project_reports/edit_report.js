@@ -205,7 +205,7 @@ export default class EditReport extends React.Component {
 
   renderMergeButton(category) {
     return (
-      <button key="merge" className="action-item" onClick={e => this.onShowMerge(e, category)} data-tooltip-bottom={I18n.t('apps.reports.merge')}>
+      <button key="merge" type="button" className="action-item" onClick={e => this.onShowMerge(e, category)} data-tooltip-bottom={I18n.t('apps.reports.merge')}>
         <i className="symbol fa fa-compress" />
       </button>
     );
@@ -213,7 +213,7 @@ export default class EditReport extends React.Component {
 
   renderEditOrMergeButton(category, id, addToMerge) {
     return (
-      <button key="edit" className={`action-item ${addToMerge ? 'plus' : ''}`} onClick={e => this.onShowEdit(e, category, id)} data-tooltip-bottom={addToMerge ? I18n.t('apps.reports.merge') : I18n.t('common.edit')}>
+      <button key="edit" type="button" className={`action-item ${addToMerge ? 'plus' : ''}`} onClick={e => this.onShowEdit(e, category, id)} data-tooltip-bottom={addToMerge ? I18n.t('apps.reports.merge') : I18n.t('common.edit')}>
         <i className="symbol fa fa-pencil" />
       </button>
     );
@@ -226,11 +226,11 @@ export default class EditReport extends React.Component {
   }
 
   renderRowActions({ id, touched, toMerge }, category, toMergeTasks) {
-    let result = [];
+    const result = [];
     const willBeAddedToMerge = !toMerge && toMergeTasks.length > 0;
     if (touched) {
       result.push(
-        <button key="details" className="action-item info" onClick={e => this.onShowWorkTimeModal(e, category, id)} data-tooltip-bottom={I18n.t('common.history')}>
+        <button key="details" type="button" className="action-item info" onClick={e => this.onShowWorkTimeModal(e, category, id)} data-tooltip-bottom={I18n.t('common.history')}>
           <i className="symbol fa fa-clock-o" />
         </button>,
       );
@@ -240,13 +240,13 @@ export default class EditReport extends React.Component {
         <React.Fragment key="merge">
           <label className="form-check-label">
             <input name="toMerge" type="checkbox" className="merge-check-box" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
-            <span className="checkbox"></span>
+            <span className="checkbox" />
           </label>
           {
             (toMerge && toMergeTasks.length >= 2 && this.renderMergeButton(category)) || this.renderEditOrMergeButton(category, id, willBeAddedToMerge)
           }
         </React.Fragment>,
-        <button key="ignore" className="action-item destroy" onClick={e => this.onIgnore(e, category, id)} data-tooltip-bottom={I18n.t('apps.reports.ignore')}>
+        <button key="ignore" type="button" className="action-item destroy" onClick={e => this.onIgnore(e, category, id)} data-tooltip-bottom={I18n.t('apps.reports.ignore')}>
           <i className="symbol fa fa-trash-o" />
         </button>,
       );
@@ -285,7 +285,7 @@ export default class EditReport extends React.Component {
                 </th>
                 <th>
                   {I18n.t('apps.reports.cost')}
-                </th>            
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -382,8 +382,7 @@ export default class EditReport extends React.Component {
               <th>
                 {I18n.t('apps.reports.cost')}
               </th>
-              <th>
-              </th>
+              <th />
             </tr>
           </thead>
           <tbody>
