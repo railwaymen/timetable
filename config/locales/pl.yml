@@ -48,6 +48,8 @@ pl:
       cost: Koszt
       merge: Połącz
       ignore: Ignoruj
+      restore_previous: Przywróć poprzednią wersję
+      restore_first: Przywróć pierwszą wersję
     accounting_periods:
       add: Dodaj okres rozliczeniowy
       note: Notatka
@@ -109,6 +111,7 @@ pl:
     add: Dodaj
     save: Zapisz
     submit: Wyślij
+    generate: Generuj
     cancel: Anuluj
     edit: Edytuj
     destroy: Usuń

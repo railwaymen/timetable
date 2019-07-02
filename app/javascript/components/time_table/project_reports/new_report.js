@@ -103,11 +103,11 @@ export default class NewReport extends React.Component {
         </div>
         <h1>{I18n.t('apps.reports.roles')}</h1>
         <DateRangeFilter from={this.state.startsAt.format()} to={this.state.endsAt.format()} onFromChange={this.onRangeStartChange} onToChange={this.onRangeEndChange} onFilter={this.getRoles} />
-        <div class="table-responsive">
+        <div className="table-responsive">
           <table className="table table-hover">
             <thead>
               <tr>
-                <th>{I18n.t('apps.reports.owner')}</th> 
+                <th>{I18n.t('apps.reports.owner')}</th>
                 <th>{I18n.t('apps.reports.role')}</th>
                 <th>{I18n.t('apps.reports.hourly_wage')}</th>
                 <th>{I18n.t('common.description')}</th>
@@ -117,10 +117,11 @@ export default class NewReport extends React.Component {
               {this.state.userRoles.map(user => (
                 <tr key={user.id}>
                   <td>
-                    {user.first_name} {user.last_name}
+                    {user.first_name}
+                    {user.last_name}
                   </td>
                   <td>
-                    <select className="form-control" value={user.role || ''} onChange={e => this.onFieldChange(e, 'role', user.id)} >
+                    <select className="form-control" value={user.role || ''} onChange={e => this.onFieldChange(e, 'role', user.id)}>
                       <option value="" />
                       {this.constructor.roles.map(role => (
                         <option key={role} value={role}>{role}</option>
@@ -141,8 +142,8 @@ export default class NewReport extends React.Component {
         </div>
         <div className="form-actions text-right">
           <button className="bt bt-main bt-big" type="button" onClick={this.onSubmit}>
-            <i className="symbol fa fa-paper-plane-o" />
             <span className="bt-txt">{I18n.t('common.submit')}</span>
+            <i className="symbol fa fa-paper-plane" />
           </button>
         </div>
       </div>

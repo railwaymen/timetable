@@ -71,11 +71,15 @@ export default class EditReport extends React.Component {
   }
 
   onHardReset() {
-    this.setState(({ report }) => ({ currentBody: this.prepareBody(report.initial_body) }));
+    if (window.confirm(I18n.t('common.confirm'))) {
+      this.setState(({ report }) => ({ currentBody: this.prepareBody(report.initial_body) }));
+    }
   }
 
   onSoftReset() {
-    this.setState(({ report }) => ({ currentBody: this.prepareBody(report.last_body) }));
+    if (window.confirm(I18n.t('common.confirm'))) {
+      this.setState(({ report }) => ({ currentBody: this.prepareBody(report.last_body) }));
+    }
   }
 
   onMergeOwnerChange(event) {
@@ -502,13 +506,6 @@ export default class EditReport extends React.Component {
     const categoriesCostSum = categories.map(category => sumBy(currentBody[category], 'cost'));
     return (
       <div className="edit-report-summary">
-        {this.editable()
-          && [
-            <button key="soft" type="button" onClick={this.onSoftReset}>Soft reset</button>,
-            <button key="hard" type="button" onClick={this.onHardReset}>Hard reset</button>,
-            <hr key="hr" />,
-          ]
-        }
         <h2>{report.project_name}</h2>
         <p>
           <strong>
@@ -542,14 +539,34 @@ export default class EditReport extends React.Component {
         {this.editable()
           && [
             <hr key="hr" />,
-            <button key="submit" className="text-center" type="button" onClick={this.onSubmit}>Submit</button>,
-            <button key="generate" className="text-center" type="button" onClick={this.onGenerate}>Generate</button>,
+            <button key="submit" className="bt bt-main bt-big" type="button" onClick={this.onSubmit}>
+              <span className="txt">{I18n.t('common.submit')}</span>
+              <i className="symbol fa fa-paper-plane" />
+            </button>,
+            <button key="generate" className="bt bt-main bt-big" type="button" onClick={this.onGenerate}>
+              <span className="txt">{I18n.t('common.generate')}</span>
+              <i className="symbol fa fa-flag-checkered" />
+            </button>,
           ]}
         {report.generated
           && (
           <a href={`/api/projects/${projectId}/project_reports/${reportId}/file`}>
-            Download
+            <span className="txt">{I18n.t('common.task')}</span>
           </a>
+          )
+        }
+        {this.editable()
+          && (
+          <div className="report-undo-actions">
+            <button key="soft" type="button" className="ln ln-second" onClick={this.onSoftReset}>
+              <i className="symbol fa fa-undo" />
+              <span className="txt">{I18n.t('apps.reports.restore_previous')}</span>
+            </button>
+            <button key="hard" type="button" className="ln ln-second" onClick={this.onHardReset}>
+              <i className="symbol fa fa-history" />
+              <span className="txt">{I18n.t('apps.reports.restore_first')}</span>
+            </button>
+          </div>
           )
         }
       </div>

@@ -2,6 +2,10 @@ $main-bt-bg: $main-color;
 $main-bt-bg-active: $main-color-75;
 $main-bt-color: white;
 
+$second-bt-bg: white;
+$second-bt-bg-active: darken($second-bt-bg, 8);
+$second-bt-color: #818181;
+
 .bt {
   display: inline-block;
   display: inline-flex;
@@ -10,11 +14,29 @@ $main-bt-color: white;
   cursor: pointer;
   line-height: 22px;
   font-size: 15px;
-  font-weight: 600;
 
   padding: 8px 16px;
+  .symbol {
+    height: auto;
+    transition: .5s ease-in-out;
+    &:first-child {
+      margin-right: 6px;
+    }
+    &:last-child {
+      margin-left: 6px;
+    }
+  }
   &.bt-big {
     padding: 12px 32px;
+    .symbol {    
+      font-size: 130%;
+      &:first-child {
+        margin-right: 12px;
+      }
+      &:last-child {
+        margin-left: 12px;
+      }
+    }
   }
   border: none;
   border-radius: 50px;
@@ -22,12 +44,14 @@ $main-bt-color: white;
   color: white;
 
   &.bt-main {
+    font-weight: 600;
     background-color: $main-bt-bg;
     background-repeat: no-repeat;
     background-position: 0 50%;
     background-size: 0 100%;
     color: $main-bt-color;
     transform: scale(1);
+    border: 0 solid transparent;
     &:hover, &:focus {
       animation: shadow-pulse 1s infinite;
     }
@@ -35,15 +59,20 @@ $main-bt-color: white;
       background-color: $main-bt-bg-active;
     }
   }
-  .symbol {
-    height: auto;
-    font-size: 130%;
-    transition: .5s ease-in-out;
-    &:first-child {
-      margin-right: 12px;
+  &.bt-second {
+    font-weight: 500;
+    background-color: $second-bt-bg;
+    background-repeat: no-repeat;
+    background-position: 0 50%;
+    background-size: 0 100%;
+    color: $second-bt-color;
+    transform: scale(1);
+    border: 1px solid #cfcfcf;
+    &:hover, &:focus {
+      animation: shadow-pulse 1s infinite;
     }
-    &:last-child {
-      margin-left: 12px;
+    &:active {
+      background-color: $second-bt-bg-active;
     }
   }
   transition: .3s ease-in-out;
@@ -60,10 +89,23 @@ $main-bt-color: white;
   font-size: 13px;
   font-weight: 500;
 
+  padding: 0;
+  background-color: transparent;
+  border: none;
+
   &.ln-main {  
     color: $main-bt-bg;
     &:hover {
       color: $main-bt-bg-active;
+    }
+  }
+  &.ln-second {
+    color: $second-bt-color;
+    &:hover {
+      color: darken($second-bt-color, 8);
+      .symbol {
+        color: $main-bt-bg-active;
+      }
     }
   }
   .symbol {
