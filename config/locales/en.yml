@@ -44,6 +44,10 @@ en:
       owner: Owner
       owners_hourly_wage: Owner's hourly wage
       hourly_wage: Hourly wage
+      time_spent: Time spent
+      cost: Cost
+      merge: Merge
+      ignore: Ignore
     accounting_periods:
       add: Add accounting period
       note: Note
@@ -110,6 +114,7 @@ en:
     destroy: Delete
     from: From
     to: To
+    task: Task
     position: Position
     person: Person
     duration: Duration
@@ -123,7 +128,7 @@ en:
     all: All
     today: Today
     yesterday: Yesterday
-    confirm: Are you sure ?
+    confirm: Are you sure?
     sum: Sum
     name: Name
     external_auth: External integration
@@ -134,7 +139,8 @@ en:
     download: Download
     range: Range
     remove: Remove
-
+    copy: Copy
+    history: History
   activerecord:
     errors:
       models:

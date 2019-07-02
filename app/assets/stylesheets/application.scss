@@ -9,12 +9,7 @@
 
 @import 'shared/*';
 
-@import 'application/helpers';
-
 @import 'application/body';
-@import 'application/buttons';
-@import 'application/error-tooltip';
-@import 'application/tag';
 @import 'application/horizontal-arrows';
 @import 'application/date-range-filter';
 
@@ -23,6 +18,7 @@
 @import 'application/time-entries';
 
 @import 'application/new-project-report';
+@import 'application/edit-report-form';
 
 @import 'pages/projects';
 @import 'pages/reports';

@@ -1,0 +1,50 @@
+.form-check-label,
+.form-radio-label {
+  input {
+    display: none;
+  }
+  .checkbox {
+    margin: 0;
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    border-radius: 3px;
+    color: $text-gray;
+    font-size: 8px;
+    border: 1px solid $gray-50;
+    position: relative;
+    cursor: pointer;
+    transition: .3s;
+    &:hover {
+      border-color: $main-color-75;
+      animation: shadow-pulse 1s infinite;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0) rotate(38deg);
+      width: 6px;
+      height: 11px;
+      border-bottom: 2px solid $main-color;
+      border-right: 2px solid $main-color;
+      border-bottom-right-radius: 2px;
+      transition: .2s $softBounce;
+    }
+  }
+  input:checked + .checkbox {
+    &::after {
+      transform: translate(-50%, -50%) scale(1) rotate(38deg);
+    }
+  }
+}
+.form-check-label {
+  .checkbox {
+  }
+}
+.form-radio-label {
+  .checkbox {
+    border-radius: 50%;
+  }
+}

@@ -91,14 +91,16 @@ export default class NewReport extends React.Component {
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
     return (
       <div className="new-project-report">
-        <div className="form-group">
-          <label>{I18n.t('common.name')}</label>
-          <input className="form-control" value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
+        <div className="row">
+          <div className="col-md-6 form-group">
+            <label>{I18n.t('common.name')}</label>
+            <input className="form-control" value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
+          </div>
+          <div className="col-md-6 form-group">
+            <label>{I18n.t('apps.reports.currency')}</label>
+            <input className="form-control" value={this.state.currency} onChange={e => this.setState({ currency: e.target.value })} />
+          </div>
         </div>
-        <div className="form-group">
-          <label>{I18n.t('apps.reports.currency')}</label>
-          <input className="form-control" value={this.state.currency} onChange={e => this.setState({ currency: e.target.value })} />
-        </div>        
         <h1>{I18n.t('apps.reports.roles')}</h1>
         <DateRangeFilter from={this.state.startsAt.format()} to={this.state.endsAt.format()} onFromChange={this.onRangeStartChange} onToChange={this.onRangeEndChange} onFilter={this.getRoles} />
         <div class="table-responsive">
@@ -118,7 +120,7 @@ export default class NewReport extends React.Component {
                     {user.first_name} {user.last_name}
                   </td>
                   <td>
-                    <select className="form-control" value={user.role || ''} onChange={e => this.onFieldChange(e, 'role', user.id)}>
+                    <select className="form-control" value={user.role || ''} onChange={e => this.onFieldChange(e, 'role', user.id)} >
                       <option value="" />
                       {this.constructor.roles.map(role => (
                         <option key={role} value={role}>{role}</option>

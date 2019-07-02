@@ -119,12 +119,14 @@ export default class EditReport extends React.Component {
 
   onIgnore(event, category, id) {
     event.preventDefault();
-    this.setState(({ currentBody }) => {
-      const [removedWorkedTime, rest] = partition(currentBody[category], wt => wt.id === id);
-      const ignored = removedWorkedTime.concat(currentBody.ignored || []);
-      const newBody = { ...currentBody, [category]: rest, ignored };
-      return { currentBody: newBody };
-    });
+    if (window.confirm(I18n.t('common.confirm'))) {
+      this.setState(({ currentBody }) => {
+        const [removedWorkedTime, rest] = partition(currentBody[category], wt => wt.id === id);
+        const ignored = removedWorkedTime.concat(currentBody.ignored || []);
+        const newBody = { ...currentBody, [category]: rest, ignored };
+        return { currentBody: newBody };
+      });
+    }
   }
 
   onShowMerge(event, category) {
@@ -203,17 +205,17 @@ export default class EditReport extends React.Component {
 
   renderMergeButton(category) {
     return (
-      <div key="merge" className="action-item info inline" onClick={e => this.onShowMerge(e, category)} style={{ fontSize: '1.5em' }}>
-        <i className="icon green object group" />
-      </div>
+      <button key="merge" className="action-item" onClick={e => this.onShowMerge(e, category)} data-tooltip-bottom={I18n.t('apps.reports.merge')}>
+        <i className="symbol fa fa-compress" />
+      </button>
     );
   }
 
-  renderEditButton(category, id) {
+  renderEditOrMergeButton(category, id, addToMerge) {
     return (
-      <div key="edit" className="action-item info inline" onClick={e => this.onShowEdit(e, category, id)} style={{ fontSize: '1.5em' }}>
-        <i className="icon blue edit" />
-      </div>
+      <button key="edit" className={`action-item ${addToMerge ? 'plus' : ''}`} onClick={e => this.onShowEdit(e, category, id)} data-tooltip-bottom={addToMerge ? I18n.t('apps.reports.merge') : I18n.t('common.edit')}>
+        <i className="symbol fa fa-pencil" />
+      </button>
     );
   }
 
@@ -225,24 +227,28 @@ export default class EditReport extends React.Component {
 
   renderRowActions({ id, touched, toMerge }, category, toMergeTasks) {
     let result = [];
-    if (this.editable()) {
-      result = [
-        <div key="merge">
-          <input name="toMerge" type="checkbox" className="merge-check-box" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
-          {
-            (toMerge && toMergeTasks.length >= 2 && this.renderMergeButton(category)) || this.renderEditButton(category, id)
-          }
-        </div>,
-        <div key="ignore" className="action-item destroy" onClick={e => this.onIgnore(e, category, id)} style={{ fontSize: '1.5em' }}>
-          <i className="icon red trash" />
-        </div>,
-      ];
-    }
+    const willBeAddedToMerge = !toMerge && toMergeTasks.length > 0;
     if (touched) {
       result.push(
-        <div key="details" className="action-item info" onClick={e => this.onShowWorkTimeModal(e, category, id)} style={{ fontSize: '1.5em' }}>
-          <i className="icon wait" />
-        </div>,
+        <button key="details" className="action-item info" onClick={e => this.onShowWorkTimeModal(e, category, id)} data-tooltip-bottom={I18n.t('common.history')}>
+          <i className="symbol fa fa-clock-o" />
+        </button>,
+      );
+    }
+    if (this.editable()) {
+      result.push(
+        <React.Fragment key="merge">
+          <label className="form-check-label">
+            <input name="toMerge" type="checkbox" className="merge-check-box" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
+            <span className="checkbox"></span>
+          </label>
+          {
+            (toMerge && toMergeTasks.length >= 2 && this.renderMergeButton(category)) || this.renderEditOrMergeButton(category, id, willBeAddedToMerge)
+          }
+        </React.Fragment>,
+        <button key="ignore" className="action-item destroy" onClick={e => this.onIgnore(e, category, id)} data-tooltip-bottom={I18n.t('apps.reports.ignore')}>
+          <i className="symbol fa fa-trash-o" />
+        </button>,
       );
     }
     return result;
@@ -263,23 +269,23 @@ export default class EditReport extends React.Component {
             <thead>
               <tr>
                 <th>
-                  Task
+                  {I18n.t('common.task')}
                 </th>
                 <th>
-                  Description
+                  {I18n.t('common.description')}
                 </th>
                 <th>
-                  Owner
+                  {I18n.t('apps.reports.owner')}
                 </th>
                 <th>
-                  Time spent
+                  {I18n.t('apps.reports.time_spent')}
                 </th>
                 <th>
-                  Owner wage
+                  {I18n.t('apps.reports.owners_hourly_wage')}
                 </th>
                 <th>
-                  Cost
-                </th>
+                  {I18n.t('apps.reports.cost')}
+                </th>            
               </tr>
             </thead>
             <tbody>
@@ -362,22 +368,21 @@ export default class EditReport extends React.Component {
             <tr>
               <th>Tag</th>
               <th>
-                Task
+                {I18n.t('common.task')}
               </th>
               <th>
-                Description
+                {I18n.t('common.description')}
               </th>
               <th>
-                Owner
+                {I18n.t('apps.reports.owner')}
               </th>
               <th>
-                Time spent
+                {I18n.t('apps.reports.time_spent')}
               </th>
               <th>
-                Cost
+                {I18n.t('apps.reports.cost')}
               </th>
               <th>
-                Actions
               </th>
             </tr>
           </thead>
@@ -392,7 +397,7 @@ export default class EditReport extends React.Component {
                 <td>{owner}</td>
                 <td>{displayDuration(duration)}</td>
                 <td>{this.renderCost(cost)}</td>
-                <td>
+                <td className="report-actions">
                   {this.renderRowActions({ id, toMerge, touched }, category, toMergeTasks)}
                 </td>
               </tr>
@@ -451,19 +456,19 @@ export default class EditReport extends React.Component {
           <thead>
             <tr>
               <th>
-                Task
+                {I18n.t('common.task')}
               </th>
               <th>
-                Description
+                {I18n.t('common.description')}
               </th>
               <th>
-                Owner
+                {I18n.t('apps.reports.owner')}
               </th>
               <th>
-                Time spent
+                {I18n.t('apps.reports.time_spent')}
               </th>
               <th>
-                Cost
+                {I18n.t('apps.reports.cost')}
               </th>
             </tr>
           </thead>
@@ -556,7 +561,7 @@ export default class EditReport extends React.Component {
     const { report, currentBody } = this.state;
     if (!report || !currentBody) return <div />;
     return (
-      <div>
+      <div className="edit-report-form">
         {without(Object.keys(currentBody), 'ignored').sort().map(this.renderCategory)}
         {this.renderWorkTimeModal()}
         {this.renderIgnored()}

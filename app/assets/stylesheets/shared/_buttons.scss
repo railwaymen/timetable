@@ -1,7 +1,6 @@
-$softBounce: cubic-bezier(0.68, -0.55, 0.265, 1.30);
-$main-background-color: #d2501d;
-$main-background-color-active: darken($main-background-color, 8);
-$main-color: white;
+$main-bt-bg: $main-color;
+$main-bt-bg-active: $main-color-75;
+$main-bt-color: white;
 
 .bt {
   display: inline-block;
@@ -23,17 +22,17 @@ $main-color: white;
   color: white;
 
   &.bt-main {
-    background-color: $main-background-color;
+    background-color: $main-bt-bg;
     background-repeat: no-repeat;
     background-position: 0 50%;
     background-size: 0 100%;
-    color: $main-color;
+    color: $main-bt-color;
     transform: scale(1);
     &:hover, &:focus {
       animation: shadow-pulse 1s infinite;
     }
     &:active {
-      background-color: $main-background-color-active;
+      background-color: $main-bt-bg-active;
     }
   }
   .symbol {
@@ -62,9 +61,9 @@ $main-color: white;
   font-weight: 500;
 
   &.ln-main {  
-    color: $main-background-color;
+    color: $main-bt-bg;
     &:hover {
-      color: $main-background-color-active;
+      color: $main-bt-bg-active;
     }
   }
   .symbol {
@@ -80,13 +79,4 @@ $main-color: white;
   }
   transition: .3s ease-in-out;
   transition: .3s $softBounce;
-}
-
-@keyframes shadow-pulse {
-  0% {
-      box-shadow: 0 0 0 0px rgba($main-background-color, 0.6);
-  }
-  100% {
-      box-shadow: 0 0 0 5px rgba(0, 0, 0, 0);
-  }
 }

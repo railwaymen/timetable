@@ -44,6 +44,10 @@ pl:
       owner: Pracownik
       owners_hourly_wage: Stawka godzinowa pracownika
       hourly_wage: Stawka godzinowa
+      time_spent: Poświecony czas
+      cost: Koszt
+      merge: Połącz
+      ignore: Ignoruj
     accounting_periods:
       add: Dodaj okres rozliczeniowy
       note: Notatka
@@ -110,6 +114,7 @@ pl:
     destroy: Usuń
     from: Od
     to: Do
+    task: Zadanie
     position: Pozycja
     person: Osoba
     duration: Czas trwania
@@ -123,7 +128,7 @@ pl:
     all: Wszystkie
     today: Dzisiaj
     yesterday: Wczoraj
-    confirm: Jesteś pewien ?
+    confirm: Jesteś pewien?
     sum: Suma
     name: Nazwa
     external_auth: Integracja z serwisami zewnętrznymi
@@ -134,6 +139,8 @@ pl:
     download: Pobierz
     range: Zakres
     remove: Usuń
+    copy: Kopiuj
+    history: Historia
   errors:
     format: "%{attribute} %{message}"
     messages:
