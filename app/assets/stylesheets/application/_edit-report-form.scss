@@ -1,6 +1,10 @@
 .edit-report-form {
+  th {
+    vertical-align: middle;
+    white-space: nowrap;
+  }
   .task-actions {
-    max-width: 170px;
+    width: 160px;
     text-align: right;
     white-space: nowrap;
     label, button {
@@ -55,7 +59,7 @@
 .edit-report-summary {
   text-align: center;
   width: 400px;
-  max-width: 400px; 
+  max-width: 100%; 
   margin: 20px auto;
   @media only screen and (min-width : 1900px) {
     width: 350px; 

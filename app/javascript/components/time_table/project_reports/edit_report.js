@@ -367,46 +367,48 @@ export default class EditReport extends React.Component {
     return (
       <div key={category}>
         <h2>{category}</h2>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Tag</th>
-              <th>
-                {I18n.t('common.task')}
-              </th>
-              <th>
-                {I18n.t('common.description')}
-              </th>
-              <th>
-                {I18n.t('apps.reports.owner')}
-              </th>
-              <th className="text-right">
-                {I18n.t('apps.reports.time_spent')}
-              </th>
-              <th className="text-right">
-                {I18n.t('apps.reports.cost')}
-              </th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {times.map(({
-              id, task, duration, owner, toMerge, description, cost, touched, tag,
-            }) => (
-              <tr key={id}>
-                <td><TagPill tag={tag} onClick={() => this.handleTagPillClick(category, tag)} bold={false} /></td>
-                <td>{task}</td>
-                <td>{description}</td>
-                <td>{owner}</td>
-                <td className="text-right">{displayDuration(duration)}</td>
-                <td className="text-right">{this.renderCost(cost)}</td>
-                <td className="task-actions">
-                  {this.renderRowActions({ id, toMerge, touched }, category, toMergeTasks)}
-                </td>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Tag</th>
+                <th>
+                  {I18n.t('common.task')}
+                </th>
+                <th>
+                  {I18n.t('common.description')}
+                </th>
+                <th>
+                  {I18n.t('apps.reports.owner')}
+                </th>
+                <th className="text-center">
+                  {I18n.t('apps.reports.time_spent')}
+                </th>
+                <th className="text-right">
+                  {I18n.t('apps.reports.cost')}
+                </th>
+                <th />
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {times.map(({
+                id, task, duration, owner, toMerge, description, cost, touched, tag,
+              }) => (
+                <tr key={id}>
+                  <td><TagPill tag={tag} onClick={() => this.handleTagPillClick(category, tag)} bold={false} /></td>
+                  <td>{task}</td>
+                  <td>{description}</td>
+                  <td>{owner}</td>
+                  <td className="text-center">{displayDuration(duration)}</td>
+                  <td className="text-right">{this.renderCost(cost)}</td>
+                  <td className="task-actions">
+                    {this.renderRowActions({ id, toMerge, touched }, category, toMergeTasks)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <Modal
           id={`modal-${category}`}
           header={modalHeader}
@@ -455,41 +457,42 @@ export default class EditReport extends React.Component {
     return (
       <div>
         <h2>Ignored</h2>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>
-                {I18n.t('common.task')}
-              </th>
-              <th>
-                {I18n.t('common.description')}
-              </th>
-              <th>
-                {I18n.t('apps.reports.owner')}
-              </th>
-              <th className="text-right">
-                {I18n.t('apps.reports.time_spent')}
-              </th>
-              <th className="text-right">
-                {I18n.t('apps.reports.cost')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {times.map(({
-              id, task, duration, owner, description, cost,
-            }) => (
-              <tr key={id}>
-                <td>{task}</td>
-                <td>{description}</td>
-                <td>{owner}</td>
-                <td className="text-right">{displayDuration(duration)}</td>
-                <td className="text-right">{this.renderCost(cost)}</td>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>
+                  {I18n.t('common.task')}
+                </th>
+                <th>
+                  {I18n.t('common.description')}
+                </th>
+                <th>
+                  {I18n.t('apps.reports.owner')}
+                </th>
+                <th className="text-center">
+                  {I18n.t('apps.reports.time_spent')}
+                </th>
+                <th className="text-right">
+                  {I18n.t('apps.reports.cost')}
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <hr />
+            </thead>
+            <tbody>
+              {times.map(({
+                id, task, duration, owner, description, cost,
+              }) => (
+                <tr key={id}>
+                  <td>{task}</td>
+                  <td>{description}</td>
+                  <td>{owner}</td>
+                  <td className="text-center">{displayDuration(duration)}</td>
+                  <td className="text-right">{this.renderCost(cost)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
