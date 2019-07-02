@@ -1,0 +1,53 @@
+.list-of-actions {
+  text-align: right;
+  white-space: nowrap;
+  label, button, a {
+    margin: 0;
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .symbol {
+    position: relative;
+  }
+  .action-item {
+    cursor: pointer;
+    border: none;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    text-align: center;
+    line-height: 25px;
+    border-radius: 25px;
+    color: white;
+    background-color: $blue-color;
+    transition: .3s;
+    &.plus {
+      background-color: $blue-color-25;
+      &::before {
+        content: '+';
+        position: absolute;
+        right: -4px;
+        bottom: -4px;
+        background-color: #209b44;
+        color: white;
+        width: 15px;
+        height: 15px;
+        line-height: 15px;
+        border-radius: 50%;
+        font-size: 16px;
+        font-weight: bold;
+        z-index: 1;
+      }
+    }
+    &.pdf {
+      background-color: #209b44;
+    }
+    &.destroy {
+      color: $error-background-color;
+      background-color: $error-color;
+    }
+  }
+}

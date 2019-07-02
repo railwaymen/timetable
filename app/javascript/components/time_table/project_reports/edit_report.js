@@ -401,7 +401,7 @@ export default class EditReport extends React.Component {
                   <td>{owner}</td>
                   <td className="text-center">{displayDuration(duration)}</td>
                   <td className="text-right">{this.renderCost(cost)}</td>
-                  <td className="task-actions">
+                  <td className="task-actions list-of-actions">
                     {this.renderRowActions({ id, toMerge, touched }, category, toMergeTasks)}
                   </td>
                 </tr>

@@ -1,0 +1,14 @@
+.list-of-reports {
+  .report-status {
+    text-align: center;
+    .symbol {
+      display: block;
+      font-size: 22px;
+    }
+  }
+  .table {
+    th, td {
+      vertical-align: middle;
+    }
+  }
+}

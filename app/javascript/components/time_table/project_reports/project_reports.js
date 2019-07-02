@@ -50,66 +50,85 @@ export default class ProjectReports extends React.Component {
       });
   }
 
+  renderReportState(state) {
+    let iconClass;
+    switch (state) {
+      case 'done':
+        iconClass = 'fa-check';
+        break;
+      case 'editing':
+        iconClass = 'fa-pencil';
+        break;
+      default:
+        iconClass = 'fa-info-circle';
+    }
+    return (
+      <span className="report-status">
+        <i className={`symbol fa ${iconClass}`} />
+        {state}
+      </span>
+    );
+  }
+
   render() {
     const { projectId, reports } = this.state;
     return (
-      <div>
-        <Link to={this.newReportLink()} className="btn btn-success">
-          {I18n.t('apps.reports.new')}
-        </Link>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>{I18n.t('common.name')}</th>
-              <th>{I18n.t('common.state')}</th>
-              <th>{I18n.t('common.show')}</th>
-              <th>{I18n.t('common.download')}</th>
-              <th>{I18n.t('common.range')}</th>
-              <th>{I18n.t('common.remove')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reports.map(({
-              id,
-              name,
-              state,
-              starts_at,
-              ends_at,
-              generated,
-            }) => (
-              <tr key={id}>
-                <td>
-                  {name}
-                </td>
-                <td>
-                  {state}
-                </td>
-                <td>
-                  <Link to={`/projects/${projectId}/edit_report/${id}`}>
-                  Link
-                  </Link>
-                </td>
-                <td>
-                  {generated
-                    && (
-                    <a href={`/api/projects/${projectId}/project_reports/${id}/file`}>
-                      {I18n.t('common.download')}
-                    </a>
-                    )
-                  }
-                </td>
-                <td>
-                  {`${simpleDateFormat(starts_at)}-${simpleDateFormat(ends_at)}`}
-                </td>
-                <td>
-                  <a onClick={this.onDelete} href={`/api/projects/${projectId}/project_reports/${id}`}>
-                    {I18n.t('apps.reports.remove')}
-                  </a>
-                </td>
+      <div className="list-of-reports">
+        <p className="text-right">
+          <Link to={this.newReportLink()} className="bt bt-main">
+            <i className="symbol fa fa-plus" />
+            <span className="bt-txt">{I18n.t('apps.reports.new')}</span>
+          </Link>
+        </p>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>{I18n.t('common.name')}</th>
+                <th className="text-center">{I18n.t('common.state')}</th>
+                <th className="text-center">{I18n.t('common.range')}</th>
+                <th />
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {reports.map(({
+                id,
+                name,
+                state,
+                starts_at,
+                ends_at,
+                generated,
+              }) => (
+                <tr key={id}>
+                  <td>
+                    {name}
+                  </td>
+                  <td className="text-center">
+                    {this.renderReportState(state)}
+                  </td>
+                  <td className="text-center">
+                    {`${simpleDateFormat(starts_at)}-${simpleDateFormat(ends_at)}`}
+                  </td>
+                  <td className="list-of-actions report-actions text-right">
+                    {generated
+                      && (
+                      <a className="action-item pdf" href={`/api/projects/${projectId}/project_reports/${id}/file`} data-tooltip-bottom={I18n.t('common.download')}>
+                        <i className="symbol fa fa-file-pdf-o" />
+                      </a>
+                      )
+                    }
+                    <Link className="action-item" to={`/projects/${projectId}/edit_report/${id}`} data-tooltip-bottom={I18n.t('common.show')}>
+                      <i className="symbol fa fa-pencil" />
+                    </Link>
+                    <a className="action-item destroy" onClick={this.onDelete} href={`/api/projects/${projectId}/project_reports/${id}`} data-tooltip-bottom={I18n.t('apps.reports.remove')}>
+                      <i className="fa fa-trash-o" />
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
