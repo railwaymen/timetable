@@ -1,0 +1,16 @@
+.edit-accounting-period {
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+  textarea {
+    min-height: 80px;
+    height: 120px;
+  }
+  .form-actions {
+    .bt {
+      &:not(:last-child) {
+        margin-right: 12px;
+      }
+    }
+  }
+}
