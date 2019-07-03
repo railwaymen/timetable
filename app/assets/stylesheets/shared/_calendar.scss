@@ -1,0 +1,95 @@
+.react-datepicker-popper {
+  .react-datepicker__triangle {
+    border-bottom-color: white !important;
+    &::before {
+      border-top-color: $border-color !important;
+      border-bottom-color: $border-color !important;
+    }
+  }
+  .react-datepicker {
+    font-family: $font-family;
+    padding: 6px 5px 12px;
+    border-color: $border-color;
+    border-radius: 3px;
+    box-shadow: 0 12px 10px -10px rgba( black , .3);
+    .react-datepicker__header {
+      padding-top: 0;
+      background-color: white;
+      border-bottom: 1px dashed $border-color !important;
+    }
+  }
+  .react-datepicker__navigation {
+    top: 15px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    &.react-datepicker__navigation--previous {
+      border-right-color: $main-color;
+      border-right-width: 8px;
+    }
+    &.react-datepicker__navigation--next {
+      border-left-color: $main-color;
+      border-left-width: 8px;
+    }
+  }
+  .react-datepicker__current-month {
+    text-transform: capitalize;
+    font-size: 15px;
+    margin-top: 5px;
+    margin-bottom: 8px;
+  }
+  .react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name {
+     width: 2rem;
+     line-height: 2rem; 
+  }
+  .react-datepicker__day-names {
+    .react-datepicker__day-name {
+      font-size: 14px !important;
+      color: rgba(32, 32, 32, 0.5);
+      font-weight: 500;
+    }
+  }
+  .react-datepicker__month { 
+    .react-datepicker__day {
+      border-radius: 30px;
+      font-size: 0.9rem;
+      color: $text-black;
+      background-color: transparent;
+      font-weight: 500;
+      &:hover {
+        animation: shadow-pulse 1s infinite;
+      }
+    }
+    .react-datepicker__day--sat,
+    .react-datepicker__day--sun {
+      color: rgba(32, 32, 32, 0.5);
+    }
+    .react-datepicker__day--outside-month {
+      opacity: .4;
+      font-size: 10px;
+    }
+    .react-datepicker__day--selected {
+      color: $main-color-complement !important;
+      background-color: $main-color !important;
+      border: none;
+    }
+  }
+}
+.react-datepicker-popper {
+  &[data-placement="top-start"] {
+    transform-origin: 50% 100%;
+  }
+  &[data-placement="bottom-start"] {
+    transform-origin: 50% 0%;
+  }
+  animation: show-calendar .2s ease-in-out;
+}
+@keyframes show-calendar {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
