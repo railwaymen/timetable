@@ -51,17 +51,10 @@ export default class ProjectReports extends React.Component {
   }
 
   renderReportState(state) {
-    let iconClass;
-    switch (state) {
-      case 'done':
-        iconClass = 'fa-check';
-        break;
-      case 'editing':
-        iconClass = 'fa-pencil';
-        break;
-      default:
-        iconClass = 'fa-info-circle';
-    }
+    const iconClass = ({
+      done: 'fa-check',
+      editing: 'fa-pencil',
+    })[state] || 'fa-info-circle';
     return (
       <span className="report-status">
         <i className={`symbol fa ${iconClass}`} />
