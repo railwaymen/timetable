@@ -1,7 +1,19 @@
 $brand-color: #bd1c2d;
 $brand-color-75: lighten($brand-color, 15);
+
+$main-color-complement: white;
+$main-color: #d2501d;
+$main-color-75: darken($main-color, 8);
+$main-color-25: #cb9e86;
+
+$blue-color: #3883d7;
+$blue-color-25: #9cc7f8;
+
+$gray-50: #c6c6c6;
+
+
 $text-black: #202020;
-$text-gray: #c6c6c6;
+$text-gray: $gray-50;
 
 $placeholder-color: $text-gray;
 

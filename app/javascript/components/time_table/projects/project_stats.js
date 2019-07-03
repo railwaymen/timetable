@@ -20,7 +20,7 @@ class ProjectStats extends React.Component {
     const data = stats[0];
 
     return (
-      <div className="col-lg-4 card-container project-card">
+      <div className="col-xs-12 col-sm-6 col-lg-4 card-container project-card">
         <div className="card h-100">
           <h3 className="title">
             {this.projectLabel()}

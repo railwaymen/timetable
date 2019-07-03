@@ -185,8 +185,8 @@ class ProjectReportGenerator
   end
 
   WEIGHTS = {
-    'task' => 4,
-    'description' => 4,
+    'task' => 3,
+    'description' => 5,
     'duration' => 1,
     'cost' => 1
   }.freeze
