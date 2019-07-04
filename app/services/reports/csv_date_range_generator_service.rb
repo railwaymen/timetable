@@ -8,10 +8,10 @@ module Reports
       :contract_id,
       :user_name,
       :project_id,
-      :body,
       :duration,
       :starts_at,
       :ends_at,
+      :body,
       :user_id
     )
 
@@ -26,7 +26,7 @@ module Reports
     # rubocop:disable Metrics/MethodLength
     def generate
       CSV.generate(headers: true) do |csv|
-        headers = ['Contract ID', 'Developer', 'Description', 'Date From', 'Date To', 'Duration(Days)']
+        headers = ['Contract ID', 'Developer', 'Date From', 'Date To', 'Description', 'Duration(Days)']
 
         csv << headers
 
@@ -65,9 +65,9 @@ module Reports
       [
         record.contract_id,
         record.user_name,
-        temp_rows.first.body || temp_rows.last.body,
         temp_rows.first.starts_at.to_date,
         temp_rows.last.ends_at.to_date,
+        temp_rows.first.body || temp_rows.last.body,
         format_duration(
           temp_rows.reduce(0) { |sum, tr| sum + tr.duration }
         )
@@ -94,8 +94,8 @@ module Reports
       %(
         SELECT
           u.contract_name as contract_id,
-          (u.first_name || ' ' || u.last_name) as user_name, project_id,
-            body, duration, starts_at, ends_at, u.id as user_id
+          (u.last_name || ' ' || u.first_name) as user_name, project_id,
+            duration, starts_at, ends_at, body, u.id as user_id
         FROM work_times w JOIN users u on w.user_id = u.id
         WHERE w.active = 't' AND w.starts_at >= ? AND w.ends_at <= ?
         ORDER BY user_name, starts_at
