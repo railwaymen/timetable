@@ -90,57 +90,62 @@ export default class NewReport extends React.Component {
   render() {
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
     return (
-      <div>
-        <h2>
-          Name
-        </h2>
-        <input value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
-        <h2>
-          Currency
-        </h2>
-        <input value={this.state.currency} onChange={e => this.setState({ currency: e.target.value })} />
-        <h1>Roles</h1>
+      <div className="new-project-report">
+        <div className="row">
+          <div className="col-md-6 form-group">
+            <label>{I18n.t('common.name')}</label>
+            <input className="form-control" value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
+          </div>
+          <div className="col-md-6 form-group">
+            <label>{I18n.t('apps.reports.currency')}</label>
+            <input className="form-control" value={this.state.currency} onChange={e => this.setState({ currency: e.target.value })} />
+          </div>
+        </div>
+        <h1>{I18n.t('apps.reports.roles')}</h1>
         <DateRangeFilter from={this.state.startsAt.format()} to={this.state.endsAt.format()} onFromChange={this.onRangeStartChange} onToChange={this.onRangeEndChange} onFilter={this.getRoles} />
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Last name</th>
-              <th>Role</th>
-              <th>Hourly wage</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.userRoles.map(user => (
-              <tr key={user.id}>
-                <td>
-                  {user.first_name}
-                </td>
-                <td>
-                  {user.last_name}
-                </td>
-                <td>
-                  <select value={user.role || ''} onChange={e => this.onFieldChange(e, 'role', user.id)}>
-                    <option value="" />
-                    {this.constructor.roles.map(role => (
-                      <option key={role} value={role}>{role}</option>
-                    ))}
-                  </select>
-                </td>
-                <td>
-                  <input type="number" min="0" step="0.01" value={user.hourly_wage} onChange={e => this.onFieldChange(e, 'hourly_wage', user.id)} />
-                  {user.hourly_wage === '' && <span style={{ color: 'red', fontWeight: 'bold' }}>Invalid format</span>}
-                </td>
-                <td>
-                  <input type="text" value={user.description} onChange={e => this.onFieldChange(e, 'description', user.id)} />
-                </td>
+        <div className="table-responsive">
+          <table className="table table-hover">
+            <thead>
+              <tr>
+                <th>{I18n.t('apps.reports.owner')}</th>
+                <th>{I18n.t('apps.reports.role')}</th>
+                <th>{I18n.t('apps.reports.hourly_wage')}</th>
+                <th>{I18n.t('common.description')}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <hr />
-        <button type="button" onClick={this.onSubmit}>Submit</button>
+            </thead>
+            <tbody>
+              {this.state.userRoles.map(user => (
+                <tr key={user.id}>
+                  <td>
+                    {user.first_name}
+                    {user.last_name}
+                  </td>
+                  <td>
+                    <select className="form-control" value={user.role || ''} onChange={e => this.onFieldChange(e, 'role', user.id)}>
+                      <option value="" />
+                      {this.constructor.roles.map(role => (
+                        <option key={role} value={role}>{role}</option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <input className="form-control" type="number" min="0" step="0.01" value={user.hourly_wage} onChange={e => this.onFieldChange(e, 'hourly_wage', user.id)} />
+                    {user.hourly_wage === '' && <span style={{ color: 'red', fontWeight: 'bold' }}>Invalid format</span>}
+                  </td>
+                  <td>
+                    <input className="form-control" type="text" value={user.description} onChange={e => this.onFieldChange(e, 'description', user.id)} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="form-actions text-right">
+          <button className="bt bt-main bt-big" type="button" onClick={this.onSubmit}>
+            <span className="bt-txt">{I18n.t('common.submit')}</span>
+            <i className="symbol fa fa-paper-plane" />
+          </button>
+        </div>
       </div>
     );
   }

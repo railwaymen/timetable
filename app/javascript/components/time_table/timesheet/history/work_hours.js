@@ -33,6 +33,7 @@ class WorkHours extends React.Component {
     this.toggleProjectEdit = this.toggleProjectEdit.bind(this);
     this.toggleTagEdit = this.toggleTagEdit.bind(this);
     this.onHoursEdit = this.onHoursEdit.bind(this);
+    this.onTimeWheel = this.onTimeWheel.bind(this);
     this.recountTime = this.recountTime.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onTagChange = this.onTagChange.bind(this);
@@ -76,7 +77,7 @@ class WorkHours extends React.Component {
   }
 
   onDelete() {
-    if (window.confirm('Are you sure?')) {
+    if (window.confirm(I18n.t('common.confirm'))) {
       Api.makeDeleteRequest({ url: `/api/work_times/${this.state.workHours.id}` })
         .then((data) => {
           if (parseInt(data.status, 10) === 204) {
@@ -115,6 +116,14 @@ class WorkHours extends React.Component {
   onHoursEdit(e) {
     this.setState({
       [e.target.name]: e.target.value,
+    });
+  }
+
+  onTimeWheel(e) {
+    e.preventDefault();
+    const { name, value } = e.target;
+    this.setState({
+      [name]: moment(value, 'HH:mm').subtract(Math.sign(e.deltaY), 'minutes').format('HH:mm'),
     });
   }
 
@@ -179,9 +188,9 @@ class WorkHours extends React.Component {
         <div className="edit-date">
           <DatePicker {...defaultDatePickerProps} value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
         </div>
-        <input className="start-input form-control" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
+        <input className="start-input form-control" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onWheel={this.onTimeWheel} onBlur={this.recountTime} />
         <span className="time-divider">-</span>
-        <input className="end-input form-control" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onBlur={this.recountTime} />
+        <input className="end-input form-control" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onWheel={this.onTimeWheel} onBlur={this.recountTime} />
       </div>
     );
   }
@@ -377,13 +386,13 @@ class WorkHours extends React.Component {
               }
             </div>
             <div className="actions-container">
-              <span className="action-item copy" onClick={this.onCopy}>
+              <span className="action-item copy" onClick={this.onCopy} data-tooltip-bottom={I18n.t('common.copy')}>
                 <i className="symbol fa fa-external-link-square" />
               </span>
-              <span className="action-item history" onClick={this.getInfo}>
+              <span className="action-item history" onClick={this.getInfo} data-tooltip-bottom={I18n.t('common.history')}>
                 <i className="symbol fa fa-clock-o" />
               </span>
-              <span className="action-item destroy" onClick={this.onDelete}>
+              <span className="action-item destroy" onClick={this.onDelete} data-tooltip-bottom={I18n.t('common.remove')}>
                 <i className="symbol fa fa-trash-o" />
               </span>
             </div>

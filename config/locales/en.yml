@@ -38,6 +38,18 @@ en:
       all: 'All'
       my_projects: 'My projects'
       my_work_hours: 'My work hours'
+      currency: Currency
+      roles: Roles
+      role: Role
+      owner: Owner
+      owners_hourly_wage: Owner's hourly wage
+      hourly_wage: Hourly wage
+      time_spent: Time spent
+      cost: Cost
+      merge: Merge
+      ignore: Ignore
+      restore_previous: Restore a previous version
+      restore_first: Restore the first version
     accounting_periods:
       add: Add accounting period
       note: Note
@@ -98,11 +110,14 @@ en:
     rank: 'Rank'
     add: Add
     save: Save
+    submit: Submit
+    Generate: Generate
     cancel: Cancel
     edit: Edit
     destroy: Delete
     from: From
     to: To
+    task: Task
     position: Position
     person: Person
     duration: Duration
@@ -116,17 +131,19 @@ en:
     all: All
     today: Today
     yesterday: Yesterday
-    confirm: Are you sure ?
+    confirm: Are you sure?
     sum: Sum
     name: Name
     external_auth: External integration
     custom: Custom
     state: State
     show: Show
+    description: Description
     download: Download
     range: Range
     remove: Remove
-
+    copy: Copy
+    history: History
   activerecord:
     errors:
       models:

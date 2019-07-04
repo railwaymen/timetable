@@ -1,0 +1,50 @@
+.edit-report-form {
+  th {
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .task-actions {
+    width: 160px;
+    text-align: right;
+    white-space: nowrap;
+  }
+}
+.edit-report-summary {
+  text-align: center;
+  width: 400px;
+  max-width: 100%; 
+  margin: 20px auto;
+  @media only screen and (min-width : 1900px) {
+    width: 350px; 
+    position: fixed;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    margin: 0;
+  }
+  .bt, .ln {
+    margin-bottom: 6px;
+    &:not(:last-child) {
+      margin-right: 12px;
+    } 
+  }
+  .table {
+    td, th {
+      border: none;
+      text-align: right;
+      &:first-child {
+        text-align: center;
+      }
+    }
+    th {
+      font-weight: 600;
+    }
+  }
+  .report-main-actions,
+  .report-download-actions, 
+  .report-undo-actions {
+    &:not(:last-child) {
+      margin-bottom: 15px;
+    }
+  }
+}

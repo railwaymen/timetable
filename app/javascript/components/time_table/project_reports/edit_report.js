@@ -71,11 +71,15 @@ export default class EditReport extends React.Component {
   }
 
   onHardReset() {
-    this.setState(({ report }) => ({ currentBody: this.prepareBody(report.initial_body) }));
+    if (window.confirm(I18n.t('common.confirm'))) {
+      this.setState(({ report }) => ({ currentBody: this.prepareBody(report.initial_body) }));
+    }
   }
 
   onSoftReset() {
-    this.setState(({ report }) => ({ currentBody: this.prepareBody(report.last_body) }));
+    if (window.confirm(I18n.t('common.confirm'))) {
+      this.setState(({ report }) => ({ currentBody: this.prepareBody(report.last_body) }));
+    }
   }
 
   onMergeOwnerChange(event) {
@@ -119,12 +123,14 @@ export default class EditReport extends React.Component {
 
   onIgnore(event, category, id) {
     event.preventDefault();
-    this.setState(({ currentBody }) => {
-      const [removedWorkedTime, rest] = partition(currentBody[category], wt => wt.id === id);
-      const ignored = removedWorkedTime.concat(currentBody.ignored || []);
-      const newBody = { ...currentBody, [category]: rest, ignored };
-      return { currentBody: newBody };
-    });
+    if (window.confirm(I18n.t('common.confirm'))) {
+      this.setState(({ currentBody }) => {
+        const [removedWorkedTime, rest] = partition(currentBody[category], wt => wt.id === id);
+        const ignored = removedWorkedTime.concat(currentBody.ignored || []);
+        const newBody = { ...currentBody, [category]: rest, ignored };
+        return { currentBody: newBody };
+      });
+    }
   }
 
   onShowMerge(event, category) {
@@ -203,17 +209,17 @@ export default class EditReport extends React.Component {
 
   renderMergeButton(category) {
     return (
-      <div key="merge" className="action-item info inline" onClick={e => this.onShowMerge(e, category)} style={{ fontSize: '1.5em' }}>
-        <i className="icon green object group" />
-      </div>
+      <button key="merge" type="button" className="action-item" onClick={e => this.onShowMerge(e, category)} data-tooltip-bottom={I18n.t('apps.reports.merge')}>
+        <i className="symbol fa fa-compress" />
+      </button>
     );
   }
 
-  renderEditButton(category, id) {
+  renderEditOrMergeButton(category, id, addToMerge) {
     return (
-      <div key="edit" className="action-item info inline" onClick={e => this.onShowEdit(e, category, id)} style={{ fontSize: '1.5em' }}>
-        <i className="icon blue edit" />
-      </div>
+      <button key="edit" type="button" className={`action-item ${addToMerge ? 'plus' : ''}`} onClick={e => this.onShowEdit(e, category, id)} data-tooltip-bottom={addToMerge ? I18n.t('apps.reports.merge') : I18n.t('common.edit')}>
+        <i className="symbol fa fa-pencil" />
+      </button>
     );
   }
 
@@ -224,25 +230,29 @@ export default class EditReport extends React.Component {
   }
 
   renderRowActions({ id, touched, toMerge }, category, toMergeTasks) {
-    let result = [];
-    if (this.editable()) {
-      result = [
-        <div key="merge">
-          <input name="toMerge" type="checkbox" className="merge-check-box" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
-          {
-            (toMerge && toMergeTasks.length >= 2 && this.renderMergeButton(category)) || this.renderEditButton(category, id)
-          }
-        </div>,
-        <div key="ignore" className="action-item destroy" onClick={e => this.onIgnore(e, category, id)} style={{ fontSize: '1.5em' }}>
-          <i className="icon red trash" />
-        </div>,
-      ];
-    }
+    const result = [];
+    const willBeAddedToMerge = !toMerge && toMergeTasks.length > 0;
     if (touched) {
       result.push(
-        <div key="details" className="action-item info" onClick={e => this.onShowWorkTimeModal(e, category, id)} style={{ fontSize: '1.5em' }}>
-          <i className="icon wait" />
-        </div>,
+        <button key="details" type="button" className="action-item info" onClick={e => this.onShowWorkTimeModal(e, category, id)} data-tooltip-bottom={I18n.t('common.history')}>
+          <i className="symbol fa fa-clock-o" />
+        </button>,
+      );
+    }
+    if (this.editable()) {
+      result.push(
+        <React.Fragment key="merge">
+          <label className="form-check-label">
+            <input name="toMerge" type="checkbox" className="merge-check-box" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
+            <span className="checkbox" />
+          </label>
+          {
+            (toMerge && toMergeTasks.length >= 2 && this.renderMergeButton(category)) || this.renderEditOrMergeButton(category, id, willBeAddedToMerge)
+          }
+        </React.Fragment>,
+        <button key="ignore" type="button" className="action-item destroy" onClick={e => this.onIgnore(e, category, id)} data-tooltip-bottom={I18n.t('apps.reports.ignore')}>
+          <i className="symbol fa fa-trash-o" />
+        </button>,
       );
     }
     return result;
@@ -263,22 +273,22 @@ export default class EditReport extends React.Component {
             <thead>
               <tr>
                 <th>
-                  Task
+                  {I18n.t('common.task')}
                 </th>
                 <th>
-                  Description
+                  {I18n.t('common.description')}
                 </th>
                 <th>
-                  Owner
+                  {I18n.t('apps.reports.owner')}
                 </th>
                 <th>
-                  Time spent
+                  {I18n.t('apps.reports.time_spent')}
                 </th>
                 <th>
-                  Owner wage
+                  {I18n.t('apps.reports.owners_hourly_wage')}
                 </th>
                 <th>
-                  Cost
+                  {I18n.t('apps.reports.cost')}
                 </th>
               </tr>
             </thead>
@@ -357,48 +367,48 @@ export default class EditReport extends React.Component {
     return (
       <div key={category}>
         <h2>{category}</h2>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Tag</th>
-              <th>
-                Task
-              </th>
-              <th>
-                Description
-              </th>
-              <th>
-                Owner
-              </th>
-              <th>
-                Time spent
-              </th>
-              <th>
-                Cost
-              </th>
-              <th>
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {times.map(({
-              id, task, duration, owner, toMerge, description, cost, touched, tag,
-            }) => (
-              <tr key={id}>
-                <td><TagPill tag={tag} onClick={() => this.handleTagPillClick(category, tag)} bold={false} /></td>
-                <td>{task}</td>
-                <td>{description}</td>
-                <td>{owner}</td>
-                <td>{displayDuration(duration)}</td>
-                <td>{this.renderCost(cost)}</td>
-                <td>
-                  {this.renderRowActions({ id, toMerge, touched }, category, toMergeTasks)}
-                </td>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Tag</th>
+                <th>
+                  {I18n.t('common.task')}
+                </th>
+                <th>
+                  {I18n.t('common.description')}
+                </th>
+                <th>
+                  {I18n.t('apps.reports.owner')}
+                </th>
+                <th className="text-center">
+                  {I18n.t('apps.reports.time_spent')}
+                </th>
+                <th className="text-right">
+                  {I18n.t('apps.reports.cost')}
+                </th>
+                <th />
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {times.map(({
+                id, task, duration, owner, toMerge, description, cost, touched, tag,
+              }) => (
+                <tr key={id}>
+                  <td><TagPill tag={tag} onClick={() => this.handleTagPillClick(category, tag)} bold={false} /></td>
+                  <td>{task}</td>
+                  <td>{description}</td>
+                  <td>{owner}</td>
+                  <td className="text-center">{displayDuration(duration)}</td>
+                  <td className="text-right">{this.renderCost(cost)}</td>
+                  <td className="task-actions list-of-actions">
+                    {this.renderRowActions({ id, toMerge, touched }, category, toMergeTasks)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <Modal
           id={`modal-${category}`}
           header={modalHeader}
@@ -447,41 +457,42 @@ export default class EditReport extends React.Component {
     return (
       <div>
         <h2>Ignored</h2>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>
-                Task
-              </th>
-              <th>
-                Description
-              </th>
-              <th>
-                Owner
-              </th>
-              <th>
-                Time spent
-              </th>
-              <th>
-                Cost
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {times.map(({
-              id, task, duration, owner, description, cost,
-            }) => (
-              <tr key={id}>
-                <td>{task}</td>
-                <td>{description}</td>
-                <td>{owner}</td>
-                <td>{displayDuration(duration)}</td>
-                <td>{this.renderCost(cost)}</td>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>
+                  {I18n.t('common.task')}
+                </th>
+                <th>
+                  {I18n.t('common.description')}
+                </th>
+                <th>
+                  {I18n.t('apps.reports.owner')}
+                </th>
+                <th className="text-center">
+                  {I18n.t('apps.reports.time_spent')}
+                </th>
+                <th className="text-right">
+                  {I18n.t('apps.reports.cost')}
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <hr />
+            </thead>
+            <tbody>
+              {times.map(({
+                id, task, duration, owner, description, cost,
+              }) => (
+                <tr key={id}>
+                  <td>{task}</td>
+                  <td>{description}</td>
+                  <td>{owner}</td>
+                  <td className="text-center">{displayDuration(duration)}</td>
+                  <td className="text-right">{this.renderCost(cost)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
@@ -497,14 +508,7 @@ export default class EditReport extends React.Component {
     const categoriesDurationSum = categories.map(category => sumBy(currentBody[category], 'duration'));
     const categoriesCostSum = categories.map(category => sumBy(currentBody[category], 'cost'));
     return (
-      <div className="edit-report-summary">
-        {this.editable()
-          && [
-            <button key="soft" type="button" onClick={this.onSoftReset}>Soft reset</button>,
-            <button key="hard" type="button" onClick={this.onHardReset}>Hard reset</button>,
-            <hr key="hr" />,
-          ]
-        }
+      <div className="edit-report-summary card">
         <h2>{report.project_name}</h2>
         <p>
           <strong>
@@ -513,39 +517,66 @@ export default class EditReport extends React.Component {
             {moment(report.ends_at).format('MM.DD')}
           </strong>
         </p>
-        <table className="table">
-          <tbody>
-            {categories.map((category, idx) => (
-              <tr key={category}>
-                <td>
-                  {category}
-                </td>
-                <td>
-                  {displayDuration(categoriesDurationSum[idx])}
-                </td>
-                <td>
-                  {this.renderCost(categoriesCostSum[idx])}
-                </td>
+        <div className="table-responsive">
+          <table className="table">
+            <tbody>
+              {categories.map((category, idx) => (
+                <tr key={category}>
+                  <td>
+                    {category}
+                  </td>
+                  <td>
+                    {displayDuration(categoriesDurationSum[idx])}
+                  </td>
+                  <td>
+                    {this.renderCost(categoriesCostSum[idx])}
+                  </td>
+                </tr>
+              ))}
+              <tr>
+                <th>Total</th>
+                <th>{displayDuration(sumBy(categoriesDurationSum))}</th>
+                <th>{this.renderCost(sumBy(categoriesCostSum))}</th>
               </tr>
-            ))}
-            <tr className="active">
-              <th>Total</th>
-              <th>{displayDuration(sumBy(categoriesDurationSum))}</th>
-              <th>{this.renderCost(sumBy(categoriesCostSum))}</th>
-            </tr>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
         {this.editable()
-          && [
-            <hr key="hr" />,
-            <button key="submit" className="text-center" type="button" onClick={this.onSubmit}>Submit</button>,
-            <button key="generate" className="text-center" type="button" onClick={this.onGenerate}>Generate</button>,
-          ]}
+          && (
+          <div className="report-main-actions">
+            <button key="submit" className="bt bt-main bt-big" type="button" onClick={this.onSubmit}>
+              <span className="txt">{I18n.t('common.save')}</span>
+              <i className="symbol fa fa-check" />
+            </button>
+            <button key="generate" className="bt bt-second bt-big" type="button" onClick={this.onGenerate}>
+              <span className="txt">{I18n.t('common.generate')}</span>
+              <i className="symbol fa fa-file-pdf-o" />
+            </button>
+          </div>
+          )
+        }
         {report.generated
           && (
-          <a href={`/api/projects/${projectId}/project_reports/${reportId}/file`}>
-            Download
-          </a>
+          <div className="report-download-actions">
+            <a className="bt bt-second bt-big bt-download" href={`/api/projects/${projectId}/project_reports/${reportId}/file`}>
+              <i className="symbol fa fa-file-pdf-o" />
+              <span className="txt">{I18n.t('common.download')}</span>
+            </a>
+          </div>
+          )
+        }
+        {this.editable()
+          && (
+          <div className="report-undo-actions">
+            <button key="soft" type="button" className="ln ln-second" onClick={this.onSoftReset}>
+              <i className="symbol fa fa-undo" />
+              <span className="txt">{I18n.t('apps.reports.restore_previous')}</span>
+            </button>
+            <button key="hard" type="button" className="ln ln-second" onClick={this.onHardReset}>
+              <i className="symbol fa fa-history" />
+              <span className="txt">{I18n.t('apps.reports.restore_first')}</span>
+            </button>
+          </div>
           )
         }
       </div>
@@ -556,7 +587,7 @@ export default class EditReport extends React.Component {
     const { report, currentBody } = this.state;
     if (!report || !currentBody) return <div />;
     return (
-      <div>
+      <div className="edit-report-form">
         {without(Object.keys(currentBody), 'ignored').sort().map(this.renderCategory)}
         {this.renderWorkTimeModal()}
         {this.renderIgnored()}

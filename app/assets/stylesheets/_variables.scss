@@ -6,6 +6,8 @@ $box-shadow: 0 0 $box-shadow-range rgba(black, $box-shadow-opacity);
 
 $font-family: 'Hind Vadodara', sans-serif;
 
+$softBounce: cubic-bezier(0.68, -0.55, 0.265, 1.30);
+
 $sm: "only screen and (min-width : 768px)"; 
 $md: "only screen and (min-width : 992px)"; 
 $lg: "only screen and (min-width : 1200px)";
