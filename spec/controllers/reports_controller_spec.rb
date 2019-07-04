@@ -21,7 +21,7 @@ RSpec.describe ReportsController do
 
     it 'returns vacations/zks report in csv' do
       sign_in(manager)
-      user = create(:user)
+      user = create(:user, contract_name: 'A/BC/123')
       vacation = create(
         :project,
         name: 'Vacation',
@@ -37,11 +37,12 @@ RSpec.describe ReportsController do
       require 'csv'
       csv = CSV.parse(response.body)
       expect(csv[0]).to eql(
-        ['Developer', 'Description', 'Date From', 'Date To', 'Duration(Days)']
+        ['Contract ID', 'Developer', 'Description', 'Date From', 'Date To', 'Duration(Days)']
       )
       user_name = "#{user.first_name} #{user.last_name}"
       expect(csv[1]).to eql(
         [
+          user.contract_name,
           user_name,
           work_time1.body,
           work_time1.starts_at.strftime('%Y-%m-%d'),
