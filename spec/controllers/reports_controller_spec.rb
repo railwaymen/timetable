@@ -37,16 +37,16 @@ RSpec.describe ReportsController do
       require 'csv'
       csv = CSV.parse(response.body)
       expect(csv[0]).to eql(
-        ['Contract ID', 'Developer', 'Description', 'Date From', 'Date To', 'Duration(Days)']
+        ['Contract ID', 'Developer', 'Date From', 'Date To', 'Description', 'Duration(Days)']
       )
-      user_name = "#{user.first_name} #{user.last_name}"
+      user_name = "#{user.last_name} #{user.first_name}"
       expect(csv[1]).to eql(
         [
           user.contract_name,
           user_name,
-          work_time1.body,
           work_time1.starts_at.strftime('%Y-%m-%d'),
           work_time2.ends_at.strftime('%Y-%m-%d'),
+          work_time1.body,
           '2'
         ]
       )
