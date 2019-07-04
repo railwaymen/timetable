@@ -1,7 +1,9 @@
 .h-100 {
   height: 100%;
 }
-
+.no-touch-action {
+  touch-action: none;
+}
 .table-responsive {
   @media #{$lg} {
     overflow: visible;
