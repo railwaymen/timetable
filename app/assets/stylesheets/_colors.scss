@@ -17,7 +17,9 @@ $text-gray: $gray-50;
 
 $placeholder-color: $text-gray;
 
+$error-color-complement: white;
 $error-color: #C2301F;
+$error-color-75: darken($error-color, 8);
 $error-background-color: white;
 
 $border-color: #e9e9e9;

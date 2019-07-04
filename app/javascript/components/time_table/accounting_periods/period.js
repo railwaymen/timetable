@@ -51,13 +51,19 @@ class Period extends React.Component {
         <td>{preserveLines(period.note || '')}</td>
         <td>{period.closed ? <i className="glyphicon glyphicon-ok" /> : ''}</td>
         <td>{period.full_time ? <i className="glyphicon glyphicon-ok" /> : ''}</td>
-        <td>
+        <td className="nowrap">
           { currentUser.admin
             ? (
-              <span>
-                <NavLink to={`/accounting_periods/edit/${period.id}?user_id=${period.user_id}`} className="btn btn-default edit">{I18n.t('common.edit')}</NavLink>
-                <div onClick={this.onDelete} className="btn btn-danger delete">{I18n.t('common.destroy')}</div>
-              </span>
+              <React.Fragment>
+                <NavLink to={`/accounting_periods/edit/${period.id}?user_id=${period.user_id}`} className="bt bt-second bt-small edit">
+                  <i className="symbol fa fa-pencil" />
+                  <span className="bt-txt">{I18n.t('common.edit')}</span>
+                </NavLink>
+                <button onClick={this.onDelete} className="bt bt-danger bt-small delete">
+                  <i className="symbol fa fa-trash-o" />
+                  <span className="bt-txt">{I18n.t('common.destroy')}</span>
+                </button>
+              </React.Fragment>
             ) : null }
         </td>
       </tr>
