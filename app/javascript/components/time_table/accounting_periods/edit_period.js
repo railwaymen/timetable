@@ -245,7 +245,7 @@ class EditPeriod extends React.Component {
                   </select>
                 </div>
                 <div className="form-group">
-                  <textarea className="form-control" name="note" placeholder="Note" onChange={this.onChange} value={period.note} />
+                  <textarea className="form-control" name="note" placeholder={I18n.t('apps.accounting_periods.note')} onChange={this.onChange} value={period.note} />
                 </div>
                 <div className="row form-group">
                   <div className="col-12 col-xs-6">

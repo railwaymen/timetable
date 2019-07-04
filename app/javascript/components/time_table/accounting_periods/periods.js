@@ -157,10 +157,23 @@ class Periods extends React.Component {
 
     if (currentUser.admin) {
       return (
-        <div className="btn-toolbar" style={{ marginBottom: '30px' }}>
-          <NavLink className="btn btn-default" to={`/accounting_periods/new?user_id=${this.state.userId}`}>{I18n.t('apps.accounting_periods.add')}</NavLink>
-          <a id="generate" className="btn btn-default">{I18n.t('apps.accounting_periods.generate_periods')}</a>
-          <a id="recount" onClick={this.recountPeriods} className={`btn btn-default ${recounting ? 'disabled' : ''}`}>{I18n.t('apps.accounting_periods.recount_periods')}</a>
+        <div className="row periods-actions">
+          <div className="col-md-8">
+            <NavLink className="bt bt-main" to={`/accounting_periods/new?user_id=${this.state.userId}`}>
+              <span className="bt-txt">{I18n.t('apps.accounting_periods.add')}</span>
+              <i className="symbol fa fa-calendar-plus-o" />
+            </NavLink>
+            <a id="generate" className="bt bt-second">
+              <span className="bt-txt">{I18n.t('apps.accounting_periods.generate_periods')}</span>
+              <i className="symbol fa fa-calendar-plus-o" />
+            </a>
+          </div>
+          <div className="col-md-4 text-right">
+            <a id="recount" onClick={this.recountPeriods} className={`bt bt-second ${recounting ? 'disabled' : ''}`}>
+              <span className="bt-txt">{I18n.t('apps.accounting_periods.recount_periods')}</span>
+              <i className="symbol fa fa-repeat" />
+            </a>
+          </div>
         </div>
       );
     }
@@ -270,7 +283,7 @@ class Periods extends React.Component {
     const MONTHS_IN_YEAR = 12;
 
     return (
-      <div>
+      <div className="accounting-periods-list">
         {currentUser.admin ? this.renderButtons() : null}
         <div className="col-md-offset-3 col-md-6 vert-offset-bottom clearfix">
           { currentUser.admin ? (
