@@ -9,18 +9,17 @@
 
 @import 'shared/*';
 
-@import 'application/helpers';
-
 @import 'application/body';
-@import 'application/buttons';
-@import 'application/error-tooltip';
-@import 'application/tag';
 @import 'application/horizontal-arrows';
 @import 'application/date-range-filter';
 
 @import 'application/new-entry';
 @import 'application/project-card';
 @import 'application/time-entries';
+
+@import 'application/new-project-report';
+@import 'application/edit-report-form';
+@import 'application/list-of-reports';
 
 @import 'pages/projects';
 @import 'pages/reports';
@@ -41,10 +40,6 @@
 
 div.react-datepicker__input-container {
   width: 100%;
-}
-
-.react-datepicker-popper {
-  z-index: 19;
 }
 
 .circle {

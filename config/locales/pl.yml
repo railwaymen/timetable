@@ -38,6 +38,18 @@ pl:
       all: 'Wszystkie'
       my_projects: 'Moje projekty'
       my_work_hours: 'Moje godziny pracy'
+      currency: Waluta
+      roles: Role
+      role: Rola
+      owner: Pracownik
+      owners_hourly_wage: Stawka godzinowa pracownika
+      hourly_wage: Stawka godzinowa
+      time_spent: Poświecony czas
+      cost: Koszt
+      merge: Połącz
+      ignore: Ignoruj
+      restore_previous: Przywróć poprzednią wersję
+      restore_first: Przywróć pierwszą wersję
     accounting_periods:
       add: Dodaj okres rozliczeniowy
       note: Notatka
@@ -98,11 +110,14 @@ pl:
     rank: 'Ranking'
     add: Dodaj
     save: Zapisz
+    submit: Wyślij
+    generate: Generuj
     cancel: Anuluj
     edit: Edytuj
     destroy: Usuń
     from: Od
     to: Do
+    task: Zadanie
     position: Pozycja
     person: Osoba
     duration: Czas trwania
@@ -116,16 +131,19 @@ pl:
     all: Wszystkie
     today: Dzisiaj
     yesterday: Wczoraj
-    confirm: Jesteś pewien ?
+    confirm: Jesteś pewien?
     sum: Suma
     name: Nazwa
     external_auth: Integracja z serwisami zewnętrznymi
     custom: Własny
     state: Status
     show: Pokaż
+    description: Opis
     download: Pobierz
     range: Zakres
     remove: Usuń
+    copy: Kopiuj
+    history: Historia
   errors:
     format: "%{attribute} %{message}"
     messages:

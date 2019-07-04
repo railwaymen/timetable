@@ -74,13 +74,11 @@
       border-radius: 25px;
       transform: scale(0);
       color: white;
-      background-color: #3883d7;
+      background-color: $blue-color;
       opacity: 0;      
       transition: .3s .3s ease-in-out;
-      
-      margin-right: 5px;
-      &:last-child {
-        margin-right: 0;
+      &:not(:last-child) {
+        margin-right: 5px;
       }
       * {
         margin: 0;
