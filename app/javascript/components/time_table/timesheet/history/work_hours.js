@@ -78,7 +78,7 @@ class WorkHours extends React.Component {
   }
 
   onDelete() {
-    if (window.confirm('Are you sure?')) {
+    if (window.confirm(I18n.t('common.confirm'))) {
       Api.makeDeleteRequest({ url: `/api/work_times/${this.state.workHours.id}` })
         .then((data) => {
           if (parseInt(data.status, 10) === 204) {
@@ -206,7 +206,7 @@ class WorkHours extends React.Component {
         </div>
         <input className="start-input form-control" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onFocus={this.onTimeFocus} onClick={this.onFocus} onBlur={this.onTimeBlur} />
         <span className="time-divider">-</span>
-        <input className="end-input form-control" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onFocus={this.onTimeFocus} onClick={this.onFocus} onBlur={this.onTimeBlur} />
+        <input className="end-input form-control" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onFocus={this.onTimeFocus} onClick={this.onFocus} onBlur={this.onTimeBlur} />
       </div>
     );
   }
@@ -402,13 +402,13 @@ class WorkHours extends React.Component {
               }
             </div>
             <div className="actions-container">
-              <span className="action-item copy" onClick={this.onCopy}>
+              <span className="action-item copy" onClick={this.onCopy} data-tooltip-bottom={I18n.t('common.copy')}>
                 <i className="symbol fa fa-external-link-square" />
               </span>
-              <span className="action-item history" onClick={this.getInfo}>
+              <span className="action-item history" onClick={this.getInfo} data-tooltip-bottom={I18n.t('common.history')}>
                 <i className="symbol fa fa-clock-o" />
               </span>
-              <span className="action-item destroy" onClick={this.onDelete}>
+              <span className="action-item destroy" onClick={this.onDelete} data-tooltip-bottom={I18n.t('common.remove')}>
                 <i className="symbol fa fa-trash-o" />
               </span>
             </div>
