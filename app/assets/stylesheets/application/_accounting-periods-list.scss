@@ -14,6 +14,9 @@
   }
   .table {
     td, th {
+      &:not(.text-right):not(.text-left) {
+        text-align: center;
+      }
       vertical-align: middle;
     }
   }

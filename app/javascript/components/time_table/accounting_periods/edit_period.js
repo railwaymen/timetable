@@ -254,6 +254,7 @@ class EditPeriod extends React.Component {
                       <span className="checkbox" />
                       <span className="ch-txt">
                         {I18n.t('apps.accounting_periods.closed')}
+                        <i className="symbol state-symbol fa fa-lock" />
                       </span>
                     </label>
                   </div>
@@ -261,7 +262,13 @@ class EditPeriod extends React.Component {
                     <label className="form-check-label">
                       <input type="checkbox" name="full_time" checked={period.full_time} onChange={this.onCheckboxChange} />
                       <span className="checkbox" />
-                      <span className="ch-txt">{I18n.t('apps.accounting_periods.full_time')}</span>
+                      <span className="ch-txt">
+                        {I18n.t('apps.accounting_periods.full_time')}
+                        <span className="symbol state-symbol symbol-full-time">
+                          <i className="sub-symbol s-document fa fa-file-text-o" />
+                          <i className="sub-symbol s-check fa fa-check" />
+                        </span>
+                      </span>
                     </label>
                   </div>
                 </div>

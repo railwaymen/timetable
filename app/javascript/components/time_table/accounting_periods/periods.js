@@ -301,12 +301,12 @@ class Periods extends React.Component {
             <tr>
               <th>{I18n.t('common.position')}</th>
               <th>{I18n.t('common.person')}</th>
-              <th className="text-center">{I18n.t('common.from')}</th>
-              <th className="text-center">{I18n.t('common.to')}</th>
-              <th className="text-center">{I18n.t('common.duration')}</th>
-              <th>{I18n.t('apps.accounting_periods.note')}</th>
-              <th className="text-center">{I18n.t('apps.accounting_periods.closed')}</th>
-              <th className="text-center">{I18n.t('apps.accounting_periods.full_time')}</th>
+              <th>{I18n.t('common.from')}</th>
+              <th>{I18n.t('common.to')}</th>
+              <th>{I18n.t('common.duration')}</th>
+              <th className="text-left">{I18n.t('apps.accounting_periods.note')}</th>
+              <th>{I18n.t('apps.accounting_periods.closed')}</th>
+              <th>{I18n.t('apps.accounting_periods.full_time')}</th>
               { currentUser.admin ? <th /> : null }
             </tr>
           </thead>

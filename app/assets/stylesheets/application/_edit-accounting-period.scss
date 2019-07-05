@@ -1,6 +1,8 @@
 .edit-accounting-period {
-  .react-datepicker-wrapper {
-    width: 100%;
+  .ch-txt {
+    .symbol {
+      margin-left: 5px;
+    }
   }
   textarea {
     min-height: 80px;
@@ -9,6 +11,9 @@
   .calendar-row {
     position: relative;
     z-index: 10;
+  }
+  .react-datepicker-wrapper {
+    width: 100%;
   }
   .form-actions {
     .bt {
