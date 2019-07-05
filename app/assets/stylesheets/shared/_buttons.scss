@@ -15,6 +15,9 @@ $second-bt-color: $second-color;
   line-height: 22px;
   font-size: 15px;
   text-decoration: none;
+  &:active {
+    text-decoration: none;
+  }
 
   padding: 8px 16px;
   .symbol {

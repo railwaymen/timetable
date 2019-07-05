@@ -11,6 +11,7 @@
       transition: .2s ease-in-out;
       background-color: $white;
       font-weight: 500;
+      cursor: pointer;
       &:hover, &:focus, &:active {
         color: $main-color-75;
         background-color: $white;

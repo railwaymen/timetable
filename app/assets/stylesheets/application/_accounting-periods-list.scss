@@ -5,4 +5,23 @@
   .bt:not(:last-child) {
     margin-right: 12px;
   }
+  .period-duration-progress {
+    font-weight: 500;
+    color: $text-black;
+    &.period-completed {
+      color: $blue-color;
+    }
+  }
+  .table {
+    td, th {
+      vertical-align: middle;
+    }
+  }
+  .state-symbol {
+    font-size: 16px;
+    cursor: help;
+    &.fa-lock {
+      color: $blue-color;
+    }
+  }
 }

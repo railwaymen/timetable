@@ -36,21 +36,31 @@ class Period extends React.Component {
 
   render() {
     const { period, userName } = this.props;
-
     return (
       <tr>
         <td>{period.position}</td>
         <td>{userName}</td>
-        <td>{period.starts_at ? this.formatDate(period.starts_at) : ''}</td>
-        <td>{period.ends_at ? this.formatDate(period.ends_at) : ''}</td>
-        <td>
-          {this.formatTime(period.counted_duration)}
+        <td className="text-center">{period.starts_at ? this.formatDate(period.starts_at) : ''}</td>
+        <td className="text-center">{period.ends_at ? this.formatDate(period.ends_at) : ''}</td>
+        <td className={`text-center period-duration-progress ${period.counted_duration >= period.duration ? 'period-completed' : 'in-progress'}`}>
+          <span data-tooltip-bottom={`${((period.counted_duration / period.duration) * 100).toFixed(2)}%`}>
+            {this.formatTime(period.counted_duration)}
 /
-          {this.formatTime(period.duration)}
+            {this.formatTime(period.duration)}
+          </span>
         </td>
         <td>{preserveLines(period.note || '')}</td>
-        <td>{period.closed ? <i className="glyphicon glyphicon-ok" /> : ''}</td>
-        <td>{period.full_time ? <i className="glyphicon glyphicon-ok" /> : ''}</td>
+        <td className="text-center">{period.closed ? <i className="symbol state-symbol fa fa-lock" data-tooltip-bottom={I18n.t('apps.accounting_periods.closed')} /> : ''}</td>
+        <td className="text-center">
+          {period.full_time
+            && (
+              <span className="symbol state-symbol symbol-full-time" data-tooltip-bottom={I18n.t('apps.accounting_periods.full_time')}>
+                <i className="sub-symbol s-document fa fa-file-text-o" />
+                <i className="sub-symbol s-check fa fa-check" />
+              </span>
+            )
+          }
+        </td>
         <td className="nowrap text-right">
           { currentUser.admin
             ? (

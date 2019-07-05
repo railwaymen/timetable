@@ -278,19 +278,19 @@ class EditPeriod extends React.Component {
                 <label>{I18n.t('common.duration')}</label>
                 <div className="row">
                   <div className="col-md-6">
+                    { errors.duration
+                      ? <div className="error-description">{errors.duration.join(', ')}</div>
+                      : null }
                     <div className="form-group input-group">
-                      { errors.duration
-                        ? <div className="error-description">{errors.duration.join(', ')}</div>
-                        : null }
                       <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="hours" onChange={this.onChange} value={period.hours} />
                       <div className="input-group-addon">h</div>
                     </div>
                   </div>
                   <div className="col-md-6">
+                    { errors.duration
+                      ? <div className="error-description">{errors.duration.join(', ')}</div>
+                      : null }
                     <div className="form-group input-group">
-                      { errors.duration
-                        ? <div className="error-description">{errors.duration.join(', ')}</div>
-                        : null }
                       <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="minutes" onChange={this.onChange} value={period.minutes} />
                       <div className="input-group-addon">m</div>
                     </div>
