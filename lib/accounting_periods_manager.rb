@@ -32,6 +32,6 @@ class AccountingPeriodsManager
   end
 
   def worker_params
-    { user_id: @user_id }
+    { user_id: @user_id.to_s }
   end
 end
