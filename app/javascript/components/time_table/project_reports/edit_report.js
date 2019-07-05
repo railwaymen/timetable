@@ -128,7 +128,7 @@ export default class EditReport extends React.Component {
         const [removedWorkedTime, rest] = partition(currentBody[category], wt => wt.id === id);
         const ignored = removedWorkedTime.concat(currentBody.ignored || []);
         const newBody = { ...currentBody, [category]: rest, ignored };
-        return { currentBody: newBody };
+        return { currentBody: newBody, workTimeModalCategory: null, workTimeModalId: null };
       });
     }
   }
