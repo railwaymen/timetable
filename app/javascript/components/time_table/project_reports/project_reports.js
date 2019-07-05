@@ -102,19 +102,22 @@ export default class ProjectReports extends React.Component {
                   <td className="text-center">
                     {`${simpleDateFormat(starts_at)}-${simpleDateFormat(ends_at)}`}
                   </td>
-                  <td className="list-of-actions report-actions text-right">
+                  <td className="report-actions text-right">
                     {generated
                       && (
-                      <a className="action-item pdf" href={`/api/projects/${projectId}/project_reports/${id}/file`} data-tooltip-bottom={I18n.t('common.download')}>
+                      <a className="bt bt-second bt-download" href={`/api/projects/${projectId}/project_reports/${id}/file`}>
                         <i className="symbol fa fa-file-pdf-o" />
+                        <span className="txt">{I18n.t('common.download')}</span>
                       </a>
                       )
                     }
-                    <Link className="action-item" to={`/projects/${projectId}/edit_report/${id}`} data-tooltip-bottom={I18n.t('common.show')}>
-                      <i className="symbol fa fa-pencil" />
+                    <Link className="bt bt-second" to={`/projects/${projectId}/edit_report/${id}`}>
+                      <i className="symbol fa fa-search" />
+                      <span className="bt-txt">{I18n.t('common.show')}</span>
                     </Link>
-                    <a className="action-item destroy" onClick={this.onDelete} href={`/api/projects/${projectId}/project_reports/${id}`} data-tooltip-bottom={I18n.t('apps.reports.remove')}>
-                      <i className="fa fa-trash-o" />
+                    <a className="bt bt-danger" onClick={this.onDelete} href={`/api/projects/${projectId}/project_reports/${id}`}>
+                      <i className="symbol fa fa-trash-o" />
+                      <span className="bt-txt">{I18n.t('apps.reports.remove')}</span>
                     </a>
                   </td>
                 </tr>

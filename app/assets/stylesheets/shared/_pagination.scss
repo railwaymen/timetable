@@ -1,0 +1,43 @@
+.pagination {
+  .glyphicon {
+    top: 0;
+  }
+  li {
+    float: none;
+    display: inline-block;
+    a {
+      color: $main-color;
+      border-color: $border-color;
+      transition: .2s ease-in-out;
+      background-color: $white;
+      font-weight: 500;
+      &:hover, &:focus, &:active {
+        color: $main-color-75;
+        background-color: $white;
+      }
+      &:hover {
+        animation: shadow-pulse 1s infinite;
+      }
+    }
+    &:first-child a {
+      padding-left: 15px;
+      border-top-left-radius: 30px;
+      border-bottom-left-radius: 30px;
+    }
+    &:last-child a {
+      padding-right: 15px;
+      border-top-right-radius: 30px;
+      border-bottom-right-radius: 30px;
+    }
+  }
+  li.active a {
+    color: $main-color-complement !important;
+    background-color: $main-color;
+    border-color: $main-color-75;
+    &:hover, &:focus, &:active {
+      color: $main-color-complement !important;
+      background-color: $main-color-75;
+      border-color: transparent;
+    }
+  }
+}

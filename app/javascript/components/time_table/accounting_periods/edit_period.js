@@ -267,7 +267,7 @@ class EditPeriod extends React.Component {
                 </div>
               </div>
               <div className="col-12 col-md-6">
-                <div className="row">
+                <div className="row calendar-row">
                   <div className="col-md-6 form-group">
                     <DatePicker {...defaultDatePickerProps} onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at ? moment(period.starts_at, 'YYYY-MM-DD HH:mm') : null} name="starts_at" placeholderText={I18n.t('common.from')} onChange={this.onStartsAtChange} />
                   </div>

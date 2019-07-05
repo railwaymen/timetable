@@ -4,7 +4,7 @@ $main-bt-color: white;
 
 $second-bt-bg: white;
 $second-bt-bg-active: darken($second-bt-bg, 8);
-$second-bt-color: #818181;
+$second-bt-color: $second-color;
 
 .bt {
   display: inline-block;

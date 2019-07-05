@@ -196,14 +196,14 @@ class Periods extends React.Component {
         { isBackAvailable
           ? (
             <li id="prevPage">
-              <a className="glyphicon glyphicon-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`} />
+              <a className="symbol fa fa-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`} />
             </li>
           ) : null }
         {this.paginationBody(pages, page, userId)}
         { isForwardAvailable
           ? (
             <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
-              <a className="glyphicon glyphicon-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />
+              <a className="symbol fa fa-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />
             </li>
           ) : null }
       </ul>

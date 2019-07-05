@@ -6,6 +6,10 @@
     min-height: 80px;
     height: 120px;
   }
+  .calendar-row {
+    position: relative;
+    z-index: 10;
+  }
   .form-actions {
     .bt {
       &:not(:last-child) {
