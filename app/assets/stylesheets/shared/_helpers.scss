@@ -1,9 +1,14 @@
 .h-100 {
   height: 100%;
 }
-
+.nowrap {
+  white-space: nowrap;
+}
 .table-responsive {
   @media #{$lg} {
     overflow: visible;
   }
+}
+textarea {
+  resize: vertical;
 }
