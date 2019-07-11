@@ -18,6 +18,7 @@ class Periods extends React.Component {
     this.onGenerateSubmit = this.onGenerateSubmit.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
     this.recountPeriods = this.recountPeriods.bind(this);
+    this.getRecountingPeriodsState = this.getRecountingPeriodsState.bind(this);
 
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onNextUserChange = this.onNextUserChange.bind(this);
@@ -40,6 +41,7 @@ class Periods extends React.Component {
       year: moment().format('YYYY'),
     },
     userId: undefined,
+    recountJid: undefined,
     user: {},
   }
 
@@ -145,10 +147,25 @@ class Periods extends React.Component {
     Api.makePostRequest({
       url: '/api/accounting_periods/recount',
       body: { user_id: this.state.userId },
-    }).then(() => {
+    }).then((response) => {
       this.setState({
+        recountJid: response.data.jid,
         recounting: true,
       });
+      this.recountingTimer = setInterval(this.getRecountingPeriodsState, 1000);
+    });
+  }
+
+  getRecountingPeriodsState() {
+    Api.makeGetRequest({
+      url: `/api/accounting_periods/recount_status?user_id=${this.state.userId}`,
+    }).then((response) => {
+      const { recountJid, userId, page } = this.state;
+      if (!!recountJid && !!response.data.complete) {
+        clearInterval(this.recountingTimer);
+        this.setState({ recounting: false, recountJid: undefined });
+        this.getPeriods({ userId, page });
+      }
     });
   }
 
