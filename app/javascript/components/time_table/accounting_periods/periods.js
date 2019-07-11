@@ -41,7 +41,6 @@ class Periods extends React.Component {
       year: moment().format('YYYY'),
     },
     userId: undefined,
-    recountJid: undefined,
     user: {},
   }
 
@@ -52,6 +51,12 @@ class Periods extends React.Component {
     const page = params.page || 1;
 
     this.getPeriods({ userId, page });
+  }
+
+  componentWillUnmount() {
+    if (this.recountingTimer) {
+      clearInterval(this.recountingTimer);
+    }
   }
 
   getPeriods(options) {
@@ -69,6 +74,9 @@ class Periods extends React.Component {
             page: options.page,
             recounting: periods.recounting,
           });
+          if (!!periods.recounting && !this.recountingTimer) {
+            this.recountingTimer = setInterval(this.getRecountingPeriodsState, 1000);
+          }
         });
     });
   }
@@ -144,26 +152,29 @@ class Periods extends React.Component {
   }
 
   recountPeriods() {
-    Api.makePostRequest({
-      url: '/api/accounting_periods/recount',
-      body: { user_id: this.state.userId },
-    }).then((response) => {
-      this.setState({
-        recountJid: response.data.jid,
-        recounting: true,
+    const { recounting } = this.state;
+
+    if (!recounting) {
+      Api.makePostRequest({
+        url: '/api/accounting_periods/recount',
+        body: { user_id: this.state.userId },
+      }).then((response) => {
+        if (response.data.jid) {
+          this.setState({ recounting: true });
+          this.recountingTimer = setInterval(this.getRecountingPeriodsState, 1000);
+        }
       });
-      this.recountingTimer = setInterval(this.getRecountingPeriodsState, 1000);
-    });
+    }
   }
 
   getRecountingPeriodsState() {
     Api.makeGetRequest({
       url: `/api/accounting_periods/recount_status?user_id=${this.state.userId}`,
     }).then((response) => {
-      const { recountJid, userId, page } = this.state;
-      if (!!recountJid && !!response.data.complete) {
+      const { userId, page } = this.state;
+      if (response.data.complete) {
         clearInterval(this.recountingTimer);
-        this.setState({ recounting: false, recountJid: undefined });
+        this.setState({ recounting: false });
         this.getPeriods({ userId, page });
       }
     });
@@ -186,7 +197,7 @@ class Periods extends React.Component {
             </a>
           </div>
           <div className="col-md-4 text-right">
-            <a id="recount" onClick={this.recountPeriods} className={`bt bt-second ${recounting ? 'disabled' : ''}`}>
+            <a id="recount" onClick={this.recountPeriods} className={`bt bt-second ${recounting ? 'disabled disabled-button-wrapper' : ''}`}>
               <span className="bt-txt">{I18n.t('apps.accounting_periods.recount_periods')}</span>
               <i className="symbol fa fa-repeat" />
             </a>
