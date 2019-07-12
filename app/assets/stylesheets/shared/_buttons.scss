@@ -31,7 +31,7 @@ $second-bt-color: $second-color;
   }
   &.bt-big {
     padding: 12px 32px;
-    .symbol {    
+    .symbol {
       font-size: 130%;
       &:first-child {
         margin-right: 12px;
@@ -43,7 +43,7 @@ $second-bt-color: $second-color;
   }
   border: none;
   border-radius: 50px;
-  
+
   color: white;
 
   &.bt-main {
@@ -68,7 +68,7 @@ $second-bt-color: $second-color;
     color: $second-bt-color;
     transform: scale(1);
     border: 1px solid #cfcfcf;
-    &:hover {
+    &:hover:not([disabled]) {
       .symbol {
         color: $main-bt-bg-active;
       }
@@ -120,7 +120,7 @@ $second-bt-color: $second-color;
       border-color: $error-color-75;
     }
   }
-  &:hover, &:focus {
+  &:hover:not([disabled]), &:focus:not([disabled]) {
     animation: shadow-pulse 1s infinite;
   }
   &, .symbol {
@@ -143,7 +143,7 @@ $second-bt-color: $second-color;
   background-color: transparent;
   border: none;
 
-  &.ln-main {  
+  &.ln-main {
     color: $main-bt-bg;
     &:hover {
       color: $main-bt-bg-active;

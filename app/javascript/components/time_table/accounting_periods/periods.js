@@ -197,7 +197,12 @@ class Periods extends React.Component {
             </a>
           </div>
           <div className="col-md-4 text-right">
-            <a id="recount" onClick={this.recountPeriods} className={`bt bt-second ${recounting ? 'disabled disabled-button-wrapper' : ''}`}>
+            <a
+              id="recount"
+              onClick={this.recountPeriods}
+              disabled={!!recounting}
+              className={`bt bt-second ${recounting ? 'disabled-button-wrapper' : ''}`}
+            >
               <span className="bt-txt">{I18n.t('apps.accounting_periods.recount_periods')}</span>
               <i className="symbol fa fa-repeat" />
             </a>
