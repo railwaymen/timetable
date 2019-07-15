@@ -1,0 +1,13 @@
+.symbol-full-time {
+  position: relative;
+  .s-check {
+    position: absolute;
+    bottom: -1px;
+    right: -5px;
+    font-size: 50%;
+    color: $white;
+    background-color: $blue-color;
+    border-radius: 50%;
+    padding: 2px;
+  }
+}

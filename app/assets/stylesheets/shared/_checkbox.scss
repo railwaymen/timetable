@@ -1,19 +1,21 @@
 .form-check-label,
 .form-radio-label {
+  cursor: pointer;
   input {
     display: none;
   }
   .checkbox {
     margin: 0;
     display: inline-block;
+    vertical-align: middle;
     height: 24px;
     width: 24px;
     border-radius: 3px;
     color: $text-gray;
+    background-color: white;
     font-size: 8px;
     border: 1px solid $gray-50;
     position: relative;
-    cursor: pointer;
     transition: .3s;
     &:hover {
       border-color: $main-color-75;
@@ -37,6 +39,9 @@
     &::after {
       transform: translate(-50%, -50%) scale(1) rotate(38deg);
     }
+  }
+  .ch-txt {
+    margin-left: 6px;
   }
 }
 .form-check-label {

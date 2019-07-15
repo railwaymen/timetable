@@ -18,6 +18,7 @@ class Periods extends React.Component {
     this.onGenerateSubmit = this.onGenerateSubmit.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
     this.recountPeriods = this.recountPeriods.bind(this);
+    this.getRecountingPeriodsState = this.getRecountingPeriodsState.bind(this);
 
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onNextUserChange = this.onNextUserChange.bind(this);
@@ -52,6 +53,12 @@ class Periods extends React.Component {
     this.getPeriods({ userId, page });
   }
 
+  componentWillUnmount() {
+    if (this.recountingTimer) {
+      clearInterval(this.recountingTimer);
+    }
+  }
+
   getPeriods(options) {
     Api.makeGetRequest({
       url: `/api/accounting_periods?user_id=${options.userId}&page=${options.page}`,
@@ -67,6 +74,9 @@ class Periods extends React.Component {
             page: options.page,
             recounting: periods.recounting,
           });
+          if (!!periods.recounting && !this.recountingTimer) {
+            this.recountingTimer = setInterval(this.getRecountingPeriodsState, 1000);
+          }
         });
     });
   }
@@ -142,13 +152,31 @@ class Periods extends React.Component {
   }
 
   recountPeriods() {
-    Api.makePostRequest({
-      url: '/api/accounting_periods/recount',
-      body: { user_id: this.state.userId },
-    }).then(() => {
-      this.setState({
-        recounting: true,
+    const { recounting } = this.state;
+
+    if (!recounting) {
+      Api.makePostRequest({
+        url: '/api/accounting_periods/recount',
+        body: { user_id: this.state.userId },
+      }).then((response) => {
+        if (response.data.jid) {
+          this.setState({ recounting: true });
+          this.recountingTimer = setInterval(this.getRecountingPeriodsState, 1000);
+        }
       });
+    }
+  }
+
+  getRecountingPeriodsState() {
+    Api.makeGetRequest({
+      url: `/api/accounting_periods/recount_status?user_id=${this.state.userId}`,
+    }).then((response) => {
+      const { userId, page } = this.state;
+      if (response.data.complete) {
+        clearInterval(this.recountingTimer);
+        this.setState({ recounting: false });
+        this.getPeriods({ userId, page });
+      }
     });
   }
 
@@ -157,10 +185,28 @@ class Periods extends React.Component {
 
     if (currentUser.admin) {
       return (
-        <div className="btn-toolbar" style={{ marginBottom: '30px' }}>
-          <NavLink className="btn btn-default" to={`/accounting_periods/new?user_id=${this.state.userId}`}>{I18n.t('apps.accounting_periods.add')}</NavLink>
-          <a id="generate" className="btn btn-default">{I18n.t('apps.accounting_periods.generate_periods')}</a>
-          <a id="recount" onClick={this.recountPeriods} className={`btn btn-default ${recounting ? 'disabled' : ''}`}>{I18n.t('apps.accounting_periods.recount_periods')}</a>
+        <div className="row periods-actions">
+          <div className="col-md-8">
+            <NavLink className="bt bt-main" to={`/accounting_periods/new?user_id=${this.state.userId}`}>
+              <span className="bt-txt">{I18n.t('apps.accounting_periods.add')}</span>
+              <i className="symbol fa fa-calendar-plus-o" />
+            </NavLink>
+            <a id="generate" className="bt bt-second">
+              <span className="bt-txt">{I18n.t('apps.accounting_periods.generate_periods')}</span>
+              <i className="symbol fa fa-calendar-plus-o" />
+            </a>
+          </div>
+          <div className="col-md-4 text-right">
+            <a
+              id="recount"
+              onClick={this.recountPeriods}
+              disabled={!!recounting}
+              className={`bt bt-second ${recounting ? 'disabled-button-wrapper' : ''}`}
+            >
+              <span className="bt-txt">{I18n.t('apps.accounting_periods.recount_periods')}</span>
+              <i className="symbol fa fa-repeat" />
+            </a>
+          </div>
         </div>
       );
     }
@@ -183,14 +229,14 @@ class Periods extends React.Component {
         { isBackAvailable
           ? (
             <li id="prevPage">
-              <a className="glyphicon glyphicon-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`} />
+              <a className="symbol fa fa-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`} />
             </li>
           ) : null }
         {this.paginationBody(pages, page, userId)}
         { isForwardAvailable
           ? (
             <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
-              <a className="glyphicon glyphicon-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />
+              <a className="symbol fa fa-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />
             </li>
           ) : null }
       </ul>
@@ -270,7 +316,7 @@ class Periods extends React.Component {
     const MONTHS_IN_YEAR = 12;
 
     return (
-      <div>
+      <div className="accounting-periods-list">
         {currentUser.admin ? this.renderButtons() : null}
         <div className="col-md-offset-3 col-md-6 vert-offset-bottom clearfix">
           { currentUser.admin ? (
@@ -291,7 +337,7 @@ class Periods extends React.Component {
               <th>{I18n.t('common.from')}</th>
               <th>{I18n.t('common.to')}</th>
               <th>{I18n.t('common.duration')}</th>
-              <th>{I18n.t('apps.accounting_periods.note')}</th>
+              <th className="text-left">{I18n.t('apps.accounting_periods.note')}</th>
               <th>{I18n.t('apps.accounting_periods.closed')}</th>
               <th>{I18n.t('apps.accounting_periods.full_time')}</th>
               { currentUser.admin ? <th /> : null }

@@ -1,0 +1,25 @@
+.edit-accounting-period {
+  .ch-txt {
+    .symbol {
+      margin-left: 5px;
+    }
+  }
+  textarea {
+    min-height: 80px;
+    height: 120px;
+  }
+  .calendar-row {
+    position: relative;
+    z-index: 10;
+  }
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+  .form-actions {
+    .bt {
+      &:not(:last-child) {
+        margin-right: 12px;
+      }
+    }
+  }
+}
