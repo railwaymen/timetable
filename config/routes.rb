@@ -32,7 +32,9 @@ TimeTable::Application.routes.draw do
         post :generate
       end
     end
-    resources :work_times
+    resources :work_times do
+      post :create_filling_gaps, on: :collection
+    end
     resources :projects, only: %i[index show create update] do
       resources :project_reports, except: %i[delete] do
         get :roles, on: :collection

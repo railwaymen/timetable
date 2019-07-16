@@ -6,11 +6,14 @@
     position: relative;   
     margin-bottom: 60px; 
     padding-bottom: 35px;
-    .bt-submit {
+    .form-actions {
       position: absolute;
       bottom: 0;
       right: 25px;
       transform: translateY(50%);
+      .bt:not(:last-child) {
+        margin-right: 12px;
+      }
     }
   }
   .card > .row {

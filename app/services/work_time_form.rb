@@ -2,12 +2,13 @@
 
 class WorkTimeForm
   include ActiveModel::Model
+  include ExternalValidatable
 
   attr_reader :work_time
   attr_reader :old_payload
-  validate :validate_integration
 
   delegate :id,
+           :external_auth,
            :duration,
            :updated_by_admin,
            :project_id,
@@ -25,10 +26,10 @@ class WorkTimeForm
   def save(additional_params = {})
     return false unless valid?
 
-    work_time.integration_payload = @external_payload
+    work_time.integration_payload = external_payload
     saved = work_time.save(additional_params)
     if saved
-      update_external_auth if @external_payload
+      update_external_auth if external_payload
       update_old_task if old_payload
     end
     saved
@@ -47,15 +48,6 @@ class WorkTimeForm
 
   private
 
-  def validate_integration
-    return nil if work_time.external_auth.nil? || work_time.task.blank?
-
-    fetch_external_payload unless defined?(@external_payload)
-    return unless @external_payload.nil?
-
-    errors.add(:task, I18n.t('activerecord.errors.models.work_time.attributes.task.invalid_external'))
-  end
-
   def update_external_auth
     UpdateExternalAuthWorker.perform_async(work_time.project_id, work_time.external_task_id, work_time.id) if work_time.external_task_id
   end
@@ -69,22 +61,10 @@ class WorkTimeForm
     end
   end
 
-  def fetch_external_payload
-    auth = @work_time.external_auth
-    return @external_payload = nil if auth.nil? || work_time.task.nil?
-
-    integration_payload = ExternalAuthStrategy.const_get(auth.provider).from_data(auth.data).integration_payload(work_time)
-    @external_payload = if integration_payload.nil?
-                          nil
-                        else
-                          { auth.provider => integration_payload }
-                        end
-  end
-
   def copy_errors(*args)
     work_time.valid?(*args)
     work_time.errors.details.each do |key, value|
-      errors.add(key, value.first[:error])
+      errors.add(key, value.first[:error], value.first.except(:error))
     end
   end
 end
