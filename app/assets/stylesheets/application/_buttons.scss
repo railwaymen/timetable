@@ -1,0 +1,122 @@
+$softBounce: cubic-bezier(0.68, -0.55, 0.265, 1.30);
+$main-background-color: #d2501d;
+$main-background-color-active: darken($main-background-color, 8);
+$main-color: white;
+
+$second-background-color: white;
+$second-background-color-active: darken($second-background-color, 8);
+$second-color: #818181;
+
+.bt {
+  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+
+  cursor: pointer;
+  line-height: 22px;
+  font-size: 15px;
+
+  padding: 8px 16px;
+  .symbol {
+    height: auto;
+    transition: .5s ease-in-out;
+    &:first-child {
+      margin-right: 6px;
+    }
+    &:last-child {
+      margin-left: 6px;
+    }
+  }
+  
+  &.bt-big {
+    padding: 12px 32px;
+    .symbol {    
+      font-size: 130%;
+      &:first-child {
+        margin-right: 12px;
+      }
+      &:last-child {
+        margin-left: 12px;
+      }
+    }
+  }
+  border: none;
+  border-radius: 50px;
+  
+  color: white;
+
+  &.bt-main {
+    font-weight: 600;
+    background-color: $main-background-color;
+    background-repeat: no-repeat;
+    background-position: 0 50%;
+    background-size: 0 100%;
+    color: $main-color;
+    transform: scale(1);
+    border: 0 solid transparent;
+    &:hover, &:focus {
+      animation: shadow-pulse 1s infinite;
+    }
+    &:active {
+      background-color: $main-background-color-active;
+    }
+  }
+  &.bt-second {
+    font-weight: 500;
+    background-color: $second-background-color;
+    background-repeat: no-repeat;
+    background-position: 0 50%;
+    background-size: 0 100%;
+    color: $second-color;
+    transform: scale(1);
+    border: 1px solid #cfcfcf;
+    &:hover, &:focus {
+      animation: shadow-pulse 1s infinite;
+    }
+    &:active {
+      background-color: $second-background-color-active;
+    }
+  }
+  transition: .3s ease-in-out;
+  transition: .3s $softBounce;
+}
+
+.ln {
+  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+
+  cursor: pointer;
+  line-height: 16px;
+  font-size: 13px;
+  font-weight: 500;
+
+  &.ln-main {  
+    color: $main-background-color;
+    &:hover {
+      color: $main-background-color-active;
+    }
+  }
+  .symbol {
+    height: auto;
+    font-size: 130%;
+    transition: .5s ease-in-out;
+    &:first-child {
+      margin-right: 8px;
+    }
+    &:last-child {
+      margin-left: 8px;
+    }
+  }
+  transition: .3s ease-in-out;
+  transition: .3s $softBounce;
+}
+
+@keyframes shadow-pulse {
+  0% {
+      box-shadow: 0 0 0 0px rgba($main-background-color, 0.6);
+  }
+  100% {
+      box-shadow: 0 0 0 5px rgba(0, 0, 0, 0);
+  }
+}
