@@ -21,7 +21,7 @@ module ExternalValidatable
 
   def external_payload
     return @external_payload if defined?(@external_payload)
-    return @external_payload = nil if external_auth.nil? || task.nil?
+    return @external_payload = nil if external_auth.nil? || task.blank?
 
     integration_payload = ExternalAuthStrategy.const_get(external_auth.provider).from_data(external_auth.data).integration_payload(self)
     @external_payload = if integration_payload.nil? # cache result to prevent multiple api calls
