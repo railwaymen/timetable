@@ -30,9 +30,9 @@ export const defaultDatePickerProps = {
 };
 
 export const displayDuration = (seconds) => {
-  const time = moment.duration(seconds, 'seconds');
-  const hours = time.hours() + time.days() * 24;
-  const minutes = time.minutes();
+  const duration = moment.duration(seconds, 'seconds');
+  const hours = Math.floor(duration.asHours());
+  const minutes = duration.minutes();
   const padZeroes = input => padStart(String(input), 2, '0');
 
   return `${padZeroes(hours)}:${padZeroes(minutes)}`;
