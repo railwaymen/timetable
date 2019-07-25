@@ -63,12 +63,20 @@ class Entry extends React.Component {
     }, () => { this.removeErrorsFor(name); });
   }
 
+  submitPath(e) {
+    if (e.ctrlKey) return '/api/work_times/create_filling_gaps';
+    return '/api/work_times';
+  }
+
   onKeyPress(e) {
-    if (e.key === 'Enter') this.onSubmit();
+    if (e.key === 'Enter') this.onSubmit(this.submitPath(e));
   }
 
   onTimeKeyPress(e) {
-    if (e.key === 'Enter') this.recountTime(this.onSubmit);
+    if (e.key !== 'Enter') return;
+
+    const path = this.submitPath(e);
+    this.recountTime(() => this.onSubmit(path));
   }
 
   preventScroll(e) {
