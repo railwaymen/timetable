@@ -16,12 +16,13 @@ export default class NewReport extends React.Component {
     userRoles: [],
     currency: '',
     name: '',
+    collisions: [],
     redirectTo: null,
   }
 
   constructor(props) {
     super(props);
-    bindAll(this, ['onRangeStartChange', 'onRangeEndChange', 'getRoles', 'onSubmit', 'onFieldChange']);
+    bindAll(this, ['onRangeStartChange', 'onRangeEndChange', 'getRoles', 'onSubmit', 'onFieldChange', 'checkForCollision']);
   }
 
   componentDidMount() {
@@ -49,6 +50,12 @@ export default class NewReport extends React.Component {
       .then(({ data }) => {
         this.setState(({ currency }) => ({ userRoles: data.user_roles, currency: currency || data.currency }));
       });
+    this.checkForCollision();
+  }
+
+  checkForCollision() {
+    Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}/project_reports?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}` })
+      .then(({ data }) => this.setState({ collisions: data }));
   }
 
   onFieldChange(event, field, userId) {
@@ -87,6 +94,21 @@ export default class NewReport extends React.Component {
     });
   }
 
+  collisionAlert() {
+    const { collisions } = this.state;
+    if (collisions.length === 0) return null;
+    return (
+      <div className="alert alert-danger text-center" style={{ marginTop: '10px' }} role="alert">
+        <strong>
+          {I18n.t('apps.reports.collision')}
+          :
+          {collisions.map(({ name }) => name).join(', ')}
+          .
+        </strong>
+      </div>
+    );
+  }
+
   render() {
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
     return (
@@ -103,6 +125,7 @@ export default class NewReport extends React.Component {
         </div>
         <h1>{I18n.t('apps.reports.roles')}</h1>
         <DateRangeFilter from={this.state.startsAt.format()} to={this.state.endsAt.format()} onFromChange={this.onRangeStartChange} onToChange={this.onRangeEndChange} onFilter={this.getRoles} />
+        {this.collisionAlert()}
         <div className="table-responsive">
           <table className="table table-hover">
             <thead>

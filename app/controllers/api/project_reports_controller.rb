@@ -20,6 +20,9 @@ module Api
 
     def index
       @reports = @project.project_reports.order(id: :desc)
+      if params[:starts_at].present? && params[:ends_at].present?
+        @reports.where!('starts_at < ? AND ? < ends_at', params[:ends_at], params[:starts_at])
+      end
       authorize @reports
     end
 
