@@ -50,6 +50,7 @@ en:
       ignore: Ignore
       restore_previous: Restore a previous version
       restore_first: Restore the first version
+      collision: Collision with following reports
     accounting_periods:
       add: Add accounting period
       note: Note
