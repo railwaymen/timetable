@@ -3,6 +3,7 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 import URI from 'urijs';
 import * as Api from '../../shared/api';
+import { displayDuration } from '../../shared/helpers';
 
 const simpleDateFormat = date => moment(date).format('YYYY/MM/DD');
 export default class ProjectReports extends React.Component {
@@ -80,6 +81,8 @@ export default class ProjectReports extends React.Component {
                 <th>{I18n.t('common.name')}</th>
                 <th className="text-center">{I18n.t('common.state')}</th>
                 <th className="text-center">{I18n.t('common.range')}</th>
+                <th className="text-center">{I18n.t('common.duration')}</th>
+                <th className="text-center">{I18n.t('common.cost')}</th>
                 <th />
               </tr>
             </thead>
@@ -91,6 +94,9 @@ export default class ProjectReports extends React.Component {
                 starts_at,
                 ends_at,
                 generated,
+                duration,
+                cost,
+                currency,
               }) => (
                 <tr key={id}>
                   <td>
@@ -101,6 +107,14 @@ export default class ProjectReports extends React.Component {
                   </td>
                   <td className="text-center">
                     {`${simpleDateFormat(starts_at)}-${simpleDateFormat(ends_at)}`}
+                  </td>
+                  <td className="text-center">
+                    {displayDuration(duration)}
+                  </td>
+                  <td className="text-center">
+                    {currency}
+                    {' '}
+                    {cost.toFixed(2)}
                   </td>
                   <td className="report-actions text-right">
                     {generated
