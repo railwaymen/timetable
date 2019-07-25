@@ -243,12 +243,26 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
   end
 
   describe 'GET #index' do
-    let(:project_report) { create(:project_report) }
+    let(:project) { create(:project) }
 
     it 'renders index' do
-      get :index, params: { project_id: project_report.project.id }
+      get :index, params: { project_id: project.id }
 
       expect(response).to be_ok
+    end
+
+    context 'params starts_at and ends_at' do
+      it 'filters out projects' do
+        time = Time.current
+        create(:project_report, project: project, starts_at: time - 7.days, ends_at: time - 6.days)
+        matching_report = create(:project_report, project: project, starts_at: time, ends_at: time + 1.day)
+
+        get :index, params: { project_id: project.id, starts_at: time - 1.day, ends_at: time + 8.days }
+        expect(response).to be_ok
+        body = JSON.parse(response.body)
+        expect(body.size).to eq 1
+        expect(body.first['id']).to eq matching_report.id
+      end
     end
   end
 

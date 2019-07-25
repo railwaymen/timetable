@@ -50,6 +50,7 @@ pl:
       ignore: Ignoruj
       restore_previous: Przywróć poprzednią wersję
       restore_first: Przywróć pierwszą wersję
+      collision: Kolizja z następującymi raportami
     accounting_periods:
       add: Dodaj okres rozliczeniowy
       note: Notatka
