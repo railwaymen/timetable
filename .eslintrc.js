@@ -35,6 +35,7 @@ module.exports = {
     'jsx-a11y/no-autofocus ': 'off',
     'jsx-a11y/no-noninteractive-tabindex': 'off',
     'no-param-reassign': 'off',
+    'react/no-did-update-set-state': 'off',
 
     // TODO: enable these rules:
 

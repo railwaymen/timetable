@@ -38,6 +38,10 @@ class WorkHours extends React.Component {
     this.recountTime = this.recountTime.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onTagChange = this.onTagChange.bind(this);
+    this.onFilterChange = this.onFilterChange.bind(this);
+    this.onFilterKeyPress = this.onFilterKeyPress.bind(this);
+
+    this.searchRef = React.createRef();
   }
 
   static propTypes = {
@@ -50,6 +54,7 @@ class WorkHours extends React.Component {
     projectEditable: false,
     tagEditable: false,
     errors: [],
+    filter: '',
   }
 
   componentDidMount() {
@@ -58,6 +63,12 @@ class WorkHours extends React.Component {
       ends_at_hours: moment(this.state.workHours.ends_at).format('HH:mm'),
       date: moment(this.state.workHours.starts_at).format('DD/MM/YYYY'),
     });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!_.isEqual(prevProps.workHours, this.props.workHours)) {
+      this.setState({ workHours: this.props.workHours });
+    }
   }
 
   formattedHoursAndMinutesDuration(duration) {
@@ -99,14 +110,17 @@ class WorkHours extends React.Component {
 
   onChangeProject(e) {
     const projectId = parseInt(e.target.attributes.getNamedItem('data-value').value, 10);
-    const project = _.find(this.props.projects, p => p.id === projectId);
+    this.changeProject(_.find(this.props.projects, p => p.id === projectId));
+  }
 
-    if (projectId !== this.state.selectedProject) {
+  changeProject(project) {
+    this.toggleProjectEdit();
+    if (project.id !== this.state.selectedProject) {
       this.setState({
         workHours: {
           ...this.state.workHours,
           project,
-          project_id: projectId,
+          project_id: project.id,
         },
       }, () => {
         this.saveWorkHours();
@@ -264,6 +278,9 @@ class WorkHours extends React.Component {
 
     this.setState({
       projectEditable: !projectEditable,
+      filter: '',
+    }, () => {
+      if (this.state.projectEditable && this.searchRef.current) this.searchRef.current.focus();
     });
   }
 
@@ -339,6 +356,23 @@ class WorkHours extends React.Component {
       .then(response => this.props.assignModalInfo(response.data));
   }
 
+  onFilterChange({ target }) {
+    this.setState({ filter: target.value });
+  }
+
+  onFilterKeyPress({ key }) {
+    if (key !== 'Enter') return;
+    const project = this.filteredProjects()[0];
+    if (project) {
+      this.changeProject(project);
+    }
+  }
+
+  filteredProjects(filter = this.state.filter) {
+    const lowerFilter = filter.toLowerCase();
+    return this.props.projects.filter(p => p.name.toLowerCase().match(escape(lowerFilter)));
+  }
+
   descriptionText() {
     const { workHours, editing } = this.state;
     if (editing) {
@@ -356,9 +390,9 @@ class WorkHours extends React.Component {
   }
 
   render() {
-    const { projects, tags_disabled } = this.props;
+    const { tags_disabled } = this.props;
     const {
-      workHours, projectEditable, editing, errors, tagEditable,
+      workHours, projectEditable, editing, errors, tagEditable, filter,
     } = this.state;
 
     return (
@@ -383,12 +417,12 @@ class WorkHours extends React.Component {
                     <div>
                       <div className="dropdown fluid search ui active visible">
                         <input type="hidden" name="project" value="12" />
-                        <input className="search" autoComplete="off" tabIndex="0" />
+                        <input className="search" style={{ width: '0' }} autoComplete="off" ref={this.searchRef} value={filter} onKeyPress={this.onFilterKeyPress} onChange={this.onFilterChange} />
                         <div className="text">
                           <div className="circular empty label ui" style={{ background: `#${workHours.project.color}` }} />
                           {workHours.project.name}
                         </div>
-                        <ProjectsList projects={projects} currentProject={workHours.project} onChangeProject={this.onChangeProject} />
+                        <ProjectsList projects={this.filteredProjects()} currentProject={workHours.project} onChangeProject={this.onChangeProject} />
                       </div>
                     </div>
                   ) : null }
