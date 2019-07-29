@@ -17,6 +17,14 @@ class ProjectReport < ApplicationRecord
     file_path.present?
   end
 
+  def duration_without_ignored
+    duration_sum - last_body.fetch('ignored', []).sum { |wt| wt['duration'].to_i }
+  end
+
+  def cost_without_ignored
+    (cost - last_body.fetch('ignored', []).sum { |wt| wt['cost'].to_f }).round(2)
+  end
+
   private
 
   def body_did_not_lost_duration

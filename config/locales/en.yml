@@ -146,6 +146,7 @@ en:
     remove: Remove
     copy: Copy
     history: History
+    cost: Cost
   activerecord:
     errors:
       models:
