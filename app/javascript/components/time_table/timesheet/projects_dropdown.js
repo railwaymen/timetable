@@ -7,12 +7,15 @@ class ProjectsDropdown extends React.Component {
   constructor(props) {
     super(props);
 
+    this.hideDropdown = this.hideDropdown.bind(this);
     this.expandDropdown = this.expandDropdown.bind(this);
     this.renderProjectsList = this.renderProjectsList.bind(this);
     this.onChangeProject = this.onChangeProject.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onBlur = this.onBlur.bind(this);
+
+    this.searchRef = React.createRef();
   }
 
   componentDidMount() {
@@ -50,7 +53,7 @@ class ProjectsDropdown extends React.Component {
       )) || projects[0];
 
       this.props.updateProject(selectedProject);
-      this.expandDropdown();
+      this.hideDropdown();
     }
   }
 
@@ -61,17 +64,16 @@ class ProjectsDropdown extends React.Component {
     ));
   }
 
+  hideDropdown(e) {
+    if (e && e.target === this.searchRef.current) return; // Do not hide when click is on search input
+    document.removeEventListener('click', this.hideDropdown);
+    this.setState({ isExpanded: false, filter: '', filteredProjects: this.filterProjects('') });
+  }
+
   expandDropdown() {
-    const { isExpanded } = this.state;
-
-    if (!isExpanded) {
-      document.getElementById('search-input').focus();
-      document.addEventListener('click', this.expandDropdown);
-    } else {
-      document.removeEventListener('click', this.expandDropdown);
-    }
-
-    this.setState({ isExpanded: !isExpanded, filter: '', filteredProjects: this.filterProjects('') });
+    this.setState({ isExpanded: true, filter: '', filteredProjects: this.filterProjects('') }, () => {
+      document.addEventListener('click', this.hideDropdown);
+    });
   }
 
   onBlur() {
@@ -87,11 +89,8 @@ class ProjectsDropdown extends React.Component {
         p.id === projectId
       )) || projects[0];
 
+      this.hideDropdown();
       this.props.updateProject(selectedProject);
-
-      this.setState({
-        isExpanded: false,
-      });
     }
   }
 
@@ -108,10 +107,10 @@ class ProjectsDropdown extends React.Component {
     const { selectedProject } = this.props;
 
     return (
-      <div className="dropdown fluid search ui" style={{ minWidth: '90px' }} onClick={this.expandDropdown}>
+      <div className="dropdown fluid search ui" style={{ minWidth: '90px' }}>
         <input type="hidden" name="project" value="12" />
-        <input placeholder="Project" className="form-control input-search" name="filter" value={filter} autoComplete="off" tabIndex="0" onChange={this.onFilterChange} id="search-input" onKeyPress={this.onKeyPress} />
-        <div className={`text active ${(isExpanded ? 'hidden' : '')}`} style={{ background: `#${selectedProject.color}` }}>
+        <input placeholder="Project" onFocus={this.expandDropdown} ref={this.searchRef} className="form-control input-search" name="filter" value={filter} autoComplete="off" tabIndex="0" onChange={this.onFilterChange} id="search-input" onKeyPress={this.onKeyPress} />
+        <div className={`text active ${(isExpanded ? 'hidden' : '')}`} style={{ background: `#${selectedProject.color}` }} onClick={this.expandDropdown}>
           <div className="circular empty label ui" style={{ background: `#${selectedProject.color}` }} />
           {selectedProject.name}
         </div>
