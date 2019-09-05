@@ -17,7 +17,6 @@ class User < ApplicationRecord
 
   scope :active, -> { where(active: true) }
 
-  # rubocop:disable MethodLength
   def self.with_next_and_previous_user_id
     from(%(
       (
@@ -30,7 +29,6 @@ class User < ApplicationRecord
       ) users
     ))
   end
-  # rubocop:enable MethodLength
 
   def self.filter_by(action)
     case action
