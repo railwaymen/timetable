@@ -174,6 +174,13 @@ class EditUser extends React.Component {
     return this.renderPreloader();
   }
 
+  cancelUrl() {
+    if (this.state.user.active) {
+      return '/users';
+    }
+    return '/users?filter=inactive';
+  }
+
   render() {
     const { redirectToReferer } = this.state;
 
@@ -182,7 +189,7 @@ class EditUser extends React.Component {
     return (
       <form>
         {this.renderFields()}
-        <NavLink activeClassName="" className="btn btn-default" to="/users">{I18n.t('common.cancel')}</NavLink>
+        <NavLink activeClassName="" className="btn btn-default" to={this.cancelUrl()}>{I18n.t('common.cancel')}</NavLink>
         <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
       </form>
     );

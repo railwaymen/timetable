@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import URI from 'urijs';
 import { NavLink } from 'react-router-dom';
 import User from './user';
 
@@ -12,7 +13,9 @@ class Users extends React.Component {
   }
 
   componentDidMount() {
-    this.getUsers();
+    const base = URI(window.location.href);
+    const params = base.query(true);
+    this.getUsers(params.filter);
   }
 
   static propTypes = {
@@ -24,11 +27,11 @@ class Users extends React.Component {
     visible: 'active',
   }
 
-  getUsers() {
-    fetch(`/api/users?filter=${this.state.visible}`)
+  getUsers(visible) {
+    fetch(`/api/users?filter=${visible || this.state.visible}`)
       .then(response => response.json())
       .then((data) => {
-        this.setState({ users: data });
+        this.setState({ visible, users: data });
       });
   }
 
