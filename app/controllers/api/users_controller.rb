@@ -9,7 +9,7 @@ module Api
 
     def index
       action = params[:filter].presence_in(visiblity_list) || 'all'
-      @users = User.order('contract_name::bytea').filter_by(action.to_sym)
+      @users = User.order('contract_name::bytea ASC').filter_by(action.to_sym)
       respond_with @users
     end
 

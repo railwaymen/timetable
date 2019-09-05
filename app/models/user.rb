@@ -17,21 +17,18 @@ class User < ApplicationRecord
 
   scope :active, -> { where(active: true) }
 
-  # rubocop:disable MethodLength
   def self.with_next_and_previous_user_id
     from(%(
       (
         SELECT
           users.*,
-          LAG(users.id) OVER(ORDER BY contract_name ASC) AS prev_id,
-          LEAD(users.id) OVER(ORDER BY contract_name ASC) AS next_id
+          LAG(users.id) OVER(PARTITION BY active ORDER BY contract_name::bytea ASC) AS prev_id,
+          LEAD(users.id) OVER(PARTITION BY active ORDER BY contract_name::bytea ASC) AS next_id
         FROM users
-        WHERE active IS TRUE
-        ORDER BY contract_name ASC
+        ORDER BY contract_name::bytea ASC
       ) users
     ))
   end
-  # rubocop:enable MethodLength
 
   def self.filter_by(action)
     case action

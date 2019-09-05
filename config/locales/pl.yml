@@ -146,6 +146,7 @@ pl:
     remove: Usuń
     copy: Kopiuj
     history: Historia
+    cost: Koszt
   errors:
     format: "%{attribute} %{message}"
     messages:

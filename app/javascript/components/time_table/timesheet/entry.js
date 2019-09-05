@@ -30,6 +30,8 @@ class Entry extends React.Component {
     this.onTimeKeyPress = this.onTimeKeyPress.bind(this);
     this.onTimeFocus = this.onTimeFocus.bind(this);
     this.onTimeBlur = this.onTimeBlur.bind(this);
+
+    this.startInputRef = React.createRef();
   }
 
   static propTypes = {
@@ -233,7 +235,15 @@ class Entry extends React.Component {
     }, () => {
       this.removeErrorsFor('project_id');
       this.recountTime();
+      this.focusOnStartInput();
     });
+  }
+
+  focusOnStartInput() {
+    const { current } = this.startInputRef;
+    if (!current) return;
+    current.focus();
+    current.setSelectionRange(0, current.value.length);
   }
 
   formattedHoursAndMinutes(time) {
@@ -314,7 +324,7 @@ class Entry extends React.Component {
               <div className="col-sm-12 col-md-4 date">
                 <div className="time">
                   <div className="form-group">
-                    <input className="form-control" id="start" type="text" name="starts_at" placeholder="830 → 8:30" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onFocus={this.onTimeFocus} onClick={this.onFocus} onBlur={this.onTimeBlur} value={starts_at} />
+                    <input className="form-control" id="start" type="text" name="starts_at" placeholder="830 → 8:30" ref={this.startInputRef} onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onFocus={this.onTimeFocus} onClick={this.onFocus} onBlur={this.onTimeBlur} value={starts_at} />
                   </div>
                   <span className="time-divider">-</span>
                   <div className="form-group">
