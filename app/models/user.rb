@@ -22,10 +22,10 @@ class User < ApplicationRecord
       (
         SELECT
           users.*,
-          LAG(users.id) OVER(PARTITION BY active) AS prev_id,
-          LEAD(users.id) OVER(PARTITION BY active) AS next_id
+          LAG(users.id) OVER(PARTITION BY active ORDER BY contract_name::bytea) AS prev_id,
+          LEAD(users.id) OVER(PARTITION BY active ORDER BY contract_name::bytea) AS next_id
         FROM users
-        ORDER BY contract_name ASC
+        ORDER BY contract_name::bytea
       ) users
     ))
   end
