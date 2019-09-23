@@ -36,7 +36,7 @@ export default class ProjectReports extends React.Component {
     e.preventDefault();
 
     if (window.confirm(I18n.t('common.confirm'))) {
-      Api.makeDeleteRequest({ url: e.target.href }).then((data) => {
+      Api.makeDeleteRequest({ url: e.currentTarget.href }).then((data) => {
         if (parseInt(data.status, 10) === 204) {
           this.getReports();
         }
