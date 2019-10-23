@@ -10,6 +10,7 @@ module Api
     def index
       action = params[:filter].presence_in(visiblity_list) || 'all'
       @users = User.order('contract_name::bytea ASC').filter_by(action.to_sym)
+      @users = @users.order(:last_name) if params.key?(:staff)
       respond_with @users
     end
 

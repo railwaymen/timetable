@@ -18,6 +18,10 @@ import Timesheet from './time_table/timesheet/timesheet';
 import NewReport from './time_table/project_reports/new_report';
 import EditReport from './time_table/project_reports/edit_report';
 import ProjectReports from './time_table/project_reports/project_reports';
+import Vacations from './time_table/vacations/vacations';
+import Staff from './time_table/staff/staff'
+import VacationPeriods from './time_table/vacation_periods/vacation_periods'
+import EditVacationPeriod from './time_table/vacation_periods/edit_vacation_period';
 
 class TimeTable extends React.Component {
   constructor(props) {
@@ -36,6 +40,7 @@ class TimeTable extends React.Component {
             <Route path="/users" exact component={Users} />
             <Route path="/users/edit/:id" component={EditUser} />
             <Route path="/users/new" exact component={EditUser} />
+            <Route path="/staff" exact component={Staff} />
             <Route path="/projects" exact component={Projects} />
             <Route path="/projects/list" exact component={ProjectsList} />
             <Route path="/projects/:id/work_times" component={ProjectWorkTimes} />
@@ -50,7 +55,10 @@ class TimeTable extends React.Component {
             <Route path="/accounting_periods" exact component={Periods} />
             <Route path="/accounting_periods/edit/:id" component={EditPeriod} />
             <Route path="/accounting_periods/new" component={EditPeriod} />
+            <Route path="/vacation_periods" exact  component={VacationPeriods} />
+            <Route path="/vacation_periods/edit/:id" component={EditVacationPeriod} />
             <Route path="/timesheet" component={Timesheet} />
+            <Route path="/vacations" component={Vacations} />
           </div>
         </div>
       </BrowserRouter>

@@ -8,9 +8,12 @@ Object.assign(window.currentUser, {
     return this.isSuperUser() || this.isLeaderOf(project);
   },
   isSuperUser() {
-    return this.admin || this.manager;
+    return this.admin || this.manager || this.staff_manager;
   },
   fullName() {
     return `${this.first_name} ${this.last_name}`;
+  },
+  canManageStaff() {
+    return this.isSuperUser() || this.is_leader;
   },
 });
