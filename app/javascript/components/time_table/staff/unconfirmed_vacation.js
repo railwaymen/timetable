@@ -20,7 +20,8 @@ class UnconfirmedVacation extends React.Component {
     vacationApprovers: this.props.vacation.approvers ? this.props.vacation.approvers.split(',').filter(Boolean) : [],
     disableApproveBtn: this.props.vacation.disable_approve_btn,
     vacationDecliners: this.props.vacation.decliners ? this.props.vacation.decliners.split(',').filter(Boolean) : [],
-    disableDeclineBtn: this.props.vacation.disable_decline_btn
+    disableDeclineBtn: this.props.vacation.disable_decline_btn,
+    errors: [],
   }
 
   onDeclineClick() {
@@ -37,7 +38,8 @@ class UnconfirmedVacation extends React.Component {
       this.setState({
         vacationDecliners: vacationDecliners,
         disableDeclineBtn: true,
-        disableApproveBtn: false
+        disableApproveBtn: false,
+        errors: [],
       })
     })
   }
@@ -49,7 +51,7 @@ class UnconfirmedVacation extends React.Component {
       url: `/api/vacations/${this.props.vacation.id}/approve`,
       body: { vacation: { vacation_sub_type: vacationSubType } }
     }).then((response) => {
-      if (!_.isEmpty(response.data.errors)) { this.props.showErrors(response.data.errors); return; }
+      if (!_.isEmpty(response.data.errors)) { this.showErrors(response.data.errors); return; }
       if (response.data.vacation.status === 'accepted') { this.props.addToAcceptedOrDeclinedVacationList(response.data.vacation, 'accept') }
       if (response.data.previous_status === 'declined') { this.props.removeFromAcceptedOrDeclined(response.data.vacation, 'accept') }
       vacationApprovers.push(response.data.user_full_name);
@@ -58,7 +60,8 @@ class UnconfirmedVacation extends React.Component {
       this.setState({
         vacationApprovers: vacationApprovers,
         disableApproveBtn: true,
-        disableDeclineBtn: false
+        disableDeclineBtn: false,
+        errors: [],
       })
     })
   }
@@ -69,7 +72,7 @@ class UnconfirmedVacation extends React.Component {
     Api.makePutRequest({
       url: `/api/vacations/${this.props.vacation.id}/undone`
     }).then((response) => {
-      if (_.includes(['approved', 'accepted'], response.data.previous_status)) { 
+      if (_.includes(['approved', 'accepted'], response.data.previous_status)) {
         const index = vacationApprovers.indexOf(`${currentUser.last_name} ${currentUser.first_name}`);
         if (index != -1) { vacationApprovers.splice(index, 1) }
         if (response.data.previous_status === 'accepted') { this.props.removeFromAcceptedOrDeclined(response.data.vacation) }
@@ -86,8 +89,30 @@ class UnconfirmedVacation extends React.Component {
         vacationDecliners: vacationDecliners,
         disableApproveBtn: false,
         disableDeclineBtn: false,
+        errors: [],
       })
     })
+  }
+
+  showErrors(errors) {
+    this.setState({
+      errors: errors
+    })
+  }
+
+  renderErrors() {
+    const { errors } = this.state;
+    let errorList = []
+    errors.forEach((error) => {
+      Object.keys(error).forEach((err) => {
+        errorList.push(<div className={err} key={err}>{error[err]}</div>)
+      })
+    })
+    return(
+      <div className='row vacation-errors error-tooltip'>
+        {errorList}
+      </div>
+    )
   }
 
   onSelectChange(e) {
@@ -99,8 +124,8 @@ class UnconfirmedVacation extends React.Component {
   renderVacationType(vacation) {
     if (vacation.vacation_type === 'others') {
       return(
-        <div className="vacation-sub-type" style={{ float: 'left' }}>
-          <select className="custom-select" name="vacationSubType" value={this.state.vacationSubType} onChange={this.onSelectChange}>
+        <div className="vacation-sub-type">
+          <select className="form-control" name="vacationSubType" value={this.state.vacationSubType} onChange={this.onSelectChange}>
             <option value=''>{I18n.t('apps.staff.choose')}</option>
             <option value="paternity">{I18n.t('common.paternity')}</option>
             <option value="parental">{I18n.t('common.parental')}</option>
@@ -115,8 +140,10 @@ class UnconfirmedVacation extends React.Component {
     }
     else {
       return(
-        <div className="vacation-type" style={{ float: 'left' }}>
-          {I18n.t(`common.${vacation.vacation_type}`)}
+        <div className="vacation-type">
+          <span>
+            {I18n.t(`common.${vacation.vacation_type}`)}
+          </span>
         </div>
       )
     }
@@ -124,24 +151,27 @@ class UnconfirmedVacation extends React.Component {
 
   renderButtons() {
     const { disableApproveBtn, disableDeclineBtn } = this.state;
-    return(
-      <div className="vacation-buttons" style={{ float: 'right' }}>
-        <button type="button" onClick={this.onDeclineClick} disabled={disableDeclineBtn}>
-          <span className="bt-txt">{I18n.t('apps.staff.decline')}</span>
-        </button>
-        <button type="button" onClick={this.onAcceptClick} disabled={disableApproveBtn}>
-          <span className="bt-txt">{I18n.t('apps.staff.accept')}</span>
-        </button>
-        { disableApproveBtn || disableDeclineBtn
-            ? (
-                <div className="undone-button">
-                  <button type="button" onClick={this.onUndoneClick}>
-                    <span className="bt-txt">{I18n.t('apps.staff.undone')}</span>
-                  </button>
-                </div>
-              ) : null }
-      </div>
-    )
+    if (disableApproveBtn || disableDeclineBtn) {
+      return(
+        <div className="vacation-buttons">
+          <button className="bt-vacation undone" type="button" onClick={this.onUndoneClick}>
+            <span className="bt-txt">{I18n.t('apps.staff.undone')}</span>
+          </button>
+        </div>
+      )
+    }
+    else {
+      return(
+        <div className="vacation-buttons">
+          <button className="bt-vacation accept" type="button" onClick={this.onAcceptClick} disabled={disableApproveBtn}>
+            <span className="bt-txt">{I18n.t('apps.staff.accept')}</span>
+          </button>
+          <button className="bt-vacation decline" type="button" onClick={this.onDeclineClick} disabled={disableDeclineBtn}>
+            <span className="bt-txt">{I18n.t('apps.staff.decline')}</span>
+          </button>
+        </div>
+      )
+    }
   }
 
   renderInteractions() {
@@ -150,12 +180,18 @@ class UnconfirmedVacation extends React.Component {
     const { vacationApprovers, vacationDecliners } = this.state;
     if (vacationApprovers) {
       for (let i = 0; i < vacationApprovers.length; i++) {
-        approvers.push(<div className="approver" key={i}>{I18n.t('apps.staff.approved_by', {user: vacationApprovers[i]})}</div>);
+        approvers.push(<div className="approver" key={i}>
+                         {I18n.t('apps.staff.approved_by')}
+                         <span className="interactor-name"> {vacationApprovers[i]}</span>
+                       </div>);
       }
     }
     if (vacationDecliners) {
       for (let i = 0; i < vacationDecliners.length; i++) {
-        decliners.push(<div className="decliner" key={i}>{I18n.t('apps.staff.declined_by', {user: vacationDecliners[i]})}</div>);
+        decliners.push(<div className="decliner" key={i}>
+                         {I18n.t('apps.staff.declined_by')}
+                         <span className="interactor-name"> {vacationDecliners[i]}</span>
+                       </div>);
       }
     }
     return(
@@ -168,27 +204,34 @@ class UnconfirmedVacation extends React.Component {
 
   render() {
     const vacation = this.props.vacation;
+    const { errors } = this.state;
 
     return(
-      <div style={{ border: "1px black solid", marginBottom: "20px", padding: "10px 10px 20px" }}>
-        <div className="vacation-header" style={{ display: 'flow-root' }}>
-          <div className="user-full-name" style={{ float: 'left' }}>
+      <div className={`unconfirmed-vacation ${vacation.status}`}>
+        { errors.length > 0
+            && this.renderErrors()
+        }
+        <div className="vacation-header">
+          <div className="user-full-name">
             {vacation.full_name}
           </div>
-          <div className="vacation-time-period" style={{ float: 'right' }}>
+          <div className="vacation-time-period">
             {moment(vacation.start_date).format('DD/MM/YYYY')}-{moment(vacation.end_date).format('DD/MM/YYYY')}
           </div>
         </div>
         <div className="vacation-description">
           {vacation.description}
         </div>
-        <div className="vacation-footer" style={{ display: 'flow-root' }}>
+        <div className="vacation-footer">
           {this.renderVacationType(vacation)}
           {this.renderButtons()}
         </div>
         {this.renderInteractions()}
         { window.currentUser.staff_manager
-            && <div className="available_vacation_days">{I18n.t('apps.staff.available_vacation_days')}: {vacation.available_vacation_days}</div>
+            && <div className="available_vacation_days">
+                 {I18n.t('apps.staff.available_vacation_days')}:
+                 <span className="vacation-days"> {vacation.available_vacation_days}</span>
+               </div>
         }
       </div>
     )

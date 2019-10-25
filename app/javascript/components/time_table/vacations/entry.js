@@ -118,7 +118,7 @@ class Entry extends React.Component {
           endDate: moment().format('DD/MM/YYYY')
         };
         this.setState(newState);
-        $('.custom-select')[0].value = 'planned';
+        $('.vacation-type select')[0].value = 'planned';
       }).catch((e) => {
         if (e.errors && (e.errors.base || e.errors.start_date || e.errors.end_date || e.errors.description || e.errors.vacation_type)) {
           const newErrors = {};
@@ -137,7 +137,7 @@ class Entry extends React.Component {
 
   renderVacationTypes(vacation_type) {
     return(
-      <select className="custom-select vacation-select" value={vacation_type} onChange={this.onSelectChange}>
+      <select className="form-control" value={vacation_type} onChange={this.onSelectChange}>
         <option value="planned">{I18n.t('common.planned')}</option>
         <option value="requested">{I18n.t('common.requested')}</option>
         <option value="compassionate">{I18n.t('common.compassionate')}</option>
@@ -146,42 +146,54 @@ class Entry extends React.Component {
     )
   }
 
+  renderErrorTooltip(errors) {
+    return(
+      <div className="error-tooltip vacation-errors">
+        <ul>
+          {errors.map(error => (
+            <li key={error}>{error}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
   render() {
     const { startDate, endDate, description, vacation_type, errors } = this.state
 
     return (
-      <div className="container">
-        <div className='row'>
-          <div className='col-sm-12 col-md-3'>
-            {errors.base ? <ErrorTooltip errors={errors.base} /> : null}
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-12 col-md-3 date">
-            {errors.startDate ? <ErrorTooltip errors={errors.startDate} /> : null}
-            <span>{I18n.t('common.from')}</span>
+      <div>
+        <div className="row vacation-date-range">
+          <div className="date">
+            {errors.startDate ? this.renderErrorTooltip(errors.startDate) : null}
             <DatePicker {...defaultDatePickerProps} name="start_date" className="form-control" selected={moment(startDate, 'DD/MM/YYYY')} value={moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={this.onDateChange.bind(this, 'startDate')} onSelect={this.onDateChange.bind(this, 'startDate')} />
           </div>
-          <div className="col-sm-12 col-md-3 date">
-            {errors.endDate ? <ErrorTooltip errors={errors.endDate} /> : null}
-            <span>{I18n.t('common.to')}</span>
+          <div className="date">
+            {errors.endDate ? this.renderErrorTooltip(errors.endDate) : null}
             <DatePicker {...defaultDatePickerProps} name="end_date" className="form-control" selected={moment(endDate, 'DD/MM/YYYY')} value={moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={this.onDateChange.bind(this, 'endDate')} onSelect={this.onDateChange.bind(this, 'endDate')} />
           </div>
-          <div className="col-sm-12 col-md-3 vacation-type">
-            {errors.vacation_type ? <ErrorTooltip errors={errors.vacation_type} /> : null}
+          <div className="vacation-type">
+            {errors.vacation_type ? this.renderErrorTooltip(errors.vacation_type) : null}
             {this.renderVacationTypes(vacation_type)}
           </div>
         </div>
-        <div className="row">
-          <div className="col-sm-12 col-md-6 description">
-            {errors.description ? <ErrorTooltip errors={errors.description} /> : null}
+        <div className="row description-containter">
+          <div className="description">
+            {errors.description ? this.renderErrorTooltip(errors.description) : null}
             <textarea className="form-control" placeholder={I18n.t('apps.vacations.vacation_description')} name="description" value={description} onChange={this.onChange} onKeyPress={this.onKeyPress} />
           </div>
         </div>
-        <div className="form-actions">
-          <button type="button" className="bt bt-big bt-main bt-vacation" style={{ marginTop: '5px' }} onClick={(this.onSubmit)}>
-            <span className="bt-txt">{I18n.t('common.send')}</span>
-          </button>
+        <div className="row">
+          <div className="base-error">
+            {errors.base ? this.renderErrorTooltip(errors.base) : null}
+          </div>
+        </div>
+        <div className="row buttons">
+          <div className="form-actions">
+            <button type="button" className="bt-vacation" onClick={(this.onSubmit)}>
+              <span className="bt-txt">{I18n.t('common.send')}</span>
+            </button>
+          </div>
         </div>
       </div>
     )

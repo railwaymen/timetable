@@ -113,12 +113,13 @@ pl:
         unconfirmed: Niepotwierdzone
         declined: Odrzucony
         accepted: Zaakceptowany
-      remaining_vacation:
-        one: 'Pozostały urlop: 1 dzień'
-        other: 'Pozostały urlop: {{count}} dni'
-      used_vacation_days:
-        one: 'Użyty {{type}}: 1 dzień'
-        other: 'Użyty {{type}}: {{count}} dni'
+      remaining_vacation: 'Pozostały urlop: '
+      days:
+        one: 1 dzień
+        other: '{{count}} dni'
+      used_vacation_days: 'Użyty {{type}}: '
+      expand_used_days: Rozwiń użyte dni urlopu
+      fold_used_days: Zwiń użyte dni urlopu
     staff:
       general: Ogólne
       by_person: Wg. osoby
@@ -135,13 +136,14 @@ pl:
       accept: Akceptuj
       decline: Odrzuć
       undone: Cofnij
-      approved_by: Zaakceptowane przez %{user}
-      declined_by: Odrzucone przez %{user}
+      approved_by: Zaakceptowane przez
+      declined_by: Odrzucone przez
       show_all: Pokaż wszystkie
       show_unconfirmed: Pokaż niepotwierdzone
       show_accepted: Pokaż zaakceptowane
       show_declined: Pokaż odrzucone
-      show_approved: Pokaż zatwierdzone
+      show_acceptable: Pokaż do zaakceptowania
+      acceptable: Do zaakceptowania
       all: Wszystkie
       available_vacation_days: Pozostałe dni urlopu
       user_has_already_filled_in_work_time: Użytkownik %{parameter} już wypełnił czas pracy w dniach

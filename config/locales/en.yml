@@ -113,12 +113,13 @@ en:
         unconfirmed: Unconfirmed
         declined: Declined
         accepted: Accepted
-      remaining_vacation:
-        one: 'Remaining vacation: 1 day'
-        other: 'Remaining vacation: {{count}} days'
-      used_vacation_days:
-        one: 'Used {{type}}: 1 day'
-        other: 'Used {{type}}: {{count}} days'
+      remaining_vacation: 'Remaining vacation: '
+      days:
+        one: 1 day
+        other: '{{count}} days'
+      used_vacation_days: 'Used {{type}}: '
+      expand_used_days: Expand used vacation days
+      fold_used_days: Fold used vacation days
     staff:
       general: General
       by_person: By person
@@ -135,13 +136,14 @@ en:
       accept: Accept
       decline: Decline
       undone: Undone
-      approved_by: Approved by %{user}
-      declined_by: Declined by %{user}
+      approved_by: Approved by
+      declined_by: Declined by
       show_all: Show all
       show_unconfirmed: Show unconfirmed
       show_accepted: Show accepted
       show_declined: Show declined
-      show_approved: Show approved
+      show_acceptable: Show acceptable
+      acceptable: Acceptable
       all: All
       available_vacation_days: Available vacation days
       user_has_already_filled_in_work_time: User %{parameter} has already filled in the work time in days

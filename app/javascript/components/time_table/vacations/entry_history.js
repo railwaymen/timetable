@@ -11,13 +11,14 @@ class EntryHistory extends React.Component {
     this.getVacations = this.getVacations.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.renderUsedVacationDays = this.renderUsedVacationDays.bind(this);
+    this.onCollappsibleClick = this.onCollappsibleClick.bind(this);
   }
 
   static propTypes = {
     vacations: PropTypes.array,
     years: PropTypes.array,
     selectedYear: PropTypes.number,
-    availableVacationDays: PropTypes.number    
+    availableVacationDays: PropTypes.number
   }
 
   state = {
@@ -25,7 +26,8 @@ class EntryHistory extends React.Component {
     years: [parseInt(moment().year())],
     selectedYear: undefined,
     availableVacationDays: 0,
-    usedVacationDays: {}
+    usedVacationDays: {},
+    usedVacationsExpanded: false,
   }
 
   componentDidMount() {
@@ -51,20 +53,18 @@ class EntryHistory extends React.Component {
   }
 
   renderVacations(vacation, key) {
+    const status = vacation.status === 'approved' ? I18n.t('apps.vacations.status.unconfirmed') : I18n.t('apps.vacations.status.' + vacation.status)
+    const statusClass = vacation.status === 'approved' ? 'unconfirmed' : vacation.status
     return(
-      <div className="row vacation" key={key}>
-        <div className="col-sm-12 col-md-4 vacation-type">
-          {I18n.t(`common.${vacation.vacation_type}`)}
-        </div>
-        <div className="col-sm-12 col-md-4 vacation-date-range">
+      <tr className="row vacation" key={key}>
+        <td>{I18n.t(`common.${vacation.vacation_type}`)}</td>
+        <td>
           {moment(vacation.start_date).format('DD.MM.YYYY')}
           <span>-</span>
           {moment(vacation.end_date).format('DD.MM.YYYY')}
-        </div>
-        <div className="col-sm-12 col-md-4 vacation-status">
-          {vacation.status === 'approved' ? I18n.t('apps.vacations.status.unconfirmed') : I18n.t('apps.vacations.status.' + vacation.status)}
-        </div>
-      </div>
+        </td>
+        <td className={statusClass}>{status}</td>
+      </tr>
     )
   }
 
@@ -75,7 +75,7 @@ class EntryHistory extends React.Component {
       options.push(<option key={i} value={years[i]}>{years[i]}</option>)
     }
     return(
-      <select className="custom-select year-select" value={selectedYear} onChange={this.onSelectChange}>
+      <select className="form-control" value={selectedYear} onChange={this.onSelectChange}>
         {options}
       </select>
     )
@@ -101,40 +101,59 @@ class EntryHistory extends React.Component {
   }
 
   renderUsedVacationDays() {
-    const { usedVacationDays } = this.state;
+    const { usedVacationDays, usedVacationsExpanded } = this.state;
     let usedVacationDaysList = []
     Object.keys(usedVacationDays).forEach((type) => {
       usedVacationDaysList.push(
-                                    <div className={type} key={type}>
-                                      {I18n.t('apps.vacations.used_vacation_days', 
-                                        { type: I18n.t(`common.${type}`).toLowerCase(), count: usedVacationDays[type] } )}
-                                    </div>
-                                  )
+                                <div className={type} key={type}>
+                                  {I18n.t('apps.vacations.used_vacation_days', { type: I18n.t(`common.${type}`).toLowerCase()} )}
+                                  <span>{I18n.t('apps.vacations.days', { count: usedVacationDays[type] })}</span>
+                                </div>
+                                )
     })
+    const chevron = usedVacationsExpanded ? "up" : "down";
+    const translation = usedVacationsExpanded ? "fold_used_days" : "expand_used_days";
     return(
-      <div>
-        {usedVacationDaysList}
+      <div className="used-vacations">
+        <a href="#used-vacations-collapse" data-toggle="collapse" role="button" aria-expanded={usedVacationsExpanded} aria-controls="used-vacations-collapse" onClick={this.onCollappsibleClick}>
+          <i className={`glyphicon glyphicon-chevron-${chevron}`}/>
+          {I18n.t(`apps.vacations.${translation}`)}
+        </a>
+        <div className="collapse" id="used-vacations-collapse">
+          {usedVacationDaysList}
+        </div>
       </div>
     )
   }
 
+  onCollappsibleClick() {
+    this.setState({
+      usedVacationsExpanded: !this.state.usedVacationsExpanded
+    })
+  }
+
   render() {
     const { years, vacations, availableVacationDays } = this.state;
-    
+
     return(
-      <div className="container">
+      <div>
         <div className="row">
-          <div className="col-sm-12 col-md-3 available-vacation-days">
-            {I18n.t('apps.vacations.remaining_vacation', { count: availableVacationDays })}
+          <div className="available-vacation-days">
+            {I18n.t('apps.vacations.remaining_vacation')}
+            <span>{I18n.t('apps.vacations.days', { count: availableVacationDays })}</span>
             {this.renderUsedVacationDays()}
           </div>
-          <div className="col-sm-12 col-md-3 year-filter">
+          <div className="year-filter">
             {this.renderYearFilter(years)}
           </div>
         </div>
         <div className="row">
-          <div className="col-sm-12 col-md-6 vacations">
-             {vacations.map((vacation, key) => this.renderVacations(vacation, key))}
+          <div className="vacations">
+            <table>
+              <tbody>
+                {vacations.map((vacation, key) => this.renderVacations(vacation, key))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ module Api
     respond_to :json
 
     def index
-      @vacations = Vacation.where('user_id = :user_id AND extract(year from start_date) = :year OR extract(year from start_date) = :year',
+      @vacations = Vacation.where('user_id = :user_id AND (extract(year from start_date) = :year OR extract(year from start_date) = :year)',
                                   user_id: current_user.id, year: params[:year])
       @available_vacation_days = current_user.available_vacation_days
       @used_vacation_days = current_user.used_vacation_days(@vacations)

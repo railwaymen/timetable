@@ -45,7 +45,6 @@ class VacationApplications extends React.Component {
     if (this.state.showAll) { url.addSearch({ show_all: true }) }
     if (this.state.showDeclined) { url.addSearch({ show_declined: true }) }
     url.addSearch(prepareParams);
-    console.log(url)
 
     Api.makeGetRequest({ url })
       .then((response) => {
@@ -100,12 +99,14 @@ class VacationApplications extends React.Component {
   render() {
     const { acceptedOrDeclinedVacationsList, unconfirmedVacationsList } = this.state;
     return(
-      <div className="row">
-        <div className="col-md-6">
-          <AcceptedVacations ref={(accepted_or_declined_vacations) => { this.accepted_or_declined_vacations = accepted_or_declined_vacations }} acceptedOrDeclinedVacationsList={acceptedOrDeclinedVacationsList} onShowButtonChange={this.onShowButtonChange} showDeclined={this.state.showDeclined} />
-        </div>
-        <div className="col-md-6">
-          <UnconfirmedVacations ref={(unconfirmed_vacations) => { this.unconfirmed_vacations = unconfirmed_vacations }} unconfirmedVacationsList={unconfirmedVacationsList} removeFromAcceptedOrDeclined={this.removeFromAcceptedOrDeclined} addToAcceptedOrDeclinedVacationList={this.addToAcceptedOrDeclinedVacationList} onShowButtonChange={this.onShowButtonChange} showAll={this.state.showAll} showDeclined={this.state.showDeclined} showErrors={this.props.showErrors} />
+      <div className="container vacations-container">
+        <div className="row">
+          <div className="col-md-6">
+            <AcceptedVacations ref={(accepted_or_declined_vacations) => { this.accepted_or_declined_vacations = accepted_or_declined_vacations }} acceptedOrDeclinedVacationsList={acceptedOrDeclinedVacationsList} onShowButtonChange={this.onShowButtonChange} showDeclined={this.state.showDeclined} />
+          </div>
+          <div className="col-md-6">
+            <UnconfirmedVacations ref={(unconfirmed_vacations) => { this.unconfirmed_vacations = unconfirmed_vacations }} unconfirmedVacationsList={unconfirmedVacationsList} removeFromAcceptedOrDeclined={this.removeFromAcceptedOrDeclined} addToAcceptedOrDeclinedVacationList={this.addToAcceptedOrDeclinedVacationList} onShowButtonChange={this.onShowButtonChange} showAll={this.state.showAll} showDeclined={this.state.showDeclined} />
+          </div>
         </div>
       </div>
     )

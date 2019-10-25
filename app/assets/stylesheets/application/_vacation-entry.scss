@@ -1,0 +1,71 @@
+.vacation-entry {
+  display: flex;
+  justify-content: center;
+  > .row {
+    width: 60%;
+    input, select, span:not(.bt-txt), table {
+      text-align: center;
+      color: $vacations-text-black;
+    }
+  }
+  .vacation-date-range {
+    display: flex;
+    flex-flow: row wrap;
+    margin-bottom: 15px;
+    .date:first-child {
+      margin-right: 20px;
+    }
+    .date {
+      max-width: 200px;
+    }
+    .vacation-type {
+      width: 240px;
+      margin-left: auto;
+    }
+  }
+  .description, .available-vacation-days {
+    color: $vacations-text-gray;
+    margin-bottom: 25px;
+  }
+  .vacation-errors {
+    position: initial;
+    margin: 2px auto 2px auto;
+  }
+  .available-vacation-days {
+    font-size: 16px;
+    span {
+      font-weight: 500;
+    }
+  }
+  .year-filter {
+    float: right;
+  }
+  .vacations table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+    border-spacing: 0;
+    border-collapse: collapse;
+    font-weight: 500;
+    tr {
+      border-bottom: 1px solid $vacations-dark-gray;
+      height: 50px;
+      text-align: center;
+      .unconfirmed {
+        color: #FAC50B;
+      }
+      .accepted {
+        color: $vacations-accepted-color;
+      }
+      .declined {
+        color: $vacations-declined-color;
+      }
+    }
+    tr:last-child {
+      border-bottom: none;
+    }
+    tr:nth-child(even) {
+      background-color: $vacations-gray;
+    }
+  }
+}

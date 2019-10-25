@@ -14,7 +14,6 @@ class Filters extends React.Component {
     this.onUserSelectFilterChange = this.onUserSelectFilterChange.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
-    this.renderExportButton = this.renderExportButton.bind(this);
   }
 
   static propTypes = {
@@ -88,22 +87,10 @@ class Filters extends React.Component {
       options.push(<option key={key} value={user.id}>{user.last_name} {user.first_name}</option>)
     })
     return(
-      <select className="custom-select user-select-filter" value={selectedUser} onChange={(this.onUserSelectFilterChange)}>
+      <select className="form-control user-select-filter" value={selectedUser} onChange={(this.onUserSelectFilterChange)}>
         <option value=''>{I18n.t('apps.staff.by_person')}</option>
         {options}
       </select>
-    )
-  }
-
-  renderExportButton() {
-    return(
-      <div className="col-md-1 csv-export-button">
-        <a href={`/api/vacations/generate_csv.csv`}>
-          <button type="button" onClick={this.onExportClick}>
-            <span className="bt-txt">{I18n.t('apps.staff.csv_export')}</span>
-          </button>
-        </a>
-      </div>
     )
   }
 
@@ -113,29 +100,28 @@ class Filters extends React.Component {
     return(
       <div className="container filters">
         <div className="row">
-          <div className="col-sm-12 col-md-1 general-button">
-            <button type="button" onClick={(this.onGeneralClick)}>
+          <div className="general-button">
+            <button className="filter-button bt-vacation" type="button" onClick={(this.onGeneralClick)}>
               <span className="bt-txt">{I18n.t('apps.staff.general')}</span>
             </button>
           </div>
-          <div className="col-sm-12 col-md-1 user-filter" style={{marginRight: '7vw'}}>
+          <div className="user-filter">
             {this.renderUserSelectFilter(users)}
           </div>
-          <div className="col-sm-12 col-md-2 start-date-filter">
+          <div className="start-date-filter">
             <DatePicker {...defaultDatePickerProps} name="startDate" className="form-control" selected={startDate === null ? null : moment(startDate, 'DD/MM/YYYY')} value={startDate === null ? null : moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={this.onDateChange.bind(this, 'startDate')} onSelect={this.onDateChange.bind(this, 'startDate')} />
           </div>
-          <div className="col-sm-12 col-md-2 start-date-filter">
+          <div className="end-date-filter">
             <DatePicker {...defaultDatePickerProps} name="endDate" className="form-control" selected={endDate === null ? null : moment(endDate, 'DD/MM/YYYY')} value={endDate === null ? null : moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={this.onDateChange.bind(this, 'endDate')} onSelect={this.onDateChange.bind(this, 'endDate')} />
           </div>
           { currentUser.staff_manager
-              ? (<div className="col-md-1 csv-export-button">
-                  <button type="button" onClick={this.onExportClick}>
+              ? (<div className="csv-export-button">
+                  <button className="filter-button bt-vacation" type="button" onClick={this.onExportClick}>
                     <span className="bt-txt">{I18n.t('apps.staff.csv_export')}</span>
                   </button>
                 </div>
               ) : null
           }
-          
         </div>
       </div>
     )

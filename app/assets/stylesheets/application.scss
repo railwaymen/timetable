@@ -23,6 +23,9 @@
 @import 'application/edit-accounting-period';
 @import 'application/accounting-periods-list';
 
+@import 'application/vacation-entry';
+@import 'application/staff';
+
 @import 'pages/projects';
 @import 'pages/reports';
 @import 'pages/sign_in';
@@ -31,6 +34,7 @@
 @import 'timesheet/blocks/*';
 @import 'timer';
 @import 'react-datepicker/dist/react-datepicker';
+
 
 .bootbox.ui.modal.fade.bootbox-confirm {
   opacity: 1;
@@ -190,4 +194,9 @@ ol.projects .dl-horizontal {
 .disabled-button-wrapper {
   display: inline-block;
   cursor: not-allowed;
+}
+
+.edit-vacation-period {
+  margin: auto;
+  float: none;
 }

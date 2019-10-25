@@ -16,9 +16,13 @@ class Vacations extends React.Component {
   render() {
 
     return (
-      <div>
-        <Entry ref={(entry) => { this.entry = entry; }} updateVacationList={this.updateVacationList} />
-        <EntryHistory ref={(entryHistory) => { this.entryHistory = entryHistory }} />
+      <div className="container vacation-entry">
+        <div className="row">
+          <div className="vacations-container">
+            <Entry ref={(entry) => { this.entry = entry; }} updateVacationList={this.updateVacationList} />
+            <EntryHistory ref={(entryHistory) => { this.entryHistory = entryHistory }} />
+          </div>
+        </div>
       </div>
     );
   }
