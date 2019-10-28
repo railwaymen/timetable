@@ -29,18 +29,21 @@ class VacationApplications extends React.Component {
   }
 
   componentDidMount() {
-    this.getVacationApplications({ start_date: moment().startOf('month').format('DD/MM/YYYY') })
+    const { start_date, end_date, user_id } = URI.parseQuery(URI(window.location.href).query());
+    this.props.urlFilters({ start_date, end_date, user_id });
+    this.getVacationApplications({ start_date: moment().startOf('month').format('DD/MM/YYYY') }, false)
   }
 
-  getVacationApplications(params = {}) {
+  getVacationApplications(params = {}, ignore_url = true) {
     let { start_date, end_date, user_id } = params;
-
+    let urlFilters = URI.parseQuery(URI(window.location.href).query());
+    
     const prepareParams = { start_date, end_date, user_id }
-
-    if (!start_date) { delete prepareParams['start_date']; }
-    if (!end_date) { delete prepareParams['end_date']; }
-    if (!user_id) { delete prepareParams['user_id']; }
-
+    
+    if (!start_date) { if (!urlFilters['start_date'] || ignore_url) { delete prepareParams['start_date']; } else { prepareParams['start_date'] = urlFilters['start_date'] } }
+    if (!end_date) { if (!urlFilters['end_date'] || ignore_url) { delete prepareParams['end_date']; } else { prepareParams['end_date'] = urlFilters['end_date'] } }
+    if (!user_id) { if (!urlFilters['user_id'] || ignore_url) { delete prepareParams['user_id']; } else { prepareParams['user_id'] = urlFilters['user_id'] } }
+    
     const url = URI('/api/vacations/vacation_applications');
     if (this.state.showAll) { url.addSearch({ show_all: true }) }
     if (this.state.showDeclined) { url.addSearch({ show_declined: true }) }

@@ -2,6 +2,7 @@
 
 require_relative 'querable'
 
+# rubocop:disable Metrics/ClassLength
 class VacationApplicationsQuery
   include Querable
 
@@ -12,6 +13,7 @@ class VacationApplicationsQuery
     @current_user = current_user
     @show_all = params[:show_all]
     @show_declined = params[:show_declined]
+    @vacation_id = params[:id]
   end
 
   def accepted_or_declined_vacations
@@ -24,6 +26,10 @@ class VacationApplicationsQuery
     else
       execute_sql(sanitized_sql(false, %w[unconfirmed approved]))
     end
+  end
+
+  def vacation
+    execute_sql(sanitize_array([vacation_sql, current_user: @current_user.id, vacation_id: @vacation_id]))
   end
 
   private
@@ -76,12 +82,12 @@ class VacationApplicationsQuery
         v.description,
         v.status,
         ARRAY_TO_STRING(array_agg(us_apr.last_name || ' ' || us_apr.first_name), ',', '') AS approvers,
-        (:current_user = ANY(array_agg(us_apr.id))) AS disable_approve_btn,
         ARRAY_TO_STRING(array_agg(us_dec.last_name || ' ' || us_dec.first_name), ',', '') AS decliners,
-        (:current_user = ANY(array_agg(us_dec.id))) AS disable_decline_btn
+        (:current_user = ANY(array_agg(us.id))) AS interacted
       FROM vacations AS v
       LEFT JOIN users AS u ON u.id = v.user_id
       LEFT JOIN vacation_interactions AS vi ON vi.vacation_id = v.id
+      LEFT JOIN users AS us ON us.id = vi.user_id AND vi.action = ANY(ARRAY['accepted', 'approved', 'declined'])
       LEFT JOIN users AS us_apr ON us_apr.id = vi.user_id AND vi.action = ANY(ARRAY['accepted', 'approved'])
       LEFT JOIN users AS us_dec ON us_dec.id = vi.user_id AND vi.action = 'declined'
       WHERE v.status IN (:status)
@@ -93,5 +99,33 @@ class VacationApplicationsQuery
       ORDER BY v.start_date;
     )
   end
+
+  def vacation_sql
+    %(
+      SELECT
+        v.id,
+        v.user_id,
+        (u.last_name || ' ' || u.first_name) AS full_name,
+        v.start_date,
+        v.end_date,
+        v.vacation_type,
+        v.vacation_sub_type,
+        v.description,
+        v.status,
+        ARRAY_TO_STRING(array_agg(us_apr.last_name || ' ' || us_apr.first_name), ',', '') AS approvers,
+        ARRAY_TO_STRING(array_agg(us_dec.last_name || ' ' || us_dec.first_name), ',', '') AS decliners,
+        (:current_user = ANY(array_agg(us.id))) AS interacted
+      FROM vacations AS v
+      LEFT JOIN users AS u ON u.id = v.user_id
+      LEFT JOIN vacation_interactions AS vi ON vi.vacation_id = v.id
+      LEFT JOIN users AS us ON us.id = vi.user_id AND vi.action = ANY(ARRAY['accepted', 'approved', 'declined'])
+      LEFT JOIN users AS us_apr ON us_apr.id = vi.user_id AND vi.action = ANY(ARRAY['accepted', 'approved'])
+      LEFT JOIN users AS us_dec ON us_dec.id = vi.user_id AND vi.action = 'declined'
+      WHERE v.id = :vacation_id
+      GROUP BY v.id, full_name, v.start_date, v.end_date, v.vacation_type, v.description, v.status
+      ORDER BY v.start_date;
+    )
+  end
   # rubocop:enable Metrics/MethodLength
 end
+# rubocop:enable Metrics/ClassLength

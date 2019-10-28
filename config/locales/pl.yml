@@ -149,6 +149,7 @@ pl:
       user_has_already_filled_in_work_time: Użytkownik %{parameter} już wypełnił czas pracy w dniach
       too_early: Nie można zaakceptować urlopu z wyprzedzeniem o miesiąc
       not_just_vacations: Użytkownik %{user} ma wpisy w czasie pracy nie tylko z urlopu w danym okresie urlopu
+      vacation_sub_type_empty: Podtyp urlopu nie może być pusty
     vacation_periods:
       vacation_days: Dni urlopu
       note: Notatka

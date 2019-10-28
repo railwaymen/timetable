@@ -6,6 +6,7 @@ class Vacation < ApplicationRecord
   has_many :work_times, dependent: :destroy
 
   validates :description, presence: true, if: :others?
+  validates :vacation_sub_type, presence: true, if: :accepting_other_vacation, on: :update
   validates :start_date, :end_date, :vacation_type, :status, :user_id, presence: true
   validates :status, inclusion: { in: %w[unconfirmed declined approved accepted] }
   validates :vacation_type, inclusion: { in: %w[planned requested compassionate others] }
@@ -33,6 +34,10 @@ class Vacation < ApplicationRecord
                                            ((starts_at::timestamp::date, starts_at::timestamp::date) OVERLAPS (:start_date, :end_date))',
                                           start_date: start_date, end_date: end_date).any?
     errors.add(:base, I18n.t('activerecord.errors.models.vacation.base.validates_work_time')) if any_work_time
+  end
+
+  def accepting_other_vacation
+    others? && accepted?
   end
 
   def user_full_name

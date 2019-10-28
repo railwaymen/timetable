@@ -10,7 +10,7 @@ class VacationWorkTimesService
   end
 
   def save
-    return if !@current_user.admin? || work_times.any?
+    return if !@current_user.staff_manager? || work_times.any?
 
     @vacation_range.each do |day|
       work_time = WorkTimeForm.new(work_time: build_new_work_time(work_time_params(day)))

@@ -31,6 +31,14 @@ class Filters extends React.Component {
     this.getActiveUsers();
   }
 
+  setFilters(params) {
+    this.setState({
+      selectedUser: params['user_id'] ? params['user_id'] : '',
+      startDate: params['start_date'] ? params['start_date'] : moment().startOf('month').format('DD/MM/YYYY'),
+      endDate: params['end_date'] ? moment(params['end_date'], 'DD/MM/YYYY').format('DD/MM/YYYY') : null
+    })
+  }
+
   getActiveUsers() {
     fetch(`/api/users?filter=active&staff`)
       .then(response => response.json())

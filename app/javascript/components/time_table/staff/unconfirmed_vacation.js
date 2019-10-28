@@ -16,79 +16,66 @@ class UnconfirmedVacation extends React.Component {
   }
 
   state = {
+    vacation: this.props.vacation,
     vacationSubType: this.props.vacation.vacation_sub_type ? this.props.vacation.vacation_sub_type : '',
     vacationApprovers: this.props.vacation.approvers ? this.props.vacation.approvers.split(',').filter(Boolean) : [],
-    disableApproveBtn: this.props.vacation.disable_approve_btn,
     vacationDecliners: this.props.vacation.decliners ? this.props.vacation.decliners.split(',').filter(Boolean) : [],
-    disableDeclineBtn: this.props.vacation.disable_decline_btn,
+    interacted: this.props.vacation.interacted,
     errors: [],
   }
 
   onDeclineClick() {
-    let { vacationDecliners, vacationApprovers } = this.state;
+    let { vacation } = this.state;
     Api.makePostRequest({
-      url: `/api/vacations/${this.props.vacation.id}/decline`
+      url: `/api/vacations/${vacation.id}/decline`
     }).then((response) => {
       if (!_.isEmpty(response.data.errors)) { this.props.showErrors(response.data.errors); return; }
       if (_.includes(['accepted', 'approved'], response.data.previous_status)) { this.props.removeFromAcceptedOrDeclined(response.data.vacation, 'decline') }
       this.props.addToAcceptedOrDeclinedVacationList(response.data.vacation, 'decline');
-      vacationDecliners.push(response.data.user_full_name);
-      const index = vacationApprovers.indexOf(response.data.user_full_name)
-      if (index != -1) { vacationApprovers.splice(index, 1) }
-      this.setState({
-        vacationDecliners: vacationDecliners,
-        disableDeclineBtn: true,
-        disableApproveBtn: false,
-        errors: [],
-      })
+      this.updateVacation(vacation.id);
     })
   }
 
   onAcceptClick() {
-    let { vacationApprovers, vacationDecliners, vacationSubType } = this.state;
+    let { vacationSubType, vacation } = this.state;
 
     Api.makePostRequest({
-      url: `/api/vacations/${this.props.vacation.id}/approve`,
+      url: `/api/vacations/${vacation.id}/approve`,
       body: { vacation: { vacation_sub_type: vacationSubType } }
     }).then((response) => {
       if (!_.isEmpty(response.data.errors)) { this.showErrors(response.data.errors); return; }
       if (response.data.vacation.status === 'accepted') { this.props.addToAcceptedOrDeclinedVacationList(response.data.vacation, 'accept') }
       if (response.data.previous_status === 'declined') { this.props.removeFromAcceptedOrDeclined(response.data.vacation, 'accept') }
-      vacationApprovers.push(response.data.user_full_name);
-      const index = vacationDecliners.indexOf(response.data.user_full_name)
-      if (index != -1) { vacationDecliners.splice(index, 1) }
-      this.setState({
-        vacationApprovers: vacationApprovers,
-        disableApproveBtn: true,
-        disableDeclineBtn: false,
-        errors: [],
-      })
+      this.updateVacation(vacation.id);
     })
   }
 
   onUndoneClick() {
-    let { vacationApprovers, vacationDecliners } = this.state;
+    let { vacation } = this.state;
 
     Api.makePutRequest({
-      url: `/api/vacations/${this.props.vacation.id}/undone`
+      url: `/api/vacations/${vacation.id}/undone`
     }).then((response) => {
-      if (_.includes(['approved', 'accepted'], response.data.previous_status)) {
-        const index = vacationApprovers.indexOf(`${currentUser.last_name} ${currentUser.first_name}`);
-        if (index != -1) { vacationApprovers.splice(index, 1) }
-        if (response.data.previous_status === 'accepted') { this.props.removeFromAcceptedOrDeclined(response.data.vacation) }
-      }
-      if (response.data.previous_status === 'declined') {
-        const index = vacationDecliners.indexOf(response.data.user_full_name);
-        vacationDecliners.splice(index, 1)
-        if (response.data.vacation.status != 'declined' && this.props.showDeclined) { this.props.removeFromAcceptedOrDeclined(response.data.vacation) }
-      }
+      if (response.data.previous_status === 'accepted') { this.props.removeFromAcceptedOrDeclined(response.data.vacation) }
+      if (response.data.vacation.status != 'declined' && this.props.showDeclined) { this.props.removeFromAcceptedOrDeclined(response.data.vacation) }
       if (response.data.vacation.status === 'accepted' && this.props.showAll) { this.props.addToAcceptedOrDeclinedVacationList(response.data.vacation) }
       if (response.data.vacation.status === 'declined' && this.props.showDeclined) { this.props.addToAcceptedOrDeclinedVacationList(response.data.vacation) }
+      this.updateVacation(vacation.id);
+    })
+  }
+
+  updateVacation(vacationId) {
+    Api.makeGetRequest({
+      url: `/api/vacations/${vacationId}`
+    }).then((response) => {
+      const vacation = response.data;
       this.setState({
-        vacationApprovers: vacationApprovers,
-        vacationDecliners: vacationDecliners,
+        vacation: vacation,
+        vacationApprovers: vacation.approvers ? vacation.approvers.split(',').filter(Boolean) : [],
+        vacationDecliners: vacation.decliners ? vacation.decliners.split(',').filter(Boolean) : [],
         disableApproveBtn: false,
         disableDeclineBtn: false,
+        interacted: vacation.interacted,
         errors: [],
       })
     })
@@ -150,8 +137,8 @@ class UnconfirmedVacation extends React.Component {
   }
 
   renderButtons() {
-    const { disableApproveBtn, disableDeclineBtn } = this.state;
-    if (disableApproveBtn || disableDeclineBtn) {
+    const { interacted } = this.state;
+    if (interacted) {
       return(
         <div className="vacation-buttons">
           <button className="bt-vacation undone" type="button" onClick={this.onUndoneClick}>
@@ -163,10 +150,10 @@ class UnconfirmedVacation extends React.Component {
     else {
       return(
         <div className="vacation-buttons">
-          <button className="bt-vacation accept" type="button" onClick={this.onAcceptClick} disabled={disableApproveBtn}>
+          <button className="bt-vacation accept" type="button" onClick={this.onAcceptClick}>
             <span className="bt-txt">{I18n.t('apps.staff.accept')}</span>
           </button>
-          <button className="bt-vacation decline" type="button" onClick={this.onDeclineClick} disabled={disableDeclineBtn}>
+          <button className="bt-vacation decline" type="button" onClick={this.onDeclineClick}>
             <span className="bt-txt">{I18n.t('apps.staff.decline')}</span>
           </button>
         </div>
@@ -203,8 +190,7 @@ class UnconfirmedVacation extends React.Component {
   }
 
   render() {
-    const vacation = this.props.vacation;
-    const { errors } = this.state;
+    const { errors, vacation } = this.state;
 
     return(
       <div className={`unconfirmed-vacation ${vacation.status}`}>

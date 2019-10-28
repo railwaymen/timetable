@@ -55,7 +55,7 @@ class VacationService
 
   def approve_transaction
     ActiveRecord::Base.transaction do
-      approve_vacation
+      vacation_sub_type_error unless approve_vacation
       vacation_work_times_service.save
       @vacation_interaction = create_vacation_interaction(:approved)
       remove_previous_interaction(%w[declined])
@@ -81,9 +81,9 @@ class VacationService
 
   def approve_vacation
     if @current_user.staff_manager?
-      @vacation.update!(accept_vacations_params.merge(status: :accepted))
+      @vacation.update(accept_vacations_params.merge(status: :accepted))
     else
-      @vacation.update!(accept_vacations_params.merge(status: :approved)) unless @vacation.accepted?
+      @vacation.update(accept_vacations_params.merge(status: :approved)) unless @vacation.accepted?
     end
   end
 
@@ -122,6 +122,10 @@ class VacationService
   def remove_previous_interaction(status)
     previous_interactions = VacationInteraction.where(user_id: @current_user.id, vacation_id: @vacation.id, action: status)
     previous_interactions.destroy_all if previous_interactions.any?
+  end
+
+  def vacation_sub_type_error
+    @errors << { vacation_sub_type: I18n.t('apps.staff.vacation_sub_type_empty') }
   end
 
   def undone_accepted_vacation

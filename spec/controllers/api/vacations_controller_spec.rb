@@ -26,8 +26,7 @@ RSpec.describe Api::VacationsController do
 
   def unconfirmed_vacation_response(vacation)
     vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'vacation_sub_type', 'status', 'description')
-            .merge(approvers: nil, decliners: nil, disable_approve_btn: nil,
-                   disable_decline_btn: nil, full_name: nil)
+            .merge(approvers: nil, decliners: nil, full_name: nil, interacted: nil)
   end
 
   def vacation_service_response(vacation, current_user)
@@ -56,7 +55,7 @@ RSpec.describe Api::VacationsController do
       create(:vacation, user: user, start_date: Time.current + 4.days, end_date: Time.current + 10.days,
                         vacation_type: :others, vacation_sub_type: :parental, description: 'Parental', status: :accepted)
       create(:vacation, user: user, vacation_type: :requested, status: :accepted)
-      get :index, format: :json
+      get :index, params: { year: Time.current.year }, format: :json
       expect(response.code).to eql('200')
       available_vacation_days = user.available_vacation_days
       used_vacation_days = user.used_vacation_days(Vacation.all)
@@ -97,6 +96,28 @@ RSpec.describe Api::VacationsController do
         expect(vacation.vacation_type).to eql(create_params[:vacation_type])
         expect(vacation.description).to eql(create_params[:description])
       end
+    end
+  end
+
+  describe '#show' do
+    it 'authenticates user' do
+      post :create, format: :json
+      expect(response.code).to eql('401')
+    end
+
+    it 'forbids regular user' do
+      sign_in(user)
+      get :vacation_applications, format: :json
+      expect(response.code).to eql('403')
+    end
+
+    it 'returns specific vacation' do
+      sign_in(admin)
+      vacation = create(:vacation)
+      get :show, params: { id: vacation.id }, format: :json
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql(vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'description', 'vacation_sub_type')
+                                                              .merge(full_name: vacation.user.to_s, approvers: '', decliners: '', interacted: nil, available_vacation_days: 0).to_json)
     end
   end
 

@@ -24,9 +24,8 @@ json.unconfirmed_vacations do |unconfirmed_vacation_element|
     json.description vacation['description']
 
     json.approvers vacation['approvers']
-    json.disable_approve_btn vacation['disable_approve_btn']
     json.decliners vacation['decliners']
-    json.disable_decline_btn vacation['disable_decline_btn']
+    json.interacted vacation['interacted']
     json.available_vacation_days @available_vacation_days[vacation['user_id']]
   end
 end

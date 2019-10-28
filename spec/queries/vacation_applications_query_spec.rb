@@ -133,6 +133,18 @@ RSpec.describe VacationApplicationsQuery do
         expect(described_class_instance.accepted_or_declined_vacations.field_values('id')).to eql([@present_vacation.id])
       end
     end
+
+    context 'by vacation' do
+      it 'returns specific vacation' do
+        admin = create(:admin)
+        vacation1 = create(:vacation)
+        create(:vacation)
+
+        described_class_instance = described_class.new(admin, id: vacation1.id)
+
+        expect(described_class_instance.vacation.field_values('id')).to eql([vacation1.id])
+      end
+    end
   end
 
   describe 'returns correct values' do
@@ -145,8 +157,7 @@ RSpec.describe VacationApplicationsQuery do
         approvers: admin.to_s,
         decliners: '',
         description: nil,
-        disable_approve_btn: true,
-        disable_decline_btn: nil,
+        interacted: true,
         start_date: vacation.start_date.to_date.strftime('%Y-%m-%d'),
         end_date: vacation.end_date.to_date.strftime('%Y-%m-%d'),
         status: 'accepted',
@@ -168,8 +179,7 @@ RSpec.describe VacationApplicationsQuery do
         approvers: '',
         decliners: staff_manager.to_s,
         description: nil,
-        disable_approve_btn: nil,
-        disable_decline_btn: true,
+        interacted: true,
         start_date: vacation.start_date.to_date.strftime('%Y-%m-%d'),
         end_date: vacation.end_date.to_date.strftime('%Y-%m-%d'),
         status: 'declined',

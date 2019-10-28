@@ -2,7 +2,7 @@
 
 module Api
   class VacationsController < Api::BaseController
-    before_action :authenticate_admin_or_manager_or_leader!, only: %i[vacation_applications decline approve undone generate_csv]
+    before_action :authenticate_admin_or_manager_or_leader!, only: %i[vacation_applications show decline approve undone generate_csv]
     before_action :find_vacation, only: %i[approve decline undone]
     respond_to :json
 
@@ -15,6 +15,12 @@ module Api
 
     def create
       @vacation = Vacation.create(vacations_params)
+      respond_with @vacation
+    end
+
+    def show
+      @vacation = VacationApplicationsQuery.new(current_user, params).vacation.first
+      @available_vacation_days = User.find(@vacation['user_id']).available_vacation_days
       respond_with @vacation
     end
 
