@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import * as Api from '../../shared/api';
-import moment, { isMoment } from 'moment';
 
 class EntryHistory extends React.Component {
   constructor(props) {
@@ -18,12 +18,12 @@ class EntryHistory extends React.Component {
     vacations: PropTypes.array,
     years: PropTypes.array,
     selectedYear: PropTypes.number,
-    availableVacationDays: PropTypes.number
+    availableVacationDays: PropTypes.number,
   }
 
   state = {
     vacations: [],
-    years: [parseInt(moment().year())],
+    years: [parseInt(moment().year(), 10)],
     selectedYear: undefined,
     availableVacationDays: 0,
     usedVacationDays: {},
@@ -31,31 +31,31 @@ class EntryHistory extends React.Component {
   }
 
   componentDidMount() {
-    let years = this.state.years;
+    const { years } = this.state;
     const currentYear = years[0];
     const iterator = moment().format('YYYY') - moment('2017', 'YYYY').year();
-    for (let i = 0; i < iterator; i++) {
+    for (let i = 0; i < iterator; i += 1) {
       years.push(currentYear - (i + 1));
     }
     this.setState({
       years: years.sort(),
-      selectedYear: currentYear
-    })
+      selectedYear: currentYear,
+    });
     this.getVacations(currentYear);
   }
 
   onSelectChange(e) {
     this.setState({
-      selectedYear: e.target.value
+      selectedYear: e.target.value,
     }, () => {
       this.getVacations(this.state.selectedYear);
-    })
+    });
   }
 
   renderVacations(vacation, key) {
-    const status = vacation.status === 'approved' ? I18n.t('apps.vacations.status.unconfirmed') : I18n.t('apps.vacations.status.' + vacation.status)
-    const statusClass = vacation.status === 'approved' ? 'unconfirmed' : vacation.status
-    return(
+    const status = vacation.status === 'approved' ? I18n.t('apps.vacations.status.unconfirmed') : I18n.t(`apps.vacations.status.${vacation.status}`);
+    const statusClass = vacation.status === 'approved' ? 'unconfirmed' : vacation.status;
+    return (
       <tr className="row vacation" key={key}>
         <td>{I18n.t(`common.${vacation.vacation_type}`)}</td>
         <td>
@@ -65,27 +65,27 @@ class EntryHistory extends React.Component {
         </td>
         <td className={statusClass}>{status}</td>
       </tr>
-    )
+    );
   }
 
   renderYearFilter(years) {
     const { selectedYear } = this.state;
-    let options = [];
-    for (let i = 0; i < years.length; i++) {
-      options.push(<option key={i} value={years[i]}>{years[i]}</option>)
+    const options = [];
+    for (let i = 0; i < years.length; i += 1) {
+      options.push(<option key={i} value={years[i]}>{years[i]}</option>);
     }
-    return(
+    return (
       <select className="form-control" value={selectedYear} onChange={this.onSelectChange}>
         {options}
       </select>
-    )
+    );
   }
 
   updateVacationList(object) {
-    let vacations = this.state.vacations;
+    const { vacations } = this.state;
     vacations.push(object);
     this.setState({
-      vacations: vacations
+      vacations,
     });
   }
 
@@ -95,47 +95,47 @@ class EntryHistory extends React.Component {
         this.setState({
           vacations: response.data.vacations,
           availableVacationDays: response.data.available_vacation_days,
-          usedVacationDays: response.data.used_vacation_days
-        })
+          usedVacationDays: response.data.used_vacation_days,
+        });
       });
   }
 
   renderUsedVacationDays() {
     const { usedVacationDays, usedVacationsExpanded } = this.state;
-    let usedVacationDaysList = []
+    const usedVacationDaysList = [];
     Object.keys(usedVacationDays).forEach((type) => {
       usedVacationDaysList.push(
-                                <div className={type} key={type}>
-                                  {I18n.t('apps.vacations.used_vacation_days', { type: I18n.t(`common.${type}`).toLowerCase()} )}
-                                  <span>{I18n.t('apps.vacations.days', { count: usedVacationDays[type] })}</span>
-                                </div>
-                                )
-    })
-    const chevron = usedVacationsExpanded ? "up" : "down";
-    const translation = usedVacationsExpanded ? "fold_used_days" : "expand_used_days";
-    return(
+        <div className={type} key={type}>
+          {I18n.t('apps.vacations.used_vacation_days', { type: I18n.t(`common.${type}`).toLowerCase() })}
+          <span>{I18n.t('apps.vacations.days', { count: usedVacationDays[type] })}</span>
+        </div>,
+      );
+    });
+    const chevron = usedVacationsExpanded ? 'up' : 'down';
+    const translation = usedVacationsExpanded ? 'fold_used_days' : 'expand_used_days';
+    return (
       <div className="used-vacations">
         <a href="#used-vacations-collapse" data-toggle="collapse" role="button" aria-expanded={usedVacationsExpanded} aria-controls="used-vacations-collapse" onClick={this.onCollappsibleClick}>
-          <i className={`glyphicon glyphicon-chevron-${chevron}`}/>
+          <i className={`glyphicon glyphicon-chevron-${chevron}`} />
           {I18n.t(`apps.vacations.${translation}`)}
         </a>
         <div className="collapse" id="used-vacations-collapse">
           {usedVacationDaysList}
         </div>
       </div>
-    )
+    );
   }
 
   onCollappsibleClick() {
     this.setState({
-      usedVacationsExpanded: !this.state.usedVacationsExpanded
-    })
+      usedVacationsExpanded: !this.state.usedVacationsExpanded,
+    });
   }
 
   render() {
     const { years, vacations, availableVacationDays } = this.state;
 
-    return(
+    return (
       <div>
         <div className="row">
           <div className="available-vacation-days">
@@ -157,8 +157,8 @@ class EntryHistory extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default EntryHistory
+export default EntryHistory;

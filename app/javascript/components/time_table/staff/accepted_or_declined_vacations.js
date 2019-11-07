@@ -1,6 +1,5 @@
-import React from 'react'
+import React from 'react';
 import moment from 'moment';
-import PropTypes from 'prop-types';
 
 class AcceptedVacations extends React.Component {
   constructor(props) {
@@ -10,25 +9,31 @@ class AcceptedVacations extends React.Component {
   }
 
   renderAcceptedVacations(vacation) {
-    return(
+    return (
       <tr key={vacation.id}>
         <td>{vacation.full_name}</td>
         <td>{I18n.t(`common.${vacation.vacation_type}`)}</td>
-        <td>{moment(vacation.start_date).format('DD/MM/YYYY')}-{moment(vacation.end_date).format('DD/MM/YYYY')}</td>
+        <td>
+          {moment(vacation.start_date).format('DD/MM/YYYY')}
+          -
+          {moment(vacation.end_date).format('DD/MM/YYYY')}
+        </td>
       </tr>
-    )
+    );
   }
 
   render() {
     const title = this.props.showDeclined ? { mainTitle: 'declined', leftTitle: 'show_accepted' } : { mainTitle: 'accepted', leftTitle: 'show_declined' };
 
-    return(
+    return (
       <div className="row accepted-or-declined-vacations">
         <div className="vacations-title">
           { window.currentUser.staff_manager
-                && <div className="left-title" onClick={() => this.props.onShowButtonChange('showDeclined')}>
-                     {I18n.t(`apps.staff.${title.leftTitle}`)}
-                   </div>
+                && (
+                  <div className="left-title" onClick={() => this.props.onShowButtonChange('showDeclined')}>
+                    {I18n.t(`apps.staff.${title.leftTitle}`)}
+                  </div>
+                )
           }
           <div className="mid-title">
             {I18n.t(`apps.staff.${title.mainTitle}`)}
@@ -43,12 +48,12 @@ class AcceptedVacations extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.acceptedOrDeclinedVacationsList.map((vacation) => this.renderAcceptedVacations(vacation))}
+            {this.props.acceptedOrDeclinedVacationsList.map(vacation => this.renderAcceptedVacations(vacation))}
           </tbody>
         </table>
       </div>
-    )
+    );
   }
 }
 
-export default AcceptedVacations
+export default AcceptedVacations;

@@ -1,6 +1,6 @@
-import React from 'react'
-import * as Api from '../../shared/api';
+import React from 'react';
 import { Redirect, NavLink } from 'react-router-dom';
+import * as Api from '../../shared/api';
 
 class EditVacationPeriod extends React.Component {
   constructor(props) {
@@ -25,54 +25,54 @@ class EditVacationPeriod extends React.Component {
 
   getPeriod(options) {
     Api.makeGetRequest({
-      url: `/api/vacation_periods/${options.periodId}`
+      url: `/api/vacation_periods/${options.periodId}`,
     }).then((response) => {
       this.setState({
-        period: response.data
-      })
-    })
+        period: response.data,
+      });
+    });
   }
 
   onSubmit() {
     const { period } = this.state;
     Api.makePutRequest({
       url: `/api/vacation_periods/${period.id}`,
-      body: { vacation_period: { ...period } }
+      body: { vacation_period: { ...period } },
     }).then(() => {
       this.setState({
-        redirectToReferer: `/vacation_periods/?user_id=${period.user_id}`
-      })
+        redirectToReferer: `/vacation_periods/?user_id=${period.user_id}`,
+      });
     }).catch((results) => {
       this.setState({
-        errors: results.errors
-      })
-    })
+        errors: results.errors,
+      });
+    });
   }
 
   onChange(e) {
     this.setState({
       period: {
         ...this.state.period,
-        [e.target.name]: e.target.value
-      }
-    })
+        [e.target.name]: e.target.value,
+      },
+    });
   }
 
   onCheckboxChange(e) {
     this.setState({
       period: {
         ...this.state.period,
-        [e.target.name]: !this.state.period[e.target.name]
-      }
-    })
+        [e.target.name]: !this.state.period[e.target.name],
+      },
+    });
   }
 
   cancelUrl() {
-    return `/vacation_periods?user_id=${this.state.period.user_id}`
+    return `/vacation_periods?user_id=${this.state.period.user_id}`;
   }
 
   renderPreloader() {
-    return(
+    return (
       <div>
         <div className="form-group">
           <div className="preloader" />
@@ -84,15 +84,18 @@ class EditVacationPeriod extends React.Component {
           <div className="preloader" />
         </div>
       </div>
-    )
+    );
   }
 
   render() {
-    const { period, periodId, redirectToReferer, errors } = this.state;
+    const {
+      period, periodId, redirectToReferer, errors,
+    } = this.state;
+    let result;
 
-    if (redirectToReferer) return (<Redirect to={redirectToReferer} />)
+    if (redirectToReferer) return (<Redirect to={redirectToReferer} />);
     if (!periodId || periodId === period.id) {
-      return(
+      result = (
         <div className="container">
           <div id="content" className="edit-vacation-period col-md-6">
             <form className="row" onSubmit={this.onSubmit}>
@@ -120,23 +123,24 @@ class EditVacationPeriod extends React.Component {
               </div>
             </form>
             <div className="form-actions text-right">
-                <NavLink activeClassName="" className="bt bt-second" to={this.cancelUrl()}>
-                  <i className="symbol fa fa-undo" />
-                  <span className="bt-txt">{I18n.t('common.cancel')}</span>
-                </NavLink>
-                <button onClick={this.onSubmit} className="bt bt-big bt-main bt-submit" type="button">
-                  <i className="symbol fa fa-calendar-check-o" />
-                  <span className="bt-txt">{I18n.t('common.save')}</span>
-                </button>
-              </div>
+              <NavLink activeClassName="" className="bt bt-second" to={this.cancelUrl()}>
+                <i className="symbol fa fa-undo" />
+                <span className="bt-txt">{I18n.t('common.cancel')}</span>
+              </NavLink>
+              <button onClick={this.onSubmit} className="bt bt-big bt-main bt-submit" type="button">
+                <i className="symbol fa fa-calendar-check-o" />
+                <span className="bt-txt">{I18n.t('common.save')}</span>
+              </button>
+            </div>
           </div>
         </div>
-      )
+      );
+    } else {
+      result = this.renderPreloader();
     }
-    else {
-      return(this.renderPreloader())
-    }
+
+    return result;
   }
 }
 
-export default EditVacationPeriod
+export default EditVacationPeriod;

@@ -1,6 +1,6 @@
-import React from 'react'
-import Filters from './filters'
-import VacationApplications from './vacation_applications'
+import React from 'react';
+import Filters from './filters';
+import VacationApplications from './vacation_applications';
 
 class Staff extends React.Component {
   constructor(props) {
@@ -19,15 +19,15 @@ class Staff extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div className="staff-container">
         <Filters ref={(filters) => { this.filters = filters; }} onFilterChange={this.onFilterChange} />
         { currentUser.canManageStaff()
             && <VacationApplications ref={(vacationApplications) => { this.vacationApplications = vacationApplications; }} urlFilters={this.urlFilters} />
           }
       </div>
-    )
+    );
   }
 }
 
-export default Staff
+export default Staff;

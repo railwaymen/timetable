@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import _ from 'lodash';
+import URI from 'urijs';
 import { defaultDatePickerProps } from '../../shared/helpers';
 import * as Api from '../../shared/api';
-import ErrorTooltip from '../timesheet/errors/error_tooltip';
-import _ from 'lodash';
 import * as Validations from '../../shared/validations';
 
 class Entry extends React.Component {
@@ -24,33 +24,33 @@ class Entry extends React.Component {
     decription: PropTypes.string,
     startDate: PropTypes.instanceOf(Date),
     endDate: PropTypes.instanceOf(Date),
-    vacation_type: PropTypes.string,
+    vacationType: PropTypes.string,
   }
 
   state = {
     description: undefined,
     startDate: moment().format('DD/MM/YYYY'),
     endDate: moment().format('DD/MM/YYYY'),
-    vacation_type: 'planned',
-    errors: []
+    vacationType: 'planned',
+    errors: [],
   }
 
   onDateChange(name, e) {
     this.setState({
-      [name]: e.format('DD/MM/YYYY')
-    }, () => { this.removeErrorsFor(name); })
+      [name]: e.format('DD/MM/YYYY'),
+    }, () => { this.removeErrorsFor(name); });
   }
 
   onSelectChange(e) {
     this.setState({
-      vacation_type: e.target.value
-    }, () => { this.removeErrorsFor('vacation_type'); })
+      vacationType: e.target.value,
+    }, () => { this.removeErrorsFor('vacationType'); });
   }
 
   onChange(e) {
     this.setState({
-      description: e.target.value
-    }, () => { this.removeErrorsFor('description'); })
+      description: e.target.value,
+    }, () => { this.removeErrorsFor('description'); });
   }
 
   onKeyPress(e) {
@@ -63,22 +63,22 @@ class Entry extends React.Component {
   removeErrorsFor(name) {
     this.setState(({ errors }) => {
       delete errors[name];
-      delete errors['base'];
+      delete errors.base;
       return { errors };
     });
   }
 
   validate() {
     const {
-      description, startDate, endDate, vacation_type
+      description, startDate, endDate, vacationType,
     } = this.state;
 
     const errors = {
-      description: (vacation_type === 'others' ? Validations.presence(description) : undefined),
+      description: (vacationType === 'others' ? Validations.presence(description) : undefined),
       startDate: Validations.presence(startDate),
       endDate: Validations.presence(endDate),
-      vacation_type: Validations.presence(vacation_type)
-    }
+      vacationType: Validations.presence(vacationType),
+    };
     Object.keys(errors).forEach((key) => { if (errors[key] === undefined) { delete errors[key]; } });
     return errors;
   }
@@ -91,15 +91,15 @@ class Entry extends React.Component {
       this.setState({ errors });
     } else {
       const {
-        description, startDate, endDate, vacation_type
+        description, startDate, endDate, vacationType,
       } = this.state;
 
       const entryData = {
         user_id: userId,
-        description: description,
+        description,
         start_date: startDate,
         end_date: endDate,
-        vacation_type: vacation_type
+        vacation_type: vacationType,
       };
 
       Api.makePostRequest({
@@ -113,9 +113,9 @@ class Entry extends React.Component {
         data.forEach(this.props.updateVacationList);
         const newState = {
           description: '',
-          vacation_type: 'planned',
+          vacationType: 'planned',
           startDate: moment().format('DD/MM/YYYY'),
-          endDate: moment().format('DD/MM/YYYY')
+          endDate: moment().format('DD/MM/YYYY'),
         };
         this.setState(newState);
         $('.vacation-type select')[0].value = 'planned';
@@ -125,7 +125,7 @@ class Entry extends React.Component {
           if (e.errors.start_date) newErrors.startDate = e.errors.start_date;
           if (e.errors.end_date) newErrors.endDate = e.errors.end_date;
           if (e.errors.description) newErrors.description = e.errors.description;
-          if (e.errors.vacation_type) newErrors.vacation_type = e.errors.vacation_type;
+          if (e.errors.vacation_type) newErrors.vacationType = e.errors.vacation_type;
           if (e.errors.base) newErrors.base = e.errors.base;
           this.setState({ errors: newErrors });
         } else {
@@ -135,19 +135,19 @@ class Entry extends React.Component {
     }
   }
 
-  renderVacationTypes(vacation_type) {
-    return(
-      <select className="form-control" value={vacation_type} onChange={this.onSelectChange}>
+  renderVacationTypes(vacationType) {
+    return (
+      <select className="form-control" value={vacationType} onChange={this.onSelectChange}>
         <option value="planned">{I18n.t('common.planned')}</option>
         <option value="requested">{I18n.t('common.requested')}</option>
         <option value="compassionate">{I18n.t('common.compassionate')}</option>
         <option value="others">{I18n.t('common.others')}</option>
       </select>
-    )
+    );
   }
 
   renderErrorTooltip(errors) {
-    return(
+    return (
       <div className="error-tooltip vacation-errors">
         <ul>
           {errors.map(error => (
@@ -155,26 +155,28 @@ class Entry extends React.Component {
           ))}
         </ul>
       </div>
-    )
+    );
   }
 
   render() {
-    const { startDate, endDate, description, vacation_type, errors } = this.state
+    const {
+      startDate, endDate, description, vacationType, errors,
+    } = this.state;
 
     return (
       <div>
         <div className="row vacation-date-range">
           <div className="date">
             {errors.startDate ? this.renderErrorTooltip(errors.startDate) : null}
-            <DatePicker {...defaultDatePickerProps} name="start_date" className="form-control" selected={moment(startDate, 'DD/MM/YYYY')} value={moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={this.onDateChange.bind(this, 'startDate')} onSelect={this.onDateChange.bind(this, 'startDate')} />
+            <DatePicker {...defaultDatePickerProps} name="start_date" className="form-control" selected={moment(startDate, 'DD/MM/YYYY')} value={moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={e => this.onDateChange('startDate', e)} onSelect={e => this.onDateChange('startDate', e)} />
           </div>
           <div className="date">
             {errors.endDate ? this.renderErrorTooltip(errors.endDate) : null}
-            <DatePicker {...defaultDatePickerProps} name="end_date" className="form-control" selected={moment(endDate, 'DD/MM/YYYY')} value={moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={this.onDateChange.bind(this, 'endDate')} onSelect={this.onDateChange.bind(this, 'endDate')} />
+            <DatePicker {...defaultDatePickerProps} name="end_date" className="form-control" selected={moment(endDate, 'DD/MM/YYYY')} value={moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={e => this.onDateChange('endDate', e)} onSelect={e => this.onDateChange('endDate', e)} />
           </div>
           <div className="vacation-type">
-            {errors.vacation_type ? this.renderErrorTooltip(errors.vacation_type) : null}
-            {this.renderVacationTypes(vacation_type)}
+            {errors.vacationType ? this.renderErrorTooltip(errors.vacationType) : null}
+            {this.renderVacationTypes(vacationType)}
           </div>
         </div>
         <div className="row description-containter">
@@ -196,7 +198,7 @@ class Entry extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 

@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react';
 import URI from 'urijs';
-import * as Api from '../../shared/api';
-import VacationPeriod from './vacation_period'
 import { NavLink } from 'react-router-dom';
+import _ from 'lodash';
+import * as Api from '../../shared/api';
+import VacationPeriod from './vacation_period';
 
 class VacationPeriods extends React.Component {
   constructor(props) {
@@ -25,24 +26,24 @@ class VacationPeriods extends React.Component {
     const params = base.query(true);
     const userId = (params.user_id || currentUser.id);
 
-    this.getVacationPeriods({ userId })
+    this.getVacationPeriods({ userId });
   }
 
   getVacationPeriods(options) {
     Api.makeGetRequest({
-      url: `/api/vacation_periods?user_id=${options.userId}`
+      url: `/api/vacation_periods?user_id=${options.userId}`,
     }).then((response) => {
-      const vacationPeriods = response.data.vacation_periods
+      const vacationPeriods = response.data.vacation_periods;
       Api.makeGetRequest({
-        url: `/api/users/${options.userId}`
+        url: `/api/users/${options.userId}`,
       }).then((userResponse) => {
         this.setState({
-          vacationPeriods: vacationPeriods,
+          vacationPeriods,
           userId: options.userId,
           user: userResponse.data,
-        })
-      })
-    })
+        });
+      });
+    });
   }
 
   onPreviousUserChange() {
@@ -81,18 +82,18 @@ class VacationPeriods extends React.Component {
   onGenerateClick() {
     Api.makePostRequest({
       url: '/api/vacation_periods/generate',
-      body: { user_id: this.state.userId }
+      body: { user_id: this.state.userId },
     }).then((response) => {
       this.setState({
-        vacationPeriods: response.data
-      })
-    })
+        vacationPeriods: response.data,
+      });
+    });
   }
 
   render() {
     const { vacationPeriods, user, userId } = this.state;
 
-    return(
+    return (
       // accounting-periods-list class only for styling
       <div className="vacation-periods-list accounting-periods-list">
         <div className="row periods-actions">
@@ -126,14 +127,14 @@ class VacationPeriods extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { vacationPeriods.map((period, index) => (
-              <VacationPeriod key={index} period={period} userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`} />
+            { vacationPeriods.map(period => (
+              <VacationPeriod key={period.id} period={period} userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`} />
             )) }
           </tbody>
         </table>
       </div>
-    )
+    );
   }
 }
 
-export default VacationPeriods
+export default VacationPeriods;
