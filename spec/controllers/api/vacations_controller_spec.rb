@@ -136,16 +136,17 @@ RSpec.describe Api::VacationsController do
     context 'returns accepted and unconfirmed vacations' do
       it 'with number of vacation days left for user' do
         sign_in(staff_manager)
-        create(:vacation_period, user: user)
+        vacation_period = create(:vacation_period, user: user)
         accepted_vacation = create(:vacation, user: user, description: 'Accepted', status: :accepted)
         unconfirmed_vacation = create(:vacation, user: user, description: 'Unconfirmed')
+        available_vacation_days = vacation_period.vacation_days - accepted_vacation.start_date.business_days_until(accepted_vacation.end_date + 1.day)
         expect(VacationApplicationsQuery).to receive(:new).with(staff_manager, default_params.merge(action: 'vacation_applications')).and_return(vacation_applications_query)
         expect(vacation_applications_query).to receive(:accepted_or_declined_vacations).and_return([accepted_vacation])
         expect(vacation_applications_query).to receive(:unconfirmed_vacations).and_return([unconfirmed_vacation])
         get :vacation_applications, format: :json
         expect(response.code).to eql('200')
         expect(response.body).to be_json_eql({ accepted_or_declined_vacations: [vacation_response_with_description(accepted_vacation).merge(full_name: nil)],
-                                               unconfirmed_vacations: [unconfirmed_vacation_response(unconfirmed_vacation).merge(available_vacation_days: 24)] }.to_json)
+                                               unconfirmed_vacations: [unconfirmed_vacation_response(unconfirmed_vacation).merge(available_vacation_days: available_vacation_days)] }.to_json)
       end
 
       it 'without number of vacation days left for user' do
