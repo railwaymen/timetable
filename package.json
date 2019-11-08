@@ -4,7 +4,7 @@
     "babel-preset-react": "^6.24.1",
     "classnames": "^2.2.6",
     "component-webpack-plugin": "^0.2.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
