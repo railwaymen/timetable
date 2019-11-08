@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import _ from 'lodash';
 import * as Api from '../../shared/api';
 
 class EntryHistory extends React.Component {
@@ -52,6 +53,17 @@ class EntryHistory extends React.Component {
     });
   }
 
+  onTrashClick(vacationId) {
+    const { vacations } = this.state;
+    Api.makeDeleteRequest({
+      url: `/api/vacations/${vacationId}`,
+    }).then(() => {
+      this.setState({
+        vacations: _.reject(vacations, v => (v.id === vacationId)),
+      });
+    });
+  }
+
   renderVacations(vacation, key) {
     const status = vacation.status === 'approved' ? I18n.t('apps.vacations.status.unconfirmed') : I18n.t(`apps.vacations.status.${vacation.status}`);
     const statusClass = vacation.status === 'approved' ? 'unconfirmed' : vacation.status;
@@ -64,6 +76,11 @@ class EntryHistory extends React.Component {
           {moment(vacation.end_date).format('DD.MM.YYYY')}
         </td>
         <td className={statusClass}>{status}</td>
+        <td className="trash">
+          {vacation.status === 'unconfirmed' ? (
+            <i className="symbol fa fa-trash" onClick={() => this.onTrashClick(vacation.id)} />
+          ) : '' }
+        </td>
       </tr>
     );
   }

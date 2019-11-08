@@ -96,14 +96,16 @@ class VacationPeriods extends React.Component {
     return (
       // accounting-periods-list class only for styling
       <div className="vacation-periods-list accounting-periods-list">
-        <div className="row periods-actions">
-          <div className="col-md-8">
-            <div id="generate" className="bt bt-second" onClick={this.onGenerateClick}>
-              <span className="bt-txt">{I18n.t('apps.vacation_periods.generate_periods')}</span>
-              <i className="symbol fa fa-calendar-plus-o" />
+        { currentUser.admin ? (
+          <div className="row periods-actions">
+            <div className="col-md-8">
+              <div id="generate" className="bt bt-second" onClick={this.onGenerateClick}>
+                <span className="bt-txt">{I18n.t('apps.vacation_periods.generate_periods')}</span>
+                <i className="symbol fa fa-calendar-plus-o" />
+              </div>
             </div>
           </div>
-        </div>
+        ) : null }
         <div className="col-md-offset-3 col-md-6 vert-offset-bottom clearfix">
           { currentUser.admin ? (
             <h3 className="text-center text-muted">
