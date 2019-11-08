@@ -5,6 +5,7 @@ class WorkTime < ApplicationRecord
   belongs_to :project
   belongs_to :user
   belongs_to :creator, class_name: 'User'
+  belongs_to :vacation
 
   before_validation :assign_duration
   before_save :delete_spaces
