@@ -112,7 +112,7 @@ class UnconfirmedVacation extends React.Component {
     if (vacation.vacation_type === 'others') {
       result = (
         <div className="vacation-sub-type">
-          <select className="form-control" name="vacationSubType" value={this.state.vacationSubType} onChange={this.onSelectChange}>
+          <select className="form-control" name="vacationSubType" value={this.state.vacationSubType} disabled={vacation.status === 'accepted'} onChange={this.onSelectChange}>
             <option value="">{I18n.t('apps.staff.choose')}</option>
             <option value="paternity">{I18n.t('common.paternity')}</option>
             <option value="parental">{I18n.t('common.parental')}</option>

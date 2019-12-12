@@ -12,14 +12,6 @@ RSpec.describe Api::VacationsController do
   let(:csv_staff_generator_service) { instance_double(CsvStaffGeneratorService) }
   let(:default_params) { ActionController::Parameters.new(format: 'json', controller: 'api/vacations') }
 
-  def vacation_response(vacations)
-    array = []
-    vacations.find_each do |v|
-      array.push(v.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status'))
-    end
-    array
-  end
-
   def vacation_response_with_description(vacation)
     vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'description')
   end
@@ -51,15 +43,20 @@ RSpec.describe Api::VacationsController do
     it 'returns user vacation applications' do
       sign_in(user)
       create(:vacation_period, user: user)
-      create(:vacation, user: user)
-      create(:vacation, user: user, start_date: Time.current + 4.days, end_date: Time.current + 10.days,
-                        vacation_type: :others, vacation_sub_type: :parental, description: 'Parental', status: :accepted)
-      create(:vacation, user: user, vacation_type: :requested, status: :accepted)
+      vacation1 = create(:vacation, user: user)
+      vacation2 = create(:vacation, user: user, start_date: Time.current + 4.days, end_date: Time.current + 10.days,
+                                    vacation_type: :others, vacation_sub_type: :parental, description: 'Parental', status: :accepted)
+      vacation3 = create(:vacation, user: user, vacation_type: :requested, status: :accepted)
+      vacations_response = [
+        vacation1.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status'),
+        vacation3.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status'),
+        vacation2.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status')
+      ]
       get :index, params: { year: Time.current.year }, format: :json
       expect(response.code).to eql('200')
       available_vacation_days = user.available_vacation_days
       used_vacation_days = user.used_vacation_days(Vacation.all)
-      expect(response.body).to be_json_eql({ vacations: vacation_response(Vacation.all), available_vacation_days: available_vacation_days, used_vacation_days: used_vacation_days }.to_json)
+      expect(response.body).to be_json_eql({ vacations: vacations_response, available_vacation_days: available_vacation_days, used_vacation_days: used_vacation_days }.to_json)
     end
 
     it 'filters user vacation applications by year' do
@@ -265,6 +262,22 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('200')
       expect(response.header['Content-Type']).to eql('text/csv')
       expect(response.header['Content-Disposition']).to eql('attachment; filename="vacations_report.csv"')
+    end
+  end
+
+  describe '#destroy' do
+    it 'authenticates user' do
+      delete :destroy, params: { id: 1 }, format: :json
+      expect(response.code).to eql('401')
+    end
+
+    it 'destroys vacation' do
+      sign_in(user)
+      vacation = create(:vacation)
+      delete :destroy, params: { id: vacation.id }, format: :json
+      expect(response.code).to eql('204')
+      expect { Vacation.find(vacation.id) }.to raise_exception(ActiveRecord::RecordNotFound)
+      expect(Vacation.count).to eql(0)
     end
   end
 end

@@ -8,7 +8,7 @@ module Api
 
     def index
       @vacations = Vacation.where('user_id = :user_id AND (extract(year from start_date) = :year OR extract(year from start_date) = :year)',
-                                  user_id: current_user.id, year: params[:year])
+                                  user_id: current_user.id, year: params[:year]).order(:start_date)
       @available_vacation_days = current_user.available_vacation_days
       @used_vacation_days = current_user.used_vacation_days(@vacations)
     end
@@ -64,6 +64,12 @@ module Api
           send_data csv_generator.generate, filename: csv_generator.filename
         end
       end
+    end
+
+    def destroy
+      @vacation = Vacation.find(params[:id])
+      @vacation.destroy
+      respond_with @vacation
     end
 
     private
