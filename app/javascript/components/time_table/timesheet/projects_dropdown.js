@@ -12,8 +12,10 @@ class ProjectsDropdown extends React.Component {
     this.renderProjectsList = this.renderProjectsList.bind(this);
     this.onChangeProject = this.onChangeProject.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
-    this.onKeyPress = this.onKeyPress.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
     this.onBlur = this.onBlur.bind(this);
+    this.handleCurrentIndexIncrement = this.handleCurrentIndexIncrement.bind(this);
+    this.handleCurrentIndexDecrement = this.handleCurrentIndexDecrement.bind(this);
 
     this.searchRef = React.createRef();
   }
@@ -29,9 +31,11 @@ class ProjectsDropdown extends React.Component {
     selectedProject: PropTypes.object,
     isExpanded: PropTypes.bool,
     filter: PropTypes.string,
+    currentIndex: PropTypes.number,
   }
 
   state = {
+    currentIndex: 0,
     isExpanded: false,
     filter: '',
     filteredProjects: this.filterProjects(''),
@@ -44,16 +48,37 @@ class ProjectsDropdown extends React.Component {
     });
   }
 
-  onKeyPress(e) {
-    const { filteredProjects } = this.state;
-    if (e.key === 'Enter' && filteredProjects.length > 0) {
+  handleCurrentIndexDecrement() {
+    const { currentIndex } = this.state;
+    if (currentIndex - 1 >= 0) {
+      this.setState({ currentIndex: currentIndex - 1 });
+    }
+  }
+
+  handleCurrentIndexIncrement() {
+    const { filteredProjects, currentIndex } = this.state;
+    if (currentIndex + 1 < filteredProjects.length) {
+      this.setState({ currentIndex: currentIndex + 1 });
+    }
+  }
+
+  onKeyDown(e) {
+    const { filteredProjects, currentIndex } = this.state;
+    if ((e.keyCode === 13 || e.keyCode === 9) && filteredProjects.length > 0) {
+      e.preventDefault();
       const projects = this.filterProjects();
       const selectedProject = _.find(projects, p => (
         p.id === filteredProjects[0]
-      )) || projects[0];
+      )) || projects[currentIndex];
 
       this.props.updateProject(selectedProject);
+      this.setState({ currentIndex: 0 });
       this.hideDropdown();
+    }
+    if (e.keyCode === 40) {
+      this.handleCurrentIndexIncrement();
+    } else if (e.keyCode === 38) {
+      this.handleCurrentIndexDecrement();
     }
   }
 
@@ -97,7 +122,7 @@ class ProjectsDropdown extends React.Component {
   renderProjectsList() {
     return (
       <div style={{ marginTop: '15px' }}>
-        <ProjectsList projects={this.state.filteredProjects} currentProject={this.props.selectedProject} onChangeProject={this.onChangeProject} />
+        <ProjectsList projects={this.state.filteredProjects} currentIndex={this.state.currentIndex} currentProject={this.props.selectedProject} onChangeProject={this.onChangeProject} />
       </div>
     );
   }
@@ -109,7 +134,7 @@ class ProjectsDropdown extends React.Component {
     return (
       <div className="dropdown fluid search ui" style={{ minWidth: '90px' }}>
         <input type="hidden" name="project" value="12" />
-        <input placeholder="Project" onFocus={this.expandDropdown} ref={this.searchRef} className="form-control input-search" name="filter" value={filter} autoComplete="off" tabIndex="0" onChange={this.onFilterChange} id="search-input" onKeyPress={this.onKeyPress} />
+        <input placeholder="Project" onFocus={this.expandDropdown} ref={this.searchRef} className="form-control input-search" name="filter" value={filter} autoComplete="off" tabIndex="0" onChange={this.onFilterChange} id="search-input" onKeyDown={this.onKeyDown} />
         <div className={`text active ${(isExpanded ? 'hidden' : '')}`} style={{ background: `#${selectedProject.color}` }} onClick={this.expandDropdown}>
           <div className="circular empty label ui" style={{ background: `#${selectedProject.color}` }} />
           {selectedProject.name}
