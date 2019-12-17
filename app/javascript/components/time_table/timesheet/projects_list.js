@@ -27,8 +27,8 @@ class ProjectsList extends React.Component {
   render() {
     return (
       <div className="menu transition visible" tabIndex="-1" style={{ display: 'block !important' }}>
-        { this.props.projects.map(project => (
-          <div key={project.id} data-value={project.id} tabIndex="-1" className="item" onClick={this.onChangeProject} onKeyPress={this.handleKeyPress}>
+        { this.props.projects.map((project, index) => (
+          <div style={{ background: index === this.props.currentIndex ? 'rgba(0, 0, 0, 0.05)' : '' }} key={project.id} data-value={project.id} tabIndex="-1" className="item" onClick={this.onChangeProject} onKeyPress={this.handleKeyPress}>
             <div className="circular empty label ui" style={{ background: `#${project.color}` }} />
             {project.id === this.props.currentProject.id ? <b>{project.name}</b> : project.name}
           </div>
