@@ -18,7 +18,7 @@ script:
   - yarn lint
 
 before_install:
-  - gem install bundler
+  - gem install bundler --version '1.7.3'
   - nvm install v11.4.0
 
 before_script:
