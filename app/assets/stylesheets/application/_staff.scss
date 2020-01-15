@@ -1,0 +1,193 @@
+.staff-container {
+  .filters {
+    > .row {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+      padding-bottom: 30px;
+      border-bottom: 1px solid $vacations-dark-gray;
+      button, select, input {
+        color: $vacations-text-black;
+        border: 1px solid $vacations-button-border;
+      }
+      .general-button {
+        width: 100px;
+        button {
+          background-color: $white;
+        }
+      }
+      .csv-export-button button {
+        border: none;
+        color: $white;
+      }
+      input, select {
+        text-align: center;
+      }
+      input {
+        max-width: 150px;
+      }
+      .user-filter, .start-date-filter, .general-button {
+        margin-right: 20px;
+      }
+      .end-date-filter {
+        margin-right: 80px;
+      }
+      button.filter-button {
+        height: 100%;
+        width: 100%;
+        min-height: 34px;
+      }
+    }
+  }
+  .vacations-container {
+    > .row {
+      display: flex;
+      @media (max-width: 650px) {
+        display: grid;
+        .col-md-6:last-child {
+          margin: auto;
+        }
+      }
+      .col-md-6 {
+        width: 45%;
+      }
+      .col-md-6:last-child{
+        margin-left: auto;
+      }
+    }
+
+    .vacations-title {
+      margin: 35px 0 35px;
+      display: flex;
+      justify-content: center;
+      flex-flow: row wrap;
+    }
+    .mid-title {
+      color: $vacations-text-black;
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .left-title, .right-title {
+      position: absolute;
+      color: $vacations-text-gray;
+      cursor: pointer;
+      @media (max-width: 700px) {
+        position: initial;
+      }
+    }
+    .left-title {
+      left: 0;
+    }
+    .right-title {
+      right: 0;
+    }
+
+    .accepted-or-declined-vacations {
+      .vacations-table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+        border-spacing: 0;
+        border-collapse: collapse;
+        color: $vacations-text-black;
+        th, tr {
+          border-bottom: 1px solid $vacations-dark-gray;
+          height: 50px;
+          text-align: center;
+          width: 33.3%
+        }
+        tr:last-child {
+          border-bottom: none;
+        }
+        tr:nth-child(even) {
+          background-color: $vacations-gray;
+        }
+        th {
+          border-top: 1px solid $vacations-dark-gray;
+          font-weight: 500;
+        }
+      }
+    }
+    
+    .unconfirmed-vacations {
+      .unconfirmed-vacation {
+        background-color: $white;
+        border: 1px solid $vacations-gray;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 35px;
+        &.accepted {
+          border-left: 5px solid $vacations-accepted-color;
+        }
+        &.declined {
+          border-left: 5px solid $vacations-declined-color;
+        }
+        .vacation-errors {
+          text-align: center;
+          margin: auto;
+          margin-bottom: 10px;
+          position: initial;
+        }
+        .vacation-header {
+          display: flex;
+          flex-flow: row wrap;
+          margin-bottom: 10px;
+          font-weight: 500;
+          color: $vacations-text-black;
+          .vacation-time-period {
+            margin-left: auto;
+          }
+        }
+        .vacation-description {
+          margin-bottom: 35px;
+          word-wrap: anywhere;
+          word-break: break-word;
+        }
+        .vacation-footer {
+          display: flex;
+          flex-flow: row wrap;
+          .vacation-type {
+            min-width: 150px;
+            height: 35px;
+            line-height: 35px;
+            background-color: $white;
+            border: 1px solid $vacations-button-border;
+            border-radius: 5px;
+            text-align: center;
+          }
+          .vacation-sub-type select {
+            max-width: 150px;
+            height: 35px;
+          }
+          .vacation-buttons {
+            margin-left: auto;
+            button.decline {
+              background-color: $white;
+              border: 1px solid $vacations-declined-color;
+              margin-right: 20px;
+              color: $vacations-declined-color;
+            }
+            button.undone {
+              background-color: #4183C4;
+            }
+          }
+        }
+        .interactions-list  {
+          .approver {
+            color: $vacations-accepted-color;
+          }
+          .decliner {
+            color: $vacations-declined-color;
+          }
+        }
+        .available_vacation_days {
+          color: $vacations-text-black;
+        }
+        .interactor-name, .vacation-days {
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+

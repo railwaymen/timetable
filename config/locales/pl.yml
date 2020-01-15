@@ -107,6 +107,54 @@ pl:
       ux: User Experience
       pm: Project Management
       ignored: Ignored
+    vacations:
+      vacation_description: Powód urlopu
+      status:
+        unconfirmed: Niepotwierdzone
+        declined: Odrzucony
+        accepted: Zaakceptowany
+      remaining_vacation: 'Pozostały urlop: '
+      days:
+        one: 1 dzień
+        other: '{{count}} dni'
+      used_vacation_days: 'Użyty {{type}}: '
+      expand_used_days: Rozwiń użyte dni urlopu
+      fold_used_days: Zwiń użyte dni urlopu
+    staff:
+      general: Ogólne
+      by_person: Wg. osoby
+      filter: Filtruj
+      csv_export: Export .csv
+      accepted: Zaakceptowane
+      declined: Odrzucone
+      unconfirmed: Niepotwierdzone
+      approved: Zatwierdzony
+      person: Osoba
+      vacation_type: Rodzaj Urlopu
+      time_period: Czas Trwania
+      choose: Wybierz
+      accept: Akceptuj
+      decline: Odrzuć
+      undone: Cofnij
+      approved_by: Zaakceptowane przez
+      declined_by: Odrzucone przez
+      show_all: Pokaż wszystkie
+      show_unconfirmed: Pokaż niepotwierdzone
+      show_accepted: Pokaż zaakceptowane
+      show_declined: Pokaż odrzucone
+      show_acceptable: Pokaż do zaakceptowania
+      acceptable: Do zaakceptowania
+      all: Wszystkie
+      available_vacation_days: Pozostałe dni urlopu
+      user_has_already_filled_in_work_time: Użytkownik %{parameter} już wypełnił czas pracy w dniach
+      too_early: Nie można zaakceptować urlopu z wyprzedzeniem o miesiąc
+      not_just_vacations: Użytkownik %{user} ma wpisy w czasie pracy nie tylko z urlopu w danym okresie urlopu
+      vacation_sub_type_empty: Podtyp urlopu nie może być pusty
+    vacation_periods:
+      vacation_days: Dni urlopu
+      note: Notatka
+      closed: Zamknięty
+      generate_periods: Generuj okresy urlopowe
   common:
     rank: 'Ranking'
     add: Dodaj
@@ -147,6 +195,34 @@ pl:
     copy: Kopiuj
     history: Historia
     cost: Koszt
+    vacations: Urlopy
+    send: Wyślij
+    staff: Kadry
+    planned: Urlop wypoczynkowy
+    requested: Urlop na żądanie
+    compassionate: Urlop okolicznościowy
+    others: Inne
+    paternity: Urlop ojcowski
+    parental: Urlop macierzyński
+    upbringing: Urlop wychowaczy
+    unpaid: Urlop bezpłatny
+    rehabilitation: Urlop rehabilitacyjny
+    illness: Urlop chorobowy
+    care: Urlop opiekuńczy
+    care_definition: Opieka zg. z art. 188 Kp.
+    vacation_code:
+      planned: Uw
+      requested: Nż
+      compassionate: Ok
+      others: Inny - nie wybrany
+      paternity: O
+      parental: Um
+      upbringing: W
+      unpaid: Ub
+      rehabilitation: R
+      illness: Ch
+      care: Op
+    vacation_periods: Okresy urlopowe
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -213,6 +289,20 @@ pl:
               greater_than: Czas trwania musi być większy od zera
         external_auth:
           basic: Błąd uwierzytelnienia
+        vacation:
+          basic: Nie udało się dodać podania o urlop
+          base:
+            validates_work_time: Jest już czas pracy z tą samą datą
+          attributes:
+            end_date:
+              validates_end_date: Nieprawidłowa data końcowa
+        vacation_interaction:
+          base:
+            already_interacted: Ten urlop już został przez ciebie %{action}
+        vacation_period:
+          attributes:
+            user_id:
+              validates_uniqueness: Jest już rekord o tym samym user_id, starts_at i ends_at
   activemodel:
     errors:
       models:

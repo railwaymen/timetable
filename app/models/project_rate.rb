@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# frozen_literal_string: true
-
 class ProjectRate
   attr_reader :id, :name, :total_for_user, :color, :total_for_project, :project_id, :user_first_name, :user_last_name,
               :leader_first_name, :leader_last_name

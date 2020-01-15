@@ -47,6 +47,16 @@ TimeTable::Application.routes.draw do
       get :work_times, on: :member
     end
     resources :external_auths, only: %i[new create destroy]
+    resources :vacations do
+      get :vacation_applications, on: :collection
+      post :decline
+      post :approve
+      put :undone
+      get :generate_csv, on: :collection
+    end
+    resources :vacation_periods, only: %i[index show update] do
+      post :generate, on: :collection
+    end
   end
 
   resources :reports, only: [] do

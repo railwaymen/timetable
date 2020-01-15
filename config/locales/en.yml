@@ -107,6 +107,54 @@ en:
       ux: User Experience
       pm: Project Management
       ignored: Ignored
+    vacations:
+      vacation_description: Reason for the vacation
+      status:
+        unconfirmed: Unconfirmed
+        declined: Declined
+        accepted: Accepted
+      remaining_vacation: 'Remaining vacation: '
+      days:
+        one: 1 day
+        other: '{{count}} days'
+      used_vacation_days: 'Used {{type}}: '
+      expand_used_days: Expand used vacation days
+      fold_used_days: Fold used vacation days
+    staff:
+      general: General
+      by_person: By person
+      filter: Filter
+      csv_export: Export .csv
+      accepted: Accepted
+      declined: Declined
+      unconfirmed: Unconfirmed
+      approved: Approved
+      person: Person
+      vacation_type: Vacation Type
+      time_period: Time Period
+      choose: Choose
+      accept: Accept
+      decline: Decline
+      undone: Undone
+      approved_by: Approved by
+      declined_by: Declined by
+      show_all: Show all
+      show_unconfirmed: Show unconfirmed
+      show_accepted: Show accepted
+      show_declined: Show declined
+      show_acceptable: Show acceptable
+      acceptable: Acceptable
+      all: All
+      available_vacation_days: Available vacation days
+      user_has_already_filled_in_work_time: User %{parameter} has already filled in the work time in days
+      too_early: Can not approve vacation that starts more than 1 month from now
+      not_just_vacations: User %{user} has not only vacation entries in work time during vacation period
+      vacation_sub_type_empty: Vacation Subtype can't be empty
+    vacation_periods:
+      vacation_days: Vacation days
+      note: Note
+      closed: Closed
+      generate_periods: Generate vacation periods
   common:
     rank: 'Rank'
     add: Add
@@ -147,6 +195,34 @@ en:
     copy: Copy
     history: History
     cost: Cost
+    vacations: Vacations
+    send: Send
+    staff: Staff
+    planned: Holiday leave
+    requested: Leave on demand
+    compassionate: Special leave
+    others: Others
+    paternity: Paternity leave
+    parental: Parental leave
+    upbringing: Upbringing leave
+    unpaid: Unpaid leave
+    rehabilitation: Rehabilitation leave
+    illness: Illness
+    care: Care
+    care_definition: Care according to Article 188 of the Code of .
+    vacation_code:
+      planned: Uw
+      requested: Nż
+      compassionate: Ok
+      others: Other - not chosen
+      paternity: O
+      parental: Um
+      upbringing: W
+      unpaid: Ub
+      rehabilitation: R
+      illness: Ch
+      care: Op
+    vacation_periods: Vacation Periods
   activerecord:
     errors:
       models:
@@ -168,6 +244,20 @@ en:
               greater_than: Duration should be greater than zero
         external_auth:
           basic: Error during authorization
+        vacation:
+          basic: There was an error while trying to add application for vacation
+          base:
+            validates_work_time: There is work time with same date
+          attributes:
+            end_date:
+              validates_end_date: Invalid end date
+        vacation_interaction:
+          base:
+            already_interacted: This vacation is already %{action} by you
+        vacation_period:
+          attributes:
+            user_id:
+              validates_uniqueness: There is already a record with the same user_id, starts_at and ends_at
   activemodel:
     errors:
       models:

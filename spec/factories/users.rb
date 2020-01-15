@@ -20,4 +20,11 @@ FactoryGirl.define do
     sequence(:email) { |n| "manager#{n}@example.com" }
     manager true
   end
+
+  factory :staff_manager, class: User do
+    first_name 'Staff'
+    last_name 'Manager'
+    sequence(:email) { |n| "staffmanager#{n}@example.com" }
+    staff_manager true
+  end
 end

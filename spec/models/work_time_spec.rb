@@ -10,6 +10,7 @@ RSpec.describe WorkTime, type: :model do
   it { should belong_to :project }
   it { should belong_to :user }
   it { should belong_to(:creator).class_name('User') }
+  it { should belong_to(:vacation) }
 
   describe '#assign_duration before validation' do
     it 'assigns duration zero for project zero' do

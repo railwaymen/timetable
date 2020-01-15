@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190619102345) do
+ActiveRecord::Schema.define(version: 20191010094744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,8 +115,44 @@ ActiveRecord::Schema.define(version: 20190619102345) do
     t.boolean "active", default: true, null: false
     t.boolean "manager", default: false, null: false
     t.string "lang", default: "pl", null: false
+    t.boolean "staff_manager", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "vacation_interactions", force: :cascade do |t|
+    t.bigint "vacation_id", null: false
+    t.bigint "user_id", null: false
+    t.string "action", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_vacation_interactions_on_user_id"
+    t.index ["vacation_id"], name: "index_vacation_interactions_on_vacation_id"
+  end
+
+  create_table "vacation_periods", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "starts_at", null: false
+    t.date "ends_at", null: false
+    t.integer "vacation_days", null: false
+    t.text "note", default: ""
+    t.boolean "closed", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_vacation_periods_on_user_id"
+  end
+
+  create_table "vacations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.string "vacation_type", null: false
+    t.string "description"
+    t.string "status", default: "unconfirmed", null: false
+    t.string "vacation_sub_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_vacations_on_user_id"
   end
 
   create_table "versions", id: :serial, force: :cascade do |t|
@@ -146,6 +182,7 @@ ActiveRecord::Schema.define(version: 20190619102345) do
     t.string "task"
     t.jsonb "integration_payload"
     t.string "tag", default: "dev", null: false
+    t.integer "vacation_id"
   end
 
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"
@@ -155,7 +192,12 @@ ActiveRecord::Schema.define(version: 20190619102345) do
   add_foreign_key "project_report_roles", "users"
   add_foreign_key "project_reports", "projects"
   add_foreign_key "projects", "users", column: "leader_id"
+  add_foreign_key "vacation_interactions", "users"
+  add_foreign_key "vacation_interactions", "vacations"
+  add_foreign_key "vacation_periods", "users"
+  add_foreign_key "vacations", "users"
   add_foreign_key "work_times", "projects", name: "work_times_project_id_fk"
   add_foreign_key "work_times", "users", column: "creator_id", name: "work_times_creator_id_fk"
   add_foreign_key "work_times", "users", name: "work_times_user_id_fk"
+  add_foreign_key "work_times", "vacations", name: "work_times_vacation_id_fk"
 end
