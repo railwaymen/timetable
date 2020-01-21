@@ -22,6 +22,7 @@ json.unconfirmed_vacations do |unconfirmed_vacation_element|
     json.vacation_sub_type vacation['vacation_sub_type']
     json.status vacation['status']
     json.description vacation['description']
+    json.self_declined vacation['self_declined']
 
     json.approvers vacation['approvers']
     json.decliners vacation['decliners']

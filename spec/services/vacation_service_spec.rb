@@ -229,8 +229,8 @@ RSpec.describe VacationService do
         create(:vacation_interaction, user: staff_manager2, vacation: vacation, action: :declined)
 
         described_class.new(current_user: staff_manager2, vacation: vacation).undone
-        expect(VacationInteraction.count).to eql(0)
-        expect(vacation.reload.status).to eql('unconfirmed')
+        expect(VacationInteraction.count).to eql(1)
+        expect(vacation.reload.status).to eql('accepted')
       end
 
       it 'when vacation is declined, user declines vacation, vacation have only approvers' do

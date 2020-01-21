@@ -2,19 +2,20 @@
 
 module Api
   class VacationsController < Api::BaseController
-    before_action :authenticate_admin_or_manager_or_leader!, only: %i[vacation_applications show decline approve undone generate_csv]
-    before_action :find_vacation, only: %i[approve decline undone]
+    before_action :authenticate_admin_or_manager_or_leader!, only: %i[vacation_applications show decline approve undone generate_csv self_decline generate_yearly_report]
+    before_action :find_vacation, only: %i[approve decline undone self_decline]
     respond_to :json
 
     def index
       @vacations = Vacation.where('user_id = :user_id AND (extract(year from start_date) = :year OR extract(year from start_date) = :year)',
                                   user_id: current_user.id, year: params[:year]).order(:start_date)
-      @available_vacation_days = current_user.available_vacation_days
-      @used_vacation_days = current_user.used_vacation_days(@vacations)
+      @available_vacation_days = current_user.available_vacation_days(@vacations)
+      @used_vacation_days = current_user.used_vacation_days(@vacations, true)
     end
 
     def create
       @vacation = Vacation.create(vacations_params)
+      VacationMailer.send_information_to_accountancy(@vacation).deliver_later if @vacation
       respond_with @vacation
     end
 
@@ -29,8 +30,10 @@ module Api
       @accepted_or_declined_vacations = vacations.accepted_or_declined_vacations
       @unconfirmed_vacations = vacations.unconfirmed_vacations
       @available_vacation_days = {}
+      return unless current_user.staff_manager?
+
       @unconfirmed_vacations.each do |vacation|
-        @available_vacation_days[vacation['user_id']] = User.find(vacation['user_id']).available_vacation_days if current_user.staff_manager?
+        @available_vacation_days[vacation['user_id']] = User.find(vacation['user_id']).available_vacation_days
       end
     end
 
@@ -70,6 +73,21 @@ module Api
       @vacation = Vacation.find(params[:id])
       @vacation.destroy
       respond_with @vacation
+    end
+
+    def self_decline
+      @vacation.update(self_declined: true, status: :declined)
+      respond_with @vacation
+    end
+
+    def generate_yearly_report
+      csv_generator = VacationsYearlyReportGenerator.new
+
+      respond_to do |format|
+        format.csv do
+          send_data csv_generator.generate, filename: 'vacations_yearly_report.csv'
+        end
+      end
     end
 
     private

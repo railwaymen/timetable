@@ -150,10 +150,7 @@ class VacationService
     return if previous_interactions.declined.any?
 
     if previous_interactions.any?
-      if previous_interactions.accepted.any?
-        @vacation.update(status: :unconfirmed)
-        previous_interactions.destroy_all
-      end
+      @vacation.update(status: :accepted) if previous_interactions.accepted.any? && @current_user.staff_manager?
       @vacation.update(status: :approved) if previous_interactions.approved.any?
     else
       @vacation.update(status: :unconfirmed)

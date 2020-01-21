@@ -110,7 +110,7 @@ class Entry extends React.Component {
         if (!data[0].id) {
           throw new Error('Invalid response');
         }
-        data.forEach(this.props.updateVacationList);
+        this.props.updateVacationList();
         const newState = {
           description: '',
           vacationType: 'planned',

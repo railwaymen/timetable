@@ -10,6 +10,7 @@ RSpec.describe Api::VacationsController do
   let(:vacation_applications_query) { instance_double(VacationApplicationsQuery) }
   let(:vacation_service) { instance_double(VacationService) }
   let(:csv_staff_generator_service) { instance_double(CsvStaffGeneratorService) }
+  let(:yearly_report_generator_service) { instance_double(VacationsYearlyReportGenerator) }
   let(:default_params) { ActionController::Parameters.new(format: 'json', controller: 'api/vacations') }
 
   def vacation_response_with_description(vacation)
@@ -18,7 +19,7 @@ RSpec.describe Api::VacationsController do
 
   def unconfirmed_vacation_response(vacation)
     vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'vacation_sub_type', 'status', 'description')
-            .merge(approvers: nil, decliners: nil, full_name: nil, interacted: nil)
+            .merge(approvers: nil, decliners: nil, full_name: nil, interacted: nil, self_declined: false)
   end
 
   def vacation_service_response(vacation, current_user)
@@ -55,7 +56,7 @@ RSpec.describe Api::VacationsController do
       get :index, params: { year: Time.current.year }, format: :json
       expect(response.code).to eql('200')
       available_vacation_days = user.available_vacation_days
-      used_vacation_days = user.used_vacation_days(Vacation.all)
+      used_vacation_days = user.used_vacation_days(Vacation.all, true)
       expect(response.body).to be_json_eql({ vacations: vacations_response, available_vacation_days: available_vacation_days, used_vacation_days: used_vacation_days }.to_json)
     end
 
@@ -114,7 +115,8 @@ RSpec.describe Api::VacationsController do
       get :show, params: { id: vacation.id }, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql(vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'description', 'vacation_sub_type')
-                                                              .merge(full_name: vacation.user.to_s, approvers: '', decliners: '', interacted: nil, available_vacation_days: 0).to_json)
+                                                              .merge(full_name: vacation.user.to_s, approvers: '', decliners: '', interacted: nil,
+                                                                     available_vacation_days: 0, self_declined: false).to_json)
     end
   end
 
@@ -278,6 +280,52 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('204')
       expect { Vacation.find(vacation.id) }.to raise_exception(ActiveRecord::RecordNotFound)
       expect(Vacation.count).to eql(0)
+    end
+  end
+
+  describe '#self_decline' do
+    it 'authenticates user' do
+      put :self_decline, params: { vacation_id: 1 }, format: :json
+      expect(response.code).to eql('401')
+    end
+
+    it 'forbids regular user' do
+      sign_in(user)
+      put :self_decline, params: { vacation_id: 1 }, format: :json
+      expect(response.code).to eql('403')
+    end
+
+    it 'declines vacation and set self_declined attribute to true' do
+      sign_in(admin)
+      vacation = create(:vacation)
+
+      put :self_decline, params: { vacation_id: vacation.id }, format: :json
+      expect(vacation.reload.status).to eql('declined')
+      expect(vacation.self_declined).to eql(true)
+    end
+  end
+
+  describe '#generate_yearly_report' do
+    it 'authenticates user' do
+      get :generate_yearly_report, format: :csv
+      expect(response.code).to eql('401')
+    end
+
+    it 'forbids regular user' do
+      sign_in(user)
+      get :generate_yearly_report, format: :csv
+      expect(response.code).to eql('403')
+    end
+
+    it 'generates yealry report' do
+      sign_in(staff_manager)
+      create(:vacation, user: user)
+      expect(VacationsYearlyReportGenerator).to receive(:new).and_return(yearly_report_generator_service)
+      expect(yearly_report_generator_service).to receive(:generate).and_return(nil)
+      get :generate_yearly_report, format: :csv
+      expect(response.code).to eql('200')
+      expect(response.header['Content-Type']).to eql('text/csv')
+      expect(response.header['Content-Disposition']).to eql('attachment; filename="vacations_yearly_report.csv"')
     end
   end
 end

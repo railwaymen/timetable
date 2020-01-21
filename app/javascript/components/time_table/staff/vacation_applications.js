@@ -14,6 +14,7 @@ class VacationApplications extends React.Component {
     this.removeFromAcceptedOrDeclined = this.removeFromAcceptedOrDeclined.bind(this);
     this.addToAcceptedOrDeclinedVacationList = this.addToAcceptedOrDeclinedVacationList.bind(this);
     this.onShowButtonChange = this.onShowButtonChange.bind(this);
+    this.removeFromUnconfirmedVacationList = this.removeFromUnconfirmedVacationList.bind(this);
   }
 
   static propTypes = {
@@ -79,12 +80,29 @@ class VacationApplications extends React.Component {
   }
 
   addToAcceptedOrDeclinedVacationList(object, action) {
-    if ((this.state.showDeclined && action === 'accept') || (!this.state.showDeclined && action === 'decline')) { return; }
-    const { acceptedOrDeclinedVacationsList } = this.state;
-    const index = acceptedOrDeclinedVacationsList.findIndex(vacation => vacation.id === object.id);
-    if (index === -1) {
+    if ((this.state.showDeclined && action === 'accept') || (!this.state.showDeclined && action === 'decline')) {
+      this.removeFromUnconfirmedVacationList(object);
+      return;
+    }
+    const { acceptedOrDeclinedVacationsList, unconfirmedVacationsList } = this.state;
+    const acceptedOrDeclinedIndex = acceptedOrDeclinedVacationsList.findIndex(vacation => vacation.id === object.id);
+    const undefinedIndex = unconfirmedVacationsList.findIndex(vacation => vacation.id === object.id);
+    if (acceptedOrDeclinedIndex === -1 && undefinedIndex !== -1) {
+      unconfirmedVacationsList.splice(undefinedIndex, 1);
       this.setState({
         acceptedOrDeclinedVacationsList: [object].concat(acceptedOrDeclinedVacationsList),
+        unconfirmedVacationsList,
+      });
+    }
+  }
+
+  removeFromUnconfirmedVacationList(object) {
+    if (window.currentUser.staff_manager) {
+      const { unconfirmedVacationsList } = this.state;
+      const undefinedIndex = unconfirmedVacationsList.findIndex(vacation => vacation.id === object.id);
+      unconfirmedVacationsList.splice(undefinedIndex, 1);
+      this.setState({
+        unconfirmedVacationsList,
       });
     }
   }
@@ -105,7 +123,7 @@ class VacationApplications extends React.Component {
       <div className="container vacations-container">
         <div className="row">
           <div className="col-md-6">
-            <AcceptedVacations ref={(accepted_or_declined_vacations) => { this.accepted_or_declined_vacations = accepted_or_declined_vacations; }} acceptedOrDeclinedVacationsList={acceptedOrDeclinedVacationsList} onShowButtonChange={this.onShowButtonChange} showDeclined={this.state.showDeclined} />
+            <AcceptedVacations acceptedOrDeclinedVacationsList={acceptedOrDeclinedVacationsList} onShowButtonChange={this.onShowButtonChange} showDeclined={this.state.showDeclined} removeFromAcceptedOrDeclined={this.removeFromAcceptedOrDeclined} addToAcceptedOrDeclinedVacationList={this.addToAcceptedOrDeclinedVacationList} showAll={this.state.showAll} getVacationApplications={this.getVacationApplications} />
           </div>
           <div className="col-md-6">
             <UnconfirmedVacations ref={(unconfirmed_vacations) => { this.unconfirmed_vacations = unconfirmed_vacations; }} unconfirmedVacationsList={unconfirmedVacationsList} removeFromAcceptedOrDeclined={this.removeFromAcceptedOrDeclined} addToAcceptedOrDeclinedVacationList={this.addToAcceptedOrDeclinedVacationList} onShowButtonChange={this.onShowButtonChange} showAll={this.state.showAll} showDeclined={this.state.showDeclined} />
