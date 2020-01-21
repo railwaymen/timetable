@@ -27,7 +27,7 @@ class VacationService
 
     ActiveRecord::Base.transaction do
       @vacation.update!(status: :declined)
-      @vacation.work_times.destroy_all if @vacation.work_times.any?
+      deactivate_vacation_work_times if @vacation.work_times.any?
       @vacation_interaction = create_vacation_interaction(:declined)
       remove_previous_interaction(%w[approved accepted])
 
@@ -41,7 +41,7 @@ class VacationService
     remove_previous_interaction(%w[declined approved accepted])
     if @vacation.status == 'accepted' && @current_user.staff_manager?
       undone_accepted_vacation
-      @vacation.work_times.destroy_all if !@vacation.accepted? && @vacation.work_times.any?
+      deactivate_vacation_work_times if !@vacation.accepted? && @vacation.work_times.any?
     elsif @vacation.status == 'declined'
       undone_declined_vacation
     else
@@ -117,6 +117,10 @@ class VacationService
 
   def not_just_vacations
     @errors << { not_just_vacations: I18n.t('apps.staff.not_just_vacations', user: @vacation.user_full_name) }
+  end
+
+  def deactivate_vacation_work_times
+    @vacation.work_times.find_each { |wt| wt.update(active: false) }
   end
 
   def remove_previous_interaction(status)
