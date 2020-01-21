@@ -22,7 +22,9 @@ TimeTable::Application.routes.draw do
         get :by_users, on: :collection
       end
     end
-    resources :users, only: %i[index show create update]
+    resources :users, only: %i[index show create update] do
+      get :incoming_birthdays, on: :collection
+    end
     resources :accounting_periods do
       collection do
         get :next_position
@@ -56,6 +58,9 @@ TimeTable::Application.routes.draw do
     end
     resources :vacation_periods, only: %i[index show update] do
       post :generate, on: :collection
+    end
+    resources :birthday_email_templates do
+      put :set_last_used
     end
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191010094744) do
+ActiveRecord::Schema.define(version: 20191213142323) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,15 @@ ActiveRecord::Schema.define(version: 20191010094744) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_accounting_periods_recounts_on_user_id"
+  end
+
+  create_table "birthday_email_templates", force: :cascade do |t|
+    t.text "body", null: false
+    t.string "name", null: false
+    t.string "title", null: false
+    t.boolean "last_used", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "external_auths", force: :cascade do |t|
@@ -116,6 +125,7 @@ ActiveRecord::Schema.define(version: 20191010094744) do
     t.boolean "manager", default: false, null: false
     t.string "lang", default: "pl", null: false
     t.boolean "staff_manager", default: false, null: false
+    t.date "birthdate"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

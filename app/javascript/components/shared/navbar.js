@@ -23,6 +23,8 @@ const Navbar = () => (
       <NavLink className="item" to="/vacation_periods">{I18n.t('common.vacation_periods')}</NavLink>
       <NavLink className="item" to="/timesheet">{I18n.t('common.timesheet')}</NavLink>
       <NavLink className="item" to="/vacations">{I18n.t('common.vacations')}</NavLink>
+      { currentUser.canManageStaff()
+            && <NavLink className="item" to="/birthday_templates">{I18n.t('common.birthday_templates')}</NavLink>}
       <div className="right menu">
         <div className="item" />
         <NavLink className="item" to={`/users/edit/${currentUser.id}`}>

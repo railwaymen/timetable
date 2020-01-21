@@ -87,6 +87,7 @@ en:
       phone: Phone
       button_disabled_tooltip: Account creation disabled. Automatic creation with LDAP login.
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
+      birthday: Birthday
     external_auths:
       authorized: 'Authorized with'
       generate_link: Generate link
@@ -155,6 +156,10 @@ en:
       note: Note
       closed: Closed
       generate_periods: Generate vacation periods
+    birthday_templates:
+      email_content: Enter email content
+      incoming_birthdays: 'Incoming birthdays:'
+      last_used: Last used
   common:
     rank: 'Rank'
     add: Add
@@ -223,6 +228,8 @@ en:
       illness: Ch
       care: Op
     vacation_periods: Vacation Periods
+    birthday_templates: Birthday Templates
+    title: Title
   activerecord:
     errors:
       models:
