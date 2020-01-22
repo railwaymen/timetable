@@ -92,7 +92,13 @@ class WorkHours extends React.Component {
     if (window.confirm(I18n.t('common.confirm'))) {
       Api.makeDeleteRequest({ url: `/api/work_times/${this.state.workHours.id}` })
         .then((data) => {
-          if (parseInt(data.status, 10) === 204) {
+          if (data.status >= 400 && data.status < 500) {
+            data.json().then((response) => {
+              this.setState({
+                errors: Object.values(response.errors),
+              });
+            });
+          } else if (parseInt(data.status, 10) === 204) {
             this.props.removeWorkHours(this);
           }
         });
