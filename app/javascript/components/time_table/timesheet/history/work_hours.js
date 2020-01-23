@@ -249,7 +249,7 @@ class WorkHours extends React.Component {
     const { localName } = e.target;
     const properly = ['textarea', 'input'];
 
-    if (!properly.includes(localName)) {
+    if (!properly.includes(localName) && !(localName === 'button' && $(e.target).closest('.react-datepicker').length !== 0)) {
       document.removeEventListener('click', this.disableEdit);
 
       this.setState({
