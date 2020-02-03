@@ -120,6 +120,9 @@
           margin-bottom: 10px;
           font-weight: 500;
           color: $vacations-text-black;
+          a {
+            margin-left: 5px;
+          }
           .vacation-time-period {
             margin-left: auto;
             &.folded {

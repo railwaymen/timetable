@@ -18,7 +18,7 @@ RSpec.describe Api::VacationsController do
   end
 
   def unconfirmed_vacation_response(vacation)
-    vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'vacation_sub_type', 'status', 'description')
+    vacation.attributes.slice('id', 'user_id', 'start_date', 'end_date', 'vacation_type', 'vacation_sub_type', 'status', 'description')
             .merge(approvers: nil, decliners: nil, full_name: nil, interacted: nil, self_declined: false)
   end
 
@@ -114,7 +114,7 @@ RSpec.describe Api::VacationsController do
       vacation = create(:vacation)
       get :show, params: { id: vacation.id }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql(vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'description', 'vacation_sub_type')
+      expect(response.body).to be_json_eql(vacation.attributes.slice('id', 'user_id', 'start_date', 'end_date', 'vacation_type', 'status', 'description', 'vacation_sub_type')
                                                               .merge(full_name: vacation.user.to_s, approvers: '', decliners: '', interacted: nil,
                                                                      available_vacation_days: 0, self_declined: false).to_json)
     end

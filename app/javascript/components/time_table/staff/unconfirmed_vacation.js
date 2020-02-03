@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import _ from 'lodash';
+import { NavLink } from 'react-router-dom';
 import * as Api from '../../shared/api';
 
 class UnconfirmedVacation extends React.Component {
@@ -206,6 +207,13 @@ class UnconfirmedVacation extends React.Component {
         <div className="vacation-header">
           <div className="user-full-name">
             {vacation.full_name}
+            { window.currentUser.staff_manager
+              && (
+                <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
+                  <i className="icon calendar" />
+                </NavLink>
+              )
+            }
           </div>
           <div className="vacation-time-period">
             {moment(vacation.start_date).format('DD/MM/YYYY')}

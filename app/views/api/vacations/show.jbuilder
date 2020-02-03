@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 json.id @vacation['id']
+json.user_id @vacation['user_id']
 json.full_name @vacation['full_name']
 json.start_date @vacation['start_date']
 json.end_date @vacation['end_date']
