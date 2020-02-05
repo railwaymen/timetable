@@ -46,6 +46,17 @@ class UnconfirmedVacation extends React.Component {
       body: { vacation: { vacation_sub_type: vacationSubType } },
     }).then((response) => {
       if (!_.isEmpty(response.data.errors)) { this.showErrors(response.data.errors); return; }
+      if (!_.isEmpty(response.data.warnings)) {
+        this.showErrors(response.data.warnings);
+        this.setState({
+          vacation: {
+            ...response.data.vacation,
+            available_vacation_days: vacation.available_vacation_days,
+          },
+          interacted: true,
+        });
+        return;
+      }
       if (response.data.vacation.status === 'accepted') { this.props.addToAcceptedOrDeclinedVacationList(response.data.vacation, 'accept'); }
       if (response.data.previous_status === 'declined') { this.props.removeFromAcceptedOrDeclined(response.data.vacation, 'accept'); }
       if (_.includes(['unconfirmed', 'approved'], response.data.vacation.status)) { this.updateVacation(vacation.id); }

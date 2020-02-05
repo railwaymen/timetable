@@ -18,7 +18,6 @@ class UnconfirmedVacations extends React.Component {
 
   render() {
     const title = this.props.showAll ? { main_title: 'all', right_tittle: 'show_acceptable' } : { main_title: 'acceptable', right_tittle: 'show_all' };
-
     return (
       <div className="row">
         <div className="vacations-title" style={{ textAlign: 'center' }}>

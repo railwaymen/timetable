@@ -6,12 +6,13 @@ RSpec.describe VacationService do
   let(:staff_manager) { create(:staff_manager) }
   let(:admin) { create(:admin) }
 
-  def response(vacation, interactor_name, previous_status, errors)
+  def response(vacation, interactor_name, previous_status, errors, warnings = [])
     {
       vacation: vacation,
       vacation_interaction: { user_full_name: interactor_name },
       previous_status: previous_status,
-      errors: errors
+      errors: errors,
+      warnings: warnings
     }
   end
 
@@ -23,11 +24,12 @@ RSpec.describe VacationService do
     end
 
     it 'returns error when thera are work times entries in vacation range' do
+      create(:project, name: 'Vacation')
       vacation = create(:vacation)
       create(:work_time, user: vacation.user, starts_at: vacation.start_date.beginning_of_day + 8.hours, ends_at: vacation.start_date.beginning_of_day + 12.hours)
-      errors = [{ work_time: I18n.t('apps.staff.user_has_already_filled_in_work_time', parameter: vacation.user_full_name),
-                  additional_info: vacation.start_date.strftime('%Y-%m-%d') }]
-      expect(described_class.new(current_user: staff_manager, vacation: vacation).approve).to eql(response(vacation, nil, 'unconfirmed', errors))
+      warnings = [{ work_time: I18n.t('apps.staff.user_has_already_filled_in_work_time', parameter: vacation.user_full_name),
+                    additional_info: vacation.start_date.strftime('%Y-%m-%d') }]
+      expect(described_class.new(current_user: staff_manager, vacation: vacation).approve).to eql(response(vacation, staff_manager.to_s, 'unconfirmed', [], warnings))
     end
 
     it 'returns error when there is already vacation interaction' do

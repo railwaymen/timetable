@@ -59,7 +59,6 @@ class VacationApplications extends React.Component {
           .addSearch(prepareParams);
 
         window.history.pushState('Timetable', 'Staff', newPath);
-
         this.setState({
           acceptedOrDeclinedVacationsList: response.data.accepted_or_declined_vacations,
           unconfirmedVacationsList: response.data.unconfirmed_vacations,

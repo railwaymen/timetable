@@ -27,7 +27,8 @@ RSpec.describe Api::VacationsController do
       vacation_interaction: { user_full_name: current_user.to_s },
       errors: [],
       vacation: vacation,
-      previous_status: vacation.status
+      previous_status: vacation.status,
+      warnings: []
     }
   end
 
@@ -186,7 +187,8 @@ RSpec.describe Api::VacationsController do
       expect(response.body).to be_json_eql({ user_full_name: staff_manager.to_s,
                                              errors: [],
                                              vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
-                                             previous_status: 'unconfirmed' }.to_json)
+                                             previous_status: 'unconfirmed',
+                                             warnings: [] }.to_json)
     end
   end
 
@@ -212,7 +214,8 @@ RSpec.describe Api::VacationsController do
       expect(response.body).to be_json_eql({ user_full_name: admin.to_s,
                                              errors: [],
                                              vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
-                                             previous_status: 'unconfirmed' }.to_json)
+                                             previous_status: 'unconfirmed',
+                                             warnings: [] }.to_json)
     end
   end
 
@@ -238,7 +241,8 @@ RSpec.describe Api::VacationsController do
       expect(response.body).to be_json_eql({ user_full_name: staff_manager.to_s,
                                              errors: [],
                                              vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
-                                             previous_status: 'accepted' }.to_json)
+                                             previous_status: 'accepted',
+                                             warnings: [] }.to_json)
     end
   end
 
