@@ -4,7 +4,7 @@ class VacationWorkTimesService
   def initialize(vacation, current_user)
     @vacation = vacation
     @current_user = current_user
-    @project = @vacation.illness? ? Project.find_by(name: 'ZKS') : Project.find_by(name: 'Vacation')
+    @project = @vacation.illness? ? Project.find_by!(name: 'ZKS') : Project.find_by!(name: 'Vacation')
     @user = User.find(@vacation.user_id)
     @vacation_range = @vacation.start_date.business_dates_until(@vacation.end_date + 1.day)
   end
@@ -12,9 +12,9 @@ class VacationWorkTimesService
   def save
     return unless @current_user.staff_manager?
 
-    work_time_dates = work_times.pluck(:starts_at).map { |date| date.strftime('%Y-%m-%d') }
+    work_time_dates = work_times.pluck(:starts_at).map(&:to_date)
     @vacation_range.each do |day|
-      next if work_time_dates.include?(day.strftime('%Y-%m-%d'))
+      next if work_time_dates.include?(day.to_date)
 
       work_time = WorkTimeForm.new(work_time: build_new_work_time(work_time_params(day)))
       work_time.save(@current_user.admin? ? {} : { context: :user }) # TODO: tylko admin?

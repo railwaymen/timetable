@@ -9,6 +9,7 @@ RSpec.describe VacationWorkTimesService do
   describe '#save' do
     it 'returns nil when user is not admin' do
       vacation = create(:vacation)
+      create(:project, name: 'Vacation')
       expect(described_class.new(vacation, user).save).to eql(nil)
     end
 
