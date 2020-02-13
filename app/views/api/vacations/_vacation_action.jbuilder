@@ -2,6 +2,7 @@
 
 json.user_full_name response[:vacation_interaction][:user_full_name]
 json.errors response[:errors]
+json.warnings response[:warnings]
 json.vacation do
   json.id response[:vacation].id
   json.full_name response[:vacation].user.to_s

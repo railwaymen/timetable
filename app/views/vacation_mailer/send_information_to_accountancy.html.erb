@@ -1,0 +1,22 @@
+<table>
+  <tr>
+    <th>Contract ID</th>
+    <th>Developer</th>
+    <th>Date From</th>
+    <th>Date To</th>
+    <th>Duration (days)</th>
+    <th>Description</th>
+    <th>Vacation Type</th>
+    <th>Vacation Code</th>
+  </tr>
+  <tr>
+    <td><%= @user.contract_name %></td>
+    <td><%= @user.to_s %></td>
+    <td><%= @vacation.start_date.strftime('%d/%m/%Y') %></td>
+    <td><%= @vacation.end_date.strftime('%d/%m/%Y') %></td>
+    <td><%= @duration %></td>
+    <td><%= @vacation.description %></td>
+    <td><%= I18n.t("common.#{@vacation.vacation_type}") %></td>
+    <td><%= @type_code %></td>
+  </tr>
+</table>

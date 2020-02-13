@@ -6,7 +6,7 @@
       justify-content: center;
       padding-bottom: 30px;
       border-bottom: 1px solid $vacations-dark-gray;
-      button, select, input {
+      button:not(.react-datepicker__navigation), select, input {
         color: $vacations-text-black;
         border: 1px solid $vacations-button-border;
       }
@@ -16,9 +16,15 @@
           background-color: $white;
         }
       }
-      .csv-export-button button {
-        border: none;
-        color: $white;
+      .generator-buttons {
+        display: flex;
+        .csv-export-button, .yearly-report {
+          margin-left: 10px;
+          button {
+            border: none;
+            color: $white;
+          }
+        }
       }
       input, select {
         text-align: center;
@@ -81,46 +87,26 @@
     .right-title {
       right: 0;
     }
-
-    .accepted-or-declined-vacations {
-      .vacations-table {
-        width: 100%;
-        max-width: 100%;
-        margin-bottom: 20px;
-        border-spacing: 0;
-        border-collapse: collapse;
-        color: $vacations-text-black;
-        th, tr {
-          border-bottom: 1px solid $vacations-dark-gray;
-          height: 50px;
-          text-align: center;
-          width: 33.3%
-        }
-        tr:last-child {
-          border-bottom: none;
-        }
-        tr:nth-child(even) {
-          background-color: $vacations-gray;
-        }
-        th {
-          border-top: 1px solid $vacations-dark-gray;
-          font-weight: 500;
-        }
-      }
-    }
     
-    .unconfirmed-vacations {
-      .unconfirmed-vacation {
+    .unconfirmed-vacations, .accepted-or-declined-vacations {
+      .unconfirmed-vacation, .accepted-or-declined-vacation {
         background-color: $white;
         border: 1px solid $vacations-gray;
         border-radius: 8px;
         padding: 25px;
         margin-bottom: 35px;
+        &.folded {
+          padding: 10px;
+          margin-bottom: 10px;
+        }
         &.accepted {
           border-left: 5px solid $vacations-accepted-color;
         }
         &.declined {
           border-left: 5px solid $vacations-declined-color;
+        }
+        .simple-vacation-type {
+          margin: auto;
         }
         .vacation-errors {
           text-align: center;
@@ -134,8 +120,17 @@
           margin-bottom: 10px;
           font-weight: 500;
           color: $vacations-text-black;
+          a {
+            margin-left: 5px;
+          }
           .vacation-time-period {
             margin-left: auto;
+            &.folded {
+              margin-left: 0;
+            }
+          }
+          &.folded {
+            margin-bottom: 0;
           }
         }
         .vacation-description {
@@ -146,7 +141,7 @@
         .vacation-footer {
           display: flex;
           flex-flow: row wrap;
-          .vacation-type {
+          .simple-vacation-type {
             min-width: 150px;
             height: 35px;
             line-height: 35px;
@@ -169,6 +164,9 @@
             }
             button.undone {
               background-color: #4183C4;
+            }
+            button.delete {
+              background-color: $vacations-declined-color;
             }
           }
         }

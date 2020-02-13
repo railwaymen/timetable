@@ -63,11 +63,10 @@ RSpec.describe VacationApplicationsQuery do
         expect(vacations.field_values('status')).to eql(%w[approved unconfirmed])
       end
 
-      it 'returns all vacations' do
+      it 'returns all vacations without accepted or declined' do
         vacations = described_class.new(@staff_manager, show_all: true).unconfirmed_vacations
-        expect(vacations.field_values('id')).to eql([@approved_vacation.id, @unconfirmed_vacation.id,
-                                                     @other_vacation.id, @accepted_vacation.id, @declined_vacation.id])
-        expect(vacations.field_values('status')).to eql(%w[approved unconfirmed unconfirmed accepted declined])
+        expect(vacations.field_values('id')).to eql([@approved_vacation.id, @unconfirmed_vacation.id, @other_vacation.id])
+        expect(vacations.field_values('status')).to eql(%w[approved unconfirmed unconfirmed])
       end
     end
 
@@ -158,6 +157,7 @@ RSpec.describe VacationApplicationsQuery do
         decliners: '',
         description: nil,
         interacted: true,
+        self_declined: false,
         start_date: vacation.start_date.to_date.strftime('%Y-%m-%d'),
         end_date: vacation.end_date.to_date.strftime('%Y-%m-%d'),
         status: 'accepted',
@@ -172,17 +172,18 @@ RSpec.describe VacationApplicationsQuery do
 
     it 'for #unconfirmed_vacations' do
       staff_manager = create(:staff_manager)
-      vacation = create(:vacation, user: staff_manager, status: :declined)
-      create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :declined)
+      vacation = create(:vacation, user: staff_manager, status: :approved)
+      create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :approved)
       response = {
         id: vacation.id,
-        approvers: '',
-        decliners: staff_manager.to_s,
+        approvers: staff_manager.to_s,
+        decliners: '',
         description: nil,
         interacted: true,
+        self_declined: false,
         start_date: vacation.start_date.to_date.strftime('%Y-%m-%d'),
         end_date: vacation.end_date.to_date.strftime('%Y-%m-%d'),
-        status: 'declined',
+        status: 'approved',
         user_id: vacation.user_id,
         vacation_type: vacation.vacation_type,
         vacation_sub_type: nil,

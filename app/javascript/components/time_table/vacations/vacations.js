@@ -9,8 +9,8 @@ class Vacations extends React.Component {
     this.updateVacationList = this.updateVacationList.bind(this);
   }
 
-  updateVacationList(object) {
-    this.entryHistory.updateVacationList(object);
+  updateVacationList() {
+    this.entryHistory.getVacations(null);
   }
 
   render() {
