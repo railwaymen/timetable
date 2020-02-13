@@ -106,6 +106,10 @@ class Filters extends React.Component {
     );
   }
 
+  onYearlyReportClick() {
+    window.open('/api/vacations/generate_yearly_report.csv', '_blank');
+  }
+
   render() {
     const { users, startDate, endDate } = this.state;
 
@@ -127,10 +131,17 @@ class Filters extends React.Component {
             <DatePicker {...defaultDatePickerProps} name="endDate" className="form-control" selected={endDate === null ? null : moment(endDate, 'DD/MM/YYYY')} value={endDate === null ? null : moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={e => this.onDateChange('endDate', e)} onSelect={e => this.onDateChange('endDate', e)} />
           </div>
           { currentUser.staff_manager ? (
-            <div className="csv-export-button">
-              <button className="filter-button bt-vacation" type="button" onClick={this.onExportClick}>
-                <span className="bt-txt">{I18n.t('apps.staff.csv_export')}</span>
-              </button>
+            <div className="generator-buttons">
+              <div className="csv-export-button">
+                <button className="filter-button bt-vacation" type="button" onClick={this.onExportClick}>
+                  <span className="bt-txt">{I18n.t('apps.staff.csv_export')}</span>
+                </button>
+              </div>
+              <div className="yearly-report">
+                <button className="filter-button bt-vacation" type="button" onClick={this.onYearlyReportClick}>
+                  <span className="bt-txt">{I18n.t('apps.staff.yearly_report')}</span>
+                </button>
+              </div>
             </div>
           ) : null
           }

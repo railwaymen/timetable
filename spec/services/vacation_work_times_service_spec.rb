@@ -9,13 +9,16 @@ RSpec.describe VacationWorkTimesService do
   describe '#save' do
     it 'returns nil when user is not admin' do
       vacation = create(:vacation)
+      create(:project, name: 'Vacation')
       expect(described_class.new(vacation, user).save).to eql(nil)
     end
 
     it 'returns nil when there are work times in vacation range' do
       vacation = create(:vacation)
+      create(:project, name: 'Vacation')
       create(:work_time, user: vacation.user, starts_at: vacation.start_date + 8.hours, ends_at: vacation.start_date + 12.hours)
-      expect(described_class.new(vacation, staff_manager).save).to eql(nil)
+      vacation_range = vacation.start_date.business_dates_until(vacation.end_date + 1.day)
+      expect(described_class.new(vacation, staff_manager).save).to eql(vacation_range)
     end
 
     it 'creates work times for given vacation' do

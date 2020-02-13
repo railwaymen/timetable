@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import _ from 'lodash';
 import * as Api from '../../shared/api';
 
 class EntryHistory extends React.Component {
@@ -54,14 +53,13 @@ class EntryHistory extends React.Component {
   }
 
   onTrashClick(vacationId) {
-    const { vacations } = this.state;
-    Api.makeDeleteRequest({
-      url: `/api/vacations/${vacationId}`,
-    }).then(() => {
-      this.setState({
-        vacations: _.reject(vacations, v => (v.id === vacationId)),
+    if (window.confirm(I18n.t('common.confirm'))) {
+      Api.makePutRequest({
+        url: `/api/vacations/${vacationId}/self_decline`,
+      }).then(() => {
+        this.getVacations(this.state.selectedYear);
       });
-    });
+    }
   }
 
   renderVacations(vacation, key) {
@@ -98,15 +96,8 @@ class EntryHistory extends React.Component {
     );
   }
 
-  updateVacationList(object) {
-    const { vacations } = this.state;
-    vacations.push(object);
-    this.setState({
-      vacations,
-    });
-  }
-
   getVacations(year) {
+    if (!year) { year = this.state.selectedYear; }
     Api.makeGetRequest({ url: `/api/vacations?year=${year}` })
       .then((response) => {
         this.setState({

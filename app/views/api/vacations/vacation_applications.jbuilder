@@ -15,6 +15,7 @@ end
 json.unconfirmed_vacations do |unconfirmed_vacation_element|
   unconfirmed_vacation_element.array! @unconfirmed_vacations do |vacation|
     json.id vacation['id']
+    json.user_id vacation['user_id']
     json.full_name vacation['full_name']
     json.start_date vacation['start_date']
     json.end_date vacation['end_date']
@@ -22,6 +23,7 @@ json.unconfirmed_vacations do |unconfirmed_vacation_element|
     json.vacation_sub_type vacation['vacation_sub_type']
     json.status vacation['status']
     json.description vacation['description']
+    json.self_declined vacation['self_declined']
 
     json.approvers vacation['approvers']
     json.decliners vacation['decliners']
