@@ -86,6 +86,9 @@
     }
     .right-title {
       right: 0;
+      .glyphicon {
+        margin-left: 5px;
+      }
     }
     
     .unconfirmed-vacations, .accepted-or-declined-vacations {

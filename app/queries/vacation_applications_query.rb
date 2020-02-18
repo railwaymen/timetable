@@ -14,6 +14,7 @@ class VacationApplicationsQuery
     @show_all = params[:show_all]
     @show_declined = params[:show_declined]
     @vacation_id = params[:id]
+    @sort_direction = params[:sort]
   end
 
   def accepted_or_declined_vacations
@@ -90,7 +91,7 @@ class VacationApplicationsQuery
         #{user_filter}
         #{vacation_type_filter(accepted)}
       GROUP BY v.id, full_name, v.start_date, v.end_date, v.vacation_type, v.description, v.status
-      ORDER BY v.start_date;
+      ORDER BY v.start_date #{@sort_direction};
     )
   end
 

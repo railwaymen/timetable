@@ -43,4 +43,12 @@ class Vacation < ApplicationRecord
   def user_full_name
     user.to_s
   end
+
+  def vacation_project
+    if planned? || requested? || compassionate? || unpaid? || care?
+      Project.find_by!(name: 'Vacation')
+    else
+      Project.find_by!(name: 'ZKS')
+    end
+  end
 end
