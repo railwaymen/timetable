@@ -293,12 +293,6 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('401')
     end
 
-    it 'forbids regular user' do
-      sign_in(user)
-      put :self_decline, params: { vacation_id: 1 }, format: :json
-      expect(response.code).to eql('403')
-    end
-
     it 'declines vacation and set self_declined attribute to true' do
       sign_in(admin)
       vacation = create(:vacation)
