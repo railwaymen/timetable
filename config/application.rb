@@ -30,6 +30,8 @@ module TimeTable
     config.react.addons = true
     config.webpacker.check_yarn_integrity = true
 
+    config.assets.precompile += %w( i18n.js )
+
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = Rails.application.secrets.default_lang || 'en'
