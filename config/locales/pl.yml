@@ -152,6 +152,7 @@ pl:
       vacation_sub_type_empty: Podtyp urlopu nie może być pusty
       canceled: Anulowany
       yearly_report: Raport roczny
+      sort_direction: Sortowanie
     vacation_periods:
       vacation_days: Dni urlopu
       note: Notatka

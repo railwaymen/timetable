@@ -152,6 +152,7 @@ en:
       vacation_sub_type_empty: Vacation Subtype can't be empty
       canceled: Canceled
       yearly_report: Yearly report
+      sort_direction: Sort direction
     vacation_periods:
       vacation_days: Vacation days
       note: Note
