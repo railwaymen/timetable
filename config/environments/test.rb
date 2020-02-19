@@ -35,4 +35,6 @@ TimeTable::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
+
+  config.middleware.use I18n::JS::Middleware
 end
