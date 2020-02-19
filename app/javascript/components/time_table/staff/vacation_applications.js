@@ -31,19 +31,28 @@ class VacationApplications extends React.Component {
   }
 
   componentDidMount() {
-    const { start_date, end_date, user_id } = URI.parseQuery(URI(window.location.href).query());
+    const urlQuery = URI.parseQuery(URI(window.location.href).query());
+    const { end_date, user_id } = urlQuery;
+    let { start_date, sort } = urlQuery;
     this.props.urlFilters({ start_date, end_date, user_id });
-    this.getVacationApplications({ start_date: moment().startOf('month').format('DD/MM/YYYY') }, false);
+    if (!start_date) { start_date = moment().startOf('month').format('DD/MM/YYYY'); }
+    if (!sort) { sort = 'asc'; }
+    this.getVacationApplications({ start_date, sort }, false);
   }
 
   getVacationApplications(params = {}, ignore_url = true) {
-    const { start_date, end_date, user_id } = params;
+    const {
+      start_date, end_date, user_id, sort,
+    } = params;
     const urlFilters = URI.parseQuery(URI(window.location.href).query());
-    const prepareParams = { start_date, end_date, user_id };
+    const prepareParams = {
+      start_date, end_date, user_id, sort,
+    };
 
     if (!start_date) { if (!urlFilters.start_date || ignore_url) { delete prepareParams.start_date; } else { prepareParams.start_date = urlFilters.start_date; } }
     if (!end_date) { if (!urlFilters.end_date || ignore_url) { delete prepareParams.end_date; } else { prepareParams.end_date = urlFilters.end_date; } }
     if (!user_id) { if (!urlFilters.user_id || ignore_url) { delete prepareParams.user_id; } else { prepareParams.user_id = urlFilters.user_id; } }
+    if (!sort) { if (!urlFilters.sort || ignore_url) { prepareParams.sort = this.acceptedVacations.state.sort; } else { prepareParams.sort = urlFilters.sort; } }
 
     const url = URI('/api/vacations/vacation_applications');
     if (this.state.showAll) { url.addSearch({ show_all: true }); }
@@ -56,13 +65,14 @@ class VacationApplications extends React.Component {
           .removeSearch('start_date')
           .removeSearch('end_date')
           .removeSearch('user_id')
+          .removeSearch('sort')
           .addSearch(prepareParams);
 
         window.history.pushState('Timetable', 'Staff', newPath);
         this.setState({
           acceptedOrDeclinedVacationsList: response.data.accepted_or_declined_vacations,
           unconfirmedVacationsList: response.data.unconfirmed_vacations,
-        });
+        }, () => this.acceptedVacations.setSort(prepareParams.sort));
       });
   }
 
@@ -108,11 +118,15 @@ class VacationApplications extends React.Component {
 
   onShowButtonChange(name) {
     const original = URI(window.location.href);
-    const { start_date, end_date, user_id } = URI.parseQuery(original.query());
+    const {
+      start_date, end_date, user_id, sort,
+    } = URI.parseQuery(original.query());
     this.setState({
       [name]: !this.state[name],
     }, () => {
-      this.getVacationApplications({ start_date, end_date, user_id });
+      this.getVacationApplications({
+        start_date, end_date, user_id, sort,
+      });
     });
   }
 
@@ -122,7 +136,7 @@ class VacationApplications extends React.Component {
       <div className="container vacations-container">
         <div className="row">
           <div className="col-md-6">
-            <AcceptedVacations acceptedOrDeclinedVacationsList={acceptedOrDeclinedVacationsList} onShowButtonChange={this.onShowButtonChange} showDeclined={this.state.showDeclined} removeFromAcceptedOrDeclined={this.removeFromAcceptedOrDeclined} addToAcceptedOrDeclinedVacationList={this.addToAcceptedOrDeclinedVacationList} showAll={this.state.showAll} getVacationApplications={this.getVacationApplications} />
+            <AcceptedVacations ref={(acceptedVacations) => { this.acceptedVacations = acceptedVacations; }} acceptedOrDeclinedVacationsList={acceptedOrDeclinedVacationsList} onShowButtonChange={this.onShowButtonChange} showDeclined={this.state.showDeclined} removeFromAcceptedOrDeclined={this.removeFromAcceptedOrDeclined} addToAcceptedOrDeclinedVacationList={this.addToAcceptedOrDeclinedVacationList} showAll={this.state.showAll} getVacationApplications={this.getVacationApplications} />
           </div>
           <div className="col-md-6">
             <UnconfirmedVacations ref={(unconfirmed_vacations) => { this.unconfirmed_vacations = unconfirmed_vacations; }} unconfirmedVacationsList={unconfirmedVacationsList} removeFromAcceptedOrDeclined={this.removeFromAcceptedOrDeclined} addToAcceptedOrDeclinedVacationList={this.addToAcceptedOrDeclinedVacationList} onShowButtonChange={this.onShowButtonChange} showAll={this.state.showAll} showDeclined={this.state.showDeclined} />

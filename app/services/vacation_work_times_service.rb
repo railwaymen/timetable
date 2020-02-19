@@ -4,7 +4,7 @@ class VacationWorkTimesService
   def initialize(vacation, current_user)
     @vacation = vacation
     @current_user = current_user
-    @project = @vacation.illness? ? Project.find_by!(name: 'ZKS') : Project.find_by!(name: 'Vacation')
+    @project = @vacation.vacation_project
     @user = User.find(@vacation.user_id)
     @vacation_range = @vacation.start_date.business_dates_until(@vacation.end_date + 1.day)
   end

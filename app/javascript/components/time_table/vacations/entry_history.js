@@ -135,9 +135,12 @@ class EntryHistory extends React.Component {
   }
 
   onCollappsibleClick() {
-    this.setState({
-      usedVacationsExpanded: !this.state.usedVacationsExpanded,
-    });
+    $('.used-vacations')[0].style.pointerEvents = 'none';
+    setTimeout(() => {
+      this.setState({
+        usedVacationsExpanded: !this.state.usedVacationsExpanded,
+      }, () => { $('.used-vacations')[0].style.pointerEvents = ''; });
+    }, 300);
   }
 
   render() {
