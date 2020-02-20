@@ -34,7 +34,7 @@ $(document).on('click', (e) => {
 });
 
 // Used to open dropdown for month/project selection on timesheet
-$(document).on('click', '.dropdown', () => {
+$(document).on('click', '.dropdown', function openDropDown() {
   $(this).find('.menu').toggle();
 });
 
