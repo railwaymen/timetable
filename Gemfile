@@ -45,17 +45,7 @@ gem 'prawn-table', require: false
 gem 'whenever'
 
 source 'https://rails-assets.org' do
-  gem 'rails-assets-marionette', '2.4.4'
-  gem 'rails-assets-backbone-query-parameters'
-  gem 'rails-assets-momentjs'
-  gem 'rails-assets-backbone.stickit'
   gem 'rails-assets-bootstrap', '3.3.6'
-  gem 'rails-assets-jquery-cookie'
-  gem 'rails-assets-jquery.maskedinput'
-  gem 'rails-assets-eonasdan-bootstrap-datetimepicker'
-  gem 'rails-assets-lodash', '4.3.0'
-  gem 'rails-assets-URIjs', '1.17.1'
-  gem 'rails-assets-i18next'
 end
 
 group :development do
