@@ -18,6 +18,7 @@ class Entry extends React.Component {
     this.onKeyPress = this.onKeyPress.bind(this);
     this.validate = this.validate.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onUserSelectFilterChange = this.onUserSelectFilterChange.bind(this);
   }
 
   static propTypes = {
@@ -33,6 +34,19 @@ class Entry extends React.Component {
     endDate: moment().format('DD/MM/YYYY'),
     vacationType: 'planned',
     errors: [],
+  }
+
+  componentDidMount() {
+    if (window.currentUser.staff_manager) {
+      fetch('/api/users?filter=active&staff')
+        .then(response => response.json())
+        .then((data) => {
+          this.setState({
+            users: data,
+            selectedUser: window.currentUser.id,
+          });
+        });
+    }
   }
 
   onDateChange(name, e) {
@@ -84,8 +98,13 @@ class Entry extends React.Component {
   }
 
   onSubmit() {
+    let userId;
     const errors = this.validate();
-    const userId = URI(window.location.href).search(true).user_id || currentUser.id;
+    if (window.currentUser.staff_manager) {
+      userId = parseInt(this.state.selectedUser, 10);
+    } else {
+      userId = URI(window.location.href).search(true).user_id || currentUser.id;
+    }
 
     if (!_.isEmpty(errors)) {
       this.setState({ errors });
@@ -110,7 +129,7 @@ class Entry extends React.Component {
         if (!data[0].id) {
           throw new Error('Invalid response');
         }
-        data.forEach(this.props.updateVacationList);
+        this.props.updateVacationList();
         const newState = {
           description: '',
           vacationType: 'planned',
@@ -133,6 +152,12 @@ class Entry extends React.Component {
         }
       });
     }
+  }
+
+  onUserSelectFilterChange(e) {
+    this.setState({
+      selectedUser: e.target.value,
+    });
   }
 
   renderVacationTypes(vacationType) {
@@ -158,9 +183,27 @@ class Entry extends React.Component {
     );
   }
 
+  renderUserSelectFilter(users) {
+    const { selectedUser } = this.state;
+    const options = [];
+    users.forEach((user) => {
+      options.push(
+        <option key={user.id} value={user.id}>
+          {`${user.last_name} ${user.first_name}`}
+        </option>,
+      );
+    });
+    return (
+      <select className="form-control user-select-filter" value={selectedUser} onChange={(this.onUserSelectFilterChange)}>
+        <option value="">{I18n.t('apps.staff.by_person')}</option>
+        {options}
+      </select>
+    );
+  }
+
   render() {
     const {
-      startDate, endDate, description, vacationType, errors,
+      startDate, endDate, description, vacationType, errors, users,
     } = this.state;
 
     return (
@@ -190,7 +233,15 @@ class Entry extends React.Component {
             {errors.base ? this.renderErrorTooltip(errors.base) : null}
           </div>
         </div>
-        <div className="row buttons">
+        <div className="row footer">
+          { window.currentUser.staff_manager
+            && users
+            && (
+            <div className="user-filter">
+              {this.renderUserSelectFilter(users)}
+            </div>
+            )
+          }
           <div className="form-actions">
             <button type="button" className="bt-vacation" onClick={(this.onSubmit)}>
               <span className="bt-txt">{I18n.t('common.send')}</span>

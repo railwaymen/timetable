@@ -55,6 +55,8 @@ TimeTable::Application.routes.draw do
       post :approve
       put :undone
       get :generate_csv, on: :collection
+      put :self_decline
+      get :generate_yearly_report, on: :collection
     end
     resources :vacation_periods, only: %i[index show update] do
       post :generate, on: :collection

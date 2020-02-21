@@ -14,6 +14,7 @@ class VacationApplicationsQuery
     @show_all = params[:show_all]
     @show_declined = params[:show_declined]
     @vacation_id = params[:id]
+    @sort_direction = params[:sort]
   end
 
   def accepted_or_declined_vacations
@@ -22,9 +23,9 @@ class VacationApplicationsQuery
 
   def unconfirmed_vacations
     if @current_user.staff_manager?
-      @show_all ? execute_sql(sanitized_sql(false, %w[declined unconfirmed approved accepted])) : execute_sql(sanitized_sql(false, 'approved'))
+      @show_all ? execute_sql(sanitized_sql(false, %w[unconfirmed approved])) : execute_sql(sanitized_sql(false, 'approved'))
     else
-      execute_sql(sanitized_sql(false, %w[unconfirmed approved]))
+      execute_sql(sanitized_sql(false, %w[unconfirmed approved declined]))
     end
   end
 
@@ -62,12 +63,6 @@ class VacationApplicationsQuery
     end
   end
 
-  def interacted_vacations(accepted)
-    return if accepted || @current_user.staff_manager?
-
-    [sanitize_array(['OR (v.status = ? AND vi.user_id = ?', 'declined', @current_user.id]), date_filter, user_filter, ')'].join(' ')
-  end
-
   # rubocop:disable Metrics/MethodLength
   def raw_sql(accepted)
     %(
@@ -81,6 +76,7 @@ class VacationApplicationsQuery
         v.vacation_sub_type,
         v.description,
         v.status,
+        v.self_declined,
         ARRAY_TO_STRING(array_agg(us_apr.last_name || ' ' || us_apr.first_name), ',', '') AS approvers,
         ARRAY_TO_STRING(array_agg(us_dec.last_name || ' ' || us_dec.first_name), ',', '') AS decliners,
         (:current_user = ANY(array_agg(us.id))) AS interacted
@@ -94,9 +90,8 @@ class VacationApplicationsQuery
         #{date_filter}
         #{user_filter}
         #{vacation_type_filter(accepted)}
-        #{interacted_vacations(accepted)}
       GROUP BY v.id, full_name, v.start_date, v.end_date, v.vacation_type, v.description, v.status
-      ORDER BY v.start_date;
+      ORDER BY v.start_date #{@sort_direction};
     )
   end
 
@@ -112,6 +107,7 @@ class VacationApplicationsQuery
         v.vacation_sub_type,
         v.description,
         v.status,
+        v.self_declined,
         ARRAY_TO_STRING(array_agg(us_apr.last_name || ' ' || us_apr.first_name), ',', '') AS approvers,
         ARRAY_TO_STRING(array_agg(us_dec.last_name || ' ' || us_dec.first_name), ',', '') AS decliners,
         (:current_user = ANY(array_agg(us.id))) AS interacted

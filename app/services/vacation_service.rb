@@ -8,13 +8,14 @@ class VacationService
     @previous_status = @vacation.status
     @params = params
     @errors = []
+    @warnings = []
   end
 
   def approve
     return too_early_error if @vacation.start_date > 1.month.from_now || @vacation.end_date > 1.month.from_now
 
     work_times = vacation_work_times_service.work_times
-    return work_time_error(work_times.pluck('date(work_times.starts_at)', 'date(work_times.ends_at)').flatten.uniq) if work_times.any?
+    work_time_error(work_times.pluck('date(work_times.starts_at)', 'date(work_times.ends_at)').flatten.uniq) if work_times.any?
 
     approve_transaction
 
@@ -74,9 +75,8 @@ class VacationService
   end
 
   def work_time_error(work_times)
-    @errors << { work_time: I18n.t('apps.staff.user_has_already_filled_in_work_time', parameter: @vacation.user_full_name),
-                 additional_info: work_times.join(', ') }
-    response
+    @warnings << { work_time: I18n.t('apps.staff.user_has_already_filled_in_work_time', parameter: @vacation.user_full_name),
+                   additional_info: work_times.join(', ') }
   end
 
   def approve_vacation
@@ -150,10 +150,7 @@ class VacationService
     return if previous_interactions.declined.any?
 
     if previous_interactions.any?
-      if previous_interactions.accepted.any?
-        @vacation.update(status: :unconfirmed)
-        previous_interactions.destroy_all
-      end
+      @vacation.update(status: :accepted) if previous_interactions.accepted.any? && @current_user.staff_manager?
       @vacation.update(status: :approved) if previous_interactions.approved.any?
     else
       @vacation.update(status: :unconfirmed)
@@ -169,7 +166,8 @@ class VacationService
       vacation: @vacation,
       vacation_interaction: { user_full_name: @vacation_interaction ? @vacation_interaction.user.to_s : nil },
       previous_status: @previous_status,
-      errors: @errors
+      errors: @errors,
+      warnings: @warnings
     }
   end
 

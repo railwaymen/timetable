@@ -1,29 +1,36 @@
 import React from 'react';
-import moment from 'moment';
+import URI from 'urijs';
+import AcceptedOrDeclinedVacation from './accepted_or_declined_vacation';
 
-class AcceptedVacations extends React.Component {
+class AcceptedOrDeclinedVacations extends React.Component {
   constructor(props) {
     super(props);
 
-    this.renderAcceptedVacations = this.renderAcceptedVacations.bind(this);
+    this.onSortChange = this.onSortChange.bind(this);
   }
 
-  renderAcceptedVacations(vacation) {
-    return (
-      <tr key={vacation.id}>
-        <td>{vacation.full_name}</td>
-        <td>{I18n.t(`common.${vacation.vacation_type}`)}</td>
-        <td>
-          {moment(vacation.start_date).format('DD/MM/YYYY')}
-          -
-          {moment(vacation.end_date).format('DD/MM/YYYY')}
-        </td>
-      </tr>
-    );
+  state = {
+    sort: 'asc',
+  }
+
+  componentDidMount() {
+    const { sort } = URI.parseQuery(URI(window.location.href).query());
+    if (sort) { this.setState({ sort }); }
+  }
+
+  onSortChange() {
+    const { sort } = this.state;
+    const newSort = sort === 'asc' ? 'desc' : 'asc';
+    this.props.getVacationApplications({ sort: newSort }, false);
+  }
+
+  setSort(sort) {
+    this.setState({ sort });
   }
 
   render() {
     const title = this.props.showDeclined ? { mainTitle: 'declined', leftTitle: 'show_accepted' } : { mainTitle: 'accepted', leftTitle: 'show_declined' };
+    const sortIcon = this.state.sort === 'asc' ? 'up' : 'down';
 
     return (
       <div className="row accepted-or-declined-vacations">
@@ -38,22 +45,15 @@ class AcceptedVacations extends React.Component {
           <div className="mid-title">
             {I18n.t(`apps.staff.${title.mainTitle}`)}
           </div>
+          <div className="right-title" onClick={this.onSortChange}>
+            {I18n.t('apps.staff.sort_direction')}
+            <i className={`glyphicon glyphicon-chevron-${sortIcon}`} />
+          </div>
         </div>
-        <table className="vacations-table">
-          <thead>
-            <tr>
-              <th>{I18n.t('apps.staff.person')}</th>
-              <th>{I18n.t('apps.staff.vacation_type')}</th>
-              <th>{I18n.t('apps.staff.time_period')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.props.acceptedOrDeclinedVacationsList.map(vacation => this.renderAcceptedVacations(vacation))}
-          </tbody>
-        </table>
+        {this.props.acceptedOrDeclinedVacationsList.map(vacation => <AcceptedOrDeclinedVacation key={vacation.id} vacation={vacation} addToAcceptedOrDeclinedVacationList={this.props.addToAcceptedOrDeclinedVacationList} removeFromAcceptedOrDeclined={this.props.removeFromAcceptedOrDeclined} showAll={this.props.showAll} showDeclined={this.props.showDeclined} getVacationApplications={this.props.getVacationApplications} />)}
       </div>
     );
   }
 }
 
-export default AcceptedVacations;
+export default AcceptedOrDeclinedVacations;

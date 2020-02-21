@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import _ from 'lodash';
+import { NavLink } from 'react-router-dom';
 import * as Api from '../../shared/api';
 
 class UnconfirmedVacation extends React.Component {
@@ -30,10 +31,10 @@ class UnconfirmedVacation extends React.Component {
     Api.makePostRequest({
       url: `/api/vacations/${vacation.id}/decline`,
     }).then((response) => {
-      if (!_.isEmpty(response.data.errors)) { this.props.showErrors(response.data.errors); return; }
+      if (!_.isEmpty(response.data.errors)) { this.showErrors(response.data.errors); return; }
       if (_.includes(['accepted', 'approved'], response.data.previous_status)) { this.props.removeFromAcceptedOrDeclined(response.data.vacation, 'decline'); }
       this.props.addToAcceptedOrDeclinedVacationList(response.data.vacation, 'decline');
-      this.updateVacation(vacation.id);
+      if (!window.currentUser.staff_manager) { this.updateVacation(vacation.id); }
     });
   }
 
@@ -45,9 +46,20 @@ class UnconfirmedVacation extends React.Component {
       body: { vacation: { vacation_sub_type: vacationSubType } },
     }).then((response) => {
       if (!_.isEmpty(response.data.errors)) { this.showErrors(response.data.errors); return; }
+      if (!_.isEmpty(response.data.warnings)) {
+        this.showErrors(response.data.warnings);
+        this.setState({
+          vacation: {
+            ...response.data.vacation,
+            available_vacation_days: vacation.available_vacation_days,
+          },
+          interacted: true,
+        });
+        return;
+      }
       if (response.data.vacation.status === 'accepted') { this.props.addToAcceptedOrDeclinedVacationList(response.data.vacation, 'accept'); }
       if (response.data.previous_status === 'declined') { this.props.removeFromAcceptedOrDeclined(response.data.vacation, 'accept'); }
-      this.updateVacation(vacation.id);
+      if (_.includes(['unconfirmed', 'approved'], response.data.vacation.status)) { this.updateVacation(vacation.id); }
     });
   }
 
@@ -56,11 +68,7 @@ class UnconfirmedVacation extends React.Component {
 
     Api.makePutRequest({
       url: `/api/vacations/${vacation.id}/undone`,
-    }).then((response) => {
-      if (response.data.previous_status === 'accepted') { this.props.removeFromAcceptedOrDeclined(response.data.vacation); }
-      if (response.data.vacation.status !== 'declined' && this.props.showDeclined) { this.props.removeFromAcceptedOrDeclined(response.data.vacation); }
-      if (response.data.vacation.status === 'accepted' && this.props.showAll) { this.props.addToAcceptedOrDeclinedVacationList(response.data.vacation); }
-      if (response.data.vacation.status === 'declined' && this.props.showDeclined) { this.props.addToAcceptedOrDeclinedVacationList(response.data.vacation); }
+    }).then(() => {
       this.updateVacation(vacation.id);
     });
   }
@@ -201,7 +209,7 @@ class UnconfirmedVacation extends React.Component {
 
   render() {
     const { errors, vacation } = this.state;
-
+    if (vacation.status === 'declined' && vacation.interacted === false) { return null; }
     return (
       <div className={`unconfirmed-vacation ${vacation.status}`}>
         { errors.length > 0
@@ -210,6 +218,13 @@ class UnconfirmedVacation extends React.Component {
         <div className="vacation-header">
           <div className="user-full-name">
             {vacation.full_name}
+            { window.currentUser.staff_manager
+              && (
+                <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
+                  <i className="icon calendar" />
+                </NavLink>
+              )
+            }
           </div>
           <div className="vacation-time-period">
             {moment(vacation.start_date).format('DD/MM/YYYY')}

@@ -151,6 +151,9 @@ en:
       too_early: Can not approve vacation that starts more than 1 month from now
       not_just_vacations: User %{user} has not only vacation entries in work time during vacation period
       vacation_sub_type_empty: Vacation Subtype can't be empty
+      canceled: Canceled
+      yearly_report: Yearly report
+      sort_direction: Sort direction
     vacation_periods:
       vacation_days: Vacation days
       note: Note
