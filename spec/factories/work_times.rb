@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :work_time do
     user
     project
-    body 'Test'
+    body { 'Test' }
     starts_at { Time.current }
     ends_at { 2.hours.from_now }
     creator { user }

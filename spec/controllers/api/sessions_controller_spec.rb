@@ -6,7 +6,7 @@ RSpec.describe Api::SessionsController, type: :request do
   describe 'create' do
     context 'correct data' do
       it 'correctly sign in user and will return token' do
-        user = FactoryGirl.create :user, email: 'example@email.com', password: 'password'
+        user = FactoryBot.create :user, email: 'example@email.com', password: 'password'
 
         post '/api/users/sign_in', params: { user: { email: user.email, password: user.password } }
 

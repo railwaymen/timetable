@@ -11,7 +11,7 @@ RSpec.describe BirthdayMailer, type: :mailer do
     it 'renders the headers' do
       expect(mail.subject).to eql(template.title)
       expect(mail.to).to eql([Rails.application.secrets.birthday_mailer_to])
-      expect(mail.from).to eq([Rails.application.secrets.mailer[:from]])
+      expect(mail.from).to eq([Rails.application.secrets.mailer[:from]].compact)
     end
 
     it 'renders the body' do

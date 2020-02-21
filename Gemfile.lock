@@ -142,11 +142,11 @@ GEM
       railties (>= 3.2, < 6.0)
     erubi (1.7.1)
     execjs (2.7.0)
-    factory_girl (4.9.0)
-      activesupport (>= 3.0.0)
-    factory_girl_rails (4.9.0)
-      factory_girl (~> 4.9.0)
-      railties (>= 3.0.0)
+    factory_bot (5.1.1)
+      activesupport (>= 4.2.0)
+    factory_bot_rails (5.1.1)
+      factory_bot (~> 5.1.0)
+      railties (>= 4.2.0)
     faraday (0.15.3)
       multipart-post (>= 1.2, < 3)
     ffaker (2.10.0)
@@ -425,7 +425,7 @@ DEPENDENCIES
   devise
   devise-i18n
   dotenv-rails
-  factory_girl_rails
+  factory_bot_rails
   ffaker
   haml
   haml_coffee_assets

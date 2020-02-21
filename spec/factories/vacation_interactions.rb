@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :vacation_interaction do
     vacation
     user
-    action 'approved'
+    action { 'approved' }
   end
 end

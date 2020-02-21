@@ -40,8 +40,8 @@ RSpec.describe Api::UsersController do
       context 'all' do
         it 'return all possible records' do
           sign_in admin
-          FactoryGirl.create :user, active: false
-          FactoryGirl.create :user, active: true
+          FactoryBot.create :user, active: false
+          FactoryBot.create :user, active: true
 
           get :index, params: { filter: 'all' }, format: :json
 
@@ -66,8 +66,8 @@ RSpec.describe Api::UsersController do
       context 'active' do
         it 'return all possible records' do
           sign_in admin
-          FactoryGirl.create :user, active: false
-          FactoryGirl.create :user, active: true
+          FactoryBot.create :user, active: false
+          FactoryBot.create :user, active: true
 
           get :index, params: { filter: 'active' }, format: :json
 
@@ -92,8 +92,8 @@ RSpec.describe Api::UsersController do
       context 'inactive' do
         it 'return all possible records' do
           sign_in admin
-          FactoryGirl.create :user, active: false
-          FactoryGirl.create :user, active: true
+          FactoryBot.create :user, active: false
+          FactoryBot.create :user, active: true
 
           get :index, params: { filter: 'inactive' }, format: :json
 

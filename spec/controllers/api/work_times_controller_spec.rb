@@ -46,13 +46,13 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'correct filter data for leader' do
       sign_in user
 
-      worker = FactoryGirl.create :user
-      belonged_project = FactoryGirl.create :project, leader_id: user.id
-      project = FactoryGirl.create :project
+      worker = FactoryBot.create :user
+      belonged_project = FactoryBot.create :project, leader_id: user.id
+      project = FactoryBot.create :project
 
-      work_time = FactoryGirl.create :work_time, user: worker, project: belonged_project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes
-      user_work_time = FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes
-      FactoryGirl.create :work_time, user: worker, project: project, starts_at: Time.current - 25.minutes, ends_at: Time.current - 20.minutes
+      work_time = FactoryBot.create :work_time, user: worker, project: belonged_project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes
+      user_work_time = FactoryBot.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes
+      FactoryBot.create :work_time, user: worker, project: project, starts_at: Time.current - 25.minutes, ends_at: Time.current - 20.minutes
 
       aggregate_failures 'display data for own project' do
         expected_work_times_json = [

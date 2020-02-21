@@ -88,7 +88,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   it 'Timesheet' do
     project = Project.create(name: 'test', active: true, work_times_allows_task: true)
     Project.create(name: 'another', active: true, work_times_allows_task: true)
-    user = FactoryGirl.create :user, lang: 'en', password: 'password'
+    user = FactoryBot.create :user, lang: 'en', password: 'password'
 
     work_time = create(:work_time, user: user, project: project, starts_at: 2.months.ago.beginning_of_day, ends_at: 2.months.ago.end_of_day)
     message = 'Test message'
@@ -121,9 +121,9 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
   it 'Accounting Periods' do
     expect(Sidekiq).to receive(:redis).at_least(:once).and_return([])
-    user = FactoryGirl.create :user, lang: 'en', password: 'password'
+    user = FactoryBot.create :user, lang: 'en', password: 'password'
     login_user(user)
-    FactoryGirl.create_list :accounting_period, 5, user: user
+    FactoryBot.create_list :accounting_period, 5, user: user
 
     click_link('Accounting Periods')
 
@@ -134,15 +134,15 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   end
 
   it 'Projects' do
-    user = FactoryGirl.create :user, lang: 'en', password: 'password'
-    project = FactoryGirl.create :project, active: true, internal: false, name: 'Project30'
-    project2 = FactoryGirl.create :project, active: true, internal: false, name: 'Project60'
-    project3 = FactoryGirl.create :project, active: true, internal: false, name: 'Project90'
-    FactoryGirl.create :project, active: false, internal: false, name: 'Inactive'
+    user = FactoryBot.create :user, lang: 'en', password: 'password'
+    project = FactoryBot.create :project, active: true, internal: false, name: 'Project30'
+    project2 = FactoryBot.create :project, active: true, internal: false, name: 'Project60'
+    project3 = FactoryBot.create :project, active: true, internal: false, name: 'Project90'
+    FactoryBot.create :project, active: false, internal: false, name: 'Inactive'
 
-    FactoryGirl.create :work_time, project: project, user: user, creator: user, starts_at: Time.current - 1.day - 30.minutes, ends_at: Time.current - 1.day
-    FactoryGirl.create :work_time, project: project2, user: user, creator: user, starts_at: Time.current - 31.days - 30.minutes, ends_at: Time.current - 31.days
-    FactoryGirl.create :work_time, project: project3, user: user, creator: user, starts_at: Time.current - 61.days - 30.minutes, ends_at: Time.current - 61.days
+    FactoryBot.create :work_time, project: project, user: user, creator: user, starts_at: Time.current - 1.day - 30.minutes, ends_at: Time.current - 1.day
+    FactoryBot.create :work_time, project: project2, user: user, creator: user, starts_at: Time.current - 31.days - 30.minutes, ends_at: Time.current - 31.days
+    FactoryBot.create :work_time, project: project3, user: user, creator: user, starts_at: Time.current - 61.days - 30.minutes, ends_at: Time.current - 61.days
     login_user(user)
 
     click_link('Projects')
@@ -183,7 +183,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   end
 
   it 'Profile' do
-    user = FactoryGirl.create :user, lang: 'en', password: 'password'
+    user = FactoryBot.create :user, lang: 'en', password: 'password'
     login_user(user)
 
     click_link("#{user.first_name} #{user.last_name}")

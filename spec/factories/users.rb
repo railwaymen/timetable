@@ -1,30 +1,30 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
-    first_name 'Tohn'
-    last_name 'Test'
+    first_name { 'Tohn' }
+    last_name { 'Test' }
     sequence(:email) { |n| "test#{n}@example.com" }
   end
 
   factory :admin, class: User do
-    first_name 'Admin'
-    last_name 'Admin'
+    first_name { 'Admin' }
+    last_name { 'Admin' }
     sequence(:email) { |n| "admin#{n}@example.com" }
-    admin true
+    admin { true }
   end
 
   factory :manager, class: User do
-    first_name 'Manager'
-    last_name 'Manager'
+    first_name { 'Manager' }
+    last_name { 'Manager' }
     sequence(:email) { |n| "manager#{n}@example.com" }
-    manager true
+    manager { true }
   end
 
   factory :staff_manager, class: User do
-    first_name 'Staff'
-    last_name 'Manager'
+    first_name { 'Staff' }
+    last_name { 'Manager' }
     sequence(:email) { |n| "staffmanager#{n}@example.com" }
-    staff_manager true
+    staff_manager { true }
   end
 end

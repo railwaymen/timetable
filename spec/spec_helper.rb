@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require 'rails/all'
-require 'factory_girl_rails'
+require 'factory_bot_rails'
 require 'shoulda/matchers'
 require 'capybara/rspec'
 require 'pundit/rspec'
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

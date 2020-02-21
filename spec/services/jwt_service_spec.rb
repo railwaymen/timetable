@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe JwtService do
   describe 'encode' do
     it 'properly encode user data' do
-      user = FactoryGirl.create :user
+      user = FactoryBot.create :user
 
       token = described_class.encode payload: user.as_json
 
