@@ -87,6 +87,7 @@ pl:
       phone: Telefon
       button_disabled_tooltip: Tworzenie kont zablokowane. Automatyczne tworzenie poprzez logowanie LDAP.
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
+      birthday: Urodziny
     external_auths:
       authorized: 'Zautoryzowano z'
       generate_link: Wygeneruj link
@@ -158,6 +159,10 @@ pl:
       note: Notatka
       closed: Zamknięty
       generate_periods: Generuj okresy urlopowe
+    birthday_templates:
+      email_content: Wprowadź treść maila
+      incoming_birthdays: 'Nadchodzące urodziny:'
+      last_used: Ostatnio użyte
   common:
     rank: 'Ranking'
     add: Dodaj
@@ -226,6 +231,8 @@ pl:
       illness: Ch
       care: Op
     vacation_periods: Okresy urlopowe
+    birthday_templates: Szablony urodzinowe
+    title: Tytuł
   errors:
     format: "%{attribute} %{message}"
     messages:

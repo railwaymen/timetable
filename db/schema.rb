@@ -40,6 +40,15 @@ ActiveRecord::Schema.define(version: 20200115144158) do
     t.index ["user_id"], name: "index_accounting_periods_recounts_on_user_id"
   end
 
+  create_table "birthday_email_templates", force: :cascade do |t|
+    t.text "body", null: false
+    t.string "name", null: false
+    t.string "title", null: false
+    t.boolean "last_used", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "external_auths", force: :cascade do |t|
     t.bigint "project_id", null: false
     t.jsonb "data", null: false
@@ -116,6 +125,7 @@ ActiveRecord::Schema.define(version: 20200115144158) do
     t.boolean "manager", default: false, null: false
     t.string "lang", default: "pl", null: false
     t.boolean "staff_manager", default: false, null: false
+    t.date "birthdate"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

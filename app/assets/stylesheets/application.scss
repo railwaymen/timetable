@@ -25,6 +25,7 @@
 
 @import 'application/vacation-entry';
 @import 'application/staff';
+@import 'application/birthday_templates';
 
 @import 'pages/projects';
 @import 'pages/reports';
@@ -52,12 +53,15 @@ div.react-datepicker__input-container {
   width: 18px;
   height: 18px;
   display: block;
-  &.active {
+  &.active, &.last-used {
     background-color: #5DFF51;
     color: #5DFF51;
   }
-  &.inactive {
+  &.inactive, &.not-last-used {
     background-color: #FF4F48;
+  }
+  &.last-used, &.not-last-used {
+    margin: auto;
   }
 }
 
@@ -199,4 +203,10 @@ ol.projects .dl-horizontal {
 .edit-vacation-period {
   margin: auto;
   float: none;
+}
+
+.birthday-templates {
+  th:first-child {
+    text-align: center;
+  }
 }
