@@ -2,7 +2,7 @@
 
 module Api
   class BirthdayEmailTemplatesController < Api::BaseController
-    before_action :authenticate_admin_or_manager_or_leader!
+    before_action :authenticate_admin!
     before_action :find_birthday, only: %i[show update destroy]
     respond_to :json
 
