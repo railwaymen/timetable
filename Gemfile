@@ -42,6 +42,7 @@ gem 'rails-ujs'
 gem 'pundit'
 gem 'prawn', require: false
 gem 'prawn-table', require: false
+gem 'whenever'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-marionette', '2.4.4'

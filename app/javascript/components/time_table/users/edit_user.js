@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink, Redirect } from 'react-router-dom';
+import moment from 'moment';
 import * as Api from '../../shared/api';
 import { unnullifyFields } from '../../shared/helpers';
 
@@ -105,6 +106,9 @@ class EditUser extends React.Component {
         </div>
         <div className="form-group">
           <input className="form-control" type="text" name="phone" placeholder={I18n.t('apps.users.phone')} value={user.phone} onChange={this.onChange} />
+        </div>
+        <div className="form-group">
+          <input type="date" name="birthdate" value={moment(user.birthdate).format('YYYY-MM-DD')} onChange={this.onChange} />
         </div>
         { user.id !== currentUser.id
           ? (

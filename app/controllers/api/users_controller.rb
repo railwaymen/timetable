@@ -3,8 +3,9 @@
 module Api
   class UsersController < Api::BaseController
     before_action :authenticate_notself, only: [:update]
-    before_action :authenticate_admin!, except: %i[index show update]
-    before_action :authenticate_admin_or_manager_or_leader!, only: [:index]
+    before_action :authenticate_admin!, except: %i[index show update incoming_birthdays]
+    before_action :authenticate_admin_or_manager_or_leader!, only: %i[index incoming_birthdays]
+    before_action :incoming_birthday_users, only: [:incoming_birthdays]
     respond_to :json
 
     def index
@@ -30,6 +31,16 @@ module Api
       respond_with @user
     end
 
+    def incoming_birthdays
+      if @users.length < 3
+        limit = 3 - @users.length
+        missing_users = missing_users(limit)
+        @users += missing_users
+      end
+
+      respond_with @users
+    end
+
     private
 
     def visiblity_list
@@ -41,7 +52,21 @@ module Api
     end
 
     def user_params
-      params.fetch(:user).permit(:email, :first_name, :last_name, :phone, :contract_name, :lang, :active)
+      params.fetch(:user).permit(:email, :first_name, :last_name, :phone, :contract_name, :lang, :active, :birthdate)
+    end
+
+    def incoming_birthday_users
+      @users = User.where("#{Time.current.year} || TO_CHAR(birthdate, '/mm/dd') > ?", Time.current.to_date)
+                   .order("TO_CHAR(birthdate, 'mm/dd')")
+                   .select("id, TO_CHAR(birthdate, 'dd/mm/') || #{Time.current.year} birthday_date,"\
+                           "CONCAT(last_name, ' ', first_name) AS full_name").limit(3)
+    end
+
+    def missing_users(limit)
+      User.where("#{(Time.current + 1.month).year} || TO_CHAR(birthdate, '/mm/dd') > ?",
+                 Time.current.to_date).order("TO_CHAR(birthdate, 'mm/dd')")
+          .select("id, TO_CHAR(birthdate, 'dd/mm/') || #{(Time.current + 1.month).year} birthday_date,"\
+                  "CONCAT(last_name, ' ', first_name) AS full_name").limit(limit)
     end
   end
 end
