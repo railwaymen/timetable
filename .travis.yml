@@ -3,7 +3,7 @@ cache:
   - bundler
   - yarn
 rvm:
-  - 2.4.1
+  - 2.7.0
 
 env:
   - DB_USERNAME=postgres DB_DATABASE=timetable_ci DB_HOST=localhost DB_PASSWORD=''
@@ -18,7 +18,7 @@ script:
   - yarn lint
 
 before_install:
-  - gem install bundler:1.17.3
+  - gem install bundler:2.1.4
   - nvm install v11.4.0
 
 before_script:

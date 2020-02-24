@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '2.4.1'
+ruby '2.7.0'
 gem 'awesome_print'
 gem 'bootstrap-sass'
 gem 'business_time'
@@ -26,7 +26,6 @@ gem 'paper_trail'
 gem 'pg', '~> 0.18.4'
 gem 'prawn', require: false
 gem 'prawn-table', require: false
-gem 'pry-rails'
 gem 'pundit'
 gem 'rack'
 gem 'rails'
@@ -64,19 +63,20 @@ group :development do
 end
 
 group :test do
+  gem 'capybara'
+  gem 'capybara-selenium'
+  gem 'chromedriver-helper'
   gem 'json_spec'
+  gem 'shoulda-matchers'
   gem 'simplecov', require: false
 end
 
 group :development, :test do
-  gem 'capybara'
-  gem 'capybara-selenium'
-  gem 'chromedriver-helper'
   gem 'factory_bot_rails'
   gem 'ffaker', require: false
+  gem 'pry-rails'
   gem 'puma'
   gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'selenium-webdriver'
-  gem 'shoulda-matchers'
 end
