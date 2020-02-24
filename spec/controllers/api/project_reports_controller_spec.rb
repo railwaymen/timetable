@@ -82,7 +82,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         project_id: project.id,
         id: project_report.id
       }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(ProjectReport.find_by(id: project_report.id)).to be_nil
     end
   end

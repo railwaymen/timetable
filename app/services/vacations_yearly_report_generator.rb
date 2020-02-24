@@ -4,7 +4,7 @@ require 'csv'
 
 class VacationsYearlyReportGenerator
   def initialize
-    @users = User.order('contract_name::bytea ASC').filter_by('active')
+    @users = User.order(Arel.sql('contract_name::bytea ASC')).filter_by('active')
   end
 
   def generate

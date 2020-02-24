@@ -10,7 +10,7 @@ module Api
 
     def index
       action = params[:filter].presence_in(visiblity_list) || 'all'
-      @users = User.order('contract_name::bytea ASC').filter_by(action.to_sym)
+      @users = User.order(Arel.sql('contract_name::bytea ASC')).filter_by(action.to_sym)
       @users = @users.order(:last_name) if params.key?(:staff)
       respond_with @users
     end
@@ -57,14 +57,14 @@ module Api
 
     def incoming_birthday_users
       @users = User.where("#{Time.current.year} || TO_CHAR(birthdate, '/mm/dd') > ?", Time.current.to_date)
-                   .order("TO_CHAR(birthdate, 'mm/dd')")
+                   .order(Arel.sql("TO_CHAR(birthdate, 'mm/dd')"))
                    .select("id, TO_CHAR(birthdate, 'dd/mm/') || #{Time.current.year} birthday_date,"\
                            "CONCAT(last_name, ' ', first_name) AS full_name").limit(3)
     end
 
     def missing_users(limit)
       User.where("#{(Time.current + 1.month).year} || TO_CHAR(birthdate, '/mm/dd') > ?",
-                 Time.current.to_date).order("TO_CHAR(birthdate, 'mm/dd')")
+                 Time.current.to_date).order(Arel.sql("TO_CHAR(birthdate, 'mm/dd')"))
           .select("id, TO_CHAR(birthdate, 'dd/mm/') || #{(Time.current + 1.month).year} birthday_date,"\
                   "CONCAT(last_name, ' ', first_name) AS full_name").limit(limit)
     end

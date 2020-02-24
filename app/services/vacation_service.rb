@@ -15,7 +15,7 @@ class VacationService
     return too_early_error if @vacation.start_date > 1.month.from_now || @vacation.end_date > 1.month.from_now
 
     work_times = vacation_work_times_service.work_times
-    work_time_error(work_times.pluck('date(work_times.starts_at)', 'date(work_times.ends_at)').flatten.uniq) if work_times.any?
+    work_time_error(work_times.pluck(Arel.sql('date(work_times.starts_at)'), Arel.sql('date(work_times.ends_at)')).flatten.uniq) if work_times.any?
 
     approve_transaction
 
