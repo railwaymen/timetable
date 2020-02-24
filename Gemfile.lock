@@ -342,8 +342,6 @@ GEM
     rubocop-rails (2.4.2)
       rack (>= 1.1)
       rubocop (>= 0.72.0)
-    rubocop-rspec (1.38.1)
-      rubocop (>= 0.68.1)
     ruby-progressbar (1.10.1)
     rubyzip (1.2.2)
     sass (3.6.0)
@@ -473,7 +471,6 @@ DEPENDENCIES
   rubocop
   rubocop-performance
   rubocop-rails
-  rubocop-rspec
   sass-rails
   selenium-webdriver
   semantic-ui-sass!
