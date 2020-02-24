@@ -13,9 +13,7 @@ module Api
 
     def create
       @provider = ExternalAuthStrategy.const_get(params[:external_auth][:provider].camelize).new('domain' => params[:external_auth][:domain])
-      if params[:external_auth][:request_data]
-        @provider.prepare_request_data(JwtService.decode(token: params[:external_auth][:request_data]))
-      end
+      @provider.prepare_request_data(JwtService.decode(token: params[:external_auth][:request_data])) if params[:external_auth][:request_data]
       @provider.init_access_token(params[:external_auth][:token])
       @external_auth = ExternalAuth.create(project_id: params[:external_auth][:project_id], provider: params[:external_auth][:provider].camelize, data: @provider.data)
       respond_with :api, @external_auth

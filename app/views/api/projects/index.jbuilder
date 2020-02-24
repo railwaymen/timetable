@@ -9,8 +9,6 @@ json.array! @projects do |project|
     json.name "#{project.user_first_name} #{project.user_last_name}"
   end
   json.leader do
-    if project.leader_first_name
-      json.name "#{project.leader_first_name} #{project.leader_last_name}"
-    end
+    json.name "#{project.leader_first_name} #{project.leader_last_name}" if project.leader_first_name
   end
 end

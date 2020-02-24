@@ -61,7 +61,7 @@ class User < ApplicationRecord
     admin || staff_manager
   end
 
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def as_json(_options = {})
     {
       id: id,
@@ -75,7 +75,7 @@ class User < ApplicationRecord
       staff_manager: staff_manager
     }
   end
-  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/MethodLength
 
   def destroy
     update(active: false)

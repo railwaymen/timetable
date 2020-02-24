@@ -51,9 +51,7 @@ module Api
       period = AccountingPeriod.where(user_id: params[:user_id], full_time: true)
                                .where('? >= starts_at AND ? <= ends_at', params[:date], params[:date]).first
       should_worked = nil
-      if period.try(:starts_at) && period.starts_at <= Time.zone.today && period.ends_at >= Time.zone.today
-        should_worked = period.starts_at.to_date.business_days_until(Time.zone.today + 1.day) * 8 * 3600
-      end
+      should_worked = period.starts_at.to_date.business_days_until(Time.zone.today + 1.day) * 8 * 3600 if period.try(:starts_at) && period.starts_at <= Time.zone.today && period.ends_at >= Time.zone.today
       render status: :ok, json: { period: period, should_worked: should_worked }
     end
 

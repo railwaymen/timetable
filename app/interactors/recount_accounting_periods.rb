@@ -7,7 +7,7 @@ class RecountAccountingPeriods < IncreaseWorkTime
     recount
   end
 
-  # rubocop:disable SkipsModelValidations
+  # rubocop:disable Rails/SkipsModelValidations
   def recount
     periods.update_all(counted_duration: 0, closed: false)
     periods.where(protected: false, full_time: false).update_all(ends_at: nil)
@@ -17,5 +17,5 @@ class RecountAccountingPeriods < IncreaseWorkTime
                             ends_at: work_time.ends_at, date: work_time.starts_at.to_date)
     end
   end
-  # rubocop:enable SkipsModelValidations
+  # rubocop:enable Rails/SkipsModelValidations
 end

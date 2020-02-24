@@ -72,7 +72,7 @@ module ExternalAuthStrategy
 
     def data
       {
-        'domain' =>  domain,
+        'domain' => domain,
         'token' => token,
         'secret' => secret
       }

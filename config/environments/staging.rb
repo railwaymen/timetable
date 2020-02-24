@@ -89,11 +89,11 @@ TimeTable::Application.configure do
   if [Rails.application.secrets.ses_address, Rails.application.secrets.ses_username, Rails.application.secrets.ses_password].all?(&:present?)
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
-      address:              Rails.application.secrets.ses_address,
-      port:                 587,
-      user_name:            Rails.application.secrets.ses_username,
-      password:             Rails.application.secrets.ses_password,
-      authentication:       'login',
+      address: Rails.application.secrets.ses_address,
+      port: 587,
+      user_name: Rails.application.secrets.ses_username,
+      password: Rails.application.secrets.ses_password,
+      authentication: 'login',
       enable_starttls_auto: true
     }
   end

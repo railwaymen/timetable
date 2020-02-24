@@ -17,7 +17,7 @@ class DecreaseWorkTime
     full_time_period&.update(counted_duration: full_time_period.counted_duration - duration)
   end
 
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def substract_duration_from_contract_periods
     remaning_duration = duration
     while remaning_duration.positive?
@@ -34,5 +34,5 @@ class DecreaseWorkTime
       end
     end
   end
-  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/MethodLength
 end

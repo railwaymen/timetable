@@ -3,45 +3,45 @@
 source 'https://rubygems.org'
 
 ruby '2.4.1'
-gem 'rails'
-gem 'pg', '~> 0.18.4'
-gem 'rack'
-gem 'sass-rails'
-gem 'haml_coffee_assets'
-gem 'uglifier'
+gem 'awesome_print'
+gem 'bootstrap-sass'
+gem 'business_time'
 gem 'coffee-rails'
-gem 'jquery-rails'
-gem 'jbuilder'
-gem 'semantic-ui-sass', github: 'doabit/semantic-ui-sass'
 gem 'devise'
 gem 'devise-i18n'
-gem 'i18n-js'
-gem 'awesome_print'
-gem 'paper_trail'
-gem 'business_time'
+gem 'dotenv-rails'
+gem 'haml'
+gem 'haml_coffee_assets'
 gem 'holidays'
-gem 'sentry-raven'
-gem 'bootstrap-sass'
-gem 'jira-ruby', require: false
+gem 'i18n-js'
+gem 'immigrant'
 gem 'interactor'
-gem 'pry-rails'
+gem 'jbuilder'
+gem 'jira-ruby', require: false
+gem 'jquery-rails'
+gem 'jwt', require: false
 gem 'kaminari'
+gem 'net-ldap'
+gem 'paper_trail'
+gem 'pg', '~> 0.18.4'
+gem 'prawn', require: false
+gem 'prawn-table', require: false
+gem 'pry-rails'
+gem 'pundit'
+gem 'rack'
+gem 'rails'
+gem 'rails-ujs'
+gem 'react-rails'
+gem 'redis-namespace'
+gem 'sass-rails'
+gem 'semantic-ui-sass', github: 'doabit/semantic-ui-sass'
+gem 'sentry-raven'
 gem 'sidekiq'
 gem 'sidekiq-status'
 gem 'sinatra', require: false
-gem 'immigrant'
+gem 'uglifier'
 gem 'validates_overlap'
-gem 'net-ldap'
-gem 'haml'
-gem 'redis-namespace'
-gem 'dotenv-rails'
-gem 'jwt', require: false
 gem 'webpacker'
-gem 'react-rails'
-gem 'rails-ujs'
-gem 'pundit'
-gem 'prawn', require: false
-gem 'prawn-table', require: false
 gem 'whenever'
 
 source 'https://rails-assets.org' do
@@ -51,30 +51,32 @@ end
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'rubocop'
   gem 'capistrano'
   gem 'capistrano-bundler'
-  gem 'capistrano-rvm'
+  gem 'capistrano-nvm'
   gem 'capistrano-rails'
+  gem 'capistrano-rvm'
   gem 'capistrano-sidekiq'
   gem 'capistrano-yarn'
-  gem 'capistrano-nvm'
+  gem 'rubocop'
+  gem 'rubocop-performance'
+  gem 'rubocop-rails'
 end
 
 group :test do
-  gem 'simplecov', require: false
   gem 'json_spec'
+  gem 'simplecov', require: false
 end
 
 group :development, :test do
-  gem 'puma'
-  gem 'ffaker', require: false
-  gem 'rspec-rails'
-  gem 'rails-controller-testing'
-  gem 'factory_bot_rails'
-  gem 'shoulda-matchers'
   gem 'capybara'
-  gem 'selenium-webdriver'
   gem 'capybara-selenium'
   gem 'chromedriver-helper'
+  gem 'factory_bot_rails'
+  gem 'ffaker', require: false
+  gem 'puma'
+  gem 'rails-controller-testing'
+  gem 'rspec-rails'
+  gem 'selenium-webdriver'
+  gem 'shoulda-matchers'
 end

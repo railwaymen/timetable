@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Api
-  # rubocop:disable ClassLength
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/ClassLength
+  # rubocop:disable Metrics/MethodLength
   class WorkTimesController < Api::BaseController
     respond_to :json
 
@@ -157,6 +157,6 @@ module Api
             )
     end
   end
-  # rubocop:enable MethodLength
-  # rubocop:enable ClassLength
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/ClassLength
 end

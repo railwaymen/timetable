@@ -172,7 +172,7 @@ GEM
       activerecord (>= 3.0)
     interactor (3.1.1)
     io-like (0.3.0)
-    jaro_winkler (1.5.1)
+    jaro_winkler (1.5.4)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
@@ -229,12 +229,11 @@ GEM
     paper_trail (10.0.1)
       activerecord (>= 4.2, < 5.3)
       request_store (~> 1.1)
-    parallel (1.12.1)
-    parser (2.5.1.2)
+    parallel (1.19.1)
+    parser (2.7.0.2)
       ast (~> 2.4.0)
     pdf-core (0.7.0)
     pg (0.18.4)
-    powerpack (0.1.2)
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
       ttfunk (~> 1.5)
@@ -308,6 +307,7 @@ GEM
     responders (2.4.0)
       actionpack (>= 4.2.0, < 5.3)
       railties (>= 4.2.0, < 5.3)
+    rexml (3.2.4)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -329,15 +329,22 @@ GEM
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
-    rubocop (0.59.2)
+    rubocop (0.80.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.5, != 2.5.1.1)
-      powerpack (~> 0.1)
+      parser (>= 2.7.0.1)
       rainbow (>= 2.2.2, < 4.0)
+      rexml
       ruby-progressbar (~> 1.7)
-      unicode-display_width (~> 1.0, >= 1.0.1)
-    ruby-progressbar (1.10.0)
+      unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-performance (1.5.2)
+      rubocop (>= 0.71.0)
+    rubocop-rails (2.4.2)
+      rack (>= 1.1)
+      rubocop (>= 0.72.0)
+    rubocop-rspec (1.38.1)
+      rubocop (>= 0.68.1)
+    ruby-progressbar (1.10.1)
     rubyzip (1.2.2)
     sass (3.6.0)
       sass-listen (~> 4.0.0)
@@ -393,7 +400,7 @@ GEM
       thread_safe (~> 0.1)
     uglifier (4.1.19)
       execjs (>= 0.3.0, < 3)
-    unicode-display_width (1.4.0)
+    unicode-display_width (1.6.1)
     validates_overlap (0.8.6)
       rails (>= 3.0.0)
     warden (1.2.7)
@@ -464,6 +471,9 @@ DEPENDENCIES
   redis-namespace
   rspec-rails
   rubocop
+  rubocop-performance
+  rubocop-rails
+  rubocop-rspec
   sass-rails
   selenium-webdriver
   semantic-ui-sass!
