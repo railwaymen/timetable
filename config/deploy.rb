@@ -38,7 +38,11 @@ set :linked_dirs, %w[log tmp/pids tmp/cache tmp/sockets vendor/bundle public/ima
 namespace :deploy do
   after :publishing, :export_translations do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
-      execute :rake, 'i18n:js:export'
+      within current_path do
+        with rails_env: fetch(:rails_env) do
+          execute :rake, 'i18n:js:export'
+        end
+      end
     end
   end
 
