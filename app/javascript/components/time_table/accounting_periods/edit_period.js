@@ -237,7 +237,7 @@ class EditPeriod extends React.Component {
               <div className="col-12 col-md-6">
                 <div className="form-group">
                   <select className="form-control" name="user_id" value={period.user_id} onChange={this.onChange}>
-                    { users.map(user => (
+                    { users.map((user) => (
                       <option key={user.id} value={user.id}>
                         {currentUser.fullName.apply(user)}
                       </option>

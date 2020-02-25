@@ -141,7 +141,7 @@ class EditProject extends React.Component {
                   <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
                   <select name="leader_id" id="leader" className="form-control" value={project.leader_id} onChange={this.onChange}>
                     <option value="" />
-                    { users.map(user => (
+                    { users.map((user) => (
                       <option key={user.id} value={user.id}>
                         {currentUser.fullName.apply(user)}
                       </option>

@@ -23,8 +23,7 @@ class Staff extends React.Component {
       <div className="staff-container">
         <Filters ref={(filters) => { this.filters = filters; }} onFilterChange={this.onFilterChange} />
         { currentUser.canManageStaff()
-            && <VacationApplications ref={(vacationApplications) => { this.vacationApplications = vacationApplications; }} urlFilters={this.urlFilters} />
-          }
+            && <VacationApplications ref={(vacationApplications) => { this.vacationApplications = vacationApplications; }} urlFilters={this.urlFilters} />}
       </div>
     );
   }

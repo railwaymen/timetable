@@ -130,9 +130,9 @@ class EntryHistory extends React.Component {
 
     if (day.length === 1) {
       groupedWorkHours[fingerPrint] = undefined;
-      daysKeys = daysKeys.filter(daysKey => daysKey !== fingerPrint);
+      daysKeys = daysKeys.filter((daysKey) => daysKey !== fingerPrint);
     } else {
-      groupedWorkHours[fingerPrint] = day.filter(record => record.id !== component.state.workHours.id);
+      groupedWorkHours[fingerPrint] = day.filter((record) => record.id !== component.state.workHours.id);
     }
 
     return this.setState({
@@ -167,10 +167,10 @@ class EntryHistory extends React.Component {
       let { daysKeys } = this.state;
 
       if (groupedIndex) {
-        groupedWorkHours[time] = _.sortBy(groupedWorkHours[time].concat([object]), t => moment(t.starts_at).format('HHmm')).reverse();
+        groupedWorkHours[time] = _.sortBy(groupedWorkHours[time].concat([object]), (t) => moment(t.starts_at).format('HHmm')).reverse();
       } else {
         groupedWorkHours[time] = [object];
-        daysKeys = _.sortBy(this.state.daysKeys.concat([time]), key => key).reverse();
+        daysKeys = _.sortBy(this.state.daysKeys.concat([time]), (key) => key).reverse();
       }
 
       this.setState({
@@ -302,12 +302,12 @@ class EntryHistory extends React.Component {
     } else {
       this.setState({
         daysKeys: [],
-        groupedWorkHours: _.groupBy(this.state.workHours, workHours => (
+        groupedWorkHours: _.groupBy(this.state.workHours, (workHours) => (
           moment(workHours.starts_at).format('YYYYMMDD')
         )),
       }, () => {
         this.setState({
-          daysKeys: _.sortBy(Object.keys(this.state.groupedWorkHours), date => date).reverse(),
+          daysKeys: _.sortBy(Object.keys(this.state.groupedWorkHours), (date) => date).reverse(),
         });
       });
     }
@@ -319,7 +319,7 @@ class EntryHistory extends React.Component {
 
   totalWorkHours() {
     this.setState({
-      total: displayDuration(_.sumBy(this.state.workHours, w => w.duration)),
+      total: displayDuration(_.sumBy(this.state.workHours, (w) => w.duration)),
     });
   }
 
@@ -334,7 +334,7 @@ class EntryHistory extends React.Component {
         project_id: projectId, pushHistory: true, from, to,
       });
       this.setState({
-        selectedProject: _.find(this.props.projects, project => project.id === projectId),
+        selectedProject: _.find(this.props.projects, (project) => project.id === projectId),
       });
     } else {
       this.getWorkHours({ pushHistory: true, from, to });
@@ -551,8 +551,7 @@ class EntryHistory extends React.Component {
                         <td><div className="preloader" /></td>
                         <td><div className="preloader" /></td>
                       </tr>
-                    )
-                  }
+                    )}
                 </tbody>
               </table>
               {

@@ -103,7 +103,7 @@ export default class ProjectWorkTimes extends React.Component {
         const {
           project, work_times, reports, tag_reports, tags_disabled,
         } = response.data;
-        const groupedWorkTimes = _.groupBy(work_times, workTime => (
+        const groupedWorkTimes = _.groupBy(work_times, (workTime) => (
           moment(workTime.starts_at).format('YYYYMMDD')
         ));
         this.setState({
@@ -154,15 +154,15 @@ export default class ProjectWorkTimes extends React.Component {
         </header>
         <div className="row row-eq-height">
           <div className="col-md-8">
-            {dayKeys.map(dayKey => (
+            {dayKeys.map((dayKey) => (
               <section key={dayKey} className="time-entries-day">
                 <header>
                   <div className="date-container">
                     <span className="title">{displayDayInfo(groupedWorkTimes[dayKey][0].starts_at)}</span>
-                    <span className="super">{displayDuration(_.sumBy(groupedWorkTimes[dayKey], w => w.duration))}</span>
+                    <span className="super">{displayDuration(_.sumBy(groupedWorkTimes[dayKey], (w) => w.duration))}</span>
                     <div className="time-entries-list-container">
                       <ul className="time-entries-list">
-                        {groupedWorkTimes[dayKey].map(workTime => (
+                        {groupedWorkTimes[dayKey].map((workTime) => (
                           <li className={`entry ${workTime.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workTime.id}`} key={workTime.id}>
                             <div className="col-md-2 project-container">{`${workTime.user.first_name} ${workTime.user.last_name}`}</div>
                             <div className="col-md-4 description-container" style={{ cursor: 'inherit' }}>
@@ -174,8 +174,7 @@ export default class ProjectWorkTimes extends React.Component {
                               <div className="col-md-2 tag-container" style={{ marginTop: '15px' }}>
                                 <input disabled className={`tags selected ${workTime.tag}`} type="button" value={workTime.tag.toUpperCase()} />
                               </div>
-                            )
-                            }
+                            )}
                             <div className="col-md-1">
                               <WorkTimeDuration workTime={workTime} />
                             </div>
@@ -197,8 +196,7 @@ export default class ProjectWorkTimes extends React.Component {
                 <div className="row">
                   <ReportProjectTagRecord reportRows={tag_reports} />
                 </div>
-              )
-              }
+              )}
               { reports.length > 0 && (
                 <div className="row">
                   <ReportProjectRecord
@@ -208,8 +206,7 @@ export default class ProjectWorkTimes extends React.Component {
                     redirectTo={this.filterByUser}
                   />
                 </div>
-              )
-              }
+              )}
             </div>
           </div>
         </div>

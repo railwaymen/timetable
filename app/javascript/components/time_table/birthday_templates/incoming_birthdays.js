@@ -43,7 +43,7 @@ class IncomingBirthdays extends React.Component {
       <div className="incoming-birthdays">
         {I18n.t('apps.birthday_templates.incoming_birthdays')}
         <div className="incoming-birthdays-list">
-          {incomingBirthdays.map(incomingBirthday => (this.renderIncomingBirthday(incomingBirthday)))}
+          {incomingBirthdays.map((incomingBirthday) => (this.renderIncomingBirthday(incomingBirthday)))}
         </div>
       </div>
     );

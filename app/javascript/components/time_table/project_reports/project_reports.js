@@ -5,7 +5,7 @@ import URI from 'urijs';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
 
-const simpleDateFormat = date => moment(date).format('YYYY/MM/DD');
+const simpleDateFormat = (date) => moment(date).format('YYYY/MM/DD');
 export default class ProjectReports extends React.Component {
   constructor(props) {
     super(props);
@@ -123,8 +123,7 @@ export default class ProjectReports extends React.Component {
                         <i className="symbol fa fa-file-pdf-o" />
                         <span className="txt">{I18n.t('common.download')}</span>
                       </a>
-                      )
-                    }
+                      )}
                     <Link className="bt bt-second" to={`/projects/${projectId}/edit_report/${id}`}>
                       <i className="symbol fa fa-search" />
                       <span className="bt-txt">{I18n.t('common.show')}</span>

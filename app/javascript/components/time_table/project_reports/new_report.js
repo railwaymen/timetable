@@ -116,11 +116,11 @@ export default class NewReport extends React.Component {
         <div className="row">
           <div className="col-md-6 form-group">
             <label>{I18n.t('common.name')}</label>
-            <input className="form-control" value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
+            <input className="form-control" value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} />
           </div>
           <div className="col-md-6 form-group">
             <label>{I18n.t('apps.reports.currency')}</label>
-            <input className="form-control" value={this.state.currency} onChange={e => this.setState({ currency: e.target.value })} />
+            <input className="form-control" value={this.state.currency} onChange={(e) => this.setState({ currency: e.target.value })} />
           </div>
         </div>
         <h1>{I18n.t('apps.reports.roles')}</h1>
@@ -137,26 +137,26 @@ export default class NewReport extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.userRoles.map(user => (
+              {this.state.userRoles.map((user) => (
                 <tr key={user.id}>
                   <td>
                     {user.first_name}
                     {user.last_name}
                   </td>
                   <td>
-                    <select className="form-control" value={user.role || ''} onChange={e => this.onFieldChange(e, 'role', user.id)}>
+                    <select className="form-control" value={user.role || ''} onChange={(e) => this.onFieldChange(e, 'role', user.id)}>
                       <option value="" />
-                      {this.constructor.roles.map(role => (
+                      {this.constructor.roles.map((role) => (
                         <option key={role} value={role}>{role}</option>
                       ))}
                     </select>
                   </td>
                   <td>
-                    <input className="form-control" type="number" min="0" step="0.01" value={user.hourly_wage} onChange={e => this.onFieldChange(e, 'hourly_wage', user.id)} />
+                    <input className="form-control" type="number" min="0" step="0.01" value={user.hourly_wage} onChange={(e) => this.onFieldChange(e, 'hourly_wage', user.id)} />
                     {user.hourly_wage === '' && <span style={{ color: 'red', fontWeight: 'bold' }}>Invalid format</span>}
                   </td>
                   <td>
-                    <input className="form-control" type="text" value={user.description} onChange={e => this.onFieldChange(e, 'description', user.id)} />
+                    <input className="form-control" type="text" value={user.description} onChange={(e) => this.onFieldChange(e, 'description', user.id)} />
                   </td>
                 </tr>
               ))}

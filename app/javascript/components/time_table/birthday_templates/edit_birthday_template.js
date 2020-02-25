@@ -94,7 +94,7 @@ class EditBirthdayTemplate extends React.Component {
     return (
       <div className="error-tooltip birthday-error">
         <ul>
-          {errors.map(error => (
+          {errors.map((error) => (
             <li key={error}>{error}</li>
           ))}
         </ul>

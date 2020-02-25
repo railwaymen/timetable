@@ -129,7 +129,7 @@ class VacationPeriods extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { vacationPeriods.map(period => (
+            { vacationPeriods.map((period) => (
               <VacationPeriod key={period.id} period={period} userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`} />
             )) }
           </tbody>

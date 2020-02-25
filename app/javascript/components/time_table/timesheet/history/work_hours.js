@@ -116,7 +116,7 @@ class WorkHours extends React.Component {
 
   onChangeProject(e) {
     const projectId = parseInt(e.target.attributes.getNamedItem('data-value').value, 10);
-    this.changeProject(_.find(this.props.projects, p => p.id === projectId));
+    this.changeProject(_.find(this.props.projects, (p) => p.id === projectId));
   }
 
   changeProject(project) {
@@ -359,7 +359,7 @@ class WorkHours extends React.Component {
     this.props.assignModalInfo(undefined);
 
     return Api.makeGetRequest({ url: `/api/work_times/${this.state.workHours.id}` })
-      .then(response => this.props.assignModalInfo(response.data));
+      .then((response) => this.props.assignModalInfo(response.data));
   }
 
   onFilterChange({ target }) {
@@ -376,7 +376,7 @@ class WorkHours extends React.Component {
 
   filteredProjects(filter = this.state.filter) {
     const lowerFilter = filter.toLowerCase();
-    return this.props.projects.filter(p => p.name.toLowerCase().match(escape(lowerFilter)));
+    return this.props.projects.filter((p) => p.name.toLowerCase().match(escape(lowerFilter)));
   }
 
   descriptionText() {
@@ -438,8 +438,7 @@ class WorkHours extends React.Component {
               <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>
                 { tagEditable && this.renderTagEditable() }
               </WorkTimeTag>
-              )
-              }
+              )}
             </div>
             <div className="actions-container">
               <span className="action-item copy" onClick={this.onCopy} data-tooltip-bottom={I18n.t('common.copy')}>
@@ -453,12 +452,11 @@ class WorkHours extends React.Component {
               </span>
             </div>
             {editing ? this.renderDateEditable() : (
-              <React.Fragment>
+              <>
                 <WorkTimeDuration workTime={workHours} />
                 <WorkTimeTime workTime={workHours} onClick={this.toggleEdit} />
-              </React.Fragment>
-            )
-            }
+              </>
+            )}
           </li>
         </ul>
       </div>

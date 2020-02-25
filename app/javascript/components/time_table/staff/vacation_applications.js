@@ -79,7 +79,7 @@ class VacationApplications extends React.Component {
   removeFromAcceptedOrDeclined(object, action) {
     if ((this.state.showDeclined && action === 'decline') || (!this.state.showDeclined && action === 'accept')) { return; }
     const { acceptedOrDeclinedVacationsList } = this.state;
-    const index = acceptedOrDeclinedVacationsList.findIndex(vacation => vacation.id === object.id);
+    const index = acceptedOrDeclinedVacationsList.findIndex((vacation) => vacation.id === object.id);
     if (index !== -1) {
       acceptedOrDeclinedVacationsList.splice(index, 1);
       this.setState({
@@ -94,8 +94,8 @@ class VacationApplications extends React.Component {
       return;
     }
     const { acceptedOrDeclinedVacationsList, unconfirmedVacationsList } = this.state;
-    const acceptedOrDeclinedIndex = acceptedOrDeclinedVacationsList.findIndex(vacation => vacation.id === object.id);
-    const undefinedIndex = unconfirmedVacationsList.findIndex(vacation => vacation.id === object.id);
+    const acceptedOrDeclinedIndex = acceptedOrDeclinedVacationsList.findIndex((vacation) => vacation.id === object.id);
+    const undefinedIndex = unconfirmedVacationsList.findIndex((vacation) => vacation.id === object.id);
     if (acceptedOrDeclinedIndex === -1 && undefinedIndex !== -1) {
       unconfirmedVacationsList.splice(undefinedIndex, 1);
       this.setState({
@@ -108,7 +108,7 @@ class VacationApplications extends React.Component {
   removeFromUnconfirmedVacationList(object) {
     if (window.currentUser.staff_manager) {
       const { unconfirmedVacationsList } = this.state;
-      const undefinedIndex = unconfirmedVacationsList.findIndex(vacation => vacation.id === object.id);
+      const undefinedIndex = unconfirmedVacationsList.findIndex((vacation) => vacation.id === object.id);
       unconfirmedVacationsList.splice(undefinedIndex, 1);
       this.setState({
         unconfirmedVacationsList,

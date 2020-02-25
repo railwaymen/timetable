@@ -29,7 +29,7 @@ class Users extends React.Component {
 
   getUsers(visible) {
     fetch(`/api/users?filter=${visible || this.state.visible}`)
-      .then(response => response.json())
+      .then((response) => response.json())
       .then((data) => {
         this.setState({ visible, users: data });
       });
@@ -70,7 +70,7 @@ class Users extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { users.map(user => <User key={user.id} user={user} />) }
+            { users.map((user) => <User key={user.id} user={user} />) }
           </tbody>
         </table>
       </div>

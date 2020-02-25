@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const ErrorTooltip = ({ errors }) => (
   <div className="error-tooltip">
     <ul>
-      {errors.map(error => (
+      {errors.map((error) => (
         <li key={error}>{error}</li>
       ))}
     </ul>

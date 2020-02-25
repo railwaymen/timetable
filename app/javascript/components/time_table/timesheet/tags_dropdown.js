@@ -17,7 +17,7 @@ class TagsDropdown extends React.Component {
 
   onChangeTag(tag_key) {
     const { tags } = this.props;
-    const selectedTagKey = _.find(tags, p => (
+    const selectedTagKey = _.find(tags, (p) => (
       p === tag_key
     )) || tags[0];
 

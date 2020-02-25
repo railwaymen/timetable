@@ -213,8 +213,7 @@ class UnconfirmedVacation extends React.Component {
     return (
       <div className={`unconfirmed-vacation ${vacation.status}`}>
         { errors.length > 0
-            && this.renderErrors()
-        }
+            && this.renderErrors()}
         <div className="vacation-header">
           <div className="user-full-name">
             {vacation.full_name}
@@ -223,8 +222,7 @@ class UnconfirmedVacation extends React.Component {
                 <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
                   <i className="icon calendar" />
                 </NavLink>
-              )
-            }
+              )}
           </div>
           <div className="vacation-time-period">
             {moment(vacation.start_date).format('DD/MM/YYYY')}
@@ -249,8 +247,7 @@ class UnconfirmedVacation extends React.Component {
                   {` ${vacation.available_vacation_days}`}
                 </span>
               </div>
-            )
-        }
+            )}
       </div>
     );
   }

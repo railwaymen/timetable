@@ -67,7 +67,7 @@ class ProjectsDropdown extends React.Component {
     if ((e.keyCode === 13 || e.keyCode === 9) && filteredProjects.length > 0) {
       e.preventDefault();
       const projects = this.filterProjects();
-      const selectedProject = _.find(projects, p => (
+      const selectedProject = _.find(projects, (p) => (
         p.id === filteredProjects[0]
       )) || projects[currentIndex];
 
@@ -84,7 +84,7 @@ class ProjectsDropdown extends React.Component {
 
   filterProjects(filter = this.state.filter) {
     const lowerFilter = filter.toLowerCase();
-    return _.filter(this.props.projects, p => (
+    return _.filter(this.props.projects, (p) => (
       p.active && p.name.toLowerCase().match(escape(lowerFilter))
     ));
   }
@@ -110,7 +110,7 @@ class ProjectsDropdown extends React.Component {
 
     if (projectId !== this.props.selectedProject) {
       const projects = this.filterProjects('');
-      const selectedProject = _.find(projects, p => (
+      const selectedProject = _.find(projects, (p) => (
         p.id === projectId
       )) || projects[0];
 

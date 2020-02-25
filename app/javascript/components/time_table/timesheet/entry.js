@@ -302,8 +302,7 @@ class Entry extends React.Component {
                 <div className="form-group">
                   {project.lunch
                     ? <img className="easter" src={this.renderEasterEgg()} alt="" />
-                    : <textarea className="form-control" placeholder={I18n.t('apps.timesheet.what_have_you_done')} name="body" value={body} onChange={this.onChange} onKeyPress={this.onKeyPress} />
-                  }
+                    : <textarea className="form-control" placeholder={I18n.t('apps.timesheet.what_have_you_done')} name="body" value={body} onChange={this.onChange} onKeyPress={this.onKeyPress} />}
                 </div>
                 {project.work_times_allows_task
                   ? (
@@ -343,8 +342,7 @@ class Entry extends React.Component {
                 {errors.tag && <ErrorTooltip errors={errors.tag} />}
                 <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />
               </div>
-            )
-            }
+            )}
             <div className="form-actions">
               <button type="button" className="bt bt-second" style={{ marginTop: '5px' }} onClick={() => this.onSubmit('/api/work_times/create_filling_gaps')}>
                 <i className="symbol fa fa-calendar-plus-o" />

@@ -263,7 +263,7 @@ class Periods extends React.Component {
         if (parseInt(response.status, 10) === 204) {
           this.setState({
             periods: {
-              accounting_periods: this.state.periods.accounting_periods.filter(period => (period.id !== id)),
+              accounting_periods: this.state.periods.accounting_periods.filter((period) => (period.id !== id)),
             },
           });
         } else {

@@ -140,8 +140,7 @@ class ExternalAuth extends React.Component {
               <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
             </div>
           </form>
-          )
-        }
+          )}
       </div>
     );
   }

@@ -70,7 +70,7 @@ class ProjectsList extends React.Component {
               </tr>
             </thead>
             <tbody>
-              { projects.map(project => (
+              { projects.map((project) => (
                 <Project key={project.id} project={project} />
               )) }
             </tbody>

@@ -130,8 +130,7 @@ class AcceptedOrDeclinedVacation extends React.Component {
                 <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
                   <i className="icon calendar" />
                 </NavLink>
-              )
-            }
+              )}
           </div>
           <div className="vacation-time-period">
             {moment(vacation.start_date).format('DD/MM/YYYY')}

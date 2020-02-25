@@ -22,6 +22,7 @@ module.exports = {
   ],
   rules: {
     'react/jsx-filename-extension': 'off',
+    'react/jsx-props-no-spreading': 'off',
     'react/forbid-prop-types': 'off',
     'react/no-did-update-set-state': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
@@ -32,6 +33,7 @@ module.exports = {
     'jsx-a11y/label-has-for': 'off',
     'jsx-a11y/no-autofocus ': 'off',
     'jsx-a11y/no-noninteractive-tabindex': 'off',
+    "jsx-a11y/control-has-associated-label": "off",
     'no-script-url': 'off',
     'no-param-reassign': 'off',
     'no-alert': 'off',
@@ -44,12 +46,14 @@ module.exports = {
     'react/require-default-props': 'off',
     'react/destructuring-assignment': 'off',
     'react/sort-comp': 'off',
+    'react/static-property-placement': 'off',
+    'react/state-in-constructor': 'off',
     'react/no-unused-prop-types': 'off',
     'class-methods-use-this': 'off',
     'max-len': ["error", { "code": 1000 }]
   },
   globals: {
-    I18n: 'readOnly',
-    currentUser: 'readOnly',
+    I18n: 'readonly',
+    currentUser: 'readonly',
   }
 };

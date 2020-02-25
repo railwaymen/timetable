@@ -125,7 +125,7 @@ export default class EditReport extends React.Component {
     event.preventDefault();
     if (window.confirm(I18n.t('common.confirm'))) {
       this.setState(({ currentBody }) => {
-        const [removedWorkedTime, rest] = partition(currentBody[category], wt => wt.id === id);
+        const [removedWorkedTime, rest] = partition(currentBody[category], (wt) => wt.id === id);
         const ignored = removedWorkedTime.concat(currentBody.ignored || []);
         const newBody = { ...currentBody, [category]: rest, ignored };
         return { currentBody: newBody, workTimeModalCategory: null, workTimeModalId: null };
@@ -135,11 +135,11 @@ export default class EditReport extends React.Component {
 
   onShowMerge(event, category) {
     this.setState((state) => {
-      const tasksToMerge = state.currentBody[category].filter(e => e.toMerge);
+      const tasksToMerge = state.currentBody[category].filter((e) => e.toMerge);
       return {
-        mergeTask: uniq(tasksToMerge.map(wt => wt.task)).join(', '),
-        mergeOwner: uniq(tasksToMerge.map(wt => wt.owner)).join(', '),
-        mergeDescription: uniq(tasksToMerge.map(wt => wt.description)).join(', '),
+        mergeTask: uniq(tasksToMerge.map((wt) => wt.task)).join(', '),
+        mergeOwner: uniq(tasksToMerge.map((wt) => wt.owner)).join(', '),
+        mergeDescription: uniq(tasksToMerge.map((wt) => wt.description)).join(', '),
       };
     }, () => $(`#modal-${category}`).toggle());
   }
@@ -163,8 +163,8 @@ export default class EditReport extends React.Component {
       currentBody, mergeOwner, mergeTask, mergeDescription,
     }) => {
       const [wtToMerge, otherWt] = partition(currentBody[category], 'toMerge');
-      const tag = wtToMerge.find(wt => wt.tag !== wtToMerge[0].tag) ? 'various' : wtToMerge[0].tag;
-      const user_id = wtToMerge.find(wt => wt.user_id !== wtToMerge[0].user_id) ? null : wtToMerge[0].user_id;
+      const tag = wtToMerge.find((wt) => wt.tag !== wtToMerge[0].tag) ? 'various' : wtToMerge[0].tag;
+      const user_id = wtToMerge.find((wt) => wt.user_id !== wtToMerge[0].user_id) ? null : wtToMerge[0].user_id;
       const newWt = {
         owner: mergeOwner,
         task: mergeTask,
@@ -173,7 +173,7 @@ export default class EditReport extends React.Component {
         toMerge: false,
         touched: true,
         cost: sumBy(wtToMerge, 'cost'),
-        id: wtToMerge.map(wt => wt.id).join(';'),
+        id: wtToMerge.map((wt) => wt.id).join(';'),
         tag,
         user_id,
       };
@@ -209,7 +209,7 @@ export default class EditReport extends React.Component {
 
   renderMergeButton(category) {
     return (
-      <button key="merge" type="button" className="action-item" onClick={e => this.onShowMerge(e, category)} data-tooltip-bottom={I18n.t('apps.reports.merge')}>
+      <button key="merge" type="button" className="action-item" onClick={(e) => this.onShowMerge(e, category)} data-tooltip-bottom={I18n.t('apps.reports.merge')}>
         <i className="symbol fa fa-compress" />
       </button>
     );
@@ -217,7 +217,7 @@ export default class EditReport extends React.Component {
 
   renderEditOrMergeButton(category, id, addToMerge) {
     return (
-      <button key="edit" type="button" className={`action-item ${addToMerge ? 'plus' : ''}`} onClick={e => this.onShowEdit(e, category, id)} data-tooltip-bottom={addToMerge ? I18n.t('apps.reports.merge') : I18n.t('common.edit')}>
+      <button key="edit" type="button" className={`action-item ${addToMerge ? 'plus' : ''}`} onClick={(e) => this.onShowEdit(e, category, id)} data-tooltip-bottom={addToMerge ? I18n.t('apps.reports.merge') : I18n.t('common.edit')}>
         <i className="symbol fa fa-pencil" />
       </button>
     );
@@ -234,7 +234,7 @@ export default class EditReport extends React.Component {
     const willBeAddedToMerge = !toMerge && toMergeTasks.length > 0;
     if (touched) {
       result.push(
-        <button key="details" type="button" className="action-item info" onClick={e => this.onShowWorkTimeModal(e, category, id)} data-tooltip-bottom={I18n.t('common.history')}>
+        <button key="details" type="button" className="action-item info" onClick={(e) => this.onShowWorkTimeModal(e, category, id)} data-tooltip-bottom={I18n.t('common.history')}>
           <i className="symbol fa fa-clock-o" />
         </button>,
       );
@@ -243,14 +243,14 @@ export default class EditReport extends React.Component {
       result.push(
         <React.Fragment key="merge">
           <label className="form-check-label">
-            <input name="toMerge" type="checkbox" className="merge-check-box" checked={toMerge} onChange={e => this.handleMergeChange(e, category, id)} />
+            <input name="toMerge" type="checkbox" className="merge-check-box" checked={toMerge} onChange={(e) => this.handleMergeChange(e, category, id)} />
             <span className="checkbox" />
           </label>
           {
             (toMerge && toMergeTasks.length >= 2 && this.renderMergeButton(category)) || this.renderEditOrMergeButton(category, id, willBeAddedToMerge)
           }
         </React.Fragment>,
-        <button key="ignore" type="button" className="action-item destroy" onClick={e => this.onIgnore(e, category, id)} data-tooltip-bottom={I18n.t('apps.reports.ignore')}>
+        <button key="ignore" type="button" className="action-item destroy" onClick={(e) => this.onIgnore(e, category, id)} data-tooltip-bottom={I18n.t('apps.reports.ignore')}>
           <i className="symbol fa fa-trash-o" />
         </button>,
       );
@@ -261,9 +261,9 @@ export default class EditReport extends React.Component {
   renderWorkTimeModal() {
     const { workTimeModalCategory, workTimeModalId, currentBody } = this.state;
     if (!workTimeModalCategory || !workTimeModalId) return null;
-    const workTime = currentBody[workTimeModalCategory].find(wt => wt.id === workTimeModalId);
+    const workTime = currentBody[workTimeModalCategory].find((wt) => wt.id === workTimeModalId);
     const ids = workTime.id.split(';');
-    const ancestors = this.state.report.initial_body[workTimeModalCategory].filter(wt => ids.includes(wt.id));
+    const ancestors = this.state.report.initial_body[workTimeModalCategory].filter((wt) => ids.includes(wt.id));
     return (
       <Modal
         id="work-time-modal"
@@ -346,7 +346,7 @@ export default class EditReport extends React.Component {
 
   handleTagPillClick(category, tag) {
     this.setState(({ currentBody }) => {
-      const toMergeValue = !currentBody[category].find(wt => wt.toMerge && wt.tag === tag);
+      const toMergeValue = !currentBody[category].find((wt) => wt.toMerge && wt.tag === tag);
       const newBody = currentBody[category].map((wt) => {
         const { toMerge, ...workTime } = wt;
         workTime.toMerge = toMergeValue && workTime.tag === tag;
@@ -362,7 +362,7 @@ export default class EditReport extends React.Component {
     } = this.state;
     const times = currentBody[category];
     if (times.length === 0) return null;
-    const toMergeTasks = times.filter(wt => wt.toMerge);
+    const toMergeTasks = times.filter((wt) => wt.toMerge);
     const modalHeader = toMergeTasks.length > 1 ? 'Merge' : 'Update';
     return (
       <div key={category}>
@@ -440,7 +440,7 @@ export default class EditReport extends React.Component {
             </form>
           )}
           actions={(
-            <button onClick={e => this.onMergeSubmit(e, category)} className="button green icon labeled right ui" type="button">
+            <button onClick={(e) => this.onMergeSubmit(e, category)} className="button green icon labeled right ui" type="button">
               {modalHeader}
               <i className="angle double icon right" />
             </button>
@@ -505,8 +505,8 @@ export default class EditReport extends React.Component {
       reportId,
     } = this.state;
     const categories = without(Object.keys(currentBody), 'ignored').sort();
-    const categoriesDurationSum = categories.map(category => sumBy(currentBody[category], 'duration'));
-    const categoriesCostSum = categories.map(category => sumBy(currentBody[category], 'cost'));
+    const categoriesDurationSum = categories.map((category) => sumBy(currentBody[category], 'duration'));
+    const categoriesCostSum = categories.map((category) => sumBy(currentBody[category], 'cost'));
     return (
       <div className="edit-report-summary card">
         <h2>{report.project_name}</h2>
@@ -553,8 +553,7 @@ export default class EditReport extends React.Component {
               <i className="symbol fa fa-file-pdf-o" />
             </button>
           </div>
-          )
-        }
+          )}
         {report.generated
           && (
           <div className="report-download-actions">
@@ -563,8 +562,7 @@ export default class EditReport extends React.Component {
               <span className="txt">{I18n.t('common.download')}</span>
             </a>
           </div>
-          )
-        }
+          )}
         {this.editable()
           && (
           <div className="report-undo-actions">
@@ -577,8 +575,7 @@ export default class EditReport extends React.Component {
               <span className="txt">{I18n.t('apps.reports.restore_first')}</span>
             </button>
           </div>
-          )
-        }
+          )}
       </div>
     );
   }

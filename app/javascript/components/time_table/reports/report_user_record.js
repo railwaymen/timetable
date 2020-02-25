@@ -29,7 +29,7 @@ class ReportUserRecord extends React.Component {
             </h4>
           </div>
           <ul className="list-group">
-            { reportRows.map(row => (
+            { reportRows.map((row) => (
               <li className="list-group-item" key={row.project_id}>
                 <a href={`/timesheet?project_id=${row.project_id}&user_id=${row.user_id}&from=${from}&to=${to}`} onClick={this.onRedirect}>
                   {row.project_name}
