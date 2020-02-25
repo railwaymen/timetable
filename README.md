@@ -49,7 +49,7 @@ To get it running locally run the following after cloning the repository:
 
 ```
 bundle install
-cp .env.yml.example .env.yml
+cp .env.example .env
 bundle exec rake db:create
 bundle exec rake db:seed
 bundle exec rails s
