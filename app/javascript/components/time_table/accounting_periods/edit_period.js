@@ -33,6 +33,7 @@ class EditPeriod extends React.Component {
       hours: '168',
       minutes: '00',
       note: '',
+      position: '1',
     },
     errors: {},
     users: [],
