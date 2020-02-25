@@ -163,6 +163,11 @@ en:
       email_content: Enter email content
       incoming_birthdays: 'Incoming birthdays:'
       last_used: Last used
+      days:
+        few: '%{count} days'
+        many: '%{count} days'
+        one: '%{count} day'
+        other: '%{count} days'
   common:
     rank: 'Rank'
     add: Add

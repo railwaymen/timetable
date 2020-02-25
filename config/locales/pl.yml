@@ -163,6 +163,11 @@ pl:
       email_content: Wprowadź treść maila
       incoming_birthdays: 'Nadchodzące urodziny:'
       last_used: Ostatnio użyte
+      days:
+        few: '%{count} dni'
+        many: '%{count} dni'
+        one: '%{count} dzień'
+        other: '%{count} dni'
   common:
     rank: 'Ranking'
     add: Dodaj

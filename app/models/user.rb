@@ -84,11 +84,8 @@ class User < ApplicationRecord
 
   def available_vacation_days(selected_vacations = vacations.current_year)
     last_vacation_period = vacation_periods.last
-    used_vacation_days = 0
-    selected_vacations.where(status: :accepted, vacation_type: %w[planned requested]).find_each do |vacation|
-      used_vacation_days += vacation.start_date.business_days_until(vacation.end_date + 1.day)
-    end
-    last_vacation_period.nil? ? 0 - used_vacation_days : last_vacation_period.vacation_days - used_vacation_days
+    already_used_vacation_days = selected_vacations.where(status: :accepted, vacation_type: %w[planned requested]).sum(:business_days_count)
+    last_vacation_period.nil? ? 0 - already_used_vacation_days : last_vacation_period.vacation_days - already_used_vacation_days
   end
 
   def used_vacation_days(selected_vacations = vacations.current_year, except_planned = false)

@@ -14,8 +14,9 @@ module Api
     end
 
     def create
-      @vacation = Vacation.create(vacations_params)
-      VacationMailer.send_information_to_accountancy(@vacation).deliver_later if @vacation.valid?
+      @vacation = Vacation.new(vacations_params)
+      @vacation.business_days_count = @vacation.start_date.business_days_until(@vacation.end_date + 1.day)
+      VacationMailer.send_information_to_accountancy(@vacation).deliver_later if @vacation.save
       respond_with @vacation
     end
 

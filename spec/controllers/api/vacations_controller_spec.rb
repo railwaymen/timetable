@@ -50,9 +50,9 @@ RSpec.describe Api::VacationsController do
                                     vacation_type: :others, vacation_sub_type: :parental, description: 'Parental', status: :accepted)
       vacation3 = create(:vacation, user: user, vacation_type: :requested, status: :accepted)
       vacations_response = [
-        vacation1.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status'),
-        vacation3.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status'),
-        vacation2.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status')
+        vacation1.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count'),
+        vacation3.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count'),
+        vacation2.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count')
       ]
       get :index, params: { year: Time.current.year }, format: :json
       expect(response.code).to eql('200')
@@ -139,7 +139,7 @@ RSpec.describe Api::VacationsController do
         vacation_period = create(:vacation_period, user: user)
         accepted_vacation = create(:vacation, user: user, description: 'Accepted', status: :accepted)
         unconfirmed_vacation = create(:vacation, user: user, description: 'Unconfirmed')
-        available_vacation_days = vacation_period.vacation_days - accepted_vacation.start_date.business_days_until(accepted_vacation.end_date + 1.day)
+        available_vacation_days = vacation_period.vacation_days - accepted_vacation.business_days_count
         expect(VacationApplicationsQuery).to receive(:new).with(staff_manager, default_params.merge(action: 'vacation_applications')).and_return(vacation_applications_query)
         expect(vacation_applications_query).to receive(:accepted_or_declined_vacations).and_return([accepted_vacation])
         expect(vacation_applications_query).to receive(:unconfirmed_vacations).and_return([unconfirmed_vacation])

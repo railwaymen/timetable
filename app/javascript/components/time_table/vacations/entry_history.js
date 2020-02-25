@@ -73,6 +73,7 @@ class EntryHistory extends React.Component {
           <span>-</span>
           {moment(vacation.end_date).format('DD.MM.YYYY')}
         </td>
+        <td>{I18n.t('apps.birthday_templates.days', { count: vacation.business_days_count })}</td>
         <td className={statusClass}>{status}</td>
         <td className="trash">
           {vacation.status === 'unconfirmed' ? (
