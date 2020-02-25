@@ -163,6 +163,7 @@ pl:
       email_content: Wprowadź treść maila
       incoming_birthdays: 'Nadchodzące urodziny:'
       last_used: Ostatnio użyte
+      set_as_last_used: Ustaw jako ostatnio użyte
   common:
     rank: 'Ranking'
     add: Dodaj

@@ -163,6 +163,7 @@ en:
       email_content: Enter email content
       incoming_birthdays: 'Incoming birthdays:'
       last_used: Last used
+      set_as_last_used: Set as last used
   common:
     rank: 'Rank'
     add: Add
