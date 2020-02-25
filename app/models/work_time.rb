@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class WorkTime < ApplicationRecord
-  has_paper_trail skip: [:contract_name]
+  has_paper_trail skip: %i[contract_name updated_by_admin]
   belongs_to :project
   belongs_to :user
   belongs_to :creator, class_name: 'User'

@@ -37,7 +37,7 @@ module Api
       @work_time = find_work_time
       @work_time.assign_attributes(work_time_params)
       duration_was = @work_time.duration
-      if current_user.admin?
+      if current_user.admin? && @work_time.changed?
         @work_time.updated_by_admin = true if @work_time.user_id != current_user.id
       end
       @work_time = WorkTimeForm.new(work_time: @work_time)
