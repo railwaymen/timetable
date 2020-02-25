@@ -139,7 +139,7 @@ export default class ProjectWorkTimes extends React.Component {
               (currentUser.isSuperUser()
               && (
                 <Link to={this.reportsUrl()} className="btn btn-success">
-                Reports
+                  Reports
                 </Link>
               ))
             }

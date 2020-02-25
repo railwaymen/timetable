@@ -443,12 +443,12 @@ class EntryHistory extends React.Component {
       return (
         <div className="duration">
           <span className="work-time">{total}</span>
-/
+          /
           {shouldWork}
           <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_day')}>
             <i className="circle help icon small" />
           </span>
-/
+          /
           {mandatoryHours}
           <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_month')}>
             <i className="circle help icon small" />

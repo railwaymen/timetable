@@ -45,7 +45,7 @@ class Period extends React.Component {
         <td className={`period-duration-progress ${period.counted_duration >= period.duration ? 'period-completed' : 'in-progress'}`}>
           <span data-tooltip-bottom={`${((period.counted_duration / period.duration) * 100).toFixed(2)}%`}>
             {this.formatTime(period.counted_duration)}
-/
+            /
             {this.formatTime(period.duration)}
           </span>
         </td>

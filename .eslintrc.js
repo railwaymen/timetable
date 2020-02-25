@@ -21,31 +21,31 @@ module.exports = {
     'react',
   ],
   rules: {
+    'react/jsx-filename-extension': 'off',
+    'react/forbid-prop-types': 'off',
+    'react/no-did-update-set-state': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
-    'react/jsx-filename-extension': 'off',
     'jsx-a11y/anchor-has-content': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
-    'no-script-url': 'off',
-    'react/forbid-prop-types': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
     'jsx-a11y/label-has-for': 'off',
-    'camelcase': 'off',
-    'no-param-reassign': 'off',
     'jsx-a11y/no-autofocus ': 'off',
     'jsx-a11y/no-noninteractive-tabindex': 'off',
+    'no-script-url': 'off',
     'no-param-reassign': 'off',
-    'react/no-did-update-set-state': 'off',
+    'no-alert': 'off',
+    'camelcase': 'off',
 
     // TODO: enable these rules:
 
     'react/no-access-state-in-setstate': 'off',
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
-    'class-methods-use-this': 'off',
     'react/destructuring-assignment': 'off',
     'react/sort-comp': 'off',
     'react/no-unused-prop-types': 'off',
+    'class-methods-use-this': 'off',
     'max-len': ["error", { "code": 1000 }]
   },
   globals: {

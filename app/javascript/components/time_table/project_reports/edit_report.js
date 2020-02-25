@@ -513,7 +513,7 @@ export default class EditReport extends React.Component {
         <p>
           <strong>
             {moment(report.starts_at).format('MM.DD')}
--
+            -
             {moment(report.ends_at).format('MM.DD')}
           </strong>
         </p>
