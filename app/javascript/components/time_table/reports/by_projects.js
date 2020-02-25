@@ -101,13 +101,11 @@ class ByProjects extends Report {
           </div>
         </header>
         <div className="row row-eq-height">
-          {/* eslint-disable */}
-          { projects.map((project, index) => (
-            <div className="col-md-4">
-              <ReportProjectRecord key={index} reportRows={reports[project]} from={from} to={to} redirectTo={this.redirectTo} />
+          { projects.map((project) => (
+            <div key={project} className="col-md-4">
+              <ReportProjectRecord reportRows={reports[project]} from={from} to={to} redirectTo={this.redirectTo} />
             </div>
           )) }
-          {/* eslint-enable */}
         </div>
       </div>
     );
