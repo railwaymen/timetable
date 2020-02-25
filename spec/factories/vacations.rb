@@ -6,5 +6,6 @@ FactoryBot.define do
     start_date { Time.current.beginning_of_day.to_date }
     end_date { Time.current.beginning_of_day.to_date + 1.day }
     vacation_type { 'planned' }
+    business_days_count { rand(10) }
   end
 end

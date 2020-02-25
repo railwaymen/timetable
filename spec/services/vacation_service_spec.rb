@@ -17,12 +17,6 @@ RSpec.describe VacationService do
   end
 
   describe '#approve' do
-    it 'returns error when vacation is more than one month ahead' do
-      vacation = create(:vacation, end_date: Time.current.to_date + 32.days)
-      errors = [{ too_early: I18n.t('apps.staff.too_early') }]
-      expect(described_class.new(current_user: staff_manager, vacation: vacation).approve).to eql(response(vacation, nil, 'unconfirmed', errors))
-    end
-
     it 'returns error when thera are work times entries in vacation range' do
       create(:project, name: 'Vacation')
       vacation = create(:vacation)

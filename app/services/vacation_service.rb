@@ -12,8 +12,6 @@ class VacationService
   end
 
   def approve
-    return too_early_error if @vacation.start_date > 1.month.from_now || @vacation.end_date > 1.month.from_now
-
     work_times = vacation_work_times_service.work_times
     work_time_error(work_times.pluck(Arel.sql('date(work_times.starts_at)'), Arel.sql('date(work_times.ends_at)')).flatten.uniq) if work_times.any?
 
@@ -63,11 +61,6 @@ class VacationService
 
       raise ActiveRecord::Rollback unless @errors.empty?
     end
-  end
-
-  def too_early_error
-    @errors << { too_early: I18n.t('apps.staff.too_early') }
-    response
   end
 
   def vacation_work_times_service

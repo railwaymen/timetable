@@ -7,6 +7,7 @@ json.vacations do |vacation_element|
     json.end_date vacation.end_date
     json.vacation_type vacation.vacation_type
     json.status vacation.status
+    json.business_days_count vacation.business_days_count
   end
 end
 

@@ -7,7 +7,7 @@ class Vacation < ApplicationRecord
 
   validates :description, presence: true, if: :others?
   validates :vacation_sub_type, presence: true, if: :accepting_other_vacation, on: :update
-  validates :start_date, :end_date, :vacation_type, :status, :user_id, presence: true
+  validates :start_date, :end_date, :vacation_type, :status, :user_id, :business_days_count, presence: true
   validates :status, inclusion: { in: %w[unconfirmed declined approved accepted] }
   validates :vacation_type, inclusion: { in: %w[planned requested compassionate others] }
   validates :vacation_sub_type, inclusion: { in: %w[paternity parental upbringing unpaid rehabilitation illness care] }, allow_nil: true

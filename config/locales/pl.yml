@@ -164,6 +164,11 @@ pl:
       incoming_birthdays: 'Nadchodzące urodziny:'
       last_used: Ostatnio użyte
       set_as_last_used: Ustaw jako ostatnio użyte
+      days:
+        few: '%{count} dni'
+        many: '%{count} dni'
+        one: '%{count} dzień'
+        other: '%{count} dni'
   common:
     rank: 'Ranking'
     add: Dodaj
