@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import URI from 'urijs';
 import { NavLink } from 'react-router-dom';
 import moment from 'moment';
@@ -388,11 +387,5 @@ class Periods extends React.Component {
     );
   }
 }
-
-Periods.propTypes = {
-  periods: PropTypes.array,
-  userId: PropTypes.number,
-  user: PropTypes.object,
-};
 
 export default Periods;

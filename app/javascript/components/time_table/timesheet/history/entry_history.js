@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import URI from 'urijs';
 import _ from 'lodash';
@@ -565,9 +564,5 @@ class EntryHistory extends React.Component {
     );
   }
 }
-
-EntryHistory.propTypes = {
-  workHours: PropTypes.array,
-};
 
 export default EntryHistory;

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import URI from 'urijs';
 import { NavLink } from 'react-router-dom';
 import User from './user';
@@ -73,9 +72,5 @@ class Users extends React.Component {
     );
   }
 }
-
-Users.propTypes = {
-  users: PropTypes.array,
-};
 
 export default Users;

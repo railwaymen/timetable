@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import _ from 'lodash';
 import * as Api from '../../shared/api';
@@ -86,9 +85,5 @@ class Projects extends React.Component {
     );
   }
 }
-
-Projects.propTypes = {
-  projectsStats: PropTypes.object,
-};
 
 export default Projects;

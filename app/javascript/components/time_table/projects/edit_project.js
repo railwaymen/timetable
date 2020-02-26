@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink, Redirect } from 'react-router-dom';
 import * as Api from '../../shared/api';
 
@@ -176,11 +175,5 @@ class EditProject extends React.Component {
     return this.renderPreloader();
   }
 }
-
-
-EditProject.propTypes = {
-  project: PropTypes.object,
-  users: PropTypes.array,
-};
 
 export default EditProject;

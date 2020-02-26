@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Entry from './entry';
 import EntryHistory from './history/entry_history';
@@ -64,11 +63,5 @@ class Timesheet extends React.Component {
     );
   }
 }
-
-Timesheet.propTypes = {
-  projects: PropTypes.array,
-  tags: PropTypes.array,
-  tags_disabled: PropTypes.bool,
-};
 
 export default Timesheet;

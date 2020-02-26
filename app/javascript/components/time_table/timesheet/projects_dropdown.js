@@ -140,9 +140,6 @@ class ProjectsDropdown extends React.Component {
 ProjectsDropdown.propTypes = {
   projects: PropTypes.array,
   selectedProject: PropTypes.object,
-  isExpanded: PropTypes.bool,
-  filter: PropTypes.string,
-  currentIndex: PropTypes.number,
 };
 
 export default ProjectsDropdown;

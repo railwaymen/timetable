@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import * as Api from '../../shared/api';
 import Project from './project';
@@ -75,10 +74,5 @@ class ProjectsList extends React.Component {
     );
   }
 }
-
-ProjectsList.propTypes = {
-  projects: PropTypes.array,
-  visible: PropTypes.string,
-};
 
 export default ProjectsList;

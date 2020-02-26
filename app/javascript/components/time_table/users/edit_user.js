@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import * as Api from '../../shared/api';
@@ -199,9 +198,5 @@ class EditUser extends React.Component {
     );
   }
 }
-
-EditUser.propTypes = {
-  user: PropTypes.object,
-};
 
 export default EditUser;

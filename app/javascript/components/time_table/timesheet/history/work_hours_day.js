@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
 import WorkHours from './work_hours';
@@ -86,10 +85,5 @@ class WorkHoursDay extends React.Component {
     );
   }
 }
-
-WorkHoursDay.propTypes = {
-  workHours: PropTypes.array,
-  total: PropTypes.string,
-};
 
 export default WorkHoursDay;

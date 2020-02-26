@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import URI from 'urijs';
 import AcceptedVacations from './accepted_or_declined_vacations';
@@ -140,11 +139,5 @@ class VacationApplications extends React.Component {
     );
   }
 }
-
-VacationApplications.propTypes = {
-  acceptedOrDeclinedVacationsList: PropTypes.array,
-  unconfirmedVacationsList: PropTypes.array,
-  showAll: PropTypes.bool,
-};
 
 export default VacationApplications;

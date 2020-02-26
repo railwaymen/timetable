@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import * as Api from '../../shared/api';
 
@@ -165,12 +164,5 @@ class EntryHistory extends React.Component {
     );
   }
 }
-
-EntryHistory.propTypes = {
-  vacations: PropTypes.array,
-  years: PropTypes.array,
-  selectedYear: PropTypes.number,
-  availableVacationDays: PropTypes.number,
-};
 
 export default EntryHistory;
