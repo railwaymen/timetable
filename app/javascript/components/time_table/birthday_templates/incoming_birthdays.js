@@ -28,7 +28,7 @@ class IncomingBirthdays extends React.Component {
 
   renderIncomingBirthday(incomingBirthday) {
     return (
-      <div key={incomingBirthday.id}>
+      <div key={`${incomingBirthday.id}:${incomingBirthday.birthday_date}`}>
         <span>
           {`${incomingBirthday.user_full_name}: `}
         </span>
