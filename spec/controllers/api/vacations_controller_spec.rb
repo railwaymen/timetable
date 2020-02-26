@@ -267,7 +267,7 @@ RSpec.describe Api::VacationsController do
       get :generate_csv, format: :csv
       expect(response.code).to eql('200')
       expect(response.header['Content-Type']).to eql('text/csv')
-      expect(response.header['Content-Disposition']).to eql('attachment; filename="vacations_report.csv"')
+      expect(response.header['Content-Disposition']).to include('attachment; filename="vacations_report.csv"')
     end
   end
 
@@ -323,7 +323,7 @@ RSpec.describe Api::VacationsController do
       get :generate_yearly_report, format: :csv
       expect(response.code).to eql('200')
       expect(response.header['Content-Type']).to eql('text/csv')
-      expect(response.header['Content-Disposition']).to eql('attachment; filename="vacations_yearly_report.csv"')
+      expect(response.header['Content-Disposition']).to include('attachment; filename="vacations_yearly_report.csv"')
     end
   end
 end
