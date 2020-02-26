@@ -14,12 +14,12 @@ addons:
   chrome: stable
 
 script:
-  - bundle exec rake 
+  - bundle exec rake
   - yarn lint
 
 before_install:
   - gem install bundler:2.1.4
-  - nvm install v11.4.0
+  - nvm install v13.9.0
 
 before_script:
   - yarn install
