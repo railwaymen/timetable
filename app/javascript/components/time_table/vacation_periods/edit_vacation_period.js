@@ -50,21 +50,25 @@ class EditVacationPeriod extends React.Component {
   }
 
   onChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
-        [e.target.name]: e.target.value,
+        ...prevState.period,
+        [name]: value,
       },
-    });
+    }));
   }
 
   onCheckboxChange(e) {
-    this.setState({
+    const { name } = e.target;
+
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
-        [e.target.name]: !this.state.period[e.target.name],
+        ...prevState.period,
+        [name]: !prevState.period[name],
       },
-    });
+    }));
   }
 
   cancelUrl() {

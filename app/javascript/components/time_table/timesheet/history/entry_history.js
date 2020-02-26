@@ -300,15 +300,15 @@ class EntryHistory extends React.Component {
         groupedWorkHours: {},
       });
     } else {
-      this.setState({
+      this.setState((prevState) => ({
         daysKeys: [],
-        groupedWorkHours: _.groupBy(this.state.workHours, (workHours) => (
+        groupedWorkHours: _.groupBy(prevState.workHours, (workHours) => (
           moment(workHours.starts_at).format('YYYYMMDD')
         )),
-      }, () => {
-        this.setState({
-          daysKeys: _.sortBy(Object.keys(this.state.groupedWorkHours), (date) => date).reverse(),
-        });
+      }), () => {
+        this.setState((prevState) => ({
+          daysKeys: _.sortBy(Object.keys(prevState.groupedWorkHours), (date) => date).reverse(),
+        }));
       });
     }
   }
@@ -318,9 +318,9 @@ class EntryHistory extends React.Component {
   }
 
   totalWorkHours() {
-    this.setState({
-      total: displayDuration(_.sumBy(this.state.workHours, (w) => w.duration)),
-    });
+    this.setState((prevState) => ({
+      total: displayDuration(_.sumBy(prevState.workHours, (w) => w.duration)),
+    }));
   }
 
   onProjectFilter(e) {

@@ -58,11 +58,11 @@ class WorkHours extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({
-      starts_at_hours: moment(this.state.workHours.starts_at).format('HH:mm'),
-      ends_at_hours: moment(this.state.workHours.ends_at).format('HH:mm'),
-      date: moment(this.state.workHours.starts_at).format('DD/MM/YYYY'),
-    });
+    this.setState((prevState) => ({
+      starts_at_hours: moment(prevState.workHours.starts_at).format('HH:mm'),
+      ends_at_hours: moment(prevState.workHours.ends_at).format('HH:mm'),
+      date: moment(prevState.workHours.starts_at).format('DD/MM/YYYY'),
+    }));
   }
 
   componentDidUpdate(prevProps) {
@@ -106,12 +106,14 @@ class WorkHours extends React.Component {
   }
 
   onChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       workHours: {
-        ...this.state.workHours,
-        [e.target.name]: e.target.value,
+        ...prevState.workHours,
+        [name]: value,
       },
-    });
+    }));
   }
 
   onChangeProject(e) {
@@ -122,13 +124,13 @@ class WorkHours extends React.Component {
   changeProject(project) {
     this.toggleProjectEdit();
     if (project.id !== this.state.selectedProject) {
-      this.setState({
+      this.setState((prevState) => ({
         workHours: {
-          ...this.state.workHours,
+          ...prevState.workHours,
           project,
           project_id: project.id,
         },
-      }, () => {
+      }), () => {
         this.saveWorkHours();
       });
     }
@@ -185,12 +187,12 @@ class WorkHours extends React.Component {
   onTagChange(tag) {
     if (this.props.tags_disabled) return;
 
-    this.setState({
+    this.setState((prevState) => ({
       workHours: {
-        ...this.state.workHours,
+        ...prevState.workHours,
         tag,
       },
-    }, () => {
+    }), () => {
       this.saveWorkHours();
     });
   }

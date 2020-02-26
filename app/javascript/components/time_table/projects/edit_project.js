@@ -61,22 +61,27 @@ class EditProject extends React.Component {
   }
 
   onChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       project: {
-        ...this.state.project,
-        [e.target.name]: e.target.value,
+        ...prevState.project,
+        [name]: value,
       },
-    });
+    }));
   }
 
   onCheckboxChange(e) {
-    const { project } = this.state;
+    this.setState((prevState) => {
+      const { project } = prevState;
+      const { name } = e.target;
 
-    this.setState({
-      project: {
-        ...project,
-        [e.target.name]: !project[e.target.name],
-      },
+      return {
+        project: {
+          ...project,
+          [name]: !project[name],
+        },
+      };
     });
   }
 

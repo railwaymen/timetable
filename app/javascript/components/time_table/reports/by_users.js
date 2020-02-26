@@ -70,9 +70,9 @@ class ByUsers extends Report {
           to,
           list,
         }, () => {
-          this.setState({
-            users: Object.keys(this.state.reports),
-          });
+          this.setState((prevState) => ({
+            users: Object.keys(prevState.reports),
+          }));
         });
       });
   }

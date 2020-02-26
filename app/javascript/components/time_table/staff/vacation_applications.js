@@ -121,9 +121,9 @@ class VacationApplications extends React.Component {
     const {
       start_date, end_date, user_id, sort,
     } = URI.parseQuery(original.query());
-    this.setState({
-      [name]: !this.state[name],
-    }, () => {
+    this.setState((prevState) => ({
+      [name]: !prevState[name],
+    }), () => {
       this.getVacationApplications({
         start_date, end_date, user_id, sort,
       });

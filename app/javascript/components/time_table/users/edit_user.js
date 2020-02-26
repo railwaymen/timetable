@@ -44,21 +44,25 @@ class EditUser extends React.Component {
   }
 
   onChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       user: {
-        ...this.state.user,
-        [e.target.name]: e.target.value,
+        ...prevState.user,
+        [name]: value,
       },
-    });
+    }));
   }
 
   onCheckboxChange(e) {
-    this.setState({
+    const { name } = e.target;
+
+    this.setState((prevState) => ({
       user: {
-        ...this.state.user,
-        [e.target.name]: !this.state.user[e.target.name],
+        ...prevState.user,
+        [name]: !prevState.user[name],
       },
-    });
+    }));
   }
 
   onSubmit(e) {

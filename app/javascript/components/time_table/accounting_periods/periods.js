@@ -143,12 +143,14 @@ class Periods extends React.Component {
   }
 
   onGeneratePeriodsChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       generatePeriods: {
-        ...this.state.generatePeriods,
-        [e.target.name]: e.target.value,
+        ...prevState.generatePeriods,
+        [name]: value,
       },
-    });
+    }));
   }
 
   recountPeriods() {
@@ -261,11 +263,11 @@ class Periods extends React.Component {
     Api.makeDeleteRequest({ url: `/api/accounting_periods/${id}` })
       .then((response) => {
         if (parseInt(response.status, 10) === 204) {
-          this.setState({
+          this.setState((prevState) => ({
             periods: {
-              accounting_periods: this.state.periods.accounting_periods.filter((period) => (period.id !== id)),
+              accounting_periods: prevState.periods.accounting_periods.filter((period) => (period.id !== id)),
             },
-          });
+          }));
         } else {
           alert('Error while trying to remove accounting period');
         }

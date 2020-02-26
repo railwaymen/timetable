@@ -261,16 +261,17 @@ class Entry extends React.Component {
   }
 
   recountTime(stateCallback) {
-    const formattedStartsAt = this.inclusiveParse(this.state.starts_at);
-    const formattedEndsAt = this.inclusiveParse(this.state.ends_at);
+    this.setState((prevState) => {
+      const formattedStartsAt = this.inclusiveParse(prevState.starts_at);
+      const formattedEndsAt = this.inclusiveParse(prevState.ends_at);
+      const duration = prevState.project.count_duration ? formattedEndsAt.diff(formattedStartsAt) : 0;
 
-    const duration = this.state.project.count_duration ? formattedEndsAt.diff(formattedStartsAt) : 0;
-
-    this.setState({
-      duration,
-      durationHours: moment.utc(duration).format('HH:mm'),
-      starts_at: this.formattedHoursAndMinutes(formattedStartsAt),
-      ends_at: this.formattedHoursAndMinutes(formattedEndsAt),
+      return {
+        duration,
+        durationHours: moment.utc(duration).format('HH:mm'),
+        starts_at: this.formattedHoursAndMinutes(formattedStartsAt),
+        ends_at: this.formattedHoursAndMinutes(formattedEndsAt),
+      };
     }, () => {
       this.removeErrorsFor('duration', stateCallback);
     });

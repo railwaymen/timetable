@@ -46,12 +46,12 @@ class EditPeriod extends React.Component {
     const pathId = this.state.periodId;
     const periodId = Number.isNaN(pathId) ? null : pathId;
 
-    this.setState({
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
+        ...prevState.period,
         user_id: userId,
       },
-    });
+    }));
 
     if (periodId) {
       this.getPeriod(periodId, userId);
@@ -65,12 +65,12 @@ class EditPeriod extends React.Component {
   getPeriodPosition(userId) {
     Api.makeGetRequest({ url: `/api/accounting_periods/next_position?user_id=${userId}` })
       .then((response) => {
-        this.setState({
+        this.setState((prevState) => ({
           period: {
-            ...this.state.period,
+            ...prevState.period,
             position: response.data,
           },
-        });
+        }));
       });
   }
 
@@ -106,23 +106,25 @@ class EditPeriod extends React.Component {
   }
 
   onChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
-        [e.target.name]: e.target.value,
+        ...prevState.period,
+        [name]: value,
       },
-    });
+    }));
   }
 
   onCheckboxChange(e) {
     const { name } = e.target;
 
-    this.setState({
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
-        [name]: !this.state.period[name],
+        ...prevState.period,
+        [name]: !prevState.period[name],
       },
-    });
+    }));
   }
 
   request(period) {
@@ -174,21 +176,21 @@ class EditPeriod extends React.Component {
   }
 
   onStartsAtChange(time) {
-    this.setState({
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
+        ...prevState.period,
         starts_at: time,
       },
-    });
+    }));
   }
 
   onEndsAtChange(time) {
-    this.setState({
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
+        ...prevState.period,
         ends_at: time,
       },
-    });
+    }));
   }
 
   userId() {

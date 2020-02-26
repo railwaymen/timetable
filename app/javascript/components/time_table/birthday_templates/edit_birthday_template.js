@@ -39,13 +39,13 @@ class EditBirthdayTemplate extends React.Component {
   }
 
   onChange(e) {
-    const { name } = e.target;
-    this.setState({
+    const { name, value } = e.target;
+    this.setState((prevState) => ({
       birthdayTemplate: {
-        ...this.state.birthdayTemplate,
-        [name]: e.target.value,
+        ...prevState.birthdayTemplate,
+        [name]: value,
       },
-    }, () => {
+    }), () => {
       this.setState(({ errors }) => {
         delete errors[name];
         return { errors };

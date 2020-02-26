@@ -28,13 +28,11 @@ class ByProjects extends Report {
     const original = URI(window.location.href);
     let { from, to, order } = params;
 
-    /* eslint-disable */
     if (!from || !to) {
       from = this.state.from;
       to = this.state.to;
     }
     if (!order) order = this.state.order;
-    /* eslint-enable */
 
     const prepareParams = { from, to, sort: order };
 
@@ -60,9 +58,9 @@ class ByProjects extends Report {
           from,
           to,
         }, () => {
-          this.setState({
-            projects: Object.keys(this.state.reports),
-          });
+          this.setState((prevState) => ({
+            projects: Object.keys(prevState.reports),
+          }));
         });
       });
   }

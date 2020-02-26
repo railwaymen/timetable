@@ -41,7 +41,6 @@ module.exports = {
 
     // TODO: enable these rules:
 
-    'react/no-access-state-in-setstate': 'off',
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
     'react/destructuring-assignment': 'off',
