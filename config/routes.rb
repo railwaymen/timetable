@@ -3,7 +3,7 @@
 require 'sidekiq/web'
 require 'sidekiq-status/web'
 
-TimeTable::Application.routes.draw do
+Rails.application.routes.draw do
   root to: 'home#index'
   devise_for :users
   authenticate :user, ->(u) { u.admin? } do
