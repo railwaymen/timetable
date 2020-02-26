@@ -9,10 +9,10 @@ class BirthdayTemplates extends React.Component {
     super(props);
 
     this.getBirthdayTemplates = this.getBirthdayTemplates.bind(this);
-  }
 
-  state = {
-    birthdayTemplates: [],
+    this.state = {
+      birthdayTemplates: [],
+    };
   }
 
   componentDidMount() {

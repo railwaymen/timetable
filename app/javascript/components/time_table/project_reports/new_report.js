@@ -9,20 +9,21 @@ import DateRangeFilter from '../../shared/date_range_filter';
 export default class NewReport extends React.Component {
   static roles = ['developer', 'qa', 'ux', 'pm', 'ignored'];
 
-  state = {
-    projectId: parseInt(this.props.match.params.projectId, 10),
-    startsAt: moment().startOf('month'),
-    endsAt: moment().endOf('month'),
-    userRoles: [],
-    currency: '',
-    name: '',
-    collisions: [],
-    redirectTo: null,
-  }
-
   constructor(props) {
     super(props);
+
     bindAll(this, ['onRangeStartChange', 'onRangeEndChange', 'getRoles', 'onSubmit', 'onFieldChange', 'checkForCollision']);
+
+    this.state = {
+      projectId: parseInt(this.props.match.params.projectId, 10),
+      startsAt: moment().startOf('month'),
+      endsAt: moment().endOf('month'),
+      userRoles: [],
+      currency: '',
+      name: '',
+      collisions: [],
+      redirectTo: null,
+    };
   }
 
   componentDidMount() {

@@ -11,13 +11,13 @@ export default class ProjectReports extends React.Component {
     super(props);
 
     this.onDelete = this.onDelete.bind(this);
-  }
 
-  state = {
-    projectId: parseInt(this.props.match.params.projectId, 10),
-    reports: [],
-    from: '',
-    to: '',
+    this.state = {
+      projectId: parseInt(this.props.match.params.projectId, 10),
+      reports: [],
+      from: '',
+      to: '',
+    };
   }
 
   componentDidMount() {

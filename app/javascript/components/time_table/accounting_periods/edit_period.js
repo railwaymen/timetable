@@ -8,10 +8,6 @@ import { defaultDatePickerProps } from '../../shared/helpers';
 import * as Api from '../../shared/api';
 
 class EditPeriod extends React.Component {
-  static propTypes = {
-    period: PropTypes.object,
-  }
-
   constructor(props) {
     super(props);
 
@@ -24,22 +20,23 @@ class EditPeriod extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onStartsAtChange = this.onStartsAtChange.bind(this);
     this.onEndsAtChange = this.onEndsAtChange.bind(this);
+
+    this.state = {
+      period: {
+        ends_at: null,
+        starts_at: null,
+        hours: '168',
+        minutes: '00',
+        note: '',
+        position: '1',
+      },
+      errors: {},
+      users: [],
+      redirectToReferer: undefined,
+      periodId: parseInt(this.props.match.params.id, 10),
+    };
   }
 
-  state = {
-    period: {
-      ends_at: null,
-      starts_at: null,
-      hours: '168',
-      minutes: '00',
-      note: '',
-      position: '1',
-    },
-    errors: {},
-    users: [],
-    redirectToReferer: undefined,
-    periodId: parseInt(this.props.match.params.id, 10),
-  }
 
   componentDidMount() {
     const userId = this.userId();
@@ -334,5 +331,9 @@ class EditPeriod extends React.Component {
     return this.renderPreloader();
   }
 }
+
+EditPeriod.propTypes = {
+  period: PropTypes.object,
+};
 
 export default EditPeriod;

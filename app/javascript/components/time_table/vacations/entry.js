@@ -19,21 +19,14 @@ class Entry extends React.Component {
     this.validate = this.validate.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onUserSelectFilterChange = this.onUserSelectFilterChange.bind(this);
-  }
 
-  static propTypes = {
-    decription: PropTypes.string,
-    startDate: PropTypes.instanceOf(Date),
-    endDate: PropTypes.instanceOf(Date),
-    vacationType: PropTypes.string,
-  }
-
-  state = {
-    description: undefined,
-    startDate: moment().format('DD/MM/YYYY'),
-    endDate: moment().format('DD/MM/YYYY'),
-    vacationType: 'planned',
-    errors: [],
+    this.state = {
+      description: undefined,
+      startDate: moment().format('DD/MM/YYYY'),
+      endDate: moment().format('DD/MM/YYYY'),
+      vacationType: 'planned',
+      errors: [],
+    };
   }
 
   componentDidMount() {
@@ -251,5 +244,12 @@ class Entry extends React.Component {
     );
   }
 }
+
+Entry.propTypes = {
+  decription: PropTypes.string,
+  startDate: PropTypes.instanceOf(Date),
+  endDate: PropTypes.instanceOf(Date),
+  vacationType: PropTypes.string,
+};
 
 export default Entry;

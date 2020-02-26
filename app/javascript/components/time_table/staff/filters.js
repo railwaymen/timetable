@@ -14,17 +14,13 @@ class Filters extends React.Component {
     this.onUserSelectFilterChange = this.onUserSelectFilterChange.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
-  }
 
-  static propTypes = {
-    users: PropTypes.array,
-  }
-
-  state = {
-    users: [],
-    selectedUser: '',
-    startDate: moment().startOf('month').format('DD/MM/YYYY'),
-    endDate: null,
+    this.state = {
+      users: [],
+      selectedUser: '',
+      startDate: moment().startOf('month').format('DD/MM/YYYY'),
+      endDate: null,
+    };
   }
 
   componentDidMount() {
@@ -149,5 +145,9 @@ class Filters extends React.Component {
     );
   }
 }
+
+Filters.propTypes = {
+  users: PropTypes.array,
+};
 
 export default Filters;

@@ -12,15 +12,10 @@ class WorkHoursDay extends React.Component {
     this.totalDurationViaProps = this.totalDurationViaProps.bind(this);
     this.increaseWorkHours = this.increaseWorkHours.bind(this);
     this.updateWorkHours = this.updateWorkHours.bind(this);
-  }
 
-  static propTypes = {
-    workHours: PropTypes.array,
-    total: PropTypes.string,
-  }
-
-  state = {
-    total: '00:00',
+    this.state = {
+      total: '00:00',
+    };
   }
 
   componentDidMount() {
@@ -91,5 +86,10 @@ class WorkHoursDay extends React.Component {
     );
   }
 }
+
+WorkHoursDay.propTypes = {
+  workHours: PropTypes.array,
+  total: PropTypes.string,
+};
 
 export default WorkHoursDay;

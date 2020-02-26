@@ -12,25 +12,20 @@ class EditProject extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onCheckboxChange = this.onCheckboxChange.bind(this);
     this.getUsers = this.getUsers.bind(this);
-  }
 
-  static propTypes = {
-    project: PropTypes.object,
-    users: PropTypes.array,
-  }
-
-  state = {
-    project: {
-      id: undefined,
-      name: undefined,
-      color: '0c0c0c',
-      leader_id: '',
-      work_times_allows_task: true,
-      active: true,
-    },
-    users: [],
-    projectId: parseInt(this.props.match.params.id, 10),
-    redirectToReferer: undefined,
+    this.state = {
+      project: {
+        id: undefined,
+        name: undefined,
+        color: '0c0c0c',
+        leader_id: '',
+        work_times_allows_task: true,
+        active: true,
+      },
+      users: [],
+      projectId: parseInt(this.props.match.params.id, 10),
+      redirectToReferer: undefined,
+    };
   }
 
   componentDidMount() {
@@ -181,5 +176,11 @@ class EditProject extends React.Component {
     return this.renderPreloader();
   }
 }
+
+
+EditProject.propTypes = {
+  project: PropTypes.object,
+  users: PropTypes.array,
+};
 
 export default EditProject;

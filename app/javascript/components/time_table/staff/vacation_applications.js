@@ -15,19 +15,13 @@ class VacationApplications extends React.Component {
     this.addToAcceptedOrDeclinedVacationList = this.addToAcceptedOrDeclinedVacationList.bind(this);
     this.onShowButtonChange = this.onShowButtonChange.bind(this);
     this.removeFromUnconfirmedVacationList = this.removeFromUnconfirmedVacationList.bind(this);
-  }
 
-  static propTypes = {
-    acceptedOrDeclinedVacationsList: PropTypes.array,
-    unconfirmedVacationsList: PropTypes.array,
-    showAll: PropTypes.bool,
-  }
-
-  state = {
-    acceptedOrDeclinedVacationsList: [],
-    unconfirmedVacationsList: [],
-    showAll: false,
-    showDeclined: false,
+    this.state = {
+      acceptedOrDeclinedVacationsList: [],
+      unconfirmedVacationsList: [],
+      showAll: false,
+      showDeclined: false,
+    };
   }
 
   componentDidMount() {
@@ -146,5 +140,11 @@ class VacationApplications extends React.Component {
     );
   }
 }
+
+VacationApplications.propTypes = {
+  acceptedOrDeclinedVacationsList: PropTypes.array,
+  unconfirmedVacationsList: PropTypes.array,
+  showAll: PropTypes.bool,
+};
 
 export default VacationApplications;

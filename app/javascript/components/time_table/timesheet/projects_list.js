@@ -9,11 +9,6 @@ class ProjectsList extends React.Component {
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
-  static propTypes = {
-    projects: PropTypes.array,
-    currentProject: PropTypes.object,
-  }
-
   onChangeProject(e) {
     this.props.onChangeProject(e);
   }
@@ -37,5 +32,10 @@ class ProjectsList extends React.Component {
     );
   }
 }
+
+ProjectsList.propTypes = {
+  projects: PropTypes.array,
+  currentProject: PropTypes.object,
+};
 
 export default ProjectsList;

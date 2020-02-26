@@ -11,17 +11,17 @@ import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
 
 class ByProjects extends Report {
-  static propTypes = {
-    reports: PropTypes.array,
-  }
+  constructor(props) {
+    super(props);
 
-  state = {
-    reports: {},
-    projects: [],
-    from: moment().startOf('month').format(),
-    to: moment().endOf('month').format(),
-    redirectToReferer: undefined,
-    order: 'duration',
+    this.state = {
+      reports: {},
+      projects: [],
+      from: moment().startOf('month').format(),
+      to: moment().endOf('month').format(),
+      redirectToReferer: undefined,
+      order: 'duration',
+    };
   }
 
   getReports(params = {}) {
@@ -109,5 +109,9 @@ class ByProjects extends Report {
     );
   }
 }
+
+ByProjects.propTypes = {
+  reports: PropTypes.array,
+};
 
 export default ByProjects;

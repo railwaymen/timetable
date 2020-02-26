@@ -7,10 +7,10 @@ class AcceptedOrDeclinedVacations extends React.Component {
     super(props);
 
     this.onSortChange = this.onSortChange.bind(this);
-  }
 
-  state = {
-    sort: 'asc',
+    this.state = {
+      sort: 'asc',
+    };
   }
 
   componentDidMount() {

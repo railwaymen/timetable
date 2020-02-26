@@ -6,10 +6,10 @@ class IncomingBirthdays extends React.Component {
     super(props);
 
     this.getIncomingBirthdays = this.getIncomingBirthdays.bind(this);
-  }
 
-  state = {
-    incomingBirthdays: [],
+    this.state = {
+      incomingBirthdays: [],
+    };
   }
 
   componentDidMount() {

@@ -22,26 +22,20 @@ class Periods extends React.Component {
 
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onNextUserChange = this.onNextUserChange.bind(this);
-  }
 
-  static propTypes = {
-    periods: PropTypes.array,
-    userId: PropTypes.number,
-    user: PropTypes.object,
-  }
-
-  state = {
-    periods: {
-      accounting_periods: [],
-      total_count: 0,
-    },
-    generatePeriods: {
-      periods_count: undefined,
-      month: moment().format('MM'),
-      year: moment().format('YYYY'),
-    },
-    userId: undefined,
-    user: {},
+    this.state = {
+      periods: {
+        accounting_periods: [],
+        total_count: 0,
+      },
+      generatePeriods: {
+        periods_count: undefined,
+        month: moment().format('MM'),
+        year: moment().format('YYYY'),
+      },
+      userId: undefined,
+      user: {},
+    };
   }
 
   componentDidMount() {
@@ -394,5 +388,11 @@ class Periods extends React.Component {
     );
   }
 }
+
+Periods.propTypes = {
+  periods: PropTypes.array,
+  userId: PropTypes.number,
+  user: PropTypes.object,
+};
 
 export default Periods;

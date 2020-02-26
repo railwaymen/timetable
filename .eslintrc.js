@@ -45,8 +45,6 @@ module.exports = {
     'react/require-default-props': 'off',
     'react/destructuring-assignment': 'off',
     'react/sort-comp': 'off',
-    'react/static-property-placement': 'off',
-    'react/state-in-constructor': 'off',
     'react/no-unused-prop-types': 'off',
     'class-methods-use-this': 'off',
     'max-len': ["error", { "code": 1000 }]

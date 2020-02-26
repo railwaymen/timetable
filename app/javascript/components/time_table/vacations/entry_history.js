@@ -12,22 +12,15 @@ class EntryHistory extends React.Component {
     this.onSelectChange = this.onSelectChange.bind(this);
     this.renderUsedVacationDays = this.renderUsedVacationDays.bind(this);
     this.onCollappsibleClick = this.onCollappsibleClick.bind(this);
-  }
 
-  static propTypes = {
-    vacations: PropTypes.array,
-    years: PropTypes.array,
-    selectedYear: PropTypes.number,
-    availableVacationDays: PropTypes.number,
-  }
-
-  state = {
-    vacations: [],
-    years: [parseInt(moment().year(), 10)],
-    selectedYear: undefined,
-    availableVacationDays: 0,
-    usedVacationDays: {},
-    usedVacationsExpanded: false,
+    this.state = {
+      vacations: [],
+      years: [parseInt(moment().year(), 10)],
+      selectedYear: undefined,
+      availableVacationDays: 0,
+      usedVacationDays: {},
+      usedVacationsExpanded: false,
+    };
   }
 
   componentDidMount() {
@@ -172,5 +165,12 @@ class EntryHistory extends React.Component {
     );
   }
 }
+
+EntryHistory.propTypes = {
+  vacations: PropTypes.array,
+  years: PropTypes.array,
+  selectedYear: PropTypes.number,
+  availableVacationDays: PropTypes.number,
+};
 
 export default EntryHistory;

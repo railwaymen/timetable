@@ -10,21 +10,17 @@ class Users extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.getUsers = this.getUsers.bind(this);
+
+    this.state = {
+      users: [],
+      visible: 'active',
+    };
   }
 
   componentDidMount() {
     const base = URI(window.location.href);
     const params = base.query(true);
     this.getUsers(params.filter);
-  }
-
-  static propTypes = {
-    users: PropTypes.array,
-  }
-
-  state = {
-    users: [],
-    visible: 'active',
   }
 
   getUsers(visible) {
@@ -77,5 +73,9 @@ class Users extends React.Component {
     );
   }
 }
+
+Users.propTypes = {
+  users: PropTypes.array,
+};
 
 export default Users;

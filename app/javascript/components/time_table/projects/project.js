@@ -3,10 +3,6 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
 class Project extends React.Component {
-  static propTypes = {
-    project: PropTypes.object,
-  }
-
   renderButtons() {
     if (currentUser.canManageProject(this.props.project)) {
       return (
@@ -47,5 +43,9 @@ class Project extends React.Component {
     );
   }
 }
+
+Project.propTypes = {
+  project: PropTypes.object,
+};
 
 export default Project;

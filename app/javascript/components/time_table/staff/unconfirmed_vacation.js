@@ -15,15 +15,15 @@ class UnconfirmedVacation extends React.Component {
     this.onAcceptClick = this.onAcceptClick.bind(this);
     this.onUndoneClick = this.onUndoneClick.bind(this);
     this.renderInteractions = this.renderInteractions.bind(this);
-  }
 
-  state = {
-    vacation: this.props.vacation,
-    vacationSubType: this.props.vacation.vacation_sub_type ? this.props.vacation.vacation_sub_type : '',
-    vacationApprovers: this.props.vacation.approvers ? this.props.vacation.approvers.split(',').filter(Boolean) : [],
-    vacationDecliners: this.props.vacation.decliners ? this.props.vacation.decliners.split(',').filter(Boolean) : [],
-    interacted: this.props.vacation.interacted,
-    errors: [],
+    this.state = {
+      vacation: this.props.vacation,
+      vacationSubType: this.props.vacation.vacation_sub_type ? this.props.vacation.vacation_sub_type : '',
+      vacationApprovers: this.props.vacation.approvers ? this.props.vacation.approvers.split(',').filter(Boolean) : [],
+      vacationDecliners: this.props.vacation.decliners ? this.props.vacation.decliners.split(',').filter(Boolean) : [],
+      interacted: this.props.vacation.interacted,
+      errors: [],
+    };
   }
 
   onDeclineClick() {

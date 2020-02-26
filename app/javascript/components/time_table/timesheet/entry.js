@@ -31,30 +31,20 @@ class Entry extends React.Component {
     this.onTimeFocus = this.onTimeFocus.bind(this);
     this.onTimeBlur = this.onTimeBlur.bind(this);
 
+    this.state = {
+      body: undefined,
+      duration: 0,
+      task: '',
+      tag: 'dev',
+      project: {},
+      starts_at: moment().format('HH:mm'),
+      ends_at: moment().format('HH:mm'),
+      durationHours: '00:00',
+      date: moment().format('DD/MM/YYYY'),
+      errors: [],
+    };
+
     this.startInputRef = React.createRef();
-  }
-
-  static propTypes = {
-    body: PropTypes.string,
-    duration: PropTypes.number,
-    task: PropTypes.string,
-    tag: PropTypes.string,
-    project: PropTypes.object,
-    starts_at: PropTypes.string,
-    ends_at: PropTypes.string,
-  }
-
-  state = {
-    body: undefined,
-    duration: 0,
-    task: '',
-    tag: 'dev',
-    project: {},
-    starts_at: moment().format('HH:mm'),
-    ends_at: moment().format('HH:mm'),
-    durationHours: '00:00',
-    date: moment().format('DD/MM/YYYY'),
-    errors: [],
   }
 
   onChange(e) {
@@ -360,5 +350,15 @@ class Entry extends React.Component {
     );
   }
 }
+
+Entry.propTypes = {
+  body: PropTypes.string,
+  duration: PropTypes.number,
+  task: PropTypes.string,
+  tag: PropTypes.string,
+  project: PropTypes.object,
+  starts_at: PropTypes.string,
+  ends_at: PropTypes.string,
+};
 
 export default Entry;

@@ -41,20 +41,16 @@ class WorkHours extends React.Component {
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onFilterKeyPress = this.onFilterKeyPress.bind(this);
 
+    this.state = {
+      workHours: this.props.workHours,
+      editing: false,
+      projectEditable: false,
+      tagEditable: false,
+      errors: [],
+      filter: '',
+    };
+
     this.searchRef = React.createRef();
-  }
-
-  static propTypes = {
-    workHours: PropTypes.object,
-  }
-
-  state = {
-    workHours: this.props.workHours,
-    editing: false,
-    projectEditable: false,
-    tagEditable: false,
-    errors: [],
-    filter: '',
   }
 
   componentDidMount() {
@@ -465,5 +461,9 @@ class WorkHours extends React.Component {
     );
   }
 }
+
+WorkHours.propTypes = {
+  workHours: PropTypes.object,
+};
 
 export default WorkHours;

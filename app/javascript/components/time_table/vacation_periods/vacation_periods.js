@@ -13,12 +13,12 @@ class VacationPeriods extends React.Component {
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onGenerateClick = this.onGenerateClick.bind(this);
-  }
 
-  state = {
-    vacationPeriods: [],
-    user: {},
-    userId: undefined,
+    this.state = {
+      vacationPeriods: [],
+      user: {},
+      userId: undefined,
+    };
   }
 
   componentDidMount() {

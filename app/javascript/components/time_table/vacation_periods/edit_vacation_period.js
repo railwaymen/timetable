@@ -10,13 +10,13 @@ class EditVacationPeriod extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onCheckboxChange = this.onCheckboxChange.bind(this);
-  }
 
-  state = {
-    period: {},
-    periodId: parseInt(this.props.match.params.id, 10),
-    redirectToReferer: undefined,
-    errors: {},
+    this.state = {
+      period: {},
+      periodId: parseInt(this.props.match.params.id, 10),
+      redirectToReferer: undefined,
+      errors: {},
+    };
   }
 
   componentDidMount() {

@@ -12,19 +12,15 @@ class Projects extends React.Component {
     this.getProjects = this.getProjects.bind(this);
     this.renderGroupedRecords = this.renderGroupedRecords.bind(this);
     this.changeRange = this.changeRange.bind(this);
+
+    this.state = {
+      projectsStats: {},
+      range: 30,
+    };
   }
 
   componentDidMount() {
     this.getProjects();
-  }
-
-  static propTypes = {
-    projectsStats: PropTypes.object,
-  }
-
-  state = {
-    projectsStats: {},
-    range: 30,
   }
 
   getProjects() {
@@ -91,5 +87,8 @@ class Projects extends React.Component {
   }
 }
 
+Projects.propTypes = {
+  projectsStats: PropTypes.object,
+};
 
 export default Projects;

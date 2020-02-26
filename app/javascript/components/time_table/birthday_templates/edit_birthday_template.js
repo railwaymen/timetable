@@ -11,17 +11,17 @@ class EditBirthdayTemplate extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.catchErrors = this.catchErrors.bind(this);
+
+    this.state = {
+      birthdayTemplate: {},
+      birthdayTemplateId: parseInt(this.props.match.params.id, 10),
+      redirectToReferer: undefined,
+      errors: {},
+    };
   }
 
   componentDidMount() {
     this.getBirthdayTemplate();
-  }
-
-  state = {
-    birthdayTemplate: {},
-    birthdayTemplateId: parseInt(this.props.match.params.id, 10),
-    redirectToReferer: undefined,
-    errors: {},
   }
 
   getBirthdayTemplate() {

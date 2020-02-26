@@ -17,6 +17,13 @@ class ProjectsDropdown extends React.Component {
     this.handleCurrentIndexIncrement = this.handleCurrentIndexIncrement.bind(this);
     this.handleCurrentIndexDecrement = this.handleCurrentIndexDecrement.bind(this);
 
+    this.state = {
+      currentIndex: 0,
+      isExpanded: false,
+      filter: '',
+      filteredProjects: this.filterProjects(''),
+    };
+
     this.searchRef = React.createRef();
   }
 
@@ -24,21 +31,6 @@ class ProjectsDropdown extends React.Component {
     this.setState({
       filteredProjects: this.filterProjects(),
     });
-  }
-
-  static propTypes = {
-    projects: PropTypes.array,
-    selectedProject: PropTypes.object,
-    isExpanded: PropTypes.bool,
-    filter: PropTypes.string,
-    currentIndex: PropTypes.number,
-  }
-
-  state = {
-    currentIndex: 0,
-    isExpanded: false,
-    filter: '',
-    filteredProjects: this.filterProjects(''),
   }
 
   onFilterChange(e) {
@@ -144,5 +136,13 @@ class ProjectsDropdown extends React.Component {
     );
   }
 }
+
+ProjectsDropdown.propTypes = {
+  projects: PropTypes.array,
+  selectedProject: PropTypes.object,
+  isExpanded: PropTypes.bool,
+  filter: PropTypes.string,
+  currentIndex: PropTypes.number,
+};
 
 export default ProjectsDropdown;

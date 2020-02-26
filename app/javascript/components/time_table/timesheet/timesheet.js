@@ -13,22 +13,16 @@ class Timesheet extends React.Component {
     this.onCopy = this.onCopy.bind(this);
     this.getProjects = this.getProjects.bind(this);
     this.setLastProject = this.setLastProject.bind(this);
+
+    this.state = {
+      projects: [],
+      tags: [],
+      tags_disabled: false,
+    };
   }
 
   componentDidMount() {
     this.getProjects();
-  }
-
-  static propTypes = {
-    projects: PropTypes.array,
-    tags: PropTypes.array,
-    tags_disabled: PropTypes.bool,
-  }
-
-  state = {
-    projects: [],
-    tags: [],
-    tags_disabled: false,
   }
 
   pushEntry(object) {
@@ -70,5 +64,11 @@ class Timesheet extends React.Component {
     );
   }
 }
+
+Timesheet.propTypes = {
+  projects: PropTypes.array,
+  tags: PropTypes.array,
+  tags_disabled: PropTypes.bool,
+};
 
 export default Timesheet;

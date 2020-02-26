@@ -29,6 +29,18 @@ class EntryHistory extends React.Component {
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
     this.translateTag = this.translateTag.bind(this);
+
+    this.state = {
+      workHours: [],
+      daysKeys: [],
+      groupedWorkHours: {},
+      months: [],
+      selectedProject: {},
+      filteredUser: undefined,
+      project_id: undefined,
+      from: moment().startOf('month').format(),
+      to: moment().endOf('month').format(),
+    };
   }
 
   componentDidMount() {
@@ -68,22 +80,6 @@ class EntryHistory extends React.Component {
         from, to, project_id,
       });
     }
-  }
-
-  static propTypes = {
-    workHours: PropTypes.array,
-  }
-
-  state = {
-    workHours: [],
-    daysKeys: [],
-    groupedWorkHours: {},
-    months: [],
-    selectedProject: {},
-    filteredUser: undefined,
-    project_id: undefined,
-    from: moment().startOf('month').format(),
-    to: moment().endOf('month').format(),
   }
 
   filterWorkHoursByUser(id, params) {
@@ -569,5 +565,9 @@ class EntryHistory extends React.Component {
     );
   }
 }
+
+EntryHistory.propTypes = {
+  workHours: PropTypes.array,
+};
 
 export default EntryHistory;

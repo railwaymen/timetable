@@ -11,22 +11,17 @@ import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
 
 class ByUsers extends Report {
-  static propTypes = {
-    reports: PropTypes.array,
-    users: PropTypes.array,
-    from: PropTypes.string,
-    to: PropTypes.string,
-    redirectToReferer: PropTypes.string,
-    list: PropTypes.string,
-  }
+  constructor(props) {
+    super(props);
 
-  state = {
-    reports: {},
-    users: [],
-    from: moment().startOf('month').format(),
-    to: moment().endOf('month').format(),
-    redirectToReferer: undefined,
-    list: 'self',
+    this.state = {
+      reports: {},
+      users: [],
+      from: moment().startOf('month').format(),
+      to: moment().endOf('month').format(),
+      redirectToReferer: undefined,
+      list: 'self',
+    };
   }
 
   getReports(params = {}) {
@@ -126,5 +121,14 @@ class ByUsers extends Report {
     );
   }
 }
+
+ByUsers.propTypes = {
+  reports: PropTypes.array,
+  users: PropTypes.array,
+  from: PropTypes.string,
+  to: PropTypes.string,
+  redirectToReferer: PropTypes.string,
+  list: PropTypes.string,
+};
 
 export default ByUsers;

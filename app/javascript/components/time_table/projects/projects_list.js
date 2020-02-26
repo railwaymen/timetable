@@ -10,20 +10,15 @@ class ProjectsList extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.getProjects = this.getProjects.bind(this);
+
+    this.state = {
+      projects: [],
+      visible: 'active',
+    };
   }
 
   componentDidMount() {
     this.getProjects();
-  }
-
-  static propTypes = {
-    projects: PropTypes.array,
-    visible: PropTypes.string,
-  }
-
-  state = {
-    projects: [],
-    visible: 'active',
   }
 
   getProjects() {
@@ -80,5 +75,10 @@ class ProjectsList extends React.Component {
     );
   }
 }
+
+ProjectsList.propTypes = {
+  projects: PropTypes.array,
+  visible: PropTypes.string,
+};
 
 export default ProjectsList;

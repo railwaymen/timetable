@@ -11,10 +11,6 @@ class Period extends React.Component {
     this.onDelete = this.onDelete.bind(this);
   }
 
-  static propTypes = {
-    period: PropTypes.object,
-  }
-
   formatDate(date) {
     return moment(date).format('YYYY-MM-DD HH:mm');
   }
@@ -79,5 +75,9 @@ class Period extends React.Component {
     );
   }
 }
+
+Period.propTypes = {
+  period: PropTypes.object,
+};
 
 export default Period;

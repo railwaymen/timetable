@@ -10,18 +10,18 @@ class ExternalAuth extends React.Component {
     this.onTokenChange = this.onTokenChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onDelete = this.onDelete.bind(this);
-  }
 
-  state = {
-    publicKey: '',
-    auth: {},
-    authorizationUrl: '',
-    domain: '',
-    token: '',
-    requestData: undefined,
-    projectId: parseInt(this.props.match.params.id, 10),
-    redirectToReferer: undefined,
-  };
+    this.state = {
+      publicKey: '',
+      auth: {},
+      authorizationUrl: '',
+      domain: '',
+      token: '',
+      requestData: undefined,
+      projectId: parseInt(this.props.match.params.id, 10),
+      redirectToReferer: undefined,
+    };
+  }
 
   componentDidMount() {
     this.getProject();

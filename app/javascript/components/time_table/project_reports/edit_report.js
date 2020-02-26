@@ -9,18 +9,6 @@ import Modal from '../../shared/modal';
 import TagPill from '../timesheet/tag_pill';
 
 export default class EditReport extends React.Component {
-  state = {
-    reportId: parseInt(this.props.match.params.reportId, 10),
-    projectId: parseInt(this.props.match.params.projectId, 10),
-    report: get(this.props.location, ['state', 'report']),
-    currentBody: this.prepareBody(get(this.props.location, ['state', 'report', 'last_body'])),
-    mergeTask: '',
-    mergeOwner: '',
-    mergeDescription: '',
-    workTimeModalCategory: null,
-    workTimeModalId: null,
-  };
-
   constructor(props) {
     super(props);
     bindAll(this, [
@@ -37,6 +25,18 @@ export default class EditReport extends React.Component {
       'onSubmit',
       'onGenerate',
     ]);
+
+    this.state = {
+      reportId: parseInt(this.props.match.params.reportId, 10),
+      projectId: parseInt(this.props.match.params.projectId, 10),
+      report: get(this.props.location, ['state', 'report']),
+      currentBody: this.prepareBody(get(this.props.location, ['state', 'report', 'last_body'])),
+      mergeTask: '',
+      mergeOwner: '',
+      mergeDescription: '',
+      workTimeModalCategory: null,
+      workTimeModalId: null,
+    };
   }
 
   componentDidMount() {

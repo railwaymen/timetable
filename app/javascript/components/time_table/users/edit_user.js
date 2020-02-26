@@ -17,6 +17,12 @@ class EditUser extends React.Component {
 
     this.renderAdminFields = this.renderAdminFields.bind(this);
     this.renderUserFields = this.renderUserFields.bind(this);
+
+    this.state = {
+      user: {},
+      redirectToReferer: undefined,
+      userId: parseInt(this.props.match.params.id, 10),
+    };
   }
 
   componentDidMount() {
@@ -31,16 +37,6 @@ class EditUser extends React.Component {
           this.setState({ user });
         });
     }
-  }
-
-  static propTypes = {
-    user: PropTypes.object,
-  }
-
-  state = {
-    user: {},
-    redirectToReferer: undefined,
-    userId: parseInt(this.props.match.params.id, 10),
   }
 
   onChange(e) {
@@ -203,5 +199,9 @@ class EditUser extends React.Component {
     );
   }
 }
+
+EditUser.propTypes = {
+  user: PropTypes.object,
+};
 
 export default EditUser;
