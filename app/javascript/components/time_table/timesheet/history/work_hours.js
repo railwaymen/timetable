@@ -63,6 +63,7 @@ class WorkHours extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (!_.isEqual(prevProps.workHours, this.props.workHours)) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ workHours: this.props.workHours });
     }
   }

@@ -35,8 +35,8 @@ class ProjectStats extends React.Component {
             {data.leader ? data.leader.name : ''}
           </p>
           <ul>
-            { stats.map((stat, index) => (
-              <li className="person" key={index}> {/* eslint-disable-line */}
+            { stats.map((stat) => (
+              <li className="person" key={stat.id}>
                 {stat.user.name}
               </li>
             )) }

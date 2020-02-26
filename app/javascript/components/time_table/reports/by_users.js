@@ -28,7 +28,6 @@ class ByUsers extends Report {
     const original = URI(window.location.href);
     let { from, to, list } = params;
 
-    /* eslint-disable */
     if (!from || !to) {
       from = this.state.from;
       to = this.state.to;
@@ -37,7 +36,6 @@ class ByUsers extends Report {
     if (!list) {
       list = this.state.list;
     }
-    /* eslint-enable */
 
     const prepareParams = { from, to, list };
 

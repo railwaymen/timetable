@@ -459,7 +459,6 @@ class EntryHistory extends React.Component {
   }
 
   renderFilters() {
-    /* eslint-disable */
     const { projects } = this.props;
     const { months, from, selectedProject } = this.state;
     return (
@@ -468,8 +467,8 @@ class EntryHistory extends React.Component {
           <div className="text">{moment(from).format('MMMM') || I18n.t('apps.timesheet.select_month')}</div>
           <i className="dropdown icon" />
           <div className="menu" tabIndex="-1">
-            { months.map((month, index) => (
-              <a key={index} className="item" data-month={JSON.stringify(month)} onClick={this.onMonthFilter} href={`/timesheet?project_id=${month.date}`}>
+            { months.map((month) => (
+              <a key={month.name} className="item" data-month={JSON.stringify(month)} onClick={this.onMonthFilter} href={`/timesheet?project_id=${month.date}`}>
                 {month.name}
               </a>
             )) }
@@ -480,14 +479,15 @@ class EntryHistory extends React.Component {
           <i className="dropdown icon" />
           <div className="menu" tabIndex="-1">
             <a className="item" data-project-id="" href="" onClick={this.onProjectFilter}>{I18n.t('common.all')}</a>
-            { projects.map((project, index) => (
-              <a onClick={this.onProjectFilter} data-project-id={project.id} className="item" key={index} href={`/timesheet?project_id=${project.id}`}>{project.name}</a>
+            { projects.map((project) => (
+              <a onClick={this.onProjectFilter} data-project-id={project.id} className="item" key={project.name} href={`/timesheet?project_id=${project.id}`}>
+                {project.id}
+              </a>
             )) }
           </div>
         </div>
       </div>
     );
-    /* eslint-enable */
   }
 
   renderTaskDuration() {

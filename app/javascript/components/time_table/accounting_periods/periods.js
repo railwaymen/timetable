@@ -339,9 +339,8 @@ class Periods extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { periods.accounting_periods.map((period, index) => (
-              // eslint-disable-next-line
-              <Period key={index} period={period} onDelete={this.onDelete} userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`} />
+            { periods.accounting_periods.map((period) => (
+              <Period key={period.id} period={period} onDelete={this.onDelete} userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`} />
             )) }
           </tbody>
         </table>

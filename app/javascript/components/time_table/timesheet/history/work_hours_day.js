@@ -63,10 +63,9 @@ class WorkHoursDay extends React.Component {
                 {total}
               </span>
             </h3>
-            {/* eslint-disable */}
-            { day.map((workHours, index) => (
+            { day.map((workHours) => (
               <WorkHours
-                key={index}
+                key={workHours.id}
                 updateWorkHours={this.updateWorkHours}
                 workHours={workHours}
                 fingerPrint={this.props.fingerPrint}
@@ -78,7 +77,6 @@ class WorkHoursDay extends React.Component {
                 tags_disabled={this.props.tags_disabled}
               />
             )) }
-            {/* eslint-enable */}
           </div>
         </header>
       </section>
