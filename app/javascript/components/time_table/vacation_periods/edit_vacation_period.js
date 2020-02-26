@@ -107,13 +107,27 @@ class EditVacationPeriod extends React.Component {
                 ? <div className="error-description">{errors.vacation_days.join(', ')}</div>
                 : null }
               <div className="form-group">
-                <input className={`${errors.vacation_days ? 'error' : ''} form-control`} type="number" name="vacation_days" onChange={this.onChange} value={period.vacation_days} disabled={period.closed} />
+                <input
+                  className={`${errors.vacation_days ? 'error' : ''} form-control`}
+                  type="number"
+                  name="vacation_days"
+                  onChange={this.onChange}
+                  value={period.vacation_days}
+                  disabled={period.closed}
+                />
               </div>
               { errors.note
                 ? <div className="error-description">{errors.note.join(', ')}</div>
                 : null }
               <div className="form-group">
-                <textarea className={`${errors.note ? 'error' : ''} form-control`} name="note" placeholder={I18n.t('apps.vacation_periods.note')} onChange={this.onChange} value={period.note} disabled={period.closed} />
+                <textarea
+                  className={`${errors.note ? 'error' : ''} form-control`}
+                  name="note"
+                  placeholder={I18n.t('apps.vacation_periods.note')}
+                  onChange={this.onChange}
+                  value={period.note}
+                  disabled={period.closed}
+                />
               </div>
               <div className="form-group">
                 <label className="form-check-label">

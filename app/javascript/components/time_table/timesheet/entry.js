@@ -299,7 +299,15 @@ class Entry extends React.Component {
                   ? (
                     <div className="form-group">
                       {errors.task ? <ErrorTooltip errors={errors.task} /> : null}
-                      <input className="form-control task-url" placeholder={I18n.t('apps.timesheet.task_url')} type="text" name="task" value={task} onChange={this.onChange} onKeyPress={this.onKeyPress} />
+                      <input
+                        className="form-control task-url"
+                        placeholder={I18n.t('apps.timesheet.task_url')}
+                        type="text"
+                        name="task"
+                        value={task}
+                        onChange={this.onChange}
+                        onKeyPress={this.onKeyPress}
+                      />
                     </div>
                   ) : null}
               </div>
@@ -314,18 +322,52 @@ class Entry extends React.Component {
               <div className="col-sm-12 col-md-4 date">
                 <div className="time">
                   <div className="form-group">
-                    <input className="form-control" id="start" type="text" name="starts_at" placeholder="830 → 8:30" ref={this.startInputRef} onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onFocus={this.onTimeFocus} onClick={this.onFocus} onBlur={this.onTimeBlur} value={starts_at} />
+                    <input
+                      className="form-control"
+                      id="start"
+                      type="text"
+                      name="starts_at"
+                      placeholder="830 → 8:30"
+                      ref={this.startInputRef}
+                      onKeyPress={this.onTimeKeyPress}
+                      onChange={this.onChange}
+                      onFocus={this.onTimeFocus}
+                      onClick={this.onFocus}
+                      onBlur={this.onTimeBlur}
+                      value={starts_at}
+                    />
                   </div>
                   <span className="time-divider">-</span>
                   <div className="form-group">
-                    <input className="form-control" id="end" type="text" name="ends_at" placeholder="1215 → 12:15" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onFocus={this.onTimeFocus} onClick={this.onFocus} onBlur={this.onTimeBlur} value={ends_at} />
+                    <input
+                      className="form-control"
+                      id="end"
+                      type="text"
+                      name="ends_at"
+                      placeholder="1215 → 12:15"
+                      onKeyPress={this.onTimeKeyPress}
+                      onChange={this.onChange}
+                      onFocus={this.onTimeFocus}
+                      onClick={this.onFocus}
+                      onBlur={this.onTimeBlur}
+                      value={ends_at}
+                    />
                   </div>
                 </div>
                 <div className="duration manual">
                   {errors.duration ? <ErrorTooltip errors={errors.duration} /> : null}
                   <span id="duration">{durationHours}</span>
                 </div>
-                <DatePicker {...defaultDatePickerProps} className="form-control" selected={moment(date, 'DD/MM/YYYY')} value={moment(date, 'DD/MM/YYYY').format('DD/MM')} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange} />
+                <DatePicker
+                  {...defaultDatePickerProps}
+                  className="form-control"
+                  selected={moment(date, 'DD/MM/YYYY')}
+                  value={moment(date, 'DD/MM/YYYY').format('DD/MM')}
+                  format="DD/MM"
+                  dateFormat="DD/MM"
+                  onChange={this.onDateChange}
+                  onSelect={this.onDateChange}
+                />
               </div>
             </div>
             { !this.props.tags_disabled && project.taggable && (

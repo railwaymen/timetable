@@ -126,7 +126,19 @@ class ProjectsDropdown extends React.Component {
     return (
       <div className="dropdown fluid search ui" style={{ minWidth: '90px' }}>
         <input type="hidden" name="project" value="12" />
-        <input placeholder="Project" onFocus={this.expandDropdown} ref={this.searchRef} className="form-control input-search" name="filter" value={filter} autoComplete="off" tabIndex="0" onChange={this.onFilterChange} id="search-input" onKeyDown={this.onKeyDown} />
+        <input
+          placeholder="Project"
+          onFocus={this.expandDropdown}
+          ref={this.searchRef}
+          className="form-control input-search"
+          name="filter"
+          value={filter}
+          autoComplete="off"
+          tabIndex="0"
+          onChange={this.onFilterChange}
+          id="search-input"
+          onKeyDown={this.onKeyDown}
+        />
         <div className={`text active ${(isExpanded ? 'hidden' : '')}`} style={{ background: `#${selectedProject.color}` }} onClick={this.expandDropdown}>
           <div className="circular empty label ui" style={{ background: `#${selectedProject.color}` }} />
           {selectedProject.name}

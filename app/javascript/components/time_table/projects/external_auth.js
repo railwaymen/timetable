@@ -129,7 +129,11 @@ class ExternalAuth extends React.Component {
         <h3>{I18n.t('apps.external_auths.new')}</h3>
         <input placeholder={I18n.t('apps.external_auths.domain')} value={this.state.domain} onChange={this.onDomainChange} />
         <button onClick={this.getAuthLink} type="button">{I18n.t('apps.external_auths.generate_link')}</button>
-        {this.state.authorizationUrl && <p><a className="btn btn-primary" href={this.state.authorizationUrl} target="_blank" rel="noopener noreferrer">{I18n.t('apps.external_auths.follow_link')}</a></p>}
+        {this.state.authorizationUrl && (
+          <p>
+            <a className="btn btn-primary" href={this.state.authorizationUrl} target="_blank" rel="noopener noreferrer">{I18n.t('apps.external_auths.follow_link')}</a>
+          </p>
+        )}
         {this.state.authorizationUrl
           && (
           <form>

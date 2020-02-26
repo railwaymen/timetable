@@ -217,7 +217,13 @@ export default class EditReport extends React.Component {
 
   renderEditOrMergeButton(category, id, addToMerge) {
     return (
-      <button key="edit" type="button" className={`action-item ${addToMerge ? 'plus' : ''}`} onClick={(e) => this.onShowEdit(e, category, id)} data-tooltip-bottom={addToMerge ? I18n.t('apps.reports.merge') : I18n.t('common.edit')}>
+      <button
+        key="edit"
+        type="button"
+        className={`action-item ${addToMerge ? 'plus' : ''}`}
+        onClick={(e) => this.onShowEdit(e, category, id)}
+        data-tooltip-bottom={addToMerge ? I18n.t('apps.reports.merge') : I18n.t('common.edit')}
+      >
         <i className="symbol fa fa-pencil" />
       </button>
     );

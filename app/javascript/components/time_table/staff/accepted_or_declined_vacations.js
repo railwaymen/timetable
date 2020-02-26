@@ -49,7 +49,17 @@ class AcceptedOrDeclinedVacations extends React.Component {
             <i className={`glyphicon glyphicon-chevron-${sortIcon}`} />
           </div>
         </div>
-        {this.props.acceptedOrDeclinedVacationsList.map((vacation) => <AcceptedOrDeclinedVacation key={vacation.id} vacation={vacation} addToAcceptedOrDeclinedVacationList={this.props.addToAcceptedOrDeclinedVacationList} removeFromAcceptedOrDeclined={this.props.removeFromAcceptedOrDeclined} showAll={this.props.showAll} showDeclined={this.props.showDeclined} getVacationApplications={this.props.getVacationApplications} />)}
+        {this.props.acceptedOrDeclinedVacationsList.map((vacation) => (
+          <AcceptedOrDeclinedVacation
+            key={vacation.id}
+            vacation={vacation}
+            addToAcceptedOrDeclinedVacationList={this.props.addToAcceptedOrDeclinedVacationList}
+            removeFromAcceptedOrDeclined={this.props.removeFromAcceptedOrDeclined}
+            showAll={this.props.showAll}
+            showDeclined={this.props.showDeclined}
+            getVacationApplications={this.props.getVacationApplications}
+          />
+        ))}
       </div>
     );
   }

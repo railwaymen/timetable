@@ -222,9 +222,27 @@ class WorkHours extends React.Component {
         <div className="edit-date">
           <DatePicker {...defaultDatePickerProps} value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
         </div>
-        <input className="start-input form-control" type="text" name="starts_at_hours" value={this.state.starts_at_hours} onChange={this.onHoursEdit} onFocus={this.onTimeFocus} onClick={this.onFocus} onBlur={this.onTimeBlur} />
+        <input
+          className="start-input form-control"
+          type="text"
+          name="starts_at_hours"
+          value={this.state.starts_at_hours}
+          onChange={this.onHoursEdit}
+          onFocus={this.onTimeFocus}
+          onClick={this.onFocus}
+          onBlur={this.onTimeBlur}
+        />
         <span className="time-divider">-</span>
-        <input className="end-input form-control" type="text" name="ends_at_hours" value={this.state.ends_at_hours} onChange={this.onHoursEdit} onFocus={this.onTimeFocus} onClick={this.onFocus} onBlur={this.onTimeBlur} />
+        <input
+          className="end-input form-control"
+          type="text"
+          name="ends_at_hours"
+          value={this.state.ends_at_hours}
+          onChange={this.onHoursEdit}
+          onFocus={this.onTimeFocus}
+          onClick={this.onFocus}
+          onBlur={this.onTimeBlur}
+        />
       </div>
     );
   }

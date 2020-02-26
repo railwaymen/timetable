@@ -204,11 +204,31 @@ class Entry extends React.Component {
         <div className="row vacation-date-range">
           <div className="date">
             {errors.startDate ? this.renderErrorTooltip(errors.startDate) : null}
-            <DatePicker {...defaultDatePickerProps} name="start_date" className="form-control" selected={moment(startDate, 'DD/MM/YYYY')} value={moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={(e) => this.onDateChange('startDate', e)} onSelect={(e) => this.onDateChange('startDate', e)} />
+            <DatePicker
+              {...defaultDatePickerProps}
+              name="start_date"
+              className="form-control"
+              selected={moment(startDate, 'DD/MM/YYYY')}
+              value={moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
+              format="DD/MM/YYYYs"
+              dateFormat="DD/MM/YYYY"
+              onChange={(e) => this.onDateChange('startDate', e)}
+              onSelect={(e) => this.onDateChange('startDate', e)}
+            />
           </div>
           <div className="date">
             {errors.endDate ? this.renderErrorTooltip(errors.endDate) : null}
-            <DatePicker {...defaultDatePickerProps} name="end_date" className="form-control" selected={moment(endDate, 'DD/MM/YYYY')} value={moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={(e) => this.onDateChange('endDate', e)} onSelect={(e) => this.onDateChange('endDate', e)} />
+            <DatePicker
+              {...defaultDatePickerProps}
+              name="end_date"
+              className="form-control"
+              selected={moment(endDate, 'DD/MM/YYYY')}
+              value={moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
+              format="DD/MM/YYYYs"
+              dateFormat="DD/MM/YYYY"
+              onChange={(e) => this.onDateChange('endDate', e)}
+              onSelect={(e) => this.onDateChange('endDate', e)}
+            />
           </div>
           <div className="vacation-type">
             {errors.vacationType ? this.renderErrorTooltip(errors.vacationType) : null}
@@ -218,7 +238,14 @@ class Entry extends React.Component {
         <div className="row description-containter">
           <div className="description">
             {errors.description ? this.renderErrorTooltip(errors.description) : null}
-            <textarea className="form-control" placeholder={I18n.t('apps.vacations.vacation_description')} name="description" value={description} onChange={this.onChange} onKeyPress={this.onKeyPress} />
+            <textarea
+              className="form-control"
+              placeholder={I18n.t('apps.vacations.vacation_description')}
+              name="description"
+              value={description}
+              onChange={this.onChange}
+              onKeyPress={this.onKeyPress}
+            />
           </div>
         </div>
         <div className="row">

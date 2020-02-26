@@ -276,10 +276,29 @@ class EditPeriod extends React.Component {
               <div className="col-12 col-md-6">
                 <div className="row calendar-row">
                   <div className="col-md-6 form-group">
-                    <DatePicker {...defaultDatePickerProps} onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at ? moment(period.starts_at, 'YYYY-MM-DD HH:mm') : null} name="starts_at" placeholderText={I18n.t('common.from')} onChange={this.onStartsAtChange} />
+                    <DatePicker
+                      {...defaultDatePickerProps}
+                      onChangeRaw={this.onChange}
+                      dateFormat="YYYY-MM-DD HH:mm"
+                      className="form-control"
+                      selected={period.starts_at ? moment(period.starts_at, 'YYYY-MM-DD HH:mm') : null}
+                      name="starts_at"
+                      placeholderText={I18n.t('common.from')}
+                      onChange={this.onStartsAtChange}
+                    />
                   </div>
                   <div className="col-md-6 form-group">
-                    <DatePicker {...defaultDatePickerProps} onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.ends_at ? moment(period.ends_at, 'YYYY-MM-DD HH:mm') : null} name="ends_at" placeholderText={I18n.t('common.to')} onSelect={this.onEndsAtChange} onChange={this.onEndsAtChange} />
+                    <DatePicker
+                      {...defaultDatePickerProps}
+                      onChangeRaw={this.onChange}
+                      dateFormat="YYYY-MM-DD HH:mm"
+                      className="form-control"
+                      selected={period.ends_at ? moment(period.ends_at, 'YYYY-MM-DD HH:mm') : null}
+                      name="ends_at"
+                      placeholderText={I18n.t('common.to')}
+                      onSelect={this.onEndsAtChange}
+                      onChange={this.onEndsAtChange}
+                    />
                   </div>
                 </div>
                 <label>{I18n.t('common.duration')}</label>

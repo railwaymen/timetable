@@ -54,7 +54,14 @@ class Timesheet extends React.Component {
       return (
         <div>
           <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projects} tags={tags} tags_disabled={tags_disabled} />
-          <EntryHistory ref={(entryHistory) => { this.entryHistory = entryHistory; }} onCopy={this.onCopy} projects={projects} setLastProject={this.setLastProject} tags_disabled={tags_disabled} tags={tags} />
+          <EntryHistory
+            ref={(entryHistory) => { this.entryHistory = entryHistory; }}
+            onCopy={this.onCopy}
+            projects={projects}
+            setLastProject={this.setLastProject}
+            tags_disabled={tags_disabled}
+            tags={tags}
+          />
         </div>
       );
     }

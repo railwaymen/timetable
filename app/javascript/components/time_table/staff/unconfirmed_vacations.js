@@ -11,7 +11,13 @@ class UnconfirmedVacations extends React.Component {
   renderVacation(vacation) {
     return (
       <div className="row" key={vacation.id}>
-        <UnconfirmedVacation vacation={vacation} addToAcceptedOrDeclinedVacationList={this.props.addToAcceptedOrDeclinedVacationList} removeFromAcceptedOrDeclined={this.props.removeFromAcceptedOrDeclined} showAll={this.props.showAll} showDeclined={this.props.showDeclined} />
+        <UnconfirmedVacation
+          vacation={vacation}
+          addToAcceptedOrDeclinedVacationList={this.props.addToAcceptedOrDeclinedVacationList}
+          removeFromAcceptedOrDeclined={this.props.removeFromAcceptedOrDeclined}
+          showAll={this.props.showAll}
+          showDeclined={this.props.showDeclined}
+        />
       </div>
     );
   }
