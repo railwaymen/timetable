@@ -11,29 +11,23 @@ import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
 
 class ByUsers extends Report {
-  static propTypes = {
-    reports: PropTypes.array,
-    users: PropTypes.array,
-    from: PropTypes.string,
-    to: PropTypes.string,
-    redirectToReferer: PropTypes.string,
-    list: PropTypes.string,
-  }
+  constructor(props) {
+    super(props);
 
-  state = {
-    reports: {},
-    users: [],
-    from: moment().startOf('month').format(),
-    to: moment().endOf('month').format(),
-    redirectToReferer: undefined,
-    list: 'self',
+    this.state = {
+      reports: {},
+      users: [],
+      from: moment().startOf('month').format(),
+      to: moment().endOf('month').format(),
+      redirectToReferer: undefined,
+      list: 'self',
+    };
   }
 
   getReports(params = {}) {
     const original = URI(window.location.href);
     let { from, to, list } = params;
 
-    /* eslint-disable */
     if (!from || !to) {
       from = this.state.from;
       to = this.state.to;
@@ -42,7 +36,6 @@ class ByUsers extends Report {
     if (!list) {
       list = this.state.list;
     }
-    /* eslint-enable */
 
     const prepareParams = { from, to, list };
 
@@ -70,9 +63,9 @@ class ByUsers extends Report {
           to,
           list,
         }, () => {
-          this.setState({
-            users: Object.keys(this.state.reports),
-          });
+          this.setState((prevState) => ({
+            users: Object.keys(prevState.reports),
+          }));
         });
       });
   }
@@ -126,5 +119,14 @@ class ByUsers extends Report {
     );
   }
 }
+
+ByUsers.propTypes = {
+  reports: PropTypes.array,
+  users: PropTypes.array,
+  from: PropTypes.string,
+  to: PropTypes.string,
+  redirectToReferer: PropTypes.string,
+  list: PropTypes.string,
+};
 
 export default ByUsers;

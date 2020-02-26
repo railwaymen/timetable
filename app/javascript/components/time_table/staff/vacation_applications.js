@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import URI from 'urijs';
 import AcceptedVacations from './accepted_or_declined_vacations';
@@ -15,19 +14,13 @@ class VacationApplications extends React.Component {
     this.addToAcceptedOrDeclinedVacationList = this.addToAcceptedOrDeclinedVacationList.bind(this);
     this.onShowButtonChange = this.onShowButtonChange.bind(this);
     this.removeFromUnconfirmedVacationList = this.removeFromUnconfirmedVacationList.bind(this);
-  }
 
-  static propTypes = {
-    acceptedOrDeclinedVacationsList: PropTypes.array,
-    unconfirmedVacationsList: PropTypes.array,
-    showAll: PropTypes.bool,
-  }
-
-  state = {
-    acceptedOrDeclinedVacationsList: [],
-    unconfirmedVacationsList: [],
-    showAll: false,
-    showDeclined: false,
+    this.state = {
+      acceptedOrDeclinedVacationsList: [],
+      unconfirmedVacationsList: [],
+      showAll: false,
+      showDeclined: false,
+    };
   }
 
   componentDidMount() {
@@ -79,7 +72,7 @@ class VacationApplications extends React.Component {
   removeFromAcceptedOrDeclined(object, action) {
     if ((this.state.showDeclined && action === 'decline') || (!this.state.showDeclined && action === 'accept')) { return; }
     const { acceptedOrDeclinedVacationsList } = this.state;
-    const index = acceptedOrDeclinedVacationsList.findIndex(vacation => vacation.id === object.id);
+    const index = acceptedOrDeclinedVacationsList.findIndex((vacation) => vacation.id === object.id);
     if (index !== -1) {
       acceptedOrDeclinedVacationsList.splice(index, 1);
       this.setState({
@@ -94,8 +87,8 @@ class VacationApplications extends React.Component {
       return;
     }
     const { acceptedOrDeclinedVacationsList, unconfirmedVacationsList } = this.state;
-    const acceptedOrDeclinedIndex = acceptedOrDeclinedVacationsList.findIndex(vacation => vacation.id === object.id);
-    const undefinedIndex = unconfirmedVacationsList.findIndex(vacation => vacation.id === object.id);
+    const acceptedOrDeclinedIndex = acceptedOrDeclinedVacationsList.findIndex((vacation) => vacation.id === object.id);
+    const undefinedIndex = unconfirmedVacationsList.findIndex((vacation) => vacation.id === object.id);
     if (acceptedOrDeclinedIndex === -1 && undefinedIndex !== -1) {
       unconfirmedVacationsList.splice(undefinedIndex, 1);
       this.setState({
@@ -108,7 +101,7 @@ class VacationApplications extends React.Component {
   removeFromUnconfirmedVacationList(object) {
     if (window.currentUser.staff_manager) {
       const { unconfirmedVacationsList } = this.state;
-      const undefinedIndex = unconfirmedVacationsList.findIndex(vacation => vacation.id === object.id);
+      const undefinedIndex = unconfirmedVacationsList.findIndex((vacation) => vacation.id === object.id);
       unconfirmedVacationsList.splice(undefinedIndex, 1);
       this.setState({
         unconfirmedVacationsList,
@@ -121,9 +114,9 @@ class VacationApplications extends React.Component {
     const {
       start_date, end_date, user_id, sort,
     } = URI.parseQuery(original.query());
-    this.setState({
-      [name]: !this.state[name],
-    }, () => {
+    this.setState((prevState) => ({
+      [name]: !prevState[name],
+    }), () => {
       this.getVacationApplications({
         start_date, end_date, user_id, sort,
       });
@@ -136,10 +129,27 @@ class VacationApplications extends React.Component {
       <div className="container vacations-container">
         <div className="row">
           <div className="col-md-6">
-            <AcceptedVacations ref={(acceptedVacations) => { this.acceptedVacations = acceptedVacations; }} acceptedOrDeclinedVacationsList={acceptedOrDeclinedVacationsList} onShowButtonChange={this.onShowButtonChange} showDeclined={this.state.showDeclined} removeFromAcceptedOrDeclined={this.removeFromAcceptedOrDeclined} addToAcceptedOrDeclinedVacationList={this.addToAcceptedOrDeclinedVacationList} showAll={this.state.showAll} getVacationApplications={this.getVacationApplications} />
+            <AcceptedVacations
+              ref={(acceptedVacations) => { this.acceptedVacations = acceptedVacations; }}
+              acceptedOrDeclinedVacationsList={acceptedOrDeclinedVacationsList}
+              onShowButtonChange={this.onShowButtonChange}
+              showDeclined={this.state.showDeclined}
+              removeFromAcceptedOrDeclined={this.removeFromAcceptedOrDeclined}
+              addToAcceptedOrDeclinedVacationList={this.addToAcceptedOrDeclinedVacationList}
+              showAll={this.state.showAll}
+              getVacationApplications={this.getVacationApplications}
+            />
           </div>
           <div className="col-md-6">
-            <UnconfirmedVacations ref={(unconfirmed_vacations) => { this.unconfirmed_vacations = unconfirmed_vacations; }} unconfirmedVacationsList={unconfirmedVacationsList} removeFromAcceptedOrDeclined={this.removeFromAcceptedOrDeclined} addToAcceptedOrDeclinedVacationList={this.addToAcceptedOrDeclinedVacationList} onShowButtonChange={this.onShowButtonChange} showAll={this.state.showAll} showDeclined={this.state.showDeclined} />
+            <UnconfirmedVacations
+              ref={(unconfirmed_vacations) => { this.unconfirmed_vacations = unconfirmed_vacations; }}
+              unconfirmedVacationsList={unconfirmedVacationsList}
+              removeFromAcceptedOrDeclined={this.removeFromAcceptedOrDeclined}
+              addToAcceptedOrDeclinedVacationList={this.addToAcceptedOrDeclinedVacationList}
+              onShowButtonChange={this.onShowButtonChange}
+              showAll={this.state.showAll}
+              showDeclined={this.state.showDeclined}
+            />
           </div>
         </div>
       </div>

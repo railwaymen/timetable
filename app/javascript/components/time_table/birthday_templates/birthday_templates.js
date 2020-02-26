@@ -9,10 +9,10 @@ class BirthdayTemplates extends React.Component {
     super(props);
 
     this.getBirthdayTemplates = this.getBirthdayTemplates.bind(this);
-  }
 
-  state = {
-    birthdayTemplates: [],
+    this.state = {
+      birthdayTemplates: [],
+    };
   }
 
   componentDidMount() {
@@ -48,7 +48,7 @@ class BirthdayTemplates extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { birthdayTemplates.map(birthdayTemplate => <BirthdayTemplate key={birthdayTemplate.id} birthdayTemplate={birthdayTemplate} getBirthdayTemplates={this.getBirthdayTemplates} />) }
+            { birthdayTemplates.map((birthdayTemplate) => <BirthdayTemplate key={birthdayTemplate.id} birthdayTemplate={birthdayTemplate} getBirthdayTemplates={this.getBirthdayTemplates} />) }
           </tbody>
         </table>
       </div>

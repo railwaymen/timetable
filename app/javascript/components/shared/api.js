@@ -8,7 +8,7 @@ const csrfToken = () => {
   return '';
 };
 
-export const makePutRequest = data => fetch(data.url, {
+export const makePutRequest = (data) => fetch(data.url, {
   body: JSON.stringify(data.body),
   method: 'PUT',
   headers: {
@@ -31,7 +31,7 @@ export const makePutRequest = data => fetch(data.url, {
   });
 });
 
-export const makePostRequest = params => fetch(params.url, {
+export const makePostRequest = (params) => fetch(params.url, {
   body: JSON.stringify(params.body),
   method: 'POST',
   headers: {
@@ -40,7 +40,7 @@ export const makePostRequest = params => fetch(params.url, {
     'Content-Type': 'application/json',
   },
   credentials: 'same-origin',
-}).then(response => (
+}).then((response) => (
   response.json().then((data) => {
     if (response.status >= 400 && response.status < 500) {
       return Promise.reject(data);
@@ -51,21 +51,21 @@ export const makePostRequest = params => fetch(params.url, {
   })
 ));
 
-export const makeGetRequest = data => fetch(data.url, {
+export const makeGetRequest = (data) => fetch(data.url, {
   headers: {
     'X-CSRF-Token': csrfToken(),
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
   credentials: 'same-origin',
-}).then(response => response.json().then(responseData => ({
+}).then((response) => response.json().then((responseData) => ({
   data: responseData,
   status: response.status,
 }))).catch(() => {
   alert('There was an error trying to get data');
 });
 
-export const makeDeleteRequest = data => fetch(data.url, {
+export const makeDeleteRequest = (data) => fetch(data.url, {
   method: 'DELETE',
   headers: {
     'X-CSRF-Token': csrfToken(),

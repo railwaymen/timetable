@@ -11,7 +11,13 @@ class UnconfirmedVacations extends React.Component {
   renderVacation(vacation) {
     return (
       <div className="row" key={vacation.id}>
-        <UnconfirmedVacation vacation={vacation} addToAcceptedOrDeclinedVacationList={this.props.addToAcceptedOrDeclinedVacationList} removeFromAcceptedOrDeclined={this.props.removeFromAcceptedOrDeclined} showAll={this.props.showAll} showDeclined={this.props.showDeclined} />
+        <UnconfirmedVacation
+          vacation={vacation}
+          addToAcceptedOrDeclinedVacationList={this.props.addToAcceptedOrDeclinedVacationList}
+          removeFromAcceptedOrDeclined={this.props.removeFromAcceptedOrDeclined}
+          showAll={this.props.showAll}
+          showDeclined={this.props.showDeclined}
+        />
       </div>
     );
   }
@@ -27,11 +33,10 @@ class UnconfirmedVacations extends React.Component {
                 <div className="right-title" onClick={() => this.props.onShowButtonChange('showAll')}>
                   {I18n.t(`apps.staff.${title.right_tittle}`)}
                 </div>
-              )
-          }
+              )}
         </div>
         <div className="unconfirmed-vacations">
-          {this.props.unconfirmedVacationsList.map(vacation => this.renderVacation(vacation))}
+          {this.props.unconfirmedVacationsList.map((vacation) => this.renderVacation(vacation))}
         </div>
       </div>
     );

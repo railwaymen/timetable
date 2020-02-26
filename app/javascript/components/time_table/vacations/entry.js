@@ -19,27 +19,20 @@ class Entry extends React.Component {
     this.validate = this.validate.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onUserSelectFilterChange = this.onUserSelectFilterChange.bind(this);
-  }
 
-  static propTypes = {
-    decription: PropTypes.string,
-    startDate: PropTypes.instanceOf(Date),
-    endDate: PropTypes.instanceOf(Date),
-    vacationType: PropTypes.string,
-  }
-
-  state = {
-    description: undefined,
-    startDate: moment().format('DD/MM/YYYY'),
-    endDate: moment().format('DD/MM/YYYY'),
-    vacationType: 'planned',
-    errors: [],
+    this.state = {
+      description: undefined,
+      startDate: moment().format('DD/MM/YYYY'),
+      endDate: moment().format('DD/MM/YYYY'),
+      vacationType: 'planned',
+      errors: [],
+    };
   }
 
   componentDidMount() {
     if (window.currentUser.staff_manager) {
       fetch('/api/users?filter=active&staff')
-        .then(response => response.json())
+        .then((response) => response.json())
         .then((data) => {
           this.setState({
             users: data,
@@ -175,7 +168,7 @@ class Entry extends React.Component {
     return (
       <div className="error-tooltip vacation-errors">
         <ul>
-          {errors.map(error => (
+          {errors.map((error) => (
             <li key={error}>{error}</li>
           ))}
         </ul>
@@ -211,11 +204,31 @@ class Entry extends React.Component {
         <div className="row vacation-date-range">
           <div className="date">
             {errors.startDate ? this.renderErrorTooltip(errors.startDate) : null}
-            <DatePicker {...defaultDatePickerProps} name="start_date" className="form-control" selected={moment(startDate, 'DD/MM/YYYY')} value={moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={e => this.onDateChange('startDate', e)} onSelect={e => this.onDateChange('startDate', e)} />
+            <DatePicker
+              {...defaultDatePickerProps}
+              name="start_date"
+              className="form-control"
+              selected={moment(startDate, 'DD/MM/YYYY')}
+              value={moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
+              format="DD/MM/YYYYs"
+              dateFormat="DD/MM/YYYY"
+              onChange={(e) => this.onDateChange('startDate', e)}
+              onSelect={(e) => this.onDateChange('startDate', e)}
+            />
           </div>
           <div className="date">
             {errors.endDate ? this.renderErrorTooltip(errors.endDate) : null}
-            <DatePicker {...defaultDatePickerProps} name="end_date" className="form-control" selected={moment(endDate, 'DD/MM/YYYY')} value={moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={e => this.onDateChange('endDate', e)} onSelect={e => this.onDateChange('endDate', e)} />
+            <DatePicker
+              {...defaultDatePickerProps}
+              name="end_date"
+              className="form-control"
+              selected={moment(endDate, 'DD/MM/YYYY')}
+              value={moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
+              format="DD/MM/YYYYs"
+              dateFormat="DD/MM/YYYY"
+              onChange={(e) => this.onDateChange('endDate', e)}
+              onSelect={(e) => this.onDateChange('endDate', e)}
+            />
           </div>
           <div className="vacation-type">
             {errors.vacationType ? this.renderErrorTooltip(errors.vacationType) : null}
@@ -225,7 +238,14 @@ class Entry extends React.Component {
         <div className="row description-containter">
           <div className="description">
             {errors.description ? this.renderErrorTooltip(errors.description) : null}
-            <textarea className="form-control" placeholder={I18n.t('apps.vacations.vacation_description')} name="description" value={description} onChange={this.onChange} onKeyPress={this.onKeyPress} />
+            <textarea
+              className="form-control"
+              placeholder={I18n.t('apps.vacations.vacation_description')}
+              name="description"
+              value={description}
+              onChange={this.onChange}
+              onKeyPress={this.onKeyPress}
+            />
           </div>
         </div>
         <div className="row">
@@ -240,8 +260,7 @@ class Entry extends React.Component {
             <div className="user-filter">
               {this.renderUserSelectFilter(users)}
             </div>
-            )
-          }
+            )}
           <div className="form-actions">
             <button type="button" className="bt-vacation" onClick={(this.onSubmit)}>
               <span className="bt-txt">{I18n.t('common.send')}</span>
@@ -252,5 +271,12 @@ class Entry extends React.Component {
     );
   }
 }
+
+Entry.propTypes = {
+  decription: PropTypes.string,
+  startDate: PropTypes.instanceOf(Date),
+  endDate: PropTypes.instanceOf(Date),
+  vacationType: PropTypes.string,
+};
 
 export default Entry;

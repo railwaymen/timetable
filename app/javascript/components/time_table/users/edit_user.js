@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import * as Api from '../../shared/api';
@@ -17,6 +16,12 @@ class EditUser extends React.Component {
 
     this.renderAdminFields = this.renderAdminFields.bind(this);
     this.renderUserFields = this.renderUserFields.bind(this);
+
+    this.state = {
+      user: {},
+      redirectToReferer: undefined,
+      userId: parseInt(this.props.match.params.id, 10),
+    };
   }
 
   componentDidMount() {
@@ -33,32 +38,26 @@ class EditUser extends React.Component {
     }
   }
 
-  static propTypes = {
-    user: PropTypes.object,
-  }
-
-  state = {
-    user: {},
-    redirectToReferer: undefined,
-    userId: parseInt(this.props.match.params.id, 10),
-  }
-
   onChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       user: {
-        ...this.state.user,
-        [e.target.name]: e.target.value,
+        ...prevState.user,
+        [name]: value,
       },
-    });
+    }));
   }
 
   onCheckboxChange(e) {
-    this.setState({
+    const { name } = e.target;
+
+    this.setState((prevState) => ({
       user: {
-        ...this.state.user,
-        [e.target.name]: !this.state.user[e.target.name],
+        ...prevState.user,
+        [name]: !prevState.user[name],
       },
-    });
+    }));
   }
 
   onSubmit(e) {

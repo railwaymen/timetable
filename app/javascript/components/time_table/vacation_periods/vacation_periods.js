@@ -13,12 +13,12 @@ class VacationPeriods extends React.Component {
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onGenerateClick = this.onGenerateClick.bind(this);
-  }
 
-  state = {
-    vacationPeriods: [],
-    user: {},
-    userId: undefined,
+    this.state = {
+      vacationPeriods: [],
+      user: {},
+      userId: undefined,
+    };
   }
 
   componentDidMount() {
@@ -129,7 +129,7 @@ class VacationPeriods extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { vacationPeriods.map(period => (
+            { vacationPeriods.map((period) => (
               <VacationPeriod key={period.id} period={period} userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`} />
             )) }
           </tbody>

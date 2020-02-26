@@ -7,10 +7,10 @@ class AcceptedOrDeclinedVacations extends React.Component {
     super(props);
 
     this.onSortChange = this.onSortChange.bind(this);
-  }
 
-  state = {
-    sort: 'asc',
+    this.state = {
+      sort: 'asc',
+    };
   }
 
   componentDidMount() {
@@ -40,8 +40,7 @@ class AcceptedOrDeclinedVacations extends React.Component {
                   <div className="left-title" onClick={() => this.props.onShowButtonChange('showDeclined')}>
                     {I18n.t(`apps.staff.${title.leftTitle}`)}
                   </div>
-                )
-          }
+                )}
           <div className="mid-title">
             {I18n.t(`apps.staff.${title.mainTitle}`)}
           </div>
@@ -50,7 +49,17 @@ class AcceptedOrDeclinedVacations extends React.Component {
             <i className={`glyphicon glyphicon-chevron-${sortIcon}`} />
           </div>
         </div>
-        {this.props.acceptedOrDeclinedVacationsList.map(vacation => <AcceptedOrDeclinedVacation key={vacation.id} vacation={vacation} addToAcceptedOrDeclinedVacationList={this.props.addToAcceptedOrDeclinedVacationList} removeFromAcceptedOrDeclined={this.props.removeFromAcceptedOrDeclined} showAll={this.props.showAll} showDeclined={this.props.showDeclined} getVacationApplications={this.props.getVacationApplications} />)}
+        {this.props.acceptedOrDeclinedVacationsList.map((vacation) => (
+          <AcceptedOrDeclinedVacation
+            key={vacation.id}
+            vacation={vacation}
+            addToAcceptedOrDeclinedVacationList={this.props.addToAcceptedOrDeclinedVacationList}
+            removeFromAcceptedOrDeclined={this.props.removeFromAcceptedOrDeclined}
+            showAll={this.props.showAll}
+            showDeclined={this.props.showDeclined}
+            getVacationApplications={this.props.getVacationApplications}
+          />
+        ))}
       </div>
     );
   }

@@ -10,18 +10,18 @@ class ExternalAuth extends React.Component {
     this.onTokenChange = this.onTokenChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onDelete = this.onDelete.bind(this);
-  }
 
-  state = {
-    publicKey: '',
-    auth: {},
-    authorizationUrl: '',
-    domain: '',
-    token: '',
-    requestData: undefined,
-    projectId: parseInt(this.props.match.params.id, 10),
-    redirectToReferer: undefined,
-  };
+    this.state = {
+      publicKey: '',
+      auth: {},
+      authorizationUrl: '',
+      domain: '',
+      token: '',
+      requestData: undefined,
+      projectId: parseInt(this.props.match.params.id, 10),
+      redirectToReferer: undefined,
+    };
+  }
 
   componentDidMount() {
     this.getProject();
@@ -129,7 +129,11 @@ class ExternalAuth extends React.Component {
         <h3>{I18n.t('apps.external_auths.new')}</h3>
         <input placeholder={I18n.t('apps.external_auths.domain')} value={this.state.domain} onChange={this.onDomainChange} />
         <button onClick={this.getAuthLink} type="button">{I18n.t('apps.external_auths.generate_link')}</button>
-        {this.state.authorizationUrl && <p><a className="btn btn-primary" href={this.state.authorizationUrl} target="_blank" rel="noopener noreferrer">{I18n.t('apps.external_auths.follow_link')}</a></p>}
+        {this.state.authorizationUrl && (
+          <p>
+            <a className="btn btn-primary" href={this.state.authorizationUrl} target="_blank" rel="noopener noreferrer">{I18n.t('apps.external_auths.follow_link')}</a>
+          </p>
+        )}
         {this.state.authorizationUrl
           && (
           <form>
@@ -140,8 +144,7 @@ class ExternalAuth extends React.Component {
               <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
             </div>
           </form>
-          )
-        }
+          )}
       </div>
     );
   }

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import URI from 'urijs';
 import { NavLink } from 'react-router-dom';
 import moment from 'moment';
@@ -22,26 +21,20 @@ class Periods extends React.Component {
 
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onNextUserChange = this.onNextUserChange.bind(this);
-  }
 
-  static propTypes = {
-    periods: PropTypes.array,
-    userId: PropTypes.number,
-    user: PropTypes.object,
-  }
-
-  state = {
-    periods: {
-      accounting_periods: [],
-      total_count: 0,
-    },
-    generatePeriods: {
-      periods_count: undefined,
-      month: moment().format('MM'),
-      year: moment().format('YYYY'),
-    },
-    userId: undefined,
-    user: {},
+    this.state = {
+      periods: {
+        accounting_periods: [],
+        total_count: 0,
+      },
+      generatePeriods: {
+        periods_count: undefined,
+        month: moment().format('MM'),
+        year: moment().format('YYYY'),
+      },
+      userId: undefined,
+      user: {},
+    };
   }
 
   componentDidMount() {
@@ -143,12 +136,14 @@ class Periods extends React.Component {
   }
 
   onGeneratePeriodsChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       generatePeriods: {
-        ...this.state.generatePeriods,
-        [e.target.name]: e.target.value,
+        ...prevState.generatePeriods,
+        [name]: value,
       },
-    });
+    }));
   }
 
   recountPeriods() {
@@ -261,11 +256,11 @@ class Periods extends React.Component {
     Api.makeDeleteRequest({ url: `/api/accounting_periods/${id}` })
       .then((response) => {
         if (parseInt(response.status, 10) === 204) {
-          this.setState({
+          this.setState((prevState) => ({
             periods: {
-              accounting_periods: this.state.periods.accounting_periods.filter(period => (period.id !== id)),
+              accounting_periods: prevState.periods.accounting_periods.filter((period) => (period.id !== id)),
             },
-          });
+          }));
         } else {
           alert('Error while trying to remove accounting period');
         }
@@ -344,9 +339,8 @@ class Periods extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { periods.accounting_periods.map((period, index) => (
-              // eslint-disable-next-line
-              <Period key={index} period={period} onDelete={this.onDelete} userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`} />
+            { periods.accounting_periods.map((period) => (
+              <Period key={period.id} period={period} onDelete={this.onDelete} userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`} />
             )) }
           </tbody>
         </table>

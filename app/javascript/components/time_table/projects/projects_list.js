@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import * as Api from '../../shared/api';
 import Project from './project';
@@ -10,20 +9,15 @@ class ProjectsList extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.getProjects = this.getProjects.bind(this);
+
+    this.state = {
+      projects: [],
+      visible: 'active',
+    };
   }
 
   componentDidMount() {
     this.getProjects();
-  }
-
-  static propTypes = {
-    projects: PropTypes.array,
-    visible: PropTypes.string,
-  }
-
-  state = {
-    projects: [],
-    visible: 'active',
   }
 
   getProjects() {
@@ -70,7 +64,7 @@ class ProjectsList extends React.Component {
               </tr>
             </thead>
             <tbody>
-              { projects.map(project => (
+              { projects.map((project) => (
                 <Project key={project.id} project={project} />
               )) }
             </tbody>

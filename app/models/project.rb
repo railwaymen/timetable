@@ -9,6 +9,7 @@ class Project < ApplicationRecord
   belongs_to :leader, class_name: 'User'
 
   validates :name, presence: true
+  validates :name, uniqueness: true
 
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }

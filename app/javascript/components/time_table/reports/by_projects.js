@@ -11,30 +11,28 @@ import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
 
 class ByProjects extends Report {
-  static propTypes = {
-    reports: PropTypes.array,
-  }
+  constructor(props) {
+    super(props);
 
-  state = {
-    reports: {},
-    projects: [],
-    from: moment().startOf('month').format(),
-    to: moment().endOf('month').format(),
-    redirectToReferer: undefined,
-    order: 'duration',
+    this.state = {
+      reports: {},
+      projects: [],
+      from: moment().startOf('month').format(),
+      to: moment().endOf('month').format(),
+      redirectToReferer: undefined,
+      order: 'duration',
+    };
   }
 
   getReports(params = {}) {
     const original = URI(window.location.href);
     let { from, to, order } = params;
 
-    /* eslint-disable */
     if (!from || !to) {
       from = this.state.from;
       to = this.state.to;
     }
     if (!order) order = this.state.order;
-    /* eslint-enable */
 
     const prepareParams = { from, to, sort: order };
 
@@ -60,9 +58,9 @@ class ByProjects extends Report {
           from,
           to,
         }, () => {
-          this.setState({
-            projects: Object.keys(this.state.reports),
-          });
+          this.setState((prevState) => ({
+            projects: Object.keys(prevState.reports),
+          }));
         });
       });
   }
@@ -101,17 +99,19 @@ class ByProjects extends Report {
           </div>
         </header>
         <div className="row row-eq-height">
-          {/* eslint-disable */}
-          { projects.map((project, index) => (
-            <div className="col-md-4">
-              <ReportProjectRecord key={index} reportRows={reports[project]} from={from} to={to} redirectTo={this.redirectTo} />
+          { projects.map((project) => (
+            <div key={project} className="col-md-4">
+              <ReportProjectRecord reportRows={reports[project]} from={from} to={to} redirectTo={this.redirectTo} />
             </div>
           )) }
-          {/* eslint-enable */}
         </div>
       </div>
     );
   }
 }
+
+ByProjects.propTypes = {
+  reports: PropTypes.array,
+};
 
 export default ByProjects;

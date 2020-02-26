@@ -6,10 +6,10 @@ class IncomingBirthdays extends React.Component {
     super(props);
 
     this.getIncomingBirthdays = this.getIncomingBirthdays.bind(this);
-  }
 
-  state = {
-    incomingBirthdays: [],
+    this.state = {
+      incomingBirthdays: [],
+    };
   }
 
   componentDidMount() {
@@ -28,7 +28,7 @@ class IncomingBirthdays extends React.Component {
 
   renderIncomingBirthday(incomingBirthday) {
     return (
-      <div key={incomingBirthday.id}>
+      <div key={`${incomingBirthday.id}:${incomingBirthday.birthday_date}`}>
         <span>
           {`${incomingBirthday.user_full_name}: `}
         </span>
@@ -43,7 +43,7 @@ class IncomingBirthdays extends React.Component {
       <div className="incoming-birthdays">
         {I18n.t('apps.birthday_templates.incoming_birthdays')}
         <div className="incoming-birthdays-list">
-          {incomingBirthdays.map(incomingBirthday => (this.renderIncomingBirthday(incomingBirthday)))}
+          {incomingBirthdays.map((incomingBirthday) => (this.renderIncomingBirthday(incomingBirthday)))}
         </div>
       </div>
     );

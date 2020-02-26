@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import URI from 'urijs';
 import { NavLink } from 'react-router-dom';
 import User from './user';
@@ -10,6 +9,11 @@ class Users extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.getUsers = this.getUsers.bind(this);
+
+    this.state = {
+      users: [],
+      visible: 'active',
+    };
   }
 
   componentDidMount() {
@@ -18,18 +22,9 @@ class Users extends React.Component {
     this.getUsers(params.filter);
   }
 
-  static propTypes = {
-    users: PropTypes.array,
-  }
-
-  state = {
-    users: [],
-    visible: 'active',
-  }
-
   getUsers(visible) {
     fetch(`/api/users?filter=${visible || this.state.visible}`)
-      .then(response => response.json())
+      .then((response) => response.json())
       .then((data) => {
         this.setState({ visible, users: data });
       });
@@ -70,7 +65,7 @@ class Users extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { users.map(user => <User key={user.id} user={user} />) }
+            { users.map((user) => <User key={user.id} user={user} />) }
           </tbody>
         </table>
       </div>

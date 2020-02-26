@@ -14,17 +14,13 @@ class Filters extends React.Component {
     this.onUserSelectFilterChange = this.onUserSelectFilterChange.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
-  }
 
-  static propTypes = {
-    users: PropTypes.array,
-  }
-
-  state = {
-    users: [],
-    selectedUser: '',
-    startDate: moment().startOf('month').format('DD/MM/YYYY'),
-    endDate: null,
+    this.state = {
+      users: [],
+      selectedUser: '',
+      startDate: moment().startOf('month').format('DD/MM/YYYY'),
+      endDate: null,
+    };
   }
 
   componentDidMount() {
@@ -41,7 +37,7 @@ class Filters extends React.Component {
 
   getActiveUsers() {
     fetch('/api/users?filter=active&staff')
-      .then(response => response.json())
+      .then((response) => response.json())
       .then((data) => {
         this.setState({ users: data });
       });
@@ -125,10 +121,30 @@ class Filters extends React.Component {
             {this.renderUserSelectFilter(users)}
           </div>
           <div className="start-date-filter">
-            <DatePicker {...defaultDatePickerProps} name="startDate" className="form-control" selected={startDate === null ? null : moment(startDate, 'DD/MM/YYYY')} value={startDate === null ? null : moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={e => this.onDateChange('startDate', e)} onSelect={e => this.onDateChange('startDate', e)} />
+            <DatePicker
+              {...defaultDatePickerProps}
+              name="startDate"
+              className="form-control"
+              selected={startDate === null ? null : moment(startDate, 'DD/MM/YYYY')}
+              value={startDate === null ? null : moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
+              format="DD/MM/YYYYs"
+              dateFormat="DD/MM/YYYY"
+              onChange={(e) => this.onDateChange('startDate', e)}
+              onSelect={(e) => this.onDateChange('startDate', e)}
+            />
           </div>
           <div className="end-date-filter">
-            <DatePicker {...defaultDatePickerProps} name="endDate" className="form-control" selected={endDate === null ? null : moment(endDate, 'DD/MM/YYYY')} value={endDate === null ? null : moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')} format="DD/MM/YYYYs" dateFormat="DD/MM/YYYY" onChange={e => this.onDateChange('endDate', e)} onSelect={e => this.onDateChange('endDate', e)} />
+            <DatePicker
+              {...defaultDatePickerProps}
+              name="endDate"
+              className="form-control"
+              selected={endDate === null ? null : moment(endDate, 'DD/MM/YYYY')}
+              value={endDate === null ? null : moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
+              format="DD/MM/YYYYs"
+              dateFormat="DD/MM/YYYY"
+              onChange={(e) => this.onDateChange('endDate', e)}
+              onSelect={(e) => this.onDateChange('endDate', e)}
+            />
           </div>
           { currentUser.staff_manager ? (
             <div className="generator-buttons">
@@ -143,12 +159,15 @@ class Filters extends React.Component {
                 </button>
               </div>
             </div>
-          ) : null
-          }
+          ) : null}
         </div>
       </div>
     );
   }
 }
+
+Filters.propTypes = {
+  users: PropTypes.array,
+};
 
 export default Filters;

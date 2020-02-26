@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import URI from 'urijs';
 import _ from 'lodash';
@@ -29,6 +28,18 @@ class EntryHistory extends React.Component {
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
     this.translateTag = this.translateTag.bind(this);
+
+    this.state = {
+      workHours: [],
+      daysKeys: [],
+      groupedWorkHours: {},
+      months: [],
+      selectedProject: {},
+      filteredUser: undefined,
+      project_id: undefined,
+      from: moment().startOf('month').format(),
+      to: moment().endOf('month').format(),
+    };
   }
 
   componentDidMount() {
@@ -68,22 +79,6 @@ class EntryHistory extends React.Component {
         from, to, project_id,
       });
     }
-  }
-
-  static propTypes = {
-    workHours: PropTypes.array,
-  }
-
-  state = {
-    workHours: [],
-    daysKeys: [],
-    groupedWorkHours: {},
-    months: [],
-    selectedProject: {},
-    filteredUser: undefined,
-    project_id: undefined,
-    from: moment().startOf('month').format(),
-    to: moment().endOf('month').format(),
   }
 
   filterWorkHoursByUser(id, params) {
@@ -130,9 +125,9 @@ class EntryHistory extends React.Component {
 
     if (day.length === 1) {
       groupedWorkHours[fingerPrint] = undefined;
-      daysKeys = daysKeys.filter(daysKey => daysKey !== fingerPrint);
+      daysKeys = daysKeys.filter((daysKey) => daysKey !== fingerPrint);
     } else {
-      groupedWorkHours[fingerPrint] = day.filter(record => record.id !== component.state.workHours.id);
+      groupedWorkHours[fingerPrint] = day.filter((record) => record.id !== component.state.workHours.id);
     }
 
     return this.setState({
@@ -167,10 +162,10 @@ class EntryHistory extends React.Component {
       let { daysKeys } = this.state;
 
       if (groupedIndex) {
-        groupedWorkHours[time] = _.sortBy(groupedWorkHours[time].concat([object]), t => moment(t.starts_at).format('HHmm')).reverse();
+        groupedWorkHours[time] = _.sortBy(groupedWorkHours[time].concat([object]), (t) => moment(t.starts_at).format('HHmm')).reverse();
       } else {
         groupedWorkHours[time] = [object];
-        daysKeys = _.sortBy(this.state.daysKeys.concat([time]), key => key).reverse();
+        daysKeys = _.sortBy(this.state.daysKeys.concat([time]), (key) => key).reverse();
       }
 
       this.setState({
@@ -300,15 +295,15 @@ class EntryHistory extends React.Component {
         groupedWorkHours: {},
       });
     } else {
-      this.setState({
+      this.setState((prevState) => ({
         daysKeys: [],
-        groupedWorkHours: _.groupBy(this.state.workHours, workHours => (
+        groupedWorkHours: _.groupBy(prevState.workHours, (workHours) => (
           moment(workHours.starts_at).format('YYYYMMDD')
         )),
-      }, () => {
-        this.setState({
-          daysKeys: _.sortBy(Object.keys(this.state.groupedWorkHours), date => date).reverse(),
-        });
+      }), () => {
+        this.setState((prevState) => ({
+          daysKeys: _.sortBy(Object.keys(prevState.groupedWorkHours), (date) => date).reverse(),
+        }));
       });
     }
   }
@@ -318,9 +313,9 @@ class EntryHistory extends React.Component {
   }
 
   totalWorkHours() {
-    this.setState({
-      total: displayDuration(_.sumBy(this.state.workHours, w => w.duration)),
-    });
+    this.setState((prevState) => ({
+      total: displayDuration(_.sumBy(prevState.workHours, (w) => w.duration)),
+    }));
   }
 
   onProjectFilter(e) {
@@ -334,7 +329,7 @@ class EntryHistory extends React.Component {
         project_id: projectId, pushHistory: true, from, to,
       });
       this.setState({
-        selectedProject: _.find(this.props.projects, project => project.id === projectId),
+        selectedProject: _.find(this.props.projects, (project) => project.id === projectId),
       });
     } else {
       this.getWorkHours({ pushHistory: true, from, to });
@@ -443,12 +438,12 @@ class EntryHistory extends React.Component {
       return (
         <div className="duration">
           <span className="work-time">{total}</span>
-/
+          /
           {shouldWork}
           <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_day')}>
             <i className="circle help icon small" />
           </span>
-/
+          /
           {mandatoryHours}
           <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_month')}>
             <i className="circle help icon small" />
@@ -464,7 +459,6 @@ class EntryHistory extends React.Component {
   }
 
   renderFilters() {
-    /* eslint-disable */
     const { projects } = this.props;
     const { months, from, selectedProject } = this.state;
     return (
@@ -473,8 +467,8 @@ class EntryHistory extends React.Component {
           <div className="text">{moment(from).format('MMMM') || I18n.t('apps.timesheet.select_month')}</div>
           <i className="dropdown icon" />
           <div className="menu" tabIndex="-1">
-            { months.map((month, index) => (
-              <a key={index} className="item" data-month={JSON.stringify(month)} onClick={this.onMonthFilter} href={`/timesheet?project_id=${month.date}`}>
+            { months.map((month) => (
+              <a key={month.name} className="item" data-month={JSON.stringify(month)} onClick={this.onMonthFilter} href={`/timesheet?project_id=${month.date}`}>
                 {month.name}
               </a>
             )) }
@@ -485,14 +479,15 @@ class EntryHistory extends React.Component {
           <i className="dropdown icon" />
           <div className="menu" tabIndex="-1">
             <a className="item" data-project-id="" href="" onClick={this.onProjectFilter}>{I18n.t('common.all')}</a>
-            { projects.map((project, index) => (
-              <a onClick={this.onProjectFilter} data-project-id={project.id} className="item" key={index} href={`/timesheet?project_id=${project.id}`}>{project.name}</a>
+            { projects.map((project) => (
+              <a onClick={this.onProjectFilter} data-project-id={project.id} className="item" key={project.name} href={`/timesheet?project_id=${project.id}`}>
+                {project.id}
+              </a>
             )) }
           </div>
         </div>
       </div>
     );
-    /* eslint-enable */
   }
 
   renderTaskDuration() {
@@ -551,8 +546,7 @@ class EntryHistory extends React.Component {
                         <td><div className="preloader" /></td>
                         <td><div className="preloader" /></td>
                       </tr>
-                    )
-                  }
+                    )}
                 </tbody>
               </table>
               {

@@ -6,9 +6,19 @@ const HorizontalArrows = ({
   onLeftClick, onRightClick, children, className = '',
 }) => (
   <div className={`horizontal-arrows ${className}`}>
-    <a key={0} className="glyphicon glyphicon-chevron-left previous" href="javascript:void(0)" onClick={onLeftClick} />
+    <button
+      type="button"
+      key={0}
+      className="btn btn-link glyphicon glyphicon-chevron-left previous"
+      onClick={onLeftClick}
+    />
     {children}
-    <a key={1} className="glyphicon glyphicon-chevron-right next" href="javascript:void(0)" onClick={onRightClick} />
+    <button
+      type="button"
+      key={1}
+      className="btn btn-link glyphicon glyphicon-chevron-right next"
+      onClick={onRightClick}
+    />
   </div>
 );
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import _ from 'lodash';
 import * as Api from '../../shared/api';
@@ -12,19 +11,15 @@ class Projects extends React.Component {
     this.getProjects = this.getProjects.bind(this);
     this.renderGroupedRecords = this.renderGroupedRecords.bind(this);
     this.changeRange = this.changeRange.bind(this);
+
+    this.state = {
+      projectsStats: {},
+      range: 30,
+    };
   }
 
   componentDidMount() {
     this.getProjects();
-  }
-
-  static propTypes = {
-    projectsStats: PropTypes.object,
-  }
-
-  state = {
-    projectsStats: {},
-    range: 30,
   }
 
   getProjects() {
@@ -90,6 +85,5 @@ class Projects extends React.Component {
     );
   }
 }
-
 
 export default Projects;

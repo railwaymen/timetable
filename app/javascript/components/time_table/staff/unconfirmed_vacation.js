@@ -15,15 +15,15 @@ class UnconfirmedVacation extends React.Component {
     this.onAcceptClick = this.onAcceptClick.bind(this);
     this.onUndoneClick = this.onUndoneClick.bind(this);
     this.renderInteractions = this.renderInteractions.bind(this);
-  }
 
-  state = {
-    vacation: this.props.vacation,
-    vacationSubType: this.props.vacation.vacation_sub_type ? this.props.vacation.vacation_sub_type : '',
-    vacationApprovers: this.props.vacation.approvers ? this.props.vacation.approvers.split(',').filter(Boolean) : [],
-    vacationDecliners: this.props.vacation.decliners ? this.props.vacation.decliners.split(',').filter(Boolean) : [],
-    interacted: this.props.vacation.interacted,
-    errors: [],
+    this.state = {
+      vacation: this.props.vacation,
+      vacationSubType: this.props.vacation.vacation_sub_type ? this.props.vacation.vacation_sub_type : '',
+      vacationApprovers: this.props.vacation.approvers ? this.props.vacation.approvers.split(',').filter(Boolean) : [],
+      vacationDecliners: this.props.vacation.decliners ? this.props.vacation.decliners.split(',').filter(Boolean) : [],
+      interacted: this.props.vacation.interacted,
+      errors: [],
+    };
   }
 
   onDeclineClick() {
@@ -213,8 +213,7 @@ class UnconfirmedVacation extends React.Component {
     return (
       <div className={`unconfirmed-vacation ${vacation.status}`}>
         { errors.length > 0
-            && this.renderErrors()
-        }
+            && this.renderErrors()}
         <div className="vacation-header">
           <div className="user-full-name">
             {vacation.full_name}
@@ -223,8 +222,7 @@ class UnconfirmedVacation extends React.Component {
                 <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
                   <i className="icon calendar" />
                 </NavLink>
-              )
-            }
+              )}
           </div>
           <div className="vacation-time-period">
             {moment(vacation.start_date).format('DD/MM/YYYY')}
@@ -249,8 +247,7 @@ class UnconfirmedVacation extends React.Component {
                   {` ${vacation.available_vacation_days}`}
                 </span>
               </div>
-            )
-        }
+            )}
       </div>
     );
   }

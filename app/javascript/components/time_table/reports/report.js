@@ -14,7 +14,6 @@ class Report extends React.Component {
     this.onToDateChange = this.onToDateChange.bind(this);
     this.onOrderChange = this.onOrderChange.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
-    this.redirectTo = this.redirectTo.bind(this);
   }
 
   componentDidMount() {
@@ -82,12 +81,6 @@ class Report extends React.Component {
       return moment(from).format('MMMM YYYY');
     }
     return I18n.t('common.custom');
-  }
-
-  redirectTo(location) {
-    const url = URI(location);
-    // eslint-disable-next-line
-    this.setState({ redirectToReferer: `${url.path()}?${url.query()}` });
   }
 }
 

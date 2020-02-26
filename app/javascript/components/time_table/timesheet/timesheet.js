@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Entry from './entry';
 import EntryHistory from './history/entry_history';
@@ -13,22 +12,16 @@ class Timesheet extends React.Component {
     this.onCopy = this.onCopy.bind(this);
     this.getProjects = this.getProjects.bind(this);
     this.setLastProject = this.setLastProject.bind(this);
+
+    this.state = {
+      projects: [],
+      tags: [],
+      tags_disabled: false,
+    };
   }
 
   componentDidMount() {
     this.getProjects();
-  }
-
-  static propTypes = {
-    projects: PropTypes.array,
-    tags: PropTypes.array,
-    tags_disabled: PropTypes.bool,
-  }
-
-  state = {
-    projects: [],
-    tags: [],
-    tags_disabled: false,
   }
 
   pushEntry(object) {
@@ -61,7 +54,14 @@ class Timesheet extends React.Component {
       return (
         <div>
           <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projects} tags={tags} tags_disabled={tags_disabled} />
-          <EntryHistory ref={(entryHistory) => { this.entryHistory = entryHistory; }} onCopy={this.onCopy} projects={projects} setLastProject={this.setLastProject} tags_disabled={tags_disabled} tags={tags} />
+          <EntryHistory
+            ref={(entryHistory) => { this.entryHistory = entryHistory; }}
+            onCopy={this.onCopy}
+            projects={projects}
+            setLastProject={this.setLastProject}
+            tags_disabled={tags_disabled}
+            tags={tags}
+          />
         </div>
       );
     }

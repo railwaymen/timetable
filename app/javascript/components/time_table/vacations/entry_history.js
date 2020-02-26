@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import * as Api from '../../shared/api';
 
@@ -12,22 +11,15 @@ class EntryHistory extends React.Component {
     this.onSelectChange = this.onSelectChange.bind(this);
     this.renderUsedVacationDays = this.renderUsedVacationDays.bind(this);
     this.onCollappsibleClick = this.onCollappsibleClick.bind(this);
-  }
 
-  static propTypes = {
-    vacations: PropTypes.array,
-    years: PropTypes.array,
-    selectedYear: PropTypes.number,
-    availableVacationDays: PropTypes.number,
-  }
-
-  state = {
-    vacations: [],
-    years: [parseInt(moment().year(), 10)],
-    selectedYear: undefined,
-    availableVacationDays: 0,
-    usedVacationDays: {},
-    usedVacationsExpanded: false,
+    this.state = {
+      vacations: [],
+      years: [parseInt(moment().year(), 10)],
+      selectedYear: undefined,
+      availableVacationDays: 0,
+      usedVacationDays: {},
+      usedVacationsExpanded: false,
+    };
   }
 
   componentDidMount() {
@@ -138,9 +130,9 @@ class EntryHistory extends React.Component {
   onCollappsibleClick() {
     $('.used-vacations')[0].style.pointerEvents = 'none';
     setTimeout(() => {
-      this.setState({
-        usedVacationsExpanded: !this.state.usedVacationsExpanded,
-      }, () => { $('.used-vacations')[0].style.pointerEvents = ''; });
+      this.setState((prevState) => ({
+        usedVacationsExpanded: !prevState.usedVacationsExpanded,
+      }), () => { $('.used-vacations')[0].style.pointerEvents = ''; });
     }, 300);
   }
 

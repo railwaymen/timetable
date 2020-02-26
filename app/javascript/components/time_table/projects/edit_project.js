@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink, Redirect } from 'react-router-dom';
 import * as Api from '../../shared/api';
 
@@ -12,25 +11,20 @@ class EditProject extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onCheckboxChange = this.onCheckboxChange.bind(this);
     this.getUsers = this.getUsers.bind(this);
-  }
 
-  static propTypes = {
-    project: PropTypes.object,
-    users: PropTypes.array,
-  }
-
-  state = {
-    project: {
-      id: undefined,
-      name: undefined,
-      color: '0c0c0c',
-      leader_id: '',
-      work_times_allows_task: true,
-      active: true,
-    },
-    users: [],
-    projectId: parseInt(this.props.match.params.id, 10),
-    redirectToReferer: undefined,
+    this.state = {
+      project: {
+        id: undefined,
+        name: undefined,
+        color: '0c0c0c',
+        leader_id: '',
+        work_times_allows_task: true,
+        active: true,
+      },
+      users: [],
+      projectId: parseInt(this.props.match.params.id, 10),
+      redirectToReferer: undefined,
+    };
   }
 
   componentDidMount() {
@@ -61,22 +55,27 @@ class EditProject extends React.Component {
   }
 
   onChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       project: {
-        ...this.state.project,
-        [e.target.name]: e.target.value,
+        ...prevState.project,
+        [name]: value,
       },
-    });
+    }));
   }
 
   onCheckboxChange(e) {
-    const { project } = this.state;
+    this.setState((prevState) => {
+      const { project } = prevState;
+      const { name } = e.target;
 
-    this.setState({
-      project: {
-        ...project,
-        [e.target.name]: !project[e.target.name],
-      },
+      return {
+        project: {
+          ...project,
+          [name]: !project[name],
+        },
+      };
     });
   }
 
@@ -141,7 +140,7 @@ class EditProject extends React.Component {
                   <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
                   <select name="leader_id" id="leader" className="form-control" value={project.leader_id} onChange={this.onChange}>
                     <option value="" />
-                    { users.map(user => (
+                    { users.map((user) => (
                       <option key={user.id} value={user.id}>
                         {currentUser.fullName.apply(user)}
                       </option>

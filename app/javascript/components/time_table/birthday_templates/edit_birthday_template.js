@@ -11,17 +11,17 @@ class EditBirthdayTemplate extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.catchErrors = this.catchErrors.bind(this);
+
+    this.state = {
+      birthdayTemplate: {},
+      birthdayTemplateId: parseInt(this.props.match.params.id, 10),
+      redirectToReferer: undefined,
+      errors: {},
+    };
   }
 
   componentDidMount() {
     this.getBirthdayTemplate();
-  }
-
-  state = {
-    birthdayTemplate: {},
-    birthdayTemplateId: parseInt(this.props.match.params.id, 10),
-    redirectToReferer: undefined,
-    errors: {},
   }
 
   getBirthdayTemplate() {
@@ -39,13 +39,13 @@ class EditBirthdayTemplate extends React.Component {
   }
 
   onChange(e) {
-    const { name } = e.target;
-    this.setState({
+    const { name, value } = e.target;
+    this.setState((prevState) => ({
       birthdayTemplate: {
-        ...this.state.birthdayTemplate,
-        [name]: e.target.value,
+        ...prevState.birthdayTemplate,
+        [name]: value,
       },
-    }, () => {
+    }), () => {
       this.setState(({ errors }) => {
         delete errors[name];
         return { errors };
@@ -94,7 +94,7 @@ class EditBirthdayTemplate extends React.Component {
     return (
       <div className="error-tooltip birthday-error">
         <ul>
-          {errors.map(error => (
+          {errors.map((error) => (
             <li key={error}>{error}</li>
           ))}
         </ul>
