@@ -295,25 +295,24 @@ class Entry extends React.Component {
                     ? <img className="easter" src={this.renderEasterEgg()} alt="" />
                     : <textarea className="form-control" placeholder={I18n.t('apps.timesheet.what_have_you_done')} name="body" value={body} onChange={this.onChange} onKeyPress={this.onKeyPress} />}
                 </div>
-                {project.work_times_allows_task
-                  ? (
-                    <div className="form-group">
-                      {errors.task ? <ErrorTooltip errors={errors.task} /> : null}
-                      <input
-                        className="form-control task-url"
-                        placeholder={I18n.t('apps.timesheet.task_url')}
-                        type="text"
-                        name="task"
-                        value={task}
-                        onChange={this.onChange}
-                        onKeyPress={this.onKeyPress}
-                      />
-                    </div>
-                  ) : null}
+                {project.work_times_allows_task && (
+                  <div className="form-group">
+                    {errors.task && <ErrorTooltip errors={errors.task} />}
+                    <input
+                      className="form-control task-url"
+                      placeholder={I18n.t('apps.timesheet.task_url')}
+                      type="text"
+                      name="task"
+                      value={task}
+                      onChange={this.onChange}
+                      onKeyPress={this.onKeyPress}
+                    />
+                  </div>
+                )}
               </div>
               <div className="col-sm-4 col-md-2 project">
                 <div className="project-dropdown">
-                  {errors.project_id ? <ErrorTooltip errors={errors.project_id} /> : null}
+                  {errors.project_id && <ErrorTooltip errors={errors.project_id} />}
                   <div>
                     <ProjectsDropdown updateProject={this.updateProject} selectedProject={this.state.project} projects={this.props.projects} />
                   </div>
@@ -355,7 +354,7 @@ class Entry extends React.Component {
                   </div>
                 </div>
                 <div className="duration manual">
-                  {errors.duration ? <ErrorTooltip errors={errors.duration} /> : null}
+                  {errors.duration && <ErrorTooltip errors={errors.duration} />}
                   <span id="duration">{durationHours}</span>
                 </div>
                 <DatePicker

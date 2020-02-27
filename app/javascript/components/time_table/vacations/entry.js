@@ -203,7 +203,7 @@ class Entry extends React.Component {
       <div>
         <div className="row vacation-date-range">
           <div className="date">
-            {errors.startDate ? this.renderErrorTooltip(errors.startDate) : null}
+            {errors.startDate && this.renderErrorTooltip(errors.startDate)}
             <DatePicker
               {...defaultDatePickerProps}
               name="start_date"
@@ -217,7 +217,7 @@ class Entry extends React.Component {
             />
           </div>
           <div className="date">
-            {errors.endDate ? this.renderErrorTooltip(errors.endDate) : null}
+            {errors.endDate && this.renderErrorTooltip(errors.endDate)}
             <DatePicker
               {...defaultDatePickerProps}
               name="end_date"
@@ -231,13 +231,13 @@ class Entry extends React.Component {
             />
           </div>
           <div className="vacation-type">
-            {errors.vacationType ? this.renderErrorTooltip(errors.vacationType) : null}
+            {errors.vacationType && this.renderErrorTooltip(errors.vacationType)}
             {this.renderVacationTypes(vacationType)}
           </div>
         </div>
         <div className="row description-containter">
           <div className="description">
-            {errors.description ? this.renderErrorTooltip(errors.description) : null}
+            {errors.description && this.renderErrorTooltip(errors.description)}
             <textarea
               className="form-control"
               placeholder={I18n.t('apps.vacations.vacation_description')}
@@ -250,17 +250,15 @@ class Entry extends React.Component {
         </div>
         <div className="row">
           <div className="base-error">
-            {errors.base ? this.renderErrorTooltip(errors.base) : null}
+            {errors.base && this.renderErrorTooltip(errors.base)}
           </div>
         </div>
         <div className="row footer">
-          { window.currentUser.staff_manager
-            && users
-            && (
+          { window.currentUser.staff_manager && users && (
             <div className="user-filter">
               {this.renderUserSelectFilter(users)}
             </div>
-            )}
+          )}
           <div className="form-actions">
             <button type="button" className="bt-vacation" onClick={(this.onSubmit)}>
               <span className="bt-txt">{I18n.t('common.send')}</span>

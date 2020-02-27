@@ -547,8 +547,7 @@ export default class EditReport extends React.Component {
             </tbody>
           </table>
         </div>
-        {this.editable()
-          && (
+        {this.editable() && (
           <div className="report-main-actions">
             <button key="submit" className="bt bt-main bt-big" type="button" onClick={this.onSubmit}>
               <span className="txt">{I18n.t('common.save')}</span>
@@ -559,18 +558,16 @@ export default class EditReport extends React.Component {
               <i className="symbol fa fa-file-pdf-o" />
             </button>
           </div>
-          )}
-        {report.generated
-          && (
+        )}
+        {report.generated && (
           <div className="report-download-actions">
             <a className="bt bt-second bt-big bt-download" href={`/api/projects/${projectId}/project_reports/${reportId}/file`}>
               <i className="symbol fa fa-file-pdf-o" />
               <span className="txt">{I18n.t('common.download')}</span>
             </a>
           </div>
-          )}
-        {this.editable()
-          && (
+        )}
+        {this.editable() && (
           <div className="report-undo-actions">
             <button key="soft" type="button" className="ln ln-second" onClick={this.onSoftReset}>
               <i className="symbol fa fa-undo" />
@@ -581,7 +578,7 @@ export default class EditReport extends React.Component {
               <span className="txt">{I18n.t('apps.reports.restore_first')}</span>
             </button>
           </div>
-          )}
+        )}
       </div>
     );
   }

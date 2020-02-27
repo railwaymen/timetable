@@ -109,15 +109,15 @@ class EditBirthdayTemplate extends React.Component {
       <div>
         <div className="birthday-template-form">
           <div className="form-group">
-            {errors.name ? this.renderErrorTooltip(errors.name) : null}
+            {errors.name && this.renderErrorTooltip(errors.name)}
             <input className="form-control" type="text" name="name" placeholder={I18n.t('common.name')} onChange={this.onChange} value={birthdayTemplate.name || ''} />
           </div>
           <div className="form-group">
-            {errors.title ? this.renderErrorTooltip(errors.title) : null}
+            {errors.title && this.renderErrorTooltip(errors.title)}
             <input className="form-control" type="text" name="title" placeholder={I18n.t('common.title')} onChange={this.onChange} value={birthdayTemplate.title || ''} />
           </div>
           <div className="form-group">
-            {errors.body ? this.renderErrorTooltip(errors.body) : null}
+            {errors.body && this.renderErrorTooltip(errors.body)}
             <textarea className="form-control" name="body" placeholder={I18n.t('apps.birthday_templates.email_content')} onChange={this.onChange} value={birthdayTemplate.body || ''} />
           </div>
           <NavLink activeClassName="" className="btn btn-default" to="/birthday_templates">{I18n.t('common.cancel')}</NavLink>

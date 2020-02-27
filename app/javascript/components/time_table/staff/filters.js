@@ -87,6 +87,7 @@ class Filters extends React.Component {
   renderUserSelectFilter(users) {
     const { selectedUser } = this.state;
     const options = [];
+
     users.forEach((user) => {
       options.push(
         <option key={user.id} value={user.id}>
@@ -94,6 +95,7 @@ class Filters extends React.Component {
         </option>,
       );
     });
+
     return (
       <select className="form-control user-select-filter" value={selectedUser} onChange={(this.onUserSelectFilterChange)}>
         <option value="">{I18n.t('apps.staff.by_person')}</option>
@@ -146,7 +148,7 @@ class Filters extends React.Component {
               onSelect={(date) => this.onDateChange('endDate', date)}
             />
           </div>
-          { currentUser.staff_manager ? (
+          { currentUser.staff_manager && (
             <div className="generator-buttons">
               <div className="csv-export-button">
                 <button className="filter-button bt-vacation" type="button" onClick={this.onExportClick}>
@@ -159,7 +161,7 @@ class Filters extends React.Component {
                 </button>
               </div>
             </div>
-          ) : null}
+          )}
         </div>
       </div>
     );

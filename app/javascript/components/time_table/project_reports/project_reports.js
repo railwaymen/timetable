@@ -117,13 +117,12 @@ export default class ProjectReports extends React.Component {
                     {cost.toFixed(2)}
                   </td>
                   <td className="report-actions text-right">
-                    {generated
-                      && (
+                    {generated && (
                       <a className="bt bt-second bt-download" href={`/api/projects/${projectId}/project_reports/${id}/file`}>
                         <i className="symbol fa fa-file-pdf-o" />
                         <span className="txt">{I18n.t('common.download')}</span>
                       </a>
-                      )}
+                    )}
                     <Link className="bt bt-second" to={`/projects/${projectId}/edit_report/${id}`}>
                       <i className="symbol fa fa-search" />
                       <span className="bt-txt">{I18n.t('common.show')}</span>

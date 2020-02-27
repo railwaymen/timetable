@@ -81,16 +81,17 @@ class ByUsers extends Report {
       <div id="content">
         <header className="page-header reports-header row">
           <div className="col-md-3">
-            { (currentUser.isSuperUser() || currentUser.is_leader)
-              ? (
-                <select id="filter-list" className="form-control" name="list" onChange={this.onFilterChange} defaultValue={list}>
-                  { currentUser.isSuperUser()
-                    ? <option value="all">{I18n.t('apps.reports.all')}</option> : null }
-                  { currentUser.is_leader
-                    ? <option value="leader">{I18n.t('apps.reports.my_projects')}</option> : null }
-                  <option value="self">{I18n.t('apps.reports.my_work_hours')}</option>
-                </select>
-              ) : null }
+            { (currentUser.isSuperUser() || currentUser.is_leader) && (
+              <select id="filter-list" className="form-control" name="list" onChange={this.onFilterChange} defaultValue={list}>
+                { currentUser.isSuperUser() && (
+                  <option value="all">{I18n.t('apps.reports.all')}</option>
+                )}
+                { currentUser.is_leader && (
+                  <option value="leader">{I18n.t('apps.reports.my_projects')}</option>
+                )}
+                <option value="self">{I18n.t('apps.reports.my_work_hours')}</option>
+              </select>
+            )}
           </div>
           <div className="col-md-6 text-muted text-center">
             <HorizontalArrows onLeftClick={this.prevMonth} onRightClick={this.nextMonth}>
@@ -99,13 +100,12 @@ class ByUsers extends Report {
             <DateRangeFilter from={from} to={to} onFilter={this.onFilter} onFromChange={this.onFromDateChange} onToChange={this.onToDateChange} />
           </div>
           <div className="col-md-3">
-            { (currentUser.isSuperUser() || currentUser.is_leader)
-              ? (
-                <div className="btn-group pull-right">
-                  <NavLink className="btn btn-default" to="/reports/work_times/by_projects">{I18n.t('apps.reports.by_projects')}</NavLink>
-                  <span className="btn btn-default active">{I18n.t('apps.reports.by_people')}</span>
-                </div>
-              ) : null }
+            { (currentUser.isSuperUser() || currentUser.is_leader) && (
+              <div className="btn-group pull-right">
+                <NavLink className="btn btn-default" to="/reports/work_times/by_projects">{I18n.t('apps.reports.by_projects')}</NavLink>
+                <span className="btn btn-default active">{I18n.t('apps.reports.by_people')}</span>
+              </div>
+            )}
           </div>
         </header>
         <div className="row row-eq-height">

@@ -23,7 +23,9 @@ class AcceptedOrDeclinedVacation extends React.Component {
 
   onVacationClick(e) {
     if ($(e.target).closest('.vacation-buttons').length || !window.currentUser.staff_manager) { return; }
+
     const { vacation, folded, fetched } = this.state;
+
     if (folded && !fetched) {
       Api.makeGetRequest({
         url: `/api/vacations/${vacation.id}`,
@@ -125,12 +127,11 @@ class AcceptedOrDeclinedVacation extends React.Component {
         <div className="vacation-header">
           <div className="user-full-name">
             {vacation.full_name}
-            { window.currentUser.staff_manager
-              && (
-                <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
-                  <i className="icon calendar" />
-                </NavLink>
-              )}
+            { window.currentUser.staff_manager && (
+              <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
+                <i className="icon calendar" />
+              </NavLink>
+            )}
           </div>
           <div className="vacation-time-period">
             {moment(vacation.start_date).format('DD/MM/YYYY')}
@@ -174,11 +175,11 @@ class AcceptedOrDeclinedVacation extends React.Component {
     } else {
       result = (
         <div className="vacation-buttons">
-          { vacation.status !== 'accepted' ? (
+          { vacation.status !== 'accepted' && (
             <button className="bt-vacation accept" type="button" onClick={this.onAcceptClick}>
               <span className="bt-txt">{I18n.t('apps.staff.accept')}</span>
             </button>
-          ) : undefined }
+          )}
           <button className="bt-vacation decline" type="button" onClick={this.onDeclineClick}>
             <span className="bt-txt">{I18n.t('apps.staff.decline')}</span>
           </button>

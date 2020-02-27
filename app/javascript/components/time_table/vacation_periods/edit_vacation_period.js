@@ -88,9 +88,9 @@ class EditVacationPeriod extends React.Component {
         <div className="container">
           <div id="content" className="edit-vacation-period col-md-6">
             <form className="row" onSubmit={this.onSubmit}>
-              { errors.vacation_days
-                ? <div className="error-description">{errors.vacation_days.join(', ')}</div>
-                : null }
+              { errors.vacation_days && (
+                <div className="error-description">{errors.vacation_days.join(', ')}</div>
+              )}
               <div className="form-group">
                 <input
                   className={`${errors.vacation_days ? 'error' : ''} form-control`}
@@ -101,9 +101,9 @@ class EditVacationPeriod extends React.Component {
                   disabled={period.closed}
                 />
               </div>
-              { errors.note
-                ? <div className="error-description">{errors.note.join(', ')}</div>
-                : null }
+              { errors.note && (
+                <div className="error-description">{errors.note.join(', ')}</div>
+              )}
               <div className="form-group">
                 <textarea
                   className={`${errors.note ? 'error' : ''} form-control`}

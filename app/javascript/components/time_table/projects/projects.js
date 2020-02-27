@@ -79,7 +79,7 @@ class Projects extends React.Component {
           </div>
         </header>
         <div className="row row-eq-height projects-cards">
-          { !_.isEmpty(projectsStats) ? this.renderGroupedRecords() : null }
+          { !_.isEmpty(projectsStats) && this.renderGroupedRecords() }
         </div>
       </div>
     );

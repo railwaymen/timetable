@@ -143,7 +143,7 @@ class ProjectsDropdown extends React.Component {
           <div className="circular empty label ui" style={{ background: `#${selectedProject.color}` }} />
           {selectedProject.name}
         </div>
-        { isExpanded ? this.renderProjectsList() : null }
+        {isExpanded && this.renderProjectsList()}
       </div>
     );
   }
