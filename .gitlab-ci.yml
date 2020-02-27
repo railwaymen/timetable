@@ -4,7 +4,7 @@ variables:
 before_script:
   - cp .env.example .env
   - bundle install --path=/home/gitlab-runner/builds/shared/${CI_PROJECT_NAME}/gems
-  - nvm use v11.4.0
+  - nvm use v13.9.0
   - yarn install
 
 test:
