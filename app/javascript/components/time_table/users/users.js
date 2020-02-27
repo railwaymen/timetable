@@ -1,76 +1,60 @@
-import React from 'react';
-import URI from 'urijs';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import User from './user';
 
-class Users extends React.Component {
-  constructor(props) {
-    super(props);
+function Users() {
+  const [users, setUsers] = useState([]);
+  const [visibility, setVisibility] = useState('active');
 
-    this.onChange = this.onChange.bind(this);
-    this.getUsers = this.getUsers.bind(this);
-
-    this.state = {
-      users: [],
-      visible: 'active',
-    };
-  }
-
-  componentDidMount() {
-    const base = URI(window.location.href);
-    const params = base.query(true);
-    this.getUsers(params.filter);
-  }
-
-  getUsers(visible) {
-    fetch(`/api/users?filter=${visible || this.state.visible}`)
+  function getUsers(isVisible) {
+    fetch(`/api/users?filter=${isVisible}`)
       .then((response) => response.json())
       .then((data) => {
-        this.setState({ visible, users: data });
+        setUsers(data);
       });
   }
 
-  onChange(e) {
-    this.setState({
-      [e.target.name]: [e.target.value],
-    }, () => { this.getUsers(); });
-  }
+  useEffect(() => {
+    getUsers(visibility);
+  }, [visibility]);
 
-  render() {
-    const { users, visible } = this.state;
-
-    return (
-      <div>
-        <div className="actions pull-left">
-          <div className="disabled-button-wrapper" data-toggle="tooltip" data-placement="right" title="button_disabled_tooltip">
-            <NavLink className="btn btn-default" to="/users/new">{I18n.t('common.add')}</NavLink>
-          </div>
+  return (
+    <div>
+      <div className="actions pull-left">
+        <div className="disabled-button-wrapper" data-toggle="tooltip" data-placement="right" title="button_disabled_tooltip">
+          <NavLink className="btn btn-default" to="/users/new">{I18n.t('common.add')}</NavLink>
         </div>
-        <div className="pull-left">
-          <select name="visible" id="filter" className="form-control" onChange={this.onChange} value={visible}>
-            <option value="active">{I18n.t('apps.users.active')}</option>
-            <option value="inactive">{I18n.t('apps.users.inactive')}</option>
-            <option value="all">{I18n.t('apps.users.all')}</option>
-          </select>
-        </div>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th />
-              <th>{I18n.t('apps.users.last_name')}</th>
-              <th>{I18n.t('apps.users.first_name')}</th>
-              <th>Email</th>
-              <th>{I18n.t('apps.users.contract_id')}</th>
-              <th>{I18n.t('apps.users.phone')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            { users.map((user) => <User key={user.id} user={user} />) }
-          </tbody>
-        </table>
       </div>
-    );
-  }
+      <div className="pull-left">
+        <select
+          name="visibility"
+          id="filter"
+          className="form-control"
+          onChange={(e) => setVisibility(e.target.value)}
+          value={visibility}
+        >
+          <option value="active">{I18n.t('apps.users.active')}</option>
+          <option value="inactive">{I18n.t('apps.users.inactive')}</option>
+          <option value="all">{I18n.t('apps.users.all')}</option>
+        </select>
+      </div>
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th />
+            <th>{I18n.t('apps.users.last_name')}</th>
+            <th>{I18n.t('apps.users.first_name')}</th>
+            <th>Email</th>
+            <th>{I18n.t('apps.users.contract_id')}</th>
+            <th>{I18n.t('apps.users.phone')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          { users.map((user) => <User key={user.id} user={user} />) }
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default Users;

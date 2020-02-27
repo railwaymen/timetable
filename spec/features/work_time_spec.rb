@@ -198,7 +198,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
         click_button 'Save'
       end
 
-      expect(page).to have_content('Rank')
+      expect(page).to have_selector('a.active[href="/timesheet"]')
       user.reload
       expect(user.first_name).to eq 'John'
       expect(user.last_name).to eq 'Doe'
