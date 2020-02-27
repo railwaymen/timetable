@@ -3,10 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 class User extends React.Component {
   getIconClass() {
-    if (this.props.user.active) {
-      return 'active';
-    }
-    return 'inactive';
+    return this.props.user.active ? 'active' : 'inactive';
   }
 
   render() {

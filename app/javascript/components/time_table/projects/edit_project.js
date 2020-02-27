@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
+import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
 
 class EditProject extends React.Component {
@@ -101,25 +102,6 @@ class EditProject extends React.Component {
     }
   }
 
-  renderPreloader() {
-    return (
-      <div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const {
       project, users, redirectToReferer, projectId,
@@ -172,7 +154,7 @@ class EditProject extends React.Component {
         </form>
       );
     }
-    return this.renderPreloader();
+    return <Preloader rowsNumber={5} />;
   }
 }
 

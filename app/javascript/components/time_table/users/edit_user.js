@@ -3,6 +3,7 @@ import { NavLink, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import * as Api from '../../shared/api';
 import { unnullifyFields } from '../../shared/helpers';
+import Preloader from '../../shared/preloader';
 
 class EditUser extends React.Component {
   constructor(props) {
@@ -91,20 +92,20 @@ class EditUser extends React.Component {
     return (
       <div>
         <div className="form-group">
-          <input className="form-control" type="text" name="email" placeholder="Email" onChange={this.onChange} value={user.email} />
+          <input className="form-control" type="text" name="email" placeholder="Email" onChange={this.onChange} value={user.email || ''} />
         </div>
 
         <div className="form-group">
-          <input className="form-control" type="text" name="first_name" placeholder={I18n.t('apps.users.first_name')} onChange={this.onChange} value={user.first_name} />
+          <input className="form-control" type="text" name="first_name" placeholder={I18n.t('apps.users.first_name')} onChange={this.onChange} value={user.first_name || ''} />
         </div>
         <div className="form-group">
-          <input className="form-control" type="text" name="last_name" placeholder={I18n.t('apps.users.last_name')} value={user.last_name} onChange={this.onChange} />
+          <input className="form-control" type="text" name="last_name" placeholder={I18n.t('apps.users.last_name')} value={user.last_name || ''} onChange={this.onChange} />
         </div>
         <div className="form-group">
-          <input className="form-control" type="text" name="contract_name" placeholder={I18n.t('apps.users.contract_id')} value={user.contract_name} onChange={this.onChange} />
+          <input className="form-control" type="text" name="contract_name" placeholder={I18n.t('apps.users.contract_id')} value={user.contract_name || ''} onChange={this.onChange} />
         </div>
         <div className="form-group">
-          <input className="form-control" type="text" name="phone" placeholder={I18n.t('apps.users.phone')} value={user.phone} onChange={this.onChange} />
+          <input className="form-control" type="text" name="phone" placeholder={I18n.t('apps.users.phone')} value={user.phone || ''} onChange={this.onChange} />
         </div>
         <div className="form-group">
           <input type="date" name="birthdate" value={moment(user.birthdate).format('YYYY-MM-DD')} onChange={this.onChange} />
@@ -114,7 +115,7 @@ class EditUser extends React.Component {
             <div className="form-group">
               <label>
                 {I18n.t('apps.users.user_active')}
-                <input type="checkbox" name="active" checked={user.active} onChange={this.onCheckboxChange} />
+                <input type="checkbox" name="active" checked={user.active || false} onChange={this.onCheckboxChange} />
               </label>
             </div>
           ) : null }
@@ -147,41 +148,17 @@ class EditUser extends React.Component {
     );
   }
 
-  renderPreloader() {
-    return (
-      <div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-      </div>
-    );
-  }
-
   renderFields() {
     const { user, userId } = this.state;
     if (user.id === userId || !userId) {
       return currentUser.admin ? this.renderAdminFields(user) : this.renderUserFields(user);
     }
-    return this.renderPreloader();
+
+    return <Preloader rowsNumber={5} />;
   }
 
   cancelUrl() {
-    if (this.state.user.active) {
-      return '/users';
-    }
-    return '/users?filter=inactive';
+    return this.state.user.active ? '/users' : '/users?filter=inactive';
   }
 
   render() {

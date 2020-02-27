@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect, NavLink } from 'react-router-dom';
+import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
 
 class EditVacationPeriod extends React.Component {
@@ -75,22 +76,6 @@ class EditVacationPeriod extends React.Component {
     return `/vacation_periods?user_id=${this.state.period.user_id}`;
   }
 
-  renderPreloader() {
-    return (
-      <div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const {
       period, periodId, redirectToReferer, errors,
@@ -154,7 +139,7 @@ class EditVacationPeriod extends React.Component {
         </div>
       );
     } else {
-      result = this.renderPreloader();
+      result = <Preloader rowsNumber={3} />;
     }
 
     return result;
