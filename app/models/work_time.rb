@@ -23,7 +23,6 @@ class WorkTime < ApplicationRecord
   validates :starts_at, :ends_at, overlap: { scope: 'user_id', query_options: { active: nil }, exclude_edges: %i[starts_at ends_at] }
   validate :validates_time, on: :user
   validate :validates_date
-  validate :validates_ends_at
   validate :validates_body
   validate :task_url
 
@@ -61,10 +60,6 @@ class WorkTime < ApplicationRecord
 
   def validates_date
     errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_date')) if starts_at && ends_at && starts_at.to_date != ends_at.to_date
-  end
-
-  def validates_ends_at
-    errors.add(:ends_at, I18n.t('activerecord.errors.models.work_time.attributes.ends_at.validates_ends_at')) if starts_at && starts_at > 1.month.from_now
   end
 
   def validates_time
