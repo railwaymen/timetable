@@ -94,9 +94,9 @@ class Entry extends React.Component {
     });
   }
 
-  onDateChange(e) {
+  onDateChange(date) {
     this.setState({
-      date: e.format('DD/MM/YYYY'),
+      date: date.format('DD/MM/YYYY'),
     }, () => { this.removeErrorsFor('date'); });
   }
 

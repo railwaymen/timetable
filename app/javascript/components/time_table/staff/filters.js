@@ -61,9 +61,9 @@ class Filters extends React.Component {
     });
   }
 
-  onDateChange(name, e) {
+  onDateChange(name, date) {
     this.setState({
-      [name]: e === null ? e : e.format('DD/MM/YYYY'),
+      [name]: date === null ? date : date.format('DD/MM/YYYY'),
     }, () => {
       this.onFilterChange();
     });
@@ -129,8 +129,8 @@ class Filters extends React.Component {
               value={startDate === null ? null : moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
               format="DD/MM/YYYYs"
               dateFormat="DD/MM/YYYY"
-              onChange={(e) => this.onDateChange('startDate', e)}
-              onSelect={(e) => this.onDateChange('startDate', e)}
+              onChange={(date) => this.onDateChange('startDate', date)}
+              onSelect={(date) => this.onDateChange('startDate', date)}
             />
           </div>
           <div className="end-date-filter">
@@ -142,8 +142,8 @@ class Filters extends React.Component {
               value={endDate === null ? null : moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
               format="DD/MM/YYYYs"
               dateFormat="DD/MM/YYYY"
-              onChange={(e) => this.onDateChange('endDate', e)}
-              onSelect={(e) => this.onDateChange('endDate', e)}
+              onChange={(date) => this.onDateChange('endDate', date)}
+              onSelect={(date) => this.onDateChange('endDate', date)}
             />
           </div>
           { currentUser.staff_manager ? (

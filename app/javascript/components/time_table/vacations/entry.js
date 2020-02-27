@@ -42,9 +42,9 @@ class Entry extends React.Component {
     }
   }
 
-  onDateChange(name, e) {
+  onDateChange(name, date) {
     this.setState({
-      [name]: e.format('DD/MM/YYYY'),
+      [name]: date.format('DD/MM/YYYY'),
     }, () => { this.removeErrorsFor(name); });
   }
 
@@ -212,8 +212,8 @@ class Entry extends React.Component {
               value={moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
               format="DD/MM/YYYYs"
               dateFormat="DD/MM/YYYY"
-              onChange={(e) => this.onDateChange('startDate', e)}
-              onSelect={(e) => this.onDateChange('startDate', e)}
+              onChange={(date) => this.onDateChange('startDate', date)}
+              onSelect={(date) => this.onDateChange('startDate', date)}
             />
           </div>
           <div className="date">
@@ -226,8 +226,8 @@ class Entry extends React.Component {
               value={moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
               format="DD/MM/YYYYs"
               dateFormat="DD/MM/YYYY"
-              onChange={(e) => this.onDateChange('endDate', e)}
-              onSelect={(e) => this.onDateChange('endDate', e)}
+              onChange={(date) => this.onDateChange('endDate', date)}
+              onSelect={(date) => this.onDateChange('endDate', date)}
             />
           </div>
           <div className="vacation-type">

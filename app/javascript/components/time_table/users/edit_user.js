@@ -110,15 +110,14 @@ class EditUser extends React.Component {
         <div className="form-group">
           <input type="date" name="birthdate" value={moment(user.birthdate).format('YYYY-MM-DD')} onChange={this.onChange} />
         </div>
-        { user.id !== currentUser.id
-          ? (
-            <div className="form-group">
-              <label>
-                {I18n.t('apps.users.user_active')}
-                <input type="checkbox" name="active" checked={user.active || false} onChange={this.onCheckboxChange} />
-              </label>
-            </div>
-          ) : null }
+        { user.id !== currentUser.id && (
+          <div className="form-group">
+            <label>
+              {I18n.t('apps.users.user_active')}
+              <input type="checkbox" name="active" checked={user.active || false} onChange={this.onCheckboxChange} />
+            </label>
+          </div>
+        )}
         <div className="form-group">
           <select className="form-control" name="lang" onChange={this.onChange} value={user.lang}>
             <option value="pl">pl</option>

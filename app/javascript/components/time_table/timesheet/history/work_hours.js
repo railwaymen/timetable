@@ -175,9 +175,9 @@ class WorkHours extends React.Component {
     });
   }
 
-  onDateChange(value) {
+  onDateChange(date) {
     this.setState({
-      date: moment(value).format('DD/MM/YYYY'),
+      date: moment(date).format('DD/MM/YYYY'),
     });
   }
 
