@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
-import moment from 'moment';
 import * as Api from '../../shared/api';
 import { unnullifyFields } from '../../shared/helpers';
 import Preloader from '../../shared/preloader';
+import AdminFields from './admin_fields';
+import UserFields from './user_fields';
 
 function EditUser(props) {
   const userId = parseInt(props.match.params.id, 10);
 
   const [user, setUser] = useState({});
+  const [errors, setErrors] = useState({});
   const [redirectToReferer, setRedirectToReferer] = useState();
 
   function getUser() {
@@ -20,10 +22,6 @@ function EditUser(props) {
         setUser(updatedUser);
       });
   }
-
-  useEffect(() => {
-    getUser();
-  }, []);
 
   function onChange(e) {
     const { name, value } = e.target;
@@ -54,11 +52,15 @@ function EditUser(props) {
           }
 
           if (currentUser.id === user.id) window.currentUser = { ...currentUser, ...user };
+        }).catch((results) => {
+          setErrors(results.errors);
         });
     } else {
       Api.makePostRequest({ url: '/api/users', body: { user } })
         .then(() => {
           setRedirectToReferer('/users');
+        }).catch((results) => {
+          setErrors(results.errors);
         });
     }
   }
@@ -68,72 +70,19 @@ function EditUser(props) {
     saveUser();
   }
 
-  function renderAdminFields() {
-    return (
-      <div>
-        <div className="form-group">
-          <input className="form-control" type="text" name="email" placeholder="Email" onChange={onChange} value={user.email || ''} />
-        </div>
-
-        <div className="form-group">
-          <input className="form-control" type="text" name="first_name" placeholder={I18n.t('apps.users.first_name')} onChange={onChange} value={user.first_name || ''} />
-        </div>
-        <div className="form-group">
-          <input className="form-control" type="text" name="last_name" placeholder={I18n.t('apps.users.last_name')} value={user.last_name || ''} onChange={onChange} />
-        </div>
-        <div className="form-group">
-          <input className="form-control" type="text" name="contract_name" placeholder={I18n.t('apps.users.contract_id')} value={user.contract_name || ''} onChange={onChange} />
-        </div>
-        <div className="form-group">
-          <input className="form-control" type="text" name="phone" placeholder={I18n.t('apps.users.phone')} value={user.phone || ''} onChange={onChange} />
-        </div>
-        <div className="form-group">
-          <input type="date" name="birthdate" value={moment(user.birthdate).format('YYYY-MM-DD')} onChange={onChange} />
-        </div>
-        { user.id !== currentUser.id && (
-          <div className="form-group">
-            <label>
-              {I18n.t('apps.users.user_active')}
-              <input type="checkbox" name="active" checked={user.active || false} onChange={onCheckboxChange} />
-            </label>
-          </div>
-        )}
-        <div className="form-group">
-          <select className="form-control" name="lang" onChange={onChange} value={user.lang}>
-            <option value="pl">pl</option>
-            <option value="en">en</option>
-          </select>
-        </div>
-      </div>
-    );
-  }
-
-  function renderUserFields() {
-    return (
-      <div>
-        <div className="form-group">
-          <input className="form-control" type="text" name="first_name" placeholder={I18n.t('apps.users.first_name')} onChange={onChange} value={user.first_name} />
-        </div>
-        <div className="form-group">
-          <input className="form-control" type="text" name="last_name" placeholder={I18n.t('apps.users.last_name')} value={user.last_name} onChange={onChange} />
-        </div>
-        <div className="form-group">
-          <select className="form-control" name="lang" onChange={onChange} value={user.lang}>
-            <option value="pl">pl</option>
-            <option value="en">en</option>
-          </select>
-        </div>
-      </div>
-    );
-  }
-
   function renderFields() {
     if (user.id === userId || !userId) {
-      return currentUser.admin ? renderAdminFields() : renderUserFields();
+      return currentUser.admin
+        ? <AdminFields user={user} errors={errors} onChange={onChange} onCheckboxChange={onCheckboxChange} />
+        : <UserFields user={user} errors={errors} onChange={onChange} />;
     }
 
     return <Preloader rowsNumber={5} />;
   }
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   if (redirectToReferer) return <Redirect to={redirectToReferer} />;
 
