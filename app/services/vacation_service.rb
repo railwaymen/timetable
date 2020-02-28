@@ -5,6 +5,7 @@ class VacationService
   def initialize(current_user:, vacation:, params: {})
     @current_user = current_user
     @vacation = vacation
+    @vacation_work_times = @vacation.work_times.active
     @previous_status = @vacation.status
     @params = params
     @errors = []
@@ -13,39 +14,36 @@ class VacationService
 
   def approve
     work_times = vacation_work_times_service.work_times
-    work_time_error(work_times.pluck('date(work_times.starts_at)', 'date(work_times.ends_at)').flatten.uniq) if work_times.any?
+    work_time_warning(work_times.pluck('date(work_times.starts_at)', 'date(work_times.ends_at)').flatten.uniq) if work_times.any?
 
     approve_transaction
-
+    increase_work_times if @vacation_interaction && @vacation_interaction.action == 'accepted'
     response
   end
 
   def decline
-    check_work_times_for_vacations
-    return response if @errors.any?
+    ids = @vacation_work_times.pluck(:id)
 
     ActiveRecord::Base.transaction do
       @vacation.update!(status: :declined)
-      deactivate_vacation_work_times if @vacation.work_times.any?
+      deactivate_vacation_work_times if @vacation_work_times.any?
       @vacation_interaction = create_vacation_interaction(:declined)
       remove_previous_interaction(%w[approved accepted])
 
       raise ActiveRecord::Rollback unless @errors.empty?
     end
-
+    decrease_work_times(ids) if ids.any?
     response
   end
 
   def undone
     remove_previous_interaction(%w[declined approved accepted])
-    if @vacation.status == 'accepted' && @current_user.staff_manager?
-      undone_accepted_vacation
-      deactivate_vacation_work_times if !@vacation.accepted? && @vacation.work_times.any?
-    elsif @vacation.status == 'declined'
-      undone_declined_vacation
-    else
-      undone_accepted_vacation
-    end
+    previous_status = @vacation.status
+    ids = @vacation_work_times.pluck(:id)
+    undone_vacation
+    vacation_work_times_service.save if @vacation.status == 'accepted' && @vacation.work_times.active.empty?
+    increase_work_times if @vacation.status == 'accepted' && previous_status == 'declined'
+    decrease_work_times(ids) if ids.any? && previous_status == 'accepted' && @vacation.status != 'accepted'
 
     response
   end
@@ -67,7 +65,7 @@ class VacationService
     @vacation_work_times_service ||= VacationWorkTimesService.new(@vacation, @current_user)
   end
 
-  def work_time_error(work_times)
+  def work_time_warning(work_times)
     @warnings << { work_time: I18n.t('apps.staff.user_has_already_filled_in_work_time', parameter: @vacation.user_full_name),
                    additional_info: work_times.join(', ') }
   end
@@ -101,19 +99,8 @@ class VacationService
     @errors << { vacation_interaction: error_list.join(', ') }
   end
 
-  def check_work_times_for_vacations
-    work_times = vacation_work_times_service.work_times.includes(:project)
-    work_times_project_names = work_times.pluck('projects.name').uniq
-    not_just_vacations if work_times.any? && (work_times_project_names.length > 1 || work_times_project_names[0] != 'Vacation')
-    work_times
-  end
-
-  def not_just_vacations
-    @errors << { not_just_vacations: I18n.t('apps.staff.not_just_vacations', user: @vacation.user_full_name) }
-  end
-
   def deactivate_vacation_work_times
-    @vacation.work_times.find_each { |wt| wt.update(active: false) }
+    @vacation.work_times.active.find_each { |wt| wt.update(active: false) }
   end
 
   def remove_previous_interaction(status)
@@ -123,6 +110,17 @@ class VacationService
 
   def vacation_sub_type_error
     @errors << { vacation_sub_type: I18n.t('apps.staff.vacation_sub_type_empty') }
+  end
+
+  def undone_vacation
+    if @vacation.status == 'accepted' && @current_user.staff_manager?
+      undone_accepted_vacation
+      deactivate_vacation_work_times if !@vacation.accepted? && @vacation_work_times.any?
+    elsif @vacation.status == 'declined'
+      undone_declined_vacation
+    else
+      undone_accepted_vacation
+    end
   end
 
   def undone_accepted_vacation
@@ -143,8 +141,11 @@ class VacationService
     return if previous_interactions.declined.any?
 
     if previous_interactions.any?
-      @vacation.update(status: :accepted) if previous_interactions.accepted.any? && @current_user.staff_manager?
-      @vacation.update(status: :approved) if previous_interactions.approved.any?
+      if previous_interactions.accepted.any? && @current_user.staff_manager?
+        @vacation.update(status: :accepted)
+      elsif previous_interactions.approved.any?
+        @vacation.update(status: :approved)
+      end
     else
       @vacation.update(status: :unconfirmed)
     end
@@ -152,6 +153,19 @@ class VacationService
 
   def previous_interactions
     @previous_interactions ||= VacationInteraction.where(vacation_id: @vacation.id)
+  end
+
+  def increase_work_times
+    @vacation.work_times.active.each do |wt|
+      IncreaseWorkTimeWorker.perform_async(user_id: @vacation.user_id, duration: wt.duration, starts_at: wt.starts_at, ends_at: wt.ends_at, date: wt.starts_at.to_date)
+    end
+  end
+
+  def decrease_work_times(ids)
+    ids.each do |id|
+      wt = WorkTime.find(id)
+      DecreaseWorkTimeWorker.perform_async(duration: wt.duration, date: wt.starts_at.to_date, user_id: @vacation.user_id)
+    end
   end
 
   def response

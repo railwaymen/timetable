@@ -20,6 +20,7 @@ module Api
 
     def simple
       @projects = Project.order(:internal, :name)
+      @projects = @projects.where("name != 'Vacation' AND name != 'ZKS'") unless current_user.admin?
       @tags = WorkTime.tags
       respond_with @projects
     end
