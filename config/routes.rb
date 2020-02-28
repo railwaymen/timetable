@@ -42,6 +42,7 @@ Rails.application.routes.draw do
         get :roles, on: :collection
         put :generate, on: :member
         get :file, on: :member
+        get :synchronize, on: :member
       end
       get :external_auth, on: :member
       get :list, on: :collection

@@ -232,6 +232,22 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
     end
   end
 
+  describe 'GET #synchronize' do
+    it 'checks if project record and its work times are equal' do
+      body = { development: [task: 'task', owner: 'Owner', duration: 300] }
+      project_report = create(:project_report, initial_body: body, last_body: body, duration_sum: 300, project: project)
+
+      get :synchronize, params: { project_id: project_report.project.id, id: project_report.id }
+
+      synchronize_response = {
+        synchronized: false
+      }
+
+      expect(response).to be_ok
+      expect(response.body).to be_json_eql(synchronize_response.to_json)
+    end
+  end
+
   describe 'GET #edit' do
     let(:project_report) { create(:project_report) }
 
