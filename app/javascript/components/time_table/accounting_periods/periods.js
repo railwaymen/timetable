@@ -221,19 +221,17 @@ class Periods extends React.Component {
 
     return (
       <ul className="pagination pull-right">
-        { isBackAvailable
-          ? (
-            <li id="prevPage">
-              <a className="symbol fa fa-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`} />
-            </li>
-          ) : null }
+        {isBackAvailable && (
+          <li id="prevPage">
+            <a className="symbol fa fa-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`} />
+          </li>
+        )}
         {this.paginationBody(pages, page, userId)}
-        { isForwardAvailable
-          ? (
-            <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
-              <a className="symbol fa fa-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />
-            </li>
-          ) : null }
+        {isForwardAvailable && (
+          <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
+            <a className="symbol fa fa-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />
+          </li>
+        )}
       </ul>
     );
   }
@@ -294,13 +292,13 @@ class Periods extends React.Component {
   }
 
   renderUserInfo(user) {
-    if (!_.isEmpty(user)) {
+    if (_.isEmpty(user)) {
       return (
-        <span><NavLink to={`/timesheet?user_id=${user.id}`}>{`${user.first_name} ${user.last_name}`}</NavLink></span>
+        <div style={{ width: '390px', display: 'inline-block' }} className="preloader" />
       );
     }
     return (
-      <div style={{ width: '390px', display: 'inline-block' }} className="preloader" />
+      <span><NavLink to={`/timesheet?user_id=${user.id}`}>{`${user.first_name} ${user.last_name}`}</NavLink></span>
     );
   }
 
@@ -312,17 +310,17 @@ class Periods extends React.Component {
 
     return (
       <div className="accounting-periods-list">
-        {currentUser.admin ? this.renderButtons() : null}
+        {currentUser.admin && this.renderButtons()}
         <div className="col-md-offset-3 col-md-6 vert-offset-bottom clearfix">
-          { currentUser.admin ? (
+          {currentUser.admin && (
             <h3 className="text-center text-muted">
-              { user.prev_id ? <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" /> : null }
+              {user.prev_id && <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" />}
               {this.renderUserInfo(user)}
               <span>
-                { user.next_id ? <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" /> : null }
+                {user.next_id && <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" />}
               </span>
             </h3>
-          ) : null }
+          )}
         </div>
         <table className="table table-striped">
           <thead>

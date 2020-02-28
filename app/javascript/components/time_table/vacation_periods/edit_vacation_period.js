@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect, NavLink } from 'react-router-dom';
+import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
 
 class EditVacationPeriod extends React.Component {
@@ -75,22 +76,6 @@ class EditVacationPeriod extends React.Component {
     return `/vacation_periods?user_id=${this.state.period.user_id}`;
   }
 
-  renderPreloader() {
-    return (
-      <div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const {
       period, periodId, redirectToReferer, errors,
@@ -103,9 +88,9 @@ class EditVacationPeriod extends React.Component {
         <div className="container">
           <div id="content" className="edit-vacation-period col-md-6">
             <form className="row" onSubmit={this.onSubmit}>
-              { errors.vacation_days
-                ? <div className="error-description">{errors.vacation_days.join(', ')}</div>
-                : null }
+              { errors.vacation_days && (
+                <div className="error-description">{errors.vacation_days.join(', ')}</div>
+              )}
               <div className="form-group">
                 <input
                   className={`${errors.vacation_days ? 'error' : ''} form-control`}
@@ -116,9 +101,9 @@ class EditVacationPeriod extends React.Component {
                   disabled={period.closed}
                 />
               </div>
-              { errors.note
-                ? <div className="error-description">{errors.note.join(', ')}</div>
-                : null }
+              { errors.note && (
+                <div className="error-description">{errors.note.join(', ')}</div>
+              )}
               <div className="form-group">
                 <textarea
                   className={`${errors.note ? 'error' : ''} form-control`}
@@ -154,7 +139,7 @@ class EditVacationPeriod extends React.Component {
         </div>
       );
     } else {
-      result = this.renderPreloader();
+      result = <Preloader rowsNumber={3} />;
     }
 
     return result;

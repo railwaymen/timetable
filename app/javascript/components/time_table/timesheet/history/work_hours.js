@@ -72,6 +72,7 @@ class WorkHours extends React.Component {
     const time = moment.duration(duration, 'seconds');
     let hours = time.hours();
     let minutes = time.minutes();
+
     if (hours < 10) hours = `0${hours}`;
     if (minutes < 10) minutes = `0${minutes}`;
 
@@ -175,9 +176,9 @@ class WorkHours extends React.Component {
     });
   }
 
-  onDateChange(value) {
+  onDateChange(date) {
     this.setState({
-      date: moment(value).format('DD/MM/YYYY'),
+      date: moment(date).format('DD/MM/YYYY'),
     });
   }
 
@@ -199,12 +200,11 @@ class WorkHours extends React.Component {
       <div>
         {/* eslint-disable-next-line */}
         <textarea autoFocus className="form-control" name="body" type="text" placeholder={I18n.t('apps.timesheet.what_have_you_done')} value={_.unescape(this.state.workHours.body)} onChange={this.onChange} />
-        { this.props.workHours.project.work_times_allows_task
-          ? (
-            <div className="task-edit">
-              <input className="form-control task-input" name="task" placeholder={I18n.t('apps.timesheet.task_url')} value={this.state.workHours.task} onChange={this.onChange} />
-            </div>
-          ) : null }
+        { this.props.workHours.project.work_times_allows_task && (
+          <div className="task-edit">
+            <input className="form-control task-input" name="task" placeholder={I18n.t('apps.timesheet.task_url')} value={this.state.workHours.task} onChange={this.onChange} />
+          </div>
+        )}
       </div>
     );
   }
@@ -293,10 +293,10 @@ class WorkHours extends React.Component {
   toggleProjectEdit() {
     const { projectEditable } = this.state;
 
-    if (!projectEditable) {
-      document.addEventListener('click', this.toggleProjectEdit);
-    } else {
+    if (projectEditable) {
       document.removeEventListener('click', this.toggleProjectEdit);
+    } else {
+      document.addEventListener('click', this.toggleProjectEdit);
     }
 
     this.setState({
@@ -310,10 +310,10 @@ class WorkHours extends React.Component {
   toggleTagEdit() {
     const { tagEditable } = this.state;
 
-    if (!tagEditable) {
-      document.addEventListener('click', this.toggleTagEdit);
-    } else {
+    if (tagEditable) {
       document.removeEventListener('click', this.toggleTagEdit);
+    } else {
+      document.addEventListener('click', this.toggleTagEdit);
     }
 
     this.setState({
@@ -332,6 +332,7 @@ class WorkHours extends React.Component {
     const starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
     const ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
     const oldDuration = workHours.duration;
+
     Api.makePutRequest({
       url: `/api/work_times/${this.state.workHours.id}`,
       body: {
@@ -385,7 +386,9 @@ class WorkHours extends React.Component {
 
   onFilterKeyPress({ key }) {
     if (key !== 'Enter') return;
+
     const project = this.filteredProjects()[0];
+
     if (project) {
       this.changeProject(project);
     }
@@ -424,19 +427,19 @@ class WorkHours extends React.Component {
         { errors.map((error, index) => (<ErrorTooltip key={index} errors={error} />)) }
         <ul className="time-entries-list">
           <li className={`time-entry time-entry-main entry ${editing ? 'card edit-mode' : ''} ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
-            { !_.isEmpty(errors) ? <div className="error-info-container"><i className="fa fa-exclamation-circle" /></div> : null }
+            {!_.isEmpty(errors) && <div className="error-info-container"><i className="fa fa-exclamation-circle" /></div>}
             <WorkTimeTask workTime={workHours} />
             <div className="task-content">
               <div className="description-container" onClick={this.toggleEdit}>
                 {this.descriptionText()}
-                { editing ? this.renderBodyEditable() : null }
+                {editing && this.renderBodyEditable()}
               </div>
               <div className="project-container" onClick={this.toggleProjectEdit}>
                 <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
                   {workHours.project.name}
                 </span>
                 <div className="projects-region">
-                  { projectEditable ? (
+                  { projectEditable && (
                     <div>
                       <div className="dropdown fluid search ui active visible">
                         <input type="hidden" name="project" value="12" />
@@ -448,7 +451,7 @@ class WorkHours extends React.Component {
                         <ProjectsList projects={this.filteredProjects()} currentProject={workHours.project} onChangeProject={this.onChangeProject} />
                       </div>
                     </div>
-                  ) : null }
+                  )}
                 </div>
               </div>
               { !tags_disabled && workHours.project.taggable && (
@@ -468,7 +471,9 @@ class WorkHours extends React.Component {
                 <i className="symbol fa fa-trash-o" />
               </span>
             </div>
-            {editing ? this.renderDateEditable() : (
+            {editing ? (
+              this.renderDateEditable()
+            ) : (
               <>
                 <WorkTimeDuration workTime={workHours} />
                 <WorkTimeTime workTime={workHours} onClick={this.toggleEdit} />

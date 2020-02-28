@@ -5,6 +5,7 @@ import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import { Redirect, NavLink } from 'react-router-dom';
 import { defaultDatePickerProps } from '../../shared/helpers';
+import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
 
 class EditPeriod extends React.Component {
@@ -29,6 +30,8 @@ class EditPeriod extends React.Component {
         minutes: '00',
         note: '',
         position: '1',
+        full_time: false,
+        closed: false,
       },
       errors: {},
       users: [],
@@ -200,28 +203,6 @@ class EditPeriod extends React.Component {
     return `/accounting_periods?user_id=${this.userId()}`;
   }
 
-  renderPreloader() {
-    return (
-      <div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const {
       period, users, redirectToReferer, errors, periodId,
@@ -276,11 +257,14 @@ class EditPeriod extends React.Component {
               <div className="col-12 col-md-6">
                 <div className="row calendar-row">
                   <div className="col-md-6 form-group">
+                    { errors.starts_at && (
+                      <div className="error-description">{errors.starts_at.join(', ')}</div>
+                    )}
                     <DatePicker
                       {...defaultDatePickerProps}
                       onChangeRaw={this.onChange}
                       dateFormat="YYYY-MM-DD HH:mm"
-                      className="form-control"
+                      className={`${errors.starts_at ? 'error' : ''} form-control`}
                       selected={period.starts_at ? moment(period.starts_at, 'YYYY-MM-DD HH:mm') : null}
                       name="starts_at"
                       placeholderText={I18n.t('common.from')}
@@ -288,11 +272,14 @@ class EditPeriod extends React.Component {
                     />
                   </div>
                   <div className="col-md-6 form-group">
+                    { errors.ends_at && (
+                      <div className="error-description">{errors.ends_at.join(', ')}</div>
+                    ) }
                     <DatePicker
                       {...defaultDatePickerProps}
                       onChangeRaw={this.onChange}
                       dateFormat="YYYY-MM-DD HH:mm"
-                      className="form-control"
+                      className={`${errors.ends_at ? 'error' : ''} form-control`}
                       selected={period.ends_at ? moment(period.ends_at, 'YYYY-MM-DD HH:mm') : null}
                       name="ends_at"
                       placeholderText={I18n.t('common.to')}
@@ -304,18 +291,18 @@ class EditPeriod extends React.Component {
                 <label>{I18n.t('common.duration')}</label>
                 <div className="row">
                   <div className="col-md-6">
-                    { errors.duration
-                      ? <div className="error-description">{errors.duration.join(', ')}</div>
-                      : null }
+                    { errors.duration && (
+                      <div className="error-description">{errors.duration.join(', ')}</div>
+                    )}
                     <div className="form-group input-group">
                       <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="hours" onChange={this.onChange} value={period.hours} />
                       <div className="input-group-addon">h</div>
                     </div>
                   </div>
                   <div className="col-md-6">
-                    { errors.duration
-                      ? <div className="error-description">{errors.duration.join(', ')}</div>
-                      : null }
+                    { errors.duration && (
+                      <div className="error-description">{errors.duration.join(', ')}</div>
+                    )}
                     <div className="form-group input-group">
                       <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="minutes" onChange={this.onChange} value={period.minutes} />
                       <div className="input-group-addon">m</div>
@@ -325,9 +312,9 @@ class EditPeriod extends React.Component {
                 <div className="form-group">
                   <label>
                     {I18n.t('common.position')}
-                    { errors.position
-                      ? <div className="error-description">{errors.position.join(', ')}</div>
-                      : null }
+                    { errors.position && (
+                      <div className="error-description">{errors.position.join(', ')}</div>
+                    )}
                   </label>
                   <input className={`${errors.position ? 'error' : ''} form-control`} type="number" name="position" value={period.position} onChange={this.onChange} />
                 </div>
@@ -347,7 +334,7 @@ class EditPeriod extends React.Component {
         </div>
       );
     }
-    return this.renderPreloader();
+    return <Preloader rowsNumber={5} />;
   }
 }
 

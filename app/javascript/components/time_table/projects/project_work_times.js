@@ -135,14 +135,11 @@ export default class ProjectWorkTimes extends React.Component {
         <header className="page-header projects-header row text-center">
           <h1 className="project-title">
             {project.name}
-            {
-              (currentUser.isSuperUser()
-              && (
-                <Link to={this.reportsUrl()} className="btn btn-success">
-                  Reports
-                </Link>
-              ))
-            }
+            {currentUser.isSuperUser() && (
+              <Link to={this.reportsUrl()} className="btn btn-success">
+                Reports
+              </Link>
+            )}
           </h1>
           <HorizontalArrows className="row" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
             <DateRangeFilter className="col-md-8 col-md-offset-2" from={from} to={to} onFromChange={this.onFromChange} onToChange={this.onToChange} onFilter={() => this.getWorkTimes(this.state)}>

@@ -35,12 +35,11 @@ class AcceptedOrDeclinedVacations extends React.Component {
     return (
       <div className="row accepted-or-declined-vacations">
         <div className="vacations-title">
-          { window.currentUser.staff_manager
-                && (
-                  <div className="left-title" onClick={() => this.props.onShowButtonChange('showDeclined')}>
-                    {I18n.t(`apps.staff.${title.leftTitle}`)}
-                  </div>
-                )}
+          { window.currentUser.staff_manager && (
+            <div className="left-title" onClick={() => this.props.onShowButtonChange('showDeclined')}>
+              {I18n.t(`apps.staff.${title.leftTitle}`)}
+            </div>
+          )}
           <div className="mid-title">
             {I18n.t(`apps.staff.${title.mainTitle}`)}
           </div>

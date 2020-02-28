@@ -63,6 +63,7 @@ class ExternalAuth extends React.Component {
     const request_data = this.state.requestData;
     const project_id = this.state.projectId;
     const provider = 'jira';
+
     Api.makePostRequest({
       url: '/api/external_auths',
       body: {
@@ -102,12 +103,12 @@ class ExternalAuth extends React.Component {
   renderPublicKey() {
     if (!this.state.publicKey || this.state.auth) return null;
     return (
-      [
-        <p key={0}>Public key:</p>,
+      <>
+        <p key={0}>Public key:</p>
         <pre key={1}>
           {this.state.publicKey}
-        </pre>,
-      ]
+        </pre>
+      </>
     );
   }
 
@@ -134,8 +135,7 @@ class ExternalAuth extends React.Component {
             <a className="btn btn-primary" href={this.state.authorizationUrl} target="_blank" rel="noopener noreferrer">{I18n.t('apps.external_auths.follow_link')}</a>
           </p>
         )}
-        {this.state.authorizationUrl
-          && (
+        {this.state.authorizationUrl && (
           <form>
             <div className="form-group">
               <input value={this.state.token} placeholder={I18n.t('apps.external_auths.token')} onChange={this.onTokenChange} />
@@ -144,7 +144,7 @@ class ExternalAuth extends React.Component {
               <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
             </div>
           </form>
-          )}
+        )}
       </div>
     );
   }

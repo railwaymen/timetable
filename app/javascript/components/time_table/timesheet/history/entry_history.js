@@ -408,7 +408,7 @@ class EntryHistory extends React.Component {
           <td>
             { version.tag
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{this.translateTag(version.tag)}</span>
-                : <span>{this.translateTag(version.tag_was)}</span> }
+              : <span>{this.translateTag(version.tag_was)}</span> }
           </td>
           <td>
             { version.starts_at
@@ -505,17 +505,17 @@ class EntryHistory extends React.Component {
 
     return (
       <div className="content-wrapper">
-        { currentUser.isSuperUser() && filteredUser
-          ? (
-            <h1 className="active-user-timesheet">
-              { filteredUser.prev_id
-                ? <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" /> : null }
-              {currentUser.fullName.apply(filteredUser)}
-              { filteredUser.next_id
-                ? <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" /> : null }
-            </h1>
-          )
-          : null }
+        { currentUser.isSuperUser() && filteredUser && (
+          <h1 className="active-user-timesheet">
+            { filteredUser.prev_id && (
+              <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" />
+            )}
+            {currentUser.fullName.apply(filteredUser)}
+            { filteredUser.next_id && (
+              <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" />
+            )}
+          </h1>
+        )}
         <div id="time-entry-list">
           <div className="select-month">
             <h3>

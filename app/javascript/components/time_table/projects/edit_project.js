@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
+import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
 
 class EditProject extends React.Component {
@@ -101,25 +102,6 @@ class EditProject extends React.Component {
     }
   }
 
-  renderPreloader() {
-    return (
-      <div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const {
       project, users, redirectToReferer, projectId,
@@ -129,33 +111,31 @@ class EditProject extends React.Component {
     if (!projectId || projectId === project.id) {
       return (
         <form>
-          { currentUser.isSuperUser()
-            ? (
-              <div>
-                <div className="form-group">
-                  {/* eslint-disable-next-line */}
-                  <input className="form-control" type="text" name="name" placeholder={I18n.t('common.name')} onChange={this.onChange} value={project.name} autoFocus />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
-                  <select name="leader_id" id="leader" className="form-control" value={project.leader_id} onChange={this.onChange}>
-                    <option value="" />
-                    { users.map((user) => (
-                      <option key={user.id} value={user.id}>
-                        {currentUser.fullName.apply(user)}
-                      </option>
-                    )) }
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>
-                    {I18n.t('apps.projects.active')}
-                    <input type="checkbox" name="active" checked={project.active} onChange={this.onCheckboxChange} />
-                  </label>
-                </div>
+          { currentUser.isSuperUser() && (
+            <div>
+              <div className="form-group">
+                {/* eslint-disable-next-line */}
+                <input className="form-control" type="text" name="name" placeholder={I18n.t('common.name')} onChange={this.onChange} value={project.name} autoFocus />
               </div>
-            )
-            : null }
+              <div className="form-group">
+                <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
+                <select name="leader_id" id="leader" className="form-control" value={project.leader_id} onChange={this.onChange}>
+                  <option value="" />
+                  { users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {currentUser.fullName.apply(user)}
+                    </option>
+                  )) }
+                </select>
+              </div>
+              <div className="form-group">
+                <label>
+                  {I18n.t('apps.projects.active')}
+                  <input type="checkbox" name="active" checked={project.active} onChange={this.onCheckboxChange} />
+                </label>
+              </div>
+            </div>
+          )}
           <div className="form-group" />
           <input type="color" name="color" value={((project.color && project.color[0] !== '#') ? '#' : '') + project.color} onChange={this.onChange} />
           <div className="form-group">
@@ -172,7 +152,7 @@ class EditProject extends React.Component {
         </form>
       );
     }
-    return this.renderPreloader();
+    return <Preloader rowsNumber={5} />;
   }
 }
 

@@ -37,7 +37,7 @@ class WorkHoursDay extends React.Component {
   }
 
   totalDurationViaProps() {
-    return displayDuration(_.sumBy(this.props.day, (w) => w.duration));
+    return displayDuration(_.sumBy(this.props.day, (workHours) => workHours.duration));
   }
 
   updateWorkHours(component, deviation) {

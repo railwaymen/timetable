@@ -17,6 +17,7 @@ WorkTimeTime.defaultProps = {
   children: null,
   onClick: () => {},
 };
+
 WorkTimeTime.propTypes = {
   workTime: PropTypes.shape({
     starts_at: PropTypes.string,

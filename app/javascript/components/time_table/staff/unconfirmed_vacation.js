@@ -97,11 +97,13 @@ class UnconfirmedVacation extends React.Component {
   renderErrors() {
     const { errors } = this.state;
     const errorList = [];
+
     errors.forEach((error) => {
       Object.keys(error).forEach((err) => {
         errorList.push(<div className={err} key={err}>{error[err]}</div>);
       });
     });
+
     return (
       <div className="row vacation-errors error-tooltip">
         {errorList}
@@ -148,6 +150,7 @@ class UnconfirmedVacation extends React.Component {
   renderButtons() {
     const { interacted } = this.state;
     let result;
+
     if (interacted) {
       result = (
         <div className="vacation-buttons">
@@ -175,6 +178,7 @@ class UnconfirmedVacation extends React.Component {
     const approvers = [];
     const decliners = [];
     const { vacationApprovers, vacationDecliners } = this.state;
+
     if (vacationApprovers) {
       for (let i = 0; i < vacationApprovers.length; i += 1) {
         approvers.push(
@@ -212,17 +216,17 @@ class UnconfirmedVacation extends React.Component {
     if (vacation.status === 'declined' && vacation.interacted === false) { return null; }
     return (
       <div className={`unconfirmed-vacation ${vacation.status}`}>
-        { errors.length > 0
-            && this.renderErrors()}
+        { errors.length > 0 && (
+          this.renderErrors()
+        )}
         <div className="vacation-header">
           <div className="user-full-name">
             {vacation.full_name}
-            { window.currentUser.staff_manager
-              && (
-                <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
-                  <i className="icon calendar" />
-                </NavLink>
-              )}
+            { window.currentUser.staff_manager && (
+              <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
+                <i className="icon calendar" />
+              </NavLink>
+            )}
           </div>
           <div className="vacation-time-period">
             {moment(vacation.start_date).format('DD/MM/YYYY')}
@@ -238,16 +242,15 @@ class UnconfirmedVacation extends React.Component {
           {this.renderButtons()}
         </div>
         {this.renderInteractions()}
-        { window.currentUser.staff_manager
-            && (
-              <div className="available_vacation_days">
-                {I18n.t('apps.staff.available_vacation_days')}
-                :
-                <span className="vacation-days">
-                  {` ${vacation.available_vacation_days}`}
-                </span>
-              </div>
-            )}
+        { window.currentUser.staff_manager && (
+          <div className="available_vacation_days">
+            {I18n.t('apps.staff.available_vacation_days')}
+            :
+            <span className="vacation-days">
+              {` ${vacation.available_vacation_days}`}
+            </span>
+          </div>
+        )}
       </div>
     );
   }
