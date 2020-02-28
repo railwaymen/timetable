@@ -79,14 +79,6 @@ RSpec.describe VacationService do
   end
 
   describe '#decline' do
-    it 'returns error when thera are work times entries in vacation range which are not vacation entries' do
-      vacation = create(:vacation)
-      create(:project, name: 'Vacation')
-      create(:work_time, user: vacation.user, starts_at: vacation.start_date.beginning_of_day + 8.hours, ends_at: vacation.start_date.beginning_of_day + 12.hours)
-      errors = [{ not_just_vacations: I18n.t('apps.staff.not_just_vacations', user: vacation.user_full_name) }]
-      expect(described_class.new(current_user: staff_manager, vacation: vacation).decline).to eql(response(vacation, nil, 'unconfirmed', errors))
-    end
-
     it 'declines vacation, destroys vacation work times, creates vacation interaction, deletes previous opposite vacation interaction' do
       vacation = create(:vacation, start_date: Time.current.to_date, end_date: Time.current.to_date + 7.days, status: :approved)
       project = create(:project, name: 'Vacation')
@@ -220,6 +212,7 @@ RSpec.describe VacationService do
 
       it 'when vacation is declined, user declines vacation, vacation has been accepted by other staff manager' do
         vacation = create(:vacation, status: :declined)
+        create(:project, name: 'Vacation')
         staff_manager1 = create(:staff_manager)
         staff_manager2 = create(:staff_manager)
         create(:vacation_interaction, user: staff_manager1, vacation: vacation, action: :accepted)

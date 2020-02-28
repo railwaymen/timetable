@@ -19,7 +19,7 @@ module Api
     end
 
     def simple
-      @projects = Project.order(:internal, :name)
+      @projects = Project.where("name != 'Vacation' AND name != 'ZKS'").order(:internal, :name)
       @tags = WorkTime.tags
       respond_with @projects
     end
