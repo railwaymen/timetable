@@ -9,6 +9,10 @@ class ProjectReportPolicy < ApplicationPolicy
     create?
   end
 
+  def synchronize?
+    create?
+  end
+
   def show?
     create?
   end
