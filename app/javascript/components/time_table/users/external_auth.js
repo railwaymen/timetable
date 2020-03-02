@@ -14,28 +14,24 @@ class ExternalAuth extends React.Component {
 
   state = {
     publicKey: '',
-    auth: {},
+    auth: null,
     authorizationUrl: '',
     domain: '',
     token: '',
+    userId: parseInt(this.props.match.params.id, 10),
     requestData: undefined,
-    projectId: parseInt(this.props.match.params.id, 10),
     redirectToReferer: undefined,
   };
 
   componentDidMount() {
-    this.getProject();
+    this.getUser();
   }
 
-  getProject() {
-    if (this.state.projectId) {
-      Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}/external_auth` })
-        .then((response) => {
-          const { auth, public_key } = response.data;
-
-          this.setState({ auth, publicKey: public_key });
-        });
-    }
+  getUser() {
+    Api.makeGetRequest({ url: `/api/users/${this.state.userId}` })
+      .then((response) => {
+        this.setState({ externalAuth: response.data.external_auth });
+      });
   }
 
   getAuthLink() {
@@ -72,7 +68,7 @@ class ExternalAuth extends React.Component {
       },
     })
       .then((response) => {
-        this.setState({ auth: response.data });
+        this.setState({ externalAuth: response.data });
       }).catch(() => {
         alert(I18n.t('activerecord.errors.models.external_auth.basic'));
       });
@@ -80,47 +76,31 @@ class ExternalAuth extends React.Component {
 
   onDelete(e) {
     e.preventDefault();
-    Api.makeDeleteRequest({ url: `/api/external_auths/${this.state.auth.id}` })
+    Api.makeDeleteRequest({ url: `/api/external_auths/${this.state.externalAuth.id}` })
       .then(() => {
-        this.setState({ auth: undefined });
+        this.setState({ externalAuth: undefined });
       });
   }
 
   render() {
-    const { redirectToReferer, projectId } = this.state;
+    const { redirectToReferer, userId } = this.state;
 
     if (redirectToReferer) return <Redirect to={redirectToReferer} />;
     return (
       <div>
-        {this.renderPublicKey()}
         {this.renderAuth()}
-        <NavLink className="btn btn-primary" to={`/projects/${projectId}/edit`}>{I18n.t('common.cancel')}</NavLink>
+        <NavLink className="btn btn-primary" to={`/users/${userId}/edit`}>{I18n.t('common.cancel')}</NavLink>
       </div>
     );
   }
 
-  renderPublicKey() {
-    if (!this.state.publicKey || this.state.auth) return null;
-    return (
-      [
-        <p key={0}>Public key:</p>,
-        <pre key={1}>
-          {this.state.publicKey}
-        </pre>,
-      ]
-    );
-  }
-
   renderAuth() {
-    if (this.state.auth) {
+    if (this.state.externalAuth) {
       return (
         <div>
-          <p>
-            {`${I18n.t('apps.external_auths.authorized')} ${this.state.auth.provider}`}
-          </p>
-          <p>
-            <a className="btn btn-danger" onClick={this.onDelete}>{I18n.t('common.destroy')}</a>
-          </p>
+          <p>{I18n.t('apps.external_auths.authorized')}</p>
+          {this.state.externalAuth.provider}
+          <a className="btn btn-danger" onClick={this.onDelete}>{I18n.t('common.destroy')}</a>
         </div>
       );
     }

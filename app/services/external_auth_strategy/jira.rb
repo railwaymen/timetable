@@ -27,9 +27,10 @@ module ExternalAuthStrategy
       return destroy(params) if params['time_spent'].zero?
 
       task_id = params['task_id'].upcase
+      account_id = client.User.myself.accountId
       task = client.Issue.find(task_id)
       work_log_data = { comment: COMMENT, timeSpentSeconds: params['time_spent'] }
-      log = task.worklogs.first || task.worklogs.build
+      log = task.worklogs.find { |w| w.author.accountId == account_id } || task.worklogs.build
       log.save!(work_log_data, log_url(log))
     end
 

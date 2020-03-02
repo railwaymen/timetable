@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :vacations, dependent: :destroy
   has_many :vacation_interactions, dependent: :destroy
   has_many :vacation_periods, dependent: :destroy
+  has_one :external_auth, dependent: :destroy
   validates :first_name, :last_name, presence: true
 
   scope :active, -> { where(active: true) }

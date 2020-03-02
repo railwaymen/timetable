@@ -43,7 +43,6 @@ TimeTable::Application.routes.draw do
         put :generate, on: :member
         get :file, on: :member
       end
-      get :external_auth, on: :member
       get :list, on: :collection
       get :simple, on: :collection
       get :work_times, on: :member

@@ -12,7 +12,7 @@ module ExternalValidatable
   private
 
   def validate_integration
-    return nil if external_auth.nil? || task.blank?
+    return nil if user.external_auth.nil? || task.blank?
 
     return unless external_payload.nil?
 
@@ -21,13 +21,13 @@ module ExternalValidatable
 
   def external_payload
     return @external_payload if defined?(@external_payload)
-    return @external_payload = nil if external_auth.nil? || task.blank?
+    return @external_payload = nil if user.external_auth.nil? || task.blank?
 
-    integration_payload = ExternalAuthStrategy.const_get(external_auth.provider).from_data(external_auth.data).integration_payload(self)
+    integration_payload = ExternalAuthStrategy.const_get(user.external_auth.provider).from_data(user.external_auth.data).integration_payload(self)
     @external_payload = if integration_payload.nil? # cache result to prevent multiple api calls
                           nil
                         else
-                          { external_auth.provider => integration_payload }
+                          { user.external_auth.provider => integration_payload }
                         end
   end
 end

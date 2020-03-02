@@ -28,7 +28,7 @@ class WorkTime < ApplicationRecord
 
   scope :active, -> { where(active: true) }
 
-  delegate :external_auth, to: :project
+  delegate :external_auth, to: :user
 
   def delete_spaces
     self.task = task.strip if task

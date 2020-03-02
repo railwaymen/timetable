@@ -7,7 +7,7 @@ import Projects from './time_table/projects/projects';
 import ProjectsList from './time_table/projects/projects_list';
 import ProjectWorkTimes from './time_table/projects/project_work_times';
 import EditProject from './time_table/projects/edit_project';
-import ExternalAuth from './time_table/projects/external_auth';
+import ExternalAuth from './time_table/users/external_auth';
 import Users from './time_table/users/users';
 import EditUser from './time_table/users/edit_user';
 import ByProjects from './time_table/reports/by_projects';
@@ -42,12 +42,12 @@ class TimeTable extends React.Component {
             <Route path="/users" exact component={Users} />
             <Route path="/users/edit/:id" component={EditUser} />
             <Route path="/users/new" exact component={EditUser} />
+            <Route path="/users/:id/external_authorization" component={ExternalAuth} />
             <Route path="/staff" exact component={Staff} />
             <Route path="/projects" exact component={Projects} />
             <Route path="/projects/list" exact component={ProjectsList} />
             <Route path="/projects/:id/work_times" component={ProjectWorkTimes} />
             <Route path="/projects/:id/edit" component={EditProject} />
-            <Route path="/projects/:id/external_authorization" component={ExternalAuth} />
             <Route path="/projects/:projectId/reports" component={ProjectReports} />
             <Route path="/projects/:projectId/new_report" component={NewReport} />
             <Route path="/projects/:projectId/edit_report/:reportId" component={EditReport} />

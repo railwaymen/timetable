@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :external_auth do
-    project
+    user
     provider { 'jira' }
     data { {} }
   end

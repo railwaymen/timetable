@@ -89,7 +89,7 @@ pl:
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
       birthday: Urodziny
     external_auths:
-      authorized: 'Zautoryzowano z'
+      authorized: Zewnętrzne autoryzacje
       generate_link: Wygeneruj link
       follow_link: Kliknij by autoryzować
       new: Nowe uwierzytelnienie

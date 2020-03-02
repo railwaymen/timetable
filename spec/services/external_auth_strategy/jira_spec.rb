@@ -94,12 +94,15 @@ RSpec.describe ExternalAuthStrategy::Jira do
       it 'updates worklog' do
         path = '/example/rest'
         issue_double = double('issue', key: 'ASD', timetracking: { 'originalEstimateSeconds' => 60 })
-        worklog_double = double('worklog', patched_url: path, issue: issue_double)
-        worklogs_double = double('worklogs', first: worklog_double)
-        allow(issue_double).to receive(:worklogs) { worklogs_double }
+        author_double = double('User', accountId: '123')
+        worklog_double = double('worklog', patched_url: path, issue: issue_double, author: author_double)
+        allow(issue_double).to receive(:worklogs).and_return([worklog_double])
         issues_double = double('Issue')
+        myself_double = double('User', accountId: '123')
+        user_double = double('User', myself: myself_double)
         allow(issues_double).to receive(:find).with(issue_double.key) { issue_double }
         allow(jira_double).to receive(:Issue) { issues_double }
+        allow(jira_double).to receive(:User).and_return(user_double)
 
         params = { 'task_id' => issue_double.key, 'time_spent' => 60 }
 
@@ -112,12 +115,15 @@ RSpec.describe ExternalAuthStrategy::Jira do
       it 'destroys worklog when time_spent is 0' do
         path = '/example/rest'
         issue_double = double('issue', key: 'ASD')
-        worklog_double = double('worklog', patched_url: path, issue: issue_double)
-        worklogs_double = double('worklogs', first: worklog_double)
-        allow(issue_double).to receive(:worklogs) { worklogs_double }
+        author_double = double('User', accountId: '123')
+        worklog_double = double('worklog', patched_url: path, issue: issue_double, author: author_double)
+        allow(issue_double).to receive(:worklogs).and_return([worklog_double])
         issues_double = double('Issue')
+        myself_double = double('User', accountId: '123')
+        user_double = double('User', myself: myself_double)
         allow(issues_double).to receive(:find).with(issue_double.key) { issue_double }
         allow(jira_double).to receive(:Issue) { issues_double }
+        allow(jira_double).to receive(:User).and_return(user_double)
 
         params = { 'task_id' => issue_double.key, 'time_spent' => 0 }
 
@@ -134,11 +140,14 @@ RSpec.describe ExternalAuthStrategy::Jira do
           path = '/example/rest'
           issue_double = double('issue', key: 'ASD', timetracking: { 'originalEstimateSeconds' => 60 })
           build_double = double('build', patched_url: path, issue: issue_double)
-          worklogs_double = double('worklogs', first: nil, build: build_double)
-          allow(issue_double).to receive(:worklogs) { worklogs_double }
+          worklogs_double = double('worklogs', find: nil, build: build_double)
+          allow(issue_double).to receive(:worklogs).and_return(worklogs_double)
           issues_double = double('Issue')
+          myself_double = double('User', accountId: '123')
+          user_double = double('User', myself: myself_double)
           allow(issues_double).to receive(:find).with(issue_double.key) { issue_double }
           allow(jira_double).to receive(:Issue) { issues_double }
+          allow(jira_double).to receive(:User).and_return(user_double)
 
           params = { 'task_id' => issue_double.key, 'time_spent' => 60 }
 
@@ -154,11 +163,14 @@ RSpec.describe ExternalAuthStrategy::Jira do
           path = '/example/rest'
           issue_double = double('issue', key: 'ASD', timetracking: {})
           build_double = double('build', patched_url: path, issue: issue_double)
-          worklogs_double = double('worklogs', first: nil, build: build_double)
+          worklogs_double = double('worklogs', find: nil, build: build_double)
           allow(issue_double).to receive(:worklogs) { worklogs_double }
           issues_double = double('Issue')
+          myself_double = double('User', accountId: '123')
+          user_double = double('User', myself: myself_double)
           allow(issues_double).to receive(:find).with(issue_double.key) { issue_double }
           allow(jira_double).to receive(:Issue) { issues_double }
+          allow(jira_double).to receive(:User).and_return(user_double)
 
           params = { 'task_id' => issue_double.key, 'time_spent' => 60 }
 

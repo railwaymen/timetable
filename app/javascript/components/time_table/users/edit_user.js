@@ -139,6 +139,9 @@ class EditUser extends React.Component {
           <input className="form-control" type="text" name="last_name" placeholder={I18n.t('apps.users.last_name')} value={user.last_name} onChange={this.onChange} />
         </div>
         <div className="form-group">
+          <NavLink className="btn btn-primary" to={`/users/${this.state.userId}/external_authorization`}>{I18n.t('common.external_auth')}</NavLink>
+        </div>
+        <div className="form-group">
           <select className="form-control" name="lang" onChange={this.onChange} value={user.lang}>
             <option value="pl">pl</option>
             <option value="en">en</option>
