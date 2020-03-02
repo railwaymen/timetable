@@ -24,6 +24,7 @@ require 'capistrano/bundler'
 require 'capistrano/yarn'
 require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
+require 'whenever/capistrano'
 
 task :use_capistrano_nvm do
   require 'capistrano/nvm'
