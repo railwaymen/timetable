@@ -1,64 +1,49 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import * as Api from '../../shared/api';
 
-class EntryHistory extends React.Component {
-  constructor(props) {
-    super(props);
+function EntryHistory(props) {
+  const {
+    vacationsInfo, selectedYear, setSelectedYear, getVacations,
+  } = props;
+  const { vacations, availableVacationDays, usedVacationDays } = vacationsInfo;
+  const [usedVacationsExpanded, setUsedVacationsExpanded] = useState(false);
+  const [collapsibleProperties, setCollapsibleProperties] = useState({});
+  const [years, setYears] = useState([]);
 
-    this.renderVacations = this.renderVacations.bind(this);
-    this.getVacations = this.getVacations.bind(this);
-    this.onSelectChange = this.onSelectChange.bind(this);
-    this.renderUsedVacationDays = this.renderUsedVacationDays.bind(this);
-    this.onCollappsibleClick = this.onCollappsibleClick.bind(this);
-
-    this.state = {
-      vacations: [],
-      years: [parseInt(moment().year(), 10)],
-      selectedYear: undefined,
-      availableVacationDays: 0,
-      usedVacationDays: {},
-      usedVacationsExpanded: false,
-    };
-  }
-
-  componentDidMount() {
-    const { years } = this.state;
-    const currentYear = years[0];
-    const iterator = moment().format('YYYY') - moment('2017', 'YYYY').year();
+  function getYears() {
+    const currentYear = parseInt(moment().year(), 10);
+    const tempYears = [currentYear];
+    const iterator = moment().format('YYYY') - moment('2019', 'YYYY').year();
     for (let i = 0; i < iterator; i += 1) {
-      years.push(currentYear - (i + 1));
+      tempYears.push(currentYear - (i + 1));
     }
-    this.setState({
-      years: years.sort(),
-      selectedYear: currentYear,
-    });
-    this.getVacations(currentYear);
+    setYears(tempYears.sort());
   }
 
-  onSelectChange(e) {
-    this.setState({
-      selectedYear: e.target.value,
-    }, () => {
-      this.getVacations(this.state.selectedYear);
-    });
-  }
+  useEffect(() => {
+    getYears();
+  }, []);
 
-  onTrashClick(vacationId) {
+  function onTrashClick(vacationId) {
     if (window.confirm(I18n.t('common.confirm'))) {
       Api.makePutRequest({
         url: `/api/vacations/${vacationId}/self_decline`,
       }).then(() => {
-        this.getVacations(this.state.selectedYear);
+        getVacations(selectedYear);
       });
     }
   }
 
-  renderVacations(vacation, key) {
-    const status = vacation.status === 'approved' ? I18n.t('apps.vacations.status.unconfirmed') : I18n.t(`apps.vacations.status.${vacation.status}`);
-    const statusClass = vacation.status === 'approved' ? 'unconfirmed' : vacation.status;
+  function Vacation({ vacation }) {
+    const [status, statusClass] = vacation.status === 'approved' ? (
+      [I18n.t('apps.vacations.status.unconfirmed'), 'unconfirmed']
+    ) : (
+      [I18n.t(`apps.vacations.status.${vacation.status}`), vacation.status]
+    );
     return (
-      <tr className="row vacation" key={key}>
+      <tr className="row vacation">
         <td>{I18n.t(`common.${vacation.vacation_type}`)}</td>
         <td>
           {moment(vacation.start_date).format('DD.MM.YYYY')}
@@ -68,41 +53,29 @@ class EntryHistory extends React.Component {
         <td>{I18n.t('apps.birthday_templates.days', { count: vacation.business_days_count })}</td>
         <td className={statusClass}>{status}</td>
         <td className="trash">
-          {vacation.status === 'unconfirmed' ? (
-            <i className="symbol fa fa-trash" onClick={() => this.onTrashClick(vacation.id)} />
-          ) : '' }
+          <div onClick={() => onTrashClick(vacation.id)}>
+            {vacation.status === 'unconfirmed' ? (
+              <i className="symbol fa fa-trash" />
+            ) : '' }
+          </div>
         </td>
       </tr>
     );
   }
 
-  renderYearFilter(years) {
-    const { selectedYear } = this.state;
+  function YearFilter() {
     const options = [];
     for (let i = 0; i < years.length; i += 1) {
       options.push(<option key={i} value={years[i]}>{years[i]}</option>);
     }
     return (
-      <select className="form-control" value={selectedYear} onChange={this.onSelectChange}>
+      <select className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(parseInt(e.target.value))}>
         {options}
       </select>
     );
   }
 
-  getVacations(year) {
-    if (!year) { year = this.state.selectedYear; }
-    Api.makeGetRequest({ url: `/api/vacations?year=${year}` })
-      .then((response) => {
-        this.setState({
-          vacations: response.data.vacations,
-          availableVacationDays: response.data.available_vacation_days,
-          usedVacationDays: response.data.used_vacation_days,
-        });
-      });
-  }
-
-  renderUsedVacationDays() {
-    const { usedVacationDays, usedVacationsExpanded } = this.state;
+  function UsedVacationDays() {
     const usedVacationDaysList = [];
     Object.keys(usedVacationDays).forEach((type) => {
       usedVacationDaysList.push(
@@ -112,57 +85,55 @@ class EntryHistory extends React.Component {
         </div>,
       );
     });
-    const chevron = usedVacationsExpanded ? 'up' : 'down';
-    const translation = usedVacationsExpanded ? 'fold_used_days' : 'expand_used_days';
+    const { chevron, translation, className } = collapsibleProperties;
     return (
       <div className="used-vacations">
-        <a href="#used-vacations-collapse" data-toggle="collapse" role="button" aria-expanded={usedVacationsExpanded} aria-controls="used-vacations-collapse" onClick={this.onCollappsibleClick}>
+        <div onClick={() => setUsedVacationsExpanded(!usedVacationsExpanded)}>
           <i className={`glyphicon glyphicon-chevron-${chevron}`} />
           {I18n.t(`apps.vacations.${translation}`)}
-        </a>
-        <div className="collapse" id="used-vacations-collapse">
+        </div>
+        <div className={className} id="used-vacations-collapse">
           {usedVacationDaysList}
         </div>
       </div>
     );
   }
 
-  onCollappsibleClick() {
-    $('.used-vacations')[0].style.pointerEvents = 'none';
-    setTimeout(() => {
-      this.setState((prevState) => ({
-        usedVacationsExpanded: !prevState.usedVacationsExpanded,
-      }), () => { $('.used-vacations')[0].style.pointerEvents = ''; });
-    }, 300);
-  }
+  useEffect(() => {
+    const [chevron, translation, className] = usedVacationsExpanded ? ['up', 'fold_used_days', 'show'] : ['down', 'expand_used_days', 'hide'];
+    setCollapsibleProperties({ chevron, translation, className });
+  }, [usedVacationsExpanded]);
 
-  render() {
-    const { years, vacations, availableVacationDays } = this.state;
-
-    return (
-      <div>
-        <div className="row">
-          <div className="available-vacation-days">
-            {I18n.t('apps.vacations.remaining_vacation')}
-            <span>{I18n.t('apps.vacations.days', { count: availableVacationDays })}</span>
-            {this.renderUsedVacationDays()}
-          </div>
-          <div className="year-filter">
-            {this.renderYearFilter(years)}
-          </div>
+  return (
+    <div>
+      <div className="row">
+        <div className="available-vacation-days">
+          {I18n.t('apps.vacations.remaining_vacation')}
+          <span>{I18n.t('apps.vacations.days', { count: availableVacationDays })}</span>
+          <UsedVacationDays />
         </div>
-        <div className="row">
-          <div className="vacations">
-            <table>
-              <tbody>
-                {vacations.map((vacation, key) => this.renderVacations(vacation, key))}
-              </tbody>
-            </table>
-          </div>
+        <div className="year-filter">
+          <YearFilter />
         </div>
       </div>
-    );
-  }
+      <div className="row">
+        <div className="vacations">
+          <table>
+            <tbody>
+              {vacations.map((vacation) => <Vacation key={vacation.id} vacation={vacation} />)}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 }
+
+EntryHistory.propTypes = {
+  vacationsInfo: PropTypes.object.isRequired,
+  selectedYear: PropTypes.number.isRequired,
+  setSelectedYear: PropTypes.func.isRequired,
+  getVacations: PropTypes.func.isRequired,
+};
 
 export default EntryHistory;
