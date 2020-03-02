@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import URI from 'urijs';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
-import SynchronizeIcon from './synchoronize_icon';
+import SynchronizeReport from './synchoronize_report';
 
 const simpleDateFormat = (date) => moment(date).format('YYYY/MM/DD');
 export default class ProjectReports extends React.Component {
@@ -119,7 +119,7 @@ export default class ProjectReports extends React.Component {
                     {cost.toFixed(2)}
                   </td>
                   <td className="text-center">
-                    <SynchronizeIcon id={id} projectId={this.state.projectId} />
+                    <SynchronizeReport id={id} projectId={this.state.projectId} />
                   </td>
                   <td className="report-actions text-right">
                     {generated

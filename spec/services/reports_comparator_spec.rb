@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe CompareReports do
+RSpec.describe ReportsComparator do
   describe '#call' do
     it 'returns true if project duration time is eqaul to project report duration' do
       user = create(:user)
