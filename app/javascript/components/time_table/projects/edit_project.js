@@ -26,6 +26,7 @@ class EditProject extends React.Component {
       color: '0c0c0c',
       leader_id: '',
       work_times_allows_task: true,
+      external_integration_enabled: true,
       active: true,
     },
     users: [],
@@ -163,6 +164,12 @@ class EditProject extends React.Component {
             <label>
               {I18n.t('apps.projects.work_times_allows_task')}
               <input type="checkbox" name="work_times_allows_task" checked={project.work_times_allows_task} onChange={this.onCheckboxChange} />
+            </label>
+          </div>
+          <div className="form-group">
+            <label>
+              {I18n.t('apps.projects.external_integration_enabled')}
+              <input type="checkbox" name="external_integration_enabled" checked={project.external_integration_enabled} onChange={this.onCheckboxChange} />
             </label>
           </div>
           <input className="btn btn-default" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />

@@ -26,6 +26,7 @@ en:
       filter_all: All
       filter_active_label: Show only
       work_times_allows_task: Allow for adding task urls
+      external_integration_enabled: JIRA integration
     reports:
       new: New Report
       remove: Remove Report

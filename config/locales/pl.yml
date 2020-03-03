@@ -26,6 +26,7 @@ pl:
       filter_all: Wszystkie
       filter_active_label: Pokaż tylko
       work_times_allows_task: Zezwalaj na dodawanie urli do zadań
+      external_integration_enabled: Integracja z JIRA
     reports:
       new: Nowy Raport
       remove: Usuń Raport

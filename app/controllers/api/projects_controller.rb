@@ -102,12 +102,12 @@ module Api
     end
 
     def leader_project_params
-      params.require(:project).permit(:color, :work_times_allows_task)
+      params.require(:project).permit(:color, :work_times_allows_task, :external_integration_enabled)
     end
 
     def admin_project_params
       params.fetch(:project)
-            .permit(:name, :color, :leader_id, :active, :work_times_allows_task)
+            .permit(:name, :color, :leader_id, :active, :work_times_allows_task, :external_integration_enabled)
     end
   end
 end
