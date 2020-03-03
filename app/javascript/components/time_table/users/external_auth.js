@@ -13,8 +13,6 @@ class ExternalAuth extends React.Component {
   }
 
   state = {
-    publicKey: '',
-    auth: null,
     authorizationUrl: '',
     domain: '',
     token: '',
@@ -66,12 +64,12 @@ class ExternalAuth extends React.Component {
           domain, token, authorization_url, provider, request_data, project_id,
         },
       },
-    })
-      .then((response) => {
-        this.setState({ externalAuth: response.data });
-      }).catch(() => {
-        alert(I18n.t('activerecord.errors.models.external_auth.basic'));
-      });
+    }).then((response) => {
+      this.setState({ externalAuth: response.data });
+    }).catch(() => {
+      // eslint-disable-next-line no-alert
+      alert(I18n.t('activerecord.errors.models.external_auth.basic'));
+    });
   }
 
   onDelete(e) {
