@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_28_142843) do
+ActiveRecord::Schema.define(version: 2020_03_03_103236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(version: 2020_02_28_142843) do
     t.boolean "autofill", default: false, null: false
     t.boolean "lunch", default: false, null: false
     t.boolean "count_duration", default: true, null: false
+    t.boolean "external_integration_enabled", default: false, null: false
     t.index ["leader_id"], name: "index_projects_on_leader_id"
     t.index ["name"], name: "index_projects_on_name", unique: true
   end

@@ -187,6 +187,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       module ExternalAuthStrategy
         class Sample < Base; def self.from_data(*args); end; end
       end
+      project = create(:project, external_integration_enabled: true)
       create(:external_auth, user: user, provider: 'Sample')
       sign_in(user)
       strategy_double = double('strategy')
@@ -200,6 +201,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       module ExternalAuthStrategy
         class Sample < Base; def self.from_data(*args); end; end
       end
+      project = create(:project, external_integration_enabled: true)
       create(:external_auth, user: user, provider: 'Sample')
       sign_in(user)
       strategy_double = double('strategy')
@@ -252,6 +254,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       module ExternalAuthStrategy
         class Sample < Base; def self.from_data(*args); end; end
       end
+      project = create(:project, external_integration_enabled: true)
       create(:external_auth, user: user, provider: 'Sample')
       sign_in(user)
       strategy_double = double('strategy')
@@ -267,6 +270,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       module ExternalAuthStrategy
         class Sample < Base; def self.from_data(*args); end; end
       end
+      project = create(:project, external_integration_enabled: true)
       create(:external_auth, user: user, provider: 'Sample')
       sign_in(user)
       strategy_double = double('strategy')
@@ -365,6 +369,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       module ExternalAuthStrategy
         class Sample < Base; def self.from_data(*args); end; end
       end
+      project = create(:project, external_integration_enabled: true)
       sign_in(user)
       create(:external_auth, user: user, provider: 'Sample')
       work_time = create(:work_time, project: project, user: user, integration_payload: { 'Sample' => { 'task_id' => '1' } })

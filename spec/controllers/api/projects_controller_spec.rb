@@ -21,7 +21,7 @@ RSpec.describe Api::ProjectsController do
   end
 
   def full_project_response(project)
-    project.attributes.slice('id', 'name', 'work_times_allows_task', 'color', 'active', 'leader_id')
+    project.attributes.slice('id', 'name', 'work_times_allows_task', 'external_integration_enabled', 'color', 'active', 'leader_id')
   end
 
   describe '#index' do
@@ -250,6 +250,7 @@ RSpec.describe Api::ProjectsController do
         id: project.id,
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
+        external_integration_enabled: project.external_integration_enabled,
         color: project.color,
         active: project.active,
         leader_id: project.leader_id,
@@ -275,6 +276,7 @@ RSpec.describe Api::ProjectsController do
         id: project.id,
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
+        external_integration_enabled: project.external_integration_enabled,
         color: project.color,
         active: project.active,
         leader_id: project.leader_id
@@ -294,6 +296,7 @@ RSpec.describe Api::ProjectsController do
         id: project.id,
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
+        external_integration_enabled: project.external_integration_enabled,
         color: project.color,
         active: project.active,
         leader_id: project.leader_id
@@ -370,18 +373,22 @@ RSpec.describe Api::ProjectsController do
     it 'creates project as admin' do
       sign_in(admin)
       project = create(:project)
-      put :update, params: { id: project.id, project: { name: project_name } }, format: :json
+      put :update, params: { id: project.id, project: { name: project_name, work_times_allows_task: true, external_integration_enabled: true } }, format: :json
       expect(response.code).to eql('204')
       expect(project.reload.name).to eql(project_name)
+      expect(project.work_times_allows_task).to eql(true)
+      expect(project.external_integration_enabled).to eql(true)
       expect(response.body).to eq('')
     end
 
     it 'creates project as manager' do
       sign_in(manager)
       project = create(:project)
-      put :update, params: { id: project.id, project: { name: project_name } }, format: :json
+      put :update, params: { id: project.id, project: { name: project_name, work_times_allows_task: true, external_integration_enabled: true } }, format: :json
       expect(response.code).to eql('204')
       expect(project.reload.name).to eql(project_name)
+      expect(project.work_times_allows_task).to eql(true)
+      expect(project.external_integration_enabled).to eql(true)
       expect(response.body).to eq('')
     end
   end

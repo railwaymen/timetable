@@ -11,6 +11,7 @@ function EditProject(props) {
     color: '0c0c0c',
     leader_id: '',
     work_times_allows_task: true,
+    external_integration_enabled: true,
     active: true,
   };
 
@@ -123,6 +124,17 @@ function EditProject(props) {
               type="checkbox"
               name="work_times_allows_task"
               checked={project.work_times_allows_task}
+              onChange={onCheckboxChange}
+            />
+          </label>
+        </div>
+        <div className="form-group">
+          <label>
+            {I18n.t('apps.projects.external_integration_enabled')}
+            <input
+              type="checkbox"
+              name="external_integration_enabled"
+              checked={project.external_integration_enabled}
               onChange={onCheckboxChange}
             />
           </label>
