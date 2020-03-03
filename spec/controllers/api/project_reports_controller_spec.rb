@@ -234,13 +234,23 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
 
   describe 'GET #synchronize' do
     it 'checks if project record and its work times are equal' do
-      body = { development: [task: 'task', owner: 'Owner', duration: 300] }
-      project_report = create(:project_report, initial_body: body, last_body: body, duration_sum: 300, project: project)
+      user = create(:user)
+      project = create(:project)
+      work_time = create(:work_time, user: user, project: project, active: true, starts_at: Time.current - 45.minutes, ends_at: Time.current - 30.minutes)
+      report = create(
+        :project_report,
+        duration_sum: work_time.duration,
+        project: project,
+        starts_at: 1.day.ago,
+        ends_at: Time.current
+      )
 
-      get :synchronize, params: { project_id: project_report.project.id, id: project_report.id }
+      params = { project_id: report.project.id, id: report.id }
+
+      get :synchronize, params: params
 
       synchronize_response = {
-        synchronized: false
+        synchronized: true
       }
 
       expect(response).to be_ok

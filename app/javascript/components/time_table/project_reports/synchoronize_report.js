@@ -4,7 +4,7 @@ import { makeGetRequest } from '../../shared/api';
 export default class SynchronizeReport extends Component {
   constructor(props) {
     super(props);
-    this.renderFavicon = this.renderFavicon.bind(this);
+    this.synchronizedIcon = this.synchronizedIcon.bind(this);
     this.onSynchronize = this.onSynchronize.bind(this);
     this.state = { synchronize: null };
   }
