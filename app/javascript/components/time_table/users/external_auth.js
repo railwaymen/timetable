@@ -105,14 +105,18 @@ class ExternalAuth extends React.Component {
     return (
       <div>
         <h3>{I18n.t('apps.external_auths.new')}</h3>
-        <input placeholder={I18n.t('apps.external_auths.domain')} value={this.state.domain} onChange={this.onDomainChange} />
-        <button onClick={this.getAuthLink} type="button">{I18n.t('apps.external_auths.generate_link')}</button>
+        <div className="input-group">
+          <input className="form-control" type="text" placeholder={I18n.t('apps.external_auths.domain')} value={this.state.domain} onChange={this.onDomainChange} />
+          <div className="input-group-btn">
+            <button className="btn btn-primary btn-outline-secondary" onClick={this.getAuthLink} type="button">{I18n.t('apps.external_auths.generate_link')}</button>
+          </div>
+        </div>
         {this.state.authorizationUrl && <p><a className="btn btn-primary" href={this.state.authorizationUrl} target="_blank" rel="noopener noreferrer">{I18n.t('apps.external_auths.follow_link')}</a></p>}
         {this.state.authorizationUrl
           && (
           <form>
             <div className="form-group">
-              <input value={this.state.token} placeholder={I18n.t('apps.external_auths.token')} onChange={this.onTokenChange} />
+              <input className="form-control" type="text" value={this.state.token} placeholder={I18n.t('apps.external_auths.token')} onChange={this.onTokenChange} />
             </div>
             <div className="form-group">
               <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
