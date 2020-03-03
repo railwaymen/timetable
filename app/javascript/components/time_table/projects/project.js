@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
-class Project extends React.Component {
-  renderButtons() {
-    if (currentUser.canManageProject(this.props.project)) {
+function Project(props) {
+  function renderButtons() {
+    if (currentUser.canManageProject(props.project)) {
       return (
-        <NavLink className="ui button icon basic blue" to={`/projects/${this.props.project.id}/edit`}>
+        <NavLink className="ui button icon basic blue" to={`/projects/${props.project.id}/edit`}>
           <i className="icon pencil" />
         </NavLink>
       );
@@ -14,8 +14,9 @@ class Project extends React.Component {
     return null;
   }
 
-  renderProjectName() {
-    const { project } = this.props;
+  function renderProjectName() {
+    const { project } = props;
+
     if (currentUser.canManageProject(project)) {
       return (
         <a href={`/projects/${project.id}/work_times`}>
@@ -26,26 +27,24 @@ class Project extends React.Component {
     return project.name;
   }
 
-  render() {
-    const { project } = this.props;
+  const { project } = props;
 
-    return (
-      <tr>
-        <td />
-        <td>{this.renderProjectName()}</td>
-        <td>{project.leader ? `${project.leader.first_name} ${project.leader.last_name}` : ''}</td>
-        <td>
-          <div className="ui buttons">
-            {this.renderButtons()}
-          </div>
-        </td>
-      </tr>
-    );
-  }
+  return (
+    <tr>
+      <td />
+      <td>{renderProjectName()}</td>
+      <td>{project.leader ? `${project.leader.first_name} ${project.leader.last_name}` : ''}</td>
+      <td>
+        <div className="ui buttons">
+          {renderButtons()}
+        </div>
+      </td>
+    </tr>
+  );
 }
 
 Project.propTypes = {
-  project: PropTypes.object,
+  project: PropTypes.object.isRequired,
 };
 
 export default Project;

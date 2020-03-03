@@ -6,8 +6,8 @@ function Users() {
   const [users, setUsers] = useState([]);
   const [visibility, setVisibility] = useState('active');
 
-  function getUsers(isVisible) {
-    fetch(`/api/users?filter=${isVisible}`)
+  function getUsers() {
+    fetch(`/api/users?filter=${visibility}`)
       .then((response) => response.json())
       .then((data) => {
         setUsers(data);
@@ -15,7 +15,7 @@ function Users() {
   }
 
   useEffect(() => {
-    getUsers(visibility);
+    getUsers();
   }, [visibility]);
 
   return (

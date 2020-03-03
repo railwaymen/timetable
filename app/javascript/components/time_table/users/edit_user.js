@@ -26,19 +26,13 @@ function EditUser(props) {
   function onChange(e) {
     const { name, value } = e.target;
 
-    setUser({
-      ...user,
-      [name]: value,
-    });
+    setUser({ ...user, [name]: value });
   }
 
   function onCheckboxChange(e) {
     const { name } = e.target;
 
-    setUser({
-      ...user,
-      [name]: !user[name],
-    });
+    setUser({ ...user, [name]: !user[name] });
   }
 
   function saveUser() {
@@ -57,11 +51,8 @@ function EditUser(props) {
         });
     } else {
       Api.makePostRequest({ url: '/api/users', body: { user } })
-        .then(() => {
-          setRedirectToReferer('/users');
-        }).catch((results) => {
-          setErrors(results.errors);
-        });
+        .then(() => setRedirectToReferer('/users'))
+        .catch((results) => setErrors(results.errors));
     }
   }
 

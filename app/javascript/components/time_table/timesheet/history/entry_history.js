@@ -480,8 +480,8 @@ class EntryHistory extends React.Component {
           <div className="menu" tabIndex="-1">
             <a className="item" data-project-id="" href="" onClick={this.onProjectFilter}>{I18n.t('common.all')}</a>
             { projects.map((project) => (
-              <a onClick={this.onProjectFilter} data-project-id={project.id} className="item" key={project.name} href={`/timesheet?project_id=${project.id}`}>
-                {project.id}
+              <a onClick={this.onProjectFilter} data-project-id={project.id} className="item" key={project.id} href={`/timesheet?project_id=${project.id}`}>
+                {project.name}
               </a>
             )) }
           </div>
