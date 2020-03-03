@@ -69,7 +69,7 @@ function EntryHistory(props) {
       options.push(<option key={i} value={years[i]}>{years[i]}</option>);
     }
     return (
-      <select className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(parseInt(e.target.value))}>
+      <select className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(parseInt(e.target.value, 10))}>
         {options}
       </select>
     );
