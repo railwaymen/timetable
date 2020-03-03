@@ -87,7 +87,7 @@ class ExternalAuth extends React.Component {
     return (
       <div>
         {this.renderAuth()}
-        <NavLink className="btn btn-primary" to={`/users/${userId}/edit`}>{I18n.t('common.cancel')}</NavLink>
+        <NavLink className="btn btn-primary" to={`/users/edit/${userId}`}>{I18n.t('common.cancel')}</NavLink>
       </div>
     );
   }
