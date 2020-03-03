@@ -1,93 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import URI from 'urijs';
 import { defaultDatePickerProps } from '../../shared/helpers';
 
-class Filters extends React.Component {
-  constructor(props) {
-    super(props);
+function Filters(props) {
+  const [users, setUsers] = useState([]);
+  const { filters, setFilters, defaultFilters } = props;
+  const { selectedUser, startDate, endDate } = filters;
 
-    this.onGeneralClick = this.onGeneralClick.bind(this);
-    this.getActiveUsers = this.getActiveUsers.bind(this);
-    this.onUserSelectFilterChange = this.onUserSelectFilterChange.bind(this);
-    this.onDateChange = this.onDateChange.bind(this);
-    this.onFilterChange = this.onFilterChange.bind(this);
-
-    this.state = {
-      users: [],
-      selectedUser: '',
-      startDate: moment().startOf('month').format('DD/MM/YYYY'),
-      endDate: null,
-    };
-  }
-
-  componentDidMount() {
-    this.getActiveUsers();
-  }
-
-  setFilters(params) {
-    this.setState({
-      selectedUser: params.user_id ? params.user_id : '',
-      startDate: params.start_date ? params.start_date : moment().startOf('month').format('DD/MM/YYYY'),
-      endDate: params.end_date ? moment(params.end_date, 'DD/MM/YYYY').format('DD/MM/YYYY') : null,
-    });
-  }
-
-  getActiveUsers() {
+  function getUsers() {
     fetch('/api/users?filter=active&staff')
       .then((response) => response.json())
       .then((data) => {
-        this.setState({ users: data });
+        setUsers(data);
       });
   }
 
-  onGeneralClick() {
-    this.setState({
-      selectedUser: '',
-      startDate: moment().startOf('month').format('DD/MM/YYYY'),
-      endDate: null,
-    }, () => {
-      this.onFilterChange();
-    });
-  }
+  useEffect(() => {
+    getUsers();
+  }, []);
 
-  onUserSelectFilterChange(e) {
-    this.setState({
-      selectedUser: e.target.value,
-    }, () => {
-      this.onFilterChange();
-    });
-  }
-
-  onDateChange(name, date) {
-    this.setState({
-      [name]: date === null ? date : date.format('DD/MM/YYYY'),
-    }, () => {
-      this.onFilterChange();
-    });
-  }
-
-  onFilterChange() {
-    const { startDate, endDate, selectedUser } = this.state;
-    const filterParams = {
-      start_date: startDate,
-      end_date: endDate,
-      user_id: selectedUser,
-    };
-    this.props.onFilterChange(filterParams);
-  }
-
-  onExportClick() {
-    const url = URI(window.location.href);
-    window.open(`/api/vacations/generate_csv.csv?${url.query()}`, '_blank');
-  }
-
-  renderUserSelectFilter(users) {
-    const { selectedUser } = this.state;
+  function Users() {
     const options = [];
-
     users.forEach((user) => {
       options.push(
         <option key={user.id} value={user.id}>
@@ -97,79 +33,111 @@ class Filters extends React.Component {
     });
 
     return (
-      <select className="form-control user-select-filter" value={selectedUser} onChange={(this.onUserSelectFilterChange)}>
-        <option value="">{I18n.t('apps.staff.by_person')}</option>
-        {options}
-      </select>
-    );
-  }
-
-  onYearlyReportClick() {
-    window.open('/api/vacations/generate_yearly_report.csv', '_blank');
-  }
-
-  render() {
-    const { users, startDate, endDate } = this.state;
-
-    return (
-      <div className="container filters">
-        <div className="row">
-          <div className="general-button">
-            <button className="filter-button bt-vacation" type="button" onClick={(this.onGeneralClick)}>
-              <span className="bt-txt">{I18n.t('apps.staff.general')}</span>
-            </button>
-          </div>
-          <div className="user-filter">
-            {this.renderUserSelectFilter(users)}
-          </div>
-          <div className="start-date-filter">
-            <DatePicker
-              {...defaultDatePickerProps}
-              name="startDate"
-              className="form-control"
-              selected={startDate === null ? null : moment(startDate, 'DD/MM/YYYY')}
-              value={startDate === null ? null : moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
-              format="DD/MM/YYYYs"
-              dateFormat="DD/MM/YYYY"
-              onChange={(date) => this.onDateChange('startDate', date)}
-              onSelect={(date) => this.onDateChange('startDate', date)}
-            />
-          </div>
-          <div className="end-date-filter">
-            <DatePicker
-              {...defaultDatePickerProps}
-              name="endDate"
-              className="form-control"
-              selected={endDate === null ? null : moment(endDate, 'DD/MM/YYYY')}
-              value={endDate === null ? null : moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
-              format="DD/MM/YYYYs"
-              dateFormat="DD/MM/YYYY"
-              onChange={(date) => this.onDateChange('endDate', date)}
-              onSelect={(date) => this.onDateChange('endDate', date)}
-            />
-          </div>
-          { currentUser.staff_manager && (
-            <div className="generator-buttons">
-              <div className="csv-export-button">
-                <button className="filter-button bt-vacation" type="button" onClick={this.onExportClick}>
-                  <span className="bt-txt">{I18n.t('apps.staff.csv_export')}</span>
-                </button>
-              </div>
-              <div className="yearly-report">
-                <button className="filter-button bt-vacation" type="button" onClick={this.onYearlyReportClick}>
-                  <span className="bt-txt">{I18n.t('apps.staff.yearly_report')}</span>
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+      <div className="user-filter">
+        <select className="form-control user-select-filter" value={selectedUser} onChange={(e) => setFilters({ ...filters, selectedUser: e.target.value })}>
+          <option value="">{I18n.t('apps.staff.by_person')}</option>
+          {options}
+        </select>
       </div>
     );
   }
+
+  function GeneralButton() {
+    return (
+      <div className="general-button">
+        <button className="filter-button bt-vacation" type="button" onClick={() => setFilters(defaultFilters)}>
+          <span className="bt-txt">{I18n.t('apps.staff.general')}</span>
+        </button>
+      </div>
+    );
+  }
+
+  function DateRange() {
+    return (
+      <>
+        <div className="start-date-filter">
+          <DatePicker
+            {...defaultDatePickerProps}
+            name="startDate"
+            className="form-control"
+            selected={startDate === null ? null : moment(startDate, 'DD/MM/YYYY')}
+            value={startDate === null ? null : moment(startDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
+            format="DD/MM/YYYYs"
+            dateFormat="DD/MM/YYYY"
+            onChange={(date) => setFilters({ ...filters, startDate: (date ? date.format('DD/MM/YYYY') : null) })}
+            onSelect={(date) => setFilters({ ...filters, startDate: (date ? date.format('DD/MM/YYYY') : null) })}
+          />
+        </div>
+        <div className="end-date-filter">
+          <DatePicker
+            {...defaultDatePickerProps}
+            name="endDate"
+            className="form-control"
+            selected={endDate === null ? null : moment(endDate, 'DD/MM/YYYY')}
+            value={endDate === null ? null : moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
+            format="DD/MM/YYYYs"
+            dateFormat="DD/MM/YYYY"
+            onChange={(date) => setFilters({ ...filters, endDate: (date ? date.format('DD/MM/YYYY') : null) })}
+            onSelect={(date) => setFilters({ ...filters, endDate: (date ? date.format('DD/MM/YYYY') : null) })}
+          />
+        </div>
+      </>
+    );
+  }
+
+  function exportCsv() {
+    const url = URI(window.location.href);
+    window.open(`/api/vacations/generate_csv.csv?${url.query()}`, '_blank');
+  }
+
+  function exportYearlyReport() {
+    window.open('/api/vacations/generate_yearly_report.csv', '_blank');
+  }
+
+  function CsvButton() {
+    return (
+      <div className="csv-export-button">
+        <button className="filter-button bt-vacation" type="button" onClick={exportCsv}>
+          <span className="bt-txt">{I18n.t('apps.staff.csv_export')}</span>
+        </button>
+      </div>
+    );
+  }
+
+  function YearlyButton() {
+    return (
+      <div className="yearly-report">
+        <button className="filter-button bt-vacation" type="button" onClick={exportYearlyReport}>
+          <span className="bt-txt">{I18n.t('apps.staff.yearly_report')}</span>
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container filters">
+      <div className="row">
+        <GeneralButton />
+
+        <Users />
+
+        <DateRange />
+        { currentUser.staff_manager && (
+          <div className="generator-buttons">
+            <CsvButton />
+
+            <YearlyButton />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 Filters.propTypes = {
-  users: PropTypes.array,
+  filters: PropTypes.object.isRequired,
+  setFilters: PropTypes.func.isRequired,
+  defaultFilters: PropTypes.object.isRequired,
 };
 
 export default Filters;

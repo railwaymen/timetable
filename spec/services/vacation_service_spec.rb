@@ -12,7 +12,8 @@ RSpec.describe VacationService do
       vacation_interaction: { user_full_name: interactor_name },
       previous_status: previous_status,
       errors: errors,
-      warnings: warnings
+      warnings: warnings,
+      user_available_vacation_days: User.find(vacation.user_id).available_vacation_days
     }
   end
 
