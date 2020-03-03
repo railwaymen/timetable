@@ -1,6 +1,7 @@
 import React from 'react';
 import URI from 'urijs';
 import { NavLink } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import _ from 'lodash';
 import * as Api from '../../shared/api';
 import VacationPeriod from './vacation_period';
@@ -96,6 +97,9 @@ class VacationPeriods extends React.Component {
     return (
       // accounting-periods-list class only for styling
       <div className="vacation-periods-list accounting-periods-list">
+        <Helmet>
+          <title>{`${I18n.t('common.vacation_periods')}`}</title>
+        </Helmet>
         { currentUser.admin && (
           <div className="row periods-actions">
             <div className="col-md-8">

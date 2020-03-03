@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import * as Api from '../../shared/api';
 import { unnullifyFields } from '../../shared/helpers';
 
@@ -107,6 +108,13 @@ class EditBirthdayTemplate extends React.Component {
     if (redirectToReferer) { return (<Redirect to={redirectToReferer} />); }
     return (
       <div>
+        <Helmet>
+          {birthdayTemplate.id ? (
+            <title>{I18n.t('apps.birthday_templates.edit')}</title>
+          ) : (
+            <title>{I18n.t('apps.birthday_templates.new')}</title>
+          )}
+        </Helmet>
         <div className="birthday-template-form">
           <div className="form-group">
             {errors.name && this.renderErrorTooltip(errors.name)}

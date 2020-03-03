@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import * as Api from '../../shared/api';
 import Project from './project';
 
@@ -20,6 +21,9 @@ function ProjectsList() {
 
   return (
     <div>
+      <Helmet>
+        <title>{I18n.t('common.projects')}</title>
+      </Helmet>
       <div className="ui grid">
         <div className="sixteen wide column">
           <div className="btn-group pull-right">

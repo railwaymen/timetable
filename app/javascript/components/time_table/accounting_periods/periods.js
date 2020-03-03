@@ -1,6 +1,7 @@
 import React from 'react';
 import URI from 'urijs';
 import { NavLink } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import _ from 'lodash';
 import * as Api from '../../shared/api';
@@ -310,6 +311,9 @@ class Periods extends React.Component {
 
     return (
       <div className="accounting-periods-list">
+        <Helmet>
+          <title>{I18n.t('common.accounting_periods')}</title>
+        </Helmet>
         {currentUser.admin && this.renderButtons()}
         <div className="col-md-offset-3 col-md-6 vert-offset-bottom clearfix">
           {currentUser.admin && (

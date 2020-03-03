@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import _ from 'lodash';
 import * as Api from '../../shared/api';
 import ProjectStats from './project_stats';
@@ -33,6 +34,9 @@ function Projects() {
 
   return (
     <div>
+      <Helmet>
+        <title>{I18n.t('common.projects')}</title>
+      </Helmet>
       <header className="page-header">
         <div className="ui grid">
           <div className="sixteen wide column">

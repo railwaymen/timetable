@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import * as Api from '../../shared/api';
 import { unnullifyFields } from '../../shared/helpers';
 import Preloader from '../../shared/preloader';
@@ -79,6 +80,13 @@ function EditUser(props) {
 
   return (
     <form>
+      <Helmet>
+        {user.id ? (
+          <title>{`${I18n.t('common.edit')} ${user.first_name} ${user.last_name}`}</title>
+        ) : (
+          <title>{I18n.t('apps.users.new')}</title>
+        )}
+      </Helmet>
       {renderFields()}
       <NavLink activeClassName="" className="btn btn-default" to="/users">{I18n.t('common.cancel')}</NavLink>
       <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={onSubmit} />

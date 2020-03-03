@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import moment from 'moment';
 import * as Api from '../../shared/api';
@@ -132,6 +133,9 @@ export default class ProjectWorkTimes extends React.Component {
 
     return (
       <div className="content-wrapper box">
+        <Helmet>
+          <title>{project.name}</title>
+        </Helmet>
         <header className="page-header projects-header row text-center">
           <h1 className="project-title">
             {project.name}

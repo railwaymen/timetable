@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
@@ -213,6 +214,13 @@ class EditPeriod extends React.Component {
     if (!periodId || periodId === period.id) {
       return (
         <div id="content" className="edit-accounting-period">
+          <Helmet>
+            {period.id ? (
+              <title>{`${I18n.t('apps.accounting_periods.edit')}`}</title>
+            ) : (
+              <title>{I18n.t('apps.accounting_periods.new')}</title>
+            )}
+          </Helmet>
           <div>
             <form className="row" onSubmit={this.onSubmit}>
               <div className="col-12 col-md-6">
@@ -226,7 +234,13 @@ class EditPeriod extends React.Component {
                   </select>
                 </div>
                 <div className="form-group">
-                  <textarea className="form-control" name="note" placeholder={I18n.t('apps.accounting_periods.note')} onChange={this.onChange} value={period.note} />
+                  <textarea
+                    className="form-control"
+                    name="note"
+                    placeholder={I18n.t('apps.accounting_periods.note')}
+                    onChange={this.onChange}
+                    value={period.note || ''}
+                  />
                 </div>
                 <div className="row form-group">
                   <div className="col-12 col-xs-6">

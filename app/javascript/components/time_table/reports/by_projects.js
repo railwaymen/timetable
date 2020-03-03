@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { Redirect, NavLink } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -74,6 +75,9 @@ class ByProjects extends Report {
 
     return (
       <div id="content">
+        <Helmet>
+          <title>{I18n.t('common.reports')}</title>
+        </Helmet>
         <header className="page-header reports-header row">
           <div className="col-md-3">
             <p style={{ padding: '6px' }}>
