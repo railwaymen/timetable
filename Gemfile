@@ -3,16 +3,14 @@
 source 'https://rubygems.org'
 
 ruby '2.7.0'
-gem 'awesome_print'
+
 gem 'bootstrap-sass'
 gem 'business_time'
-gem 'coffee-rails'
 gem 'devise'
 gem 'devise-i18n'
 gem 'dotenv-rails'
 gem 'holidays'
 gem 'i18n-js'
-gem 'immigrant'
 gem 'interactor'
 gem 'jbuilder'
 gem 'jira-ruby', require: false
@@ -55,6 +53,7 @@ group :development do
   gem 'capistrano-rvm'
   gem 'capistrano-sidekiq'
   gem 'capistrano-yarn'
+  gem 'immigrant'
   gem 'rubocop'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
