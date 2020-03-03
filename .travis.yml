@@ -14,8 +14,7 @@ addons:
   chrome: stable
 
 script:
-  - bundle exec rake
-  - yarn lint
+  - bundle exec rake 
 
 before_install:
   - gem install bundler:2.1.4

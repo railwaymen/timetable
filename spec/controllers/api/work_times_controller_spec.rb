@@ -8,6 +8,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
   let(:user) { create(:user) }
   let(:admin) { create(:admin) }
   let(:manager) { create(:manager) }
+  let(:project) { create(:project) }
   let(:body) { SecureRandom.hex }
   let(:starts_at) { Time.zone.now.beginning_of_day + 2.hours }
   let(:ends_at) { Time.zone.now.beginning_of_day + 4.hours }
@@ -25,7 +26,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
   end
 
   def full_work_time_response(work_time)
-    work_time_response(work_time).merge(versions: []).merge(sum_duration: 7200)
+    work_time_response(work_time).merge(versions: []).merge(sum_duration: work_time.duration)
   end
 
   describe '#index' do
@@ -186,12 +187,12 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       module ExternalAuthStrategy
         class Sample < Base; def self.from_data(*args); end; end
       end
-      auth = create(:external_auth, provider: 'Sample')
+      create(:external_auth, user: user, provider: 'Sample')
       sign_in(user)
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { nil }
-      post :create, params: { work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('422')
     end
 
@@ -199,13 +200,13 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       module ExternalAuthStrategy
         class Sample < Base; def self.from_data(*args); end; end
       end
-      auth = create(:external_auth, provider: 'Sample')
+      create(:external_auth, user: user, provider: 'Sample')
       sign_in(user)
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { { 'task_id' => 1 } }
       expect(UpdateExternalAuthWorker).to receive(:perform_async)
-      post :create, params: { work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('200')
     end
   end
@@ -251,13 +252,13 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       module ExternalAuthStrategy
         class Sample < Base; def self.from_data(*args); end; end
       end
-      auth = create(:external_auth, provider: 'Sample')
+      create(:external_auth, user: user, provider: 'Sample')
       sign_in(user)
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { nil }
       expect do
-        post :create_filling_gaps, params: { work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       end.not_to change(user.work_times, :count)
       expect(response.code).to eql('422')
     end
@@ -266,13 +267,13 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       module ExternalAuthStrategy
         class Sample < Base; def self.from_data(*args); end; end
       end
-      auth = create(:external_auth, provider: 'Sample')
+      create(:external_auth, user: user, provider: 'Sample')
       sign_in(user)
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { { 'task_id' => 1 } }
       expect(UpdateExternalAuthWorker).to receive(:perform_async)
-      post :create_filling_gaps, params: { work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('200')
     end
 
@@ -365,13 +366,13 @@ RSpec.describe Api::WorkTimesController, type: :controller do
         class Sample < Base; def self.from_data(*args); end; end
       end
       sign_in(user)
-      auth = create(:external_auth, provider: 'Sample')
-      work_time = create(:work_time, project: auth.project, user: user, integration_payload: { 'Sample' => { 'task_id' => '1' } })
+      create(:external_auth, user: user, provider: 'Sample')
+      work_time = create(:work_time, project: project, user: user, integration_payload: { 'Sample' => { 'task_id' => '1' } })
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { { 'task_id' => 1 } }
       expect(UpdateExternalAuthWorker).to receive(:perform_async).twice
-      put :update, params: { id: work_time.id, work_time: { project_id: auth.project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://www.example.com' } }, format: :json
+      put :update, params: { id: work_time.id, work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://www.example.com' } }, format: :json
       expect(response.code).to eql('200')
       expect(work_time.reload.body).to eql(body)
     end

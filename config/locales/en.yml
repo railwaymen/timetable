@@ -89,7 +89,7 @@ en:
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
       birthday: Birthday
     external_auths:
-      authorized: 'Authorized with'
+      authorized: External authorizations
       generate_link: Generate link
       follow_link: Click to authorize
       new: New auth

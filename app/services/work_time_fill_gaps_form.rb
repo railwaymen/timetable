@@ -20,6 +20,7 @@ class WorkTimeFillGapsForm
            :tag,
            :preview,
            :user_id,
+           :user,
            :project,
            :date, to: :work_time
 

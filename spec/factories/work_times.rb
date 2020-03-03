@@ -5,8 +5,8 @@ FactoryBot.define do
     user
     project
     body { 'Test' }
-    starts_at { Time.current }
-    ends_at { 2.hours.from_now }
+    sequence(:starts_at) { |n| Time.zone.now.beginning_of_day + (15 * n).minutes }
+    sequence(:ends_at) { starts_at + 15.minutes }
     creator { user }
   end
 end

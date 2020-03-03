@@ -5,7 +5,6 @@ class Project < ApplicationRecord
   has_many :work_times, dependent: :nullify
   has_many :users, through: :work_times
   has_many :project_reports, dependent: :nullify
-  has_one :external_auth, dependent: :destroy
   belongs_to :leader, class_name: 'User'
 
   validates :name, presence: true

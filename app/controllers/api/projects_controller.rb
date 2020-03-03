@@ -50,11 +50,6 @@ module Api
     end
     # rubocop:enable Metrics/MethodLength
 
-    def external_auth
-      @project = project_scope
-      @external_auth = @project.external_auth
-    end
-
     def create
       @project = Project.create(project_params)
       respond_with :api, @project

@@ -6,3 +6,4 @@ if current_user.admin?
   json.contract_name @user.contract_name
   json.birthdate @user.birthdate
 end
+json.external_auth @user.external_auth, :id, :provider if @user.external_auth

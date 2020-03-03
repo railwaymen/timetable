@@ -386,19 +386,6 @@ RSpec.describe Api::ProjectsController do
     end
   end
 
-  describe '#external_auth' do
-    it 'authenticates user' do
-      put :external_auth, params: { id: 1 }, format: :json
-      expect(response.code).to eql('401')
-    end
-
-    it 'renders external auth' do
-      sign_in(admin)
-      external_auth = create(:external_auth)
-      put :external_auth, params: { id: external_auth.project_id }, format: :json
-    end
-  end
-
   describe '#work_times' do
     context 'range params' do
       it 'returns correct work times' do
