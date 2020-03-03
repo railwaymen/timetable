@@ -3,6 +3,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import { NavLink } from 'react-router-dom';
 import * as Api from '../../shared/api';
+import { Errors, Warnings, Interactions } from './shared_functionalities';
 
 function InteractedVacation(props) {
   const {
@@ -14,22 +15,7 @@ function InteractedVacation(props) {
   const [state, setState] = useState({ vacation: propsVacation, folded: true, fetched: false });
   const { vacation, folded, fetched } = state;
   const [errors, setErrors] = useState([]);
-
-  function Errors() {
-    if (errors.length <= 0) { return null; }
-    const errorList = [];
-    errors.forEach((error) => {
-      Object.keys(error).forEach((err) => {
-        errorList.push(<div className={err} key={err}>{error[err]}</div>);
-      });
-    });
-
-    return (
-      <div className="row vacation-errors error-tooltip">
-        {errorList}
-      </div>
-    );
-  }
+  const [warnings, setWarnings] = useState([]);
 
   function onVacationClick(e) {
     if ($(e.target).closest('.vacation-buttons').length || !window.currentUser.staff_manager) { return; }
@@ -105,12 +91,18 @@ function InteractedVacation(props) {
   }
 
   function onUndoneClick() {
+    setWarnings([]);
     Api.makePutRequest({
       url: `/api/vacations/${vacation.id}/undone`,
     }).then((response) => {
-      if (response.data.previous_status === 'accepted' || response.data.vacation.status === 'accepted') { removeFromInteractedVacations(response.data.vacation); }
+      if (response.data.previous_status === 'accepted' || response.data.vacation.status === 'accepted') {
+        removeFromInteractedVacations(response.data.vacation, response.data.vacation.status.slice(0, -1));
+      }
       if (_.includes(['unconfirmed', 'approved'], response.data.vacation.status)) { getVacations(); }
-      if (response.data.previous_status === response.data.vacation.status) { updateVacation(vacation.id); }
+      if ((response.data.previous_status === response.data.vacation.status)
+         || (response.data.previous_status === 'accepted' && response.data.vacation.status === 'declined')) {
+        updateVacation(vacation.id);
+      }
     });
   }
 
@@ -128,7 +120,17 @@ function InteractedVacation(props) {
       body: { vacation: { vacation_sub_type: '' } },
     }).then((response) => {
       if (!_.isEmpty(response.data.errors)) { setErrors(response.data.errors); return; }
-      if (!_.isEmpty(response.data.warnings)) { setErrors(response.data.warnings); return; }
+      if (!_.isEmpty(response.data.warnings)) {
+        setWarnings(response.data.warnings);
+        setState({
+          ...state,
+          vacation: {
+            ...response.data.vacation,
+            interacted: true,
+          },
+        });
+        return;
+      }
       if (response.data.previous_status === 'declined') { removeFromInteractedVacations(response.data.vacation, 'accept'); }
     });
   }
@@ -181,52 +183,11 @@ function InteractedVacation(props) {
     return result;
   }
 
-  function Interactions() {
-    const approvers = [];
-    const decliners = [];
-    const vacationApprovers = vacation.approvers ? vacation.approvers.split(',').filter(Boolean) : [];
-    const vacationDecliners = vacation.decliners ? vacation.decliners.split(',').filter(Boolean) : [];
-    if (vacationApprovers) {
-      for (let i = 0; i < vacationApprovers.length; i += 1) {
-        approvers.push(
-          <div className="approver" key={i}>
-            {I18n.t('apps.staff.approved_by')}
-            <span className="interactor-name">
-              {` ${vacationApprovers[i]}`}
-            </span>
-          </div>,
-        );
-      }
-    }
-    if (vacationDecliners) {
-      for (let i = 0; i < vacationDecliners.length; i += 1) {
-        decliners.push(
-          <div className="decliner" key={i}>
-            {I18n.t('apps.staff.declined_by')}
-            <span className="interactor-name">
-              {` ${vacationDecliners[i]}`}
-            </span>
-          </div>,
-        );
-      }
-    }
-    return (
-      <div className="interactions-list">
-        {approvers}
-        {decliners}
-        { vacation.self_declined ? (
-          <div className="decliner">
-            {I18n.t('apps.staff.canceled')}
-          </div>
-        ) : undefined }
-      </div>
-    );
-  }
-
   function UnfoldedVacation() {
     return (
       <div className={`accepted-or-declined-vacation ${vacation.status}`} onClick={onVacationClick}>
-        <Errors />
+        <Errors errors={errors} />
+        <Warnings warnings={warnings} />
         <div className="vacation-header">
           <div className="user-full-name">
             {vacation.full_name}
@@ -249,7 +210,7 @@ function InteractedVacation(props) {
           <VacationType />
           <Buttons />
         </div>
-        <Interactions />
+        <Interactions vacation={vacation} />
       </div>
     );
   }
