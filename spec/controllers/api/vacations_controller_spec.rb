@@ -188,7 +188,8 @@ RSpec.describe Api::VacationsController do
                                              errors: [],
                                              vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
                                              previous_status: 'unconfirmed',
-                                             warnings: [] }.to_json)
+                                             warnings: [],
+                                             user_available_vacation_days: nil }.to_json)
     end
   end
 
@@ -215,7 +216,8 @@ RSpec.describe Api::VacationsController do
                                              errors: [],
                                              vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
                                              previous_status: 'unconfirmed',
-                                             warnings: [] }.to_json)
+                                             warnings: [],
+                                             user_available_vacation_days: nil }.to_json)
     end
   end
 
@@ -242,7 +244,8 @@ RSpec.describe Api::VacationsController do
                                              errors: [],
                                              vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
                                              previous_status: 'accepted',
-                                             warnings: [] }.to_json)
+                                             warnings: [],
+                                             user_available_vacation_days: nil }.to_json)
     end
   end
 

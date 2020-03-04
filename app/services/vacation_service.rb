@@ -174,7 +174,8 @@ class VacationService
       vacation_interaction: { user_full_name: @vacation_interaction ? @vacation_interaction.user.to_s : nil },
       previous_status: @previous_status,
       errors: @errors,
-      warnings: @warnings
+      warnings: @warnings,
+      user_available_vacation_days: User.find(@vacation.user_id).available_vacation_days
     }
   end
 
