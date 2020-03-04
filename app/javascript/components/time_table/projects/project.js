@@ -19,7 +19,7 @@ function Project(props) {
 
     if (currentUser.canManageProject(project)) {
       return (
-        <NavLink className="item" to={`/projects/${project.id}/work_times`}>{project.name}</NavLink >
+        <NavLink className="item" to={`/projects/${project.id}/work_times`}>{project.name}</NavLink>
       );
     }
     return project.name;

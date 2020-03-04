@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Redirect } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import bindAll from 'lodash/bindAll';
 import * as Api from '../../shared/api';
@@ -114,6 +115,9 @@ export default class NewReport extends React.Component {
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
     return (
       <div className="new-project-report">
+        <Helmet>
+          <title>{I18n.t('apps.reports.new')}</title>
+        </Helmet>
         <div className="row">
           <div className="col-md-6 form-group">
             <label>{I18n.t('common.name')}</label>
