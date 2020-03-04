@@ -30,8 +30,8 @@ class ProjectReportCreator
     CONCAT(users.first_name, ' ', users.last_name) AS owner,
     SUM(duration) AS duration,
     tag,
-    CASE WHEN coalesce(task, '') = '' THEN body ELSE task END AS task,
-    CASE WHEN coalesce(task, '') = '' THEN '' ELSE body END AS body
+    task,
+    body
   SQL
   def get_work_times(project_report)
     project_report.project.work_times.active

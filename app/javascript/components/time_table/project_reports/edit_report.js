@@ -11,6 +11,7 @@ import TagPill from '../timesheet/tag_pill';
 export default class EditReport extends React.Component {
   constructor(props) {
     super(props);
+
     bindAll(this, [
       'getReport',
       'renderCategory',
@@ -304,7 +305,7 @@ export default class EditReport extends React.Component {
               }) => (
                 <tr key={id}>
                   <td>
-                    {task}
+                    {task && <a href={task} target="_blank" rel="noopener noreferrer">{task}</a>}
                   </td>
                   <td>
                     {description}
@@ -325,7 +326,9 @@ export default class EditReport extends React.Component {
               ))}
               <tr className="active">
                 <td>
-                  {workTime.task}
+                  {workTime.task && (
+                    <a href={workTime.task} target="_blank" rel="noopener noreferrer">{workTime.task}</a>
+                  )}
                 </td>
                 <td>
                   {workTime.description}
@@ -402,7 +405,9 @@ export default class EditReport extends React.Component {
               }) => (
                 <tr key={id}>
                   <td><TagPill tag={tag} onClick={() => this.handleTagPillClick(category, tag)} bold={false} /></td>
-                  <td>{task}</td>
+                  <td>
+                    {task && <a href={task} target="_blank" rel="noopener noreferrer">{task}</a>}
+                  </td>
                   <td>{description}</td>
                   <td>{owner}</td>
                   <td className="text-center">{displayDuration(duration)}</td>
@@ -489,7 +494,9 @@ export default class EditReport extends React.Component {
                 id, task, duration, owner, description, cost,
               }) => (
                 <tr key={id}>
-                  <td>{task}</td>
+                  <td>
+                    {task && <a href={task} target="_blank" rel="noopener noreferrer">{task}</a>}
+                  </td>
                   <td>{description}</td>
                   <td>{owner}</td>
                   <td className="text-center">{displayDuration(duration)}</td>
