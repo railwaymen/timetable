@@ -60,7 +60,7 @@ class TimeTable extends React.Component {
             <Route path="/vacation_periods" exact component={VacationPeriods} />
             <Route path="/vacation_periods/edit/:id" component={EditVacationPeriod} />
             <Route path="/timesheet" component={Timesheet} />
-            <Route path="/vacations" component={Vacations} />
+            <Route path="/vacations" exact component={Vacations} />
             <Route path="/birthday_templates" exact component={BirthdayTemplates} />
             <Route path="/birthday_templates/new" component={EditBirthdayTemplate} />
             <Route path="/birthday_templates/edit/:id" component={EditBirthdayTemplate} />
