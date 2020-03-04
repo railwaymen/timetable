@@ -18,6 +18,22 @@ class ProjectReportCreator
     project_report.tap(&:save!)
   end
 
+  def duration(project_report)
+    get_work_times(project_report).inject(0) { |sum, wt| sum + wt.duration }
+  end
+
+  def cost(project_report)
+    work_times = get_work_times(project_report)
+    user_role_map = Hash[project_report.project_report_roles.map { |role| [role[:user_id].to_i, { role: role[:role], hourly_wage: role[:hourly_wage] }] }]
+    work_times.inject(0.to_r) do |sum, wt|
+      sum + work_time_cost(wt, user_role_map)
+    end.to_f.round(2)
+  end
+
+  def team_size(project_report)
+    project_report.project_report_roles.size
+  end
+
   private
 
   def all_users_have_role?(work_times, user_role_map)

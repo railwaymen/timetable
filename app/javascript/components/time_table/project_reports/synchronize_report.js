@@ -9,7 +9,6 @@ export default class SynchronizeReport extends Component {
     this.state = { synchronize: null };
   }
 
-
   onSynchronize(e) {
     e.preventDefault();
 

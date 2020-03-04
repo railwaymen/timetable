@@ -45,7 +45,7 @@ module Api
     def synchronize
       report = @project.project_reports.find(params[:id])
       authorize report
-      compared_reports = ReportsComparator.new.call(report, @project)
+      compared_reports = ReportsComparator.new.call(report)
       render json: { synchronized: compared_reports }
     end
 

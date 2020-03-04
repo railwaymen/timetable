@@ -4,13 +4,12 @@ import { Link } from 'react-router-dom';
 import URI from 'urijs';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
-import SynchronizeReport from './synchoronize_report';
+import SynchronizeReport from './synchronize_report';
 
 const simpleDateFormat = (date) => moment(date).format('YYYY/MM/DD');
 export default class ProjectReports extends React.Component {
   constructor(props) {
     super(props);
-
     this.onDelete = this.onDelete.bind(this);
     this.state = {
       projectId: parseInt(this.props.match.params.projectId, 10),
@@ -19,7 +18,6 @@ export default class ProjectReports extends React.Component {
       to: '',
     };
   }
-
 
   componentDidMount() {
     this.getReports();

@@ -1,21 +1,15 @@
 # frozen_string_literal: true
 
 class ReportsComparator
-  def call(report, project)
-    generated_duration(report) == synchornized_duration(project, report)
+  def call(report)
+    report.project_report_roles.size == project_report_creator.team_size(report) &&
+      report.duration_sum == project_report_creator.duration(report) &&
+      report.cost == project_report_creator.cost(report)
   end
 
   private
 
-  def synchornized_duration(project, report)
-    project
-      .work_times
-      .active
-      .where('work_times.starts_at BETWEEN ? AND ?', report.starts_at, report.ends_at)
-      .sum(:duration)
-  end
-
-  def generated_duration(report)
-    report.duration_sum
+  def project_report_creator
+    @project_report_creator ||= ProjectReportCreator.new
   end
 end
