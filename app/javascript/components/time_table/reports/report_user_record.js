@@ -24,7 +24,9 @@ class ReportUserRecord extends React.Component {
             <h4>
               <i className="glyphicon glyphicon-user" />
               <a href={`/timesheet?user_id=${overallData.user_id}&from=${from}&to=${to}`} onClick={this.onRedirect}>{overallData.user_name}</a>
-              <a href={`/reports/project.csv?from=${from}&to=${to}&user_id=${overallData.user_id}`}><i className="calendar icon" /></a>
+              {currentUser.isAdminOrManagerOrLeader() && (
+                <a href={`/reports/project.csv?from=${from}&to=${to}&user_id=${overallData.user_id}`}><i className="calendar icon" /></a>
+              )}
               <span className="badge">{formattedDuration(overallData.user_work_time)}</span>
             </h4>
           </div>
