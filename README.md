@@ -57,10 +57,11 @@ bundle exec rails s
 
 Visit localhost:3000 and login using following credentails :
 
-| email               | password | role    |
-|---------------------|----------|---------|
-| admin@example.com   | password | admin   |
-| manager@example.com | password | manager |
+| email                    | password | role    |
+|--------------------------|----------|---------|
+| admin@example.com        | password | admin   |
+| manager@example.com      | password | manager |
+| staffmanager@example.com | password | manager |
 
 After login on admin account you can create your own projects for the clients and accounts for your employees.
 
