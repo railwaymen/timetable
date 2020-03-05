@@ -52,7 +52,9 @@ class BirthdayTemplates extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { birthdayTemplates.map((birthdayTemplate) => <BirthdayTemplate key={birthdayTemplate.id} birthdayTemplate={birthdayTemplate} getBirthdayTemplates={this.getBirthdayTemplates} />) }
+            { birthdayTemplates.map((birthdayTemplate) => (
+              <BirthdayTemplate key={birthdayTemplate.id} birthdayTemplate={birthdayTemplate} getBirthdayTemplates={this.getBirthdayTemplates} />
+            ))}
           </tbody>
         </table>
       </div>

@@ -114,7 +114,12 @@ class ProjectsDropdown extends React.Component {
   renderProjectsList() {
     return (
       <div style={{ marginTop: '15px' }}>
-        <ProjectsList projects={this.state.filteredProjects} currentIndex={this.state.currentIndex} currentProject={this.props.selectedProject} onChangeProject={this.onChangeProject} />
+        <ProjectsList
+          projects={this.state.filteredProjects}
+          currentIndex={this.state.currentIndex}
+          currentProject={this.props.selectedProject}
+          onChangeProject={this.onChangeProject}
+        />
       </div>
     );
   }

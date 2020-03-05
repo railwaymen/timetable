@@ -443,7 +443,15 @@ class WorkHours extends React.Component {
                     <div>
                       <div className="dropdown fluid search ui active visible">
                         <input type="hidden" name="project" value="12" />
-                        <input className="search" style={{ width: '0' }} autoComplete="off" ref={this.searchRef} value={filter} onKeyPress={this.onFilterKeyPress} onChange={this.onFilterChange} />
+                        <input
+                          className="search"
+                          style={{ width: '0' }}
+                          autoComplete="off"
+                          ref={this.searchRef}
+                          value={filter}
+                          onKeyPress={this.onFilterKeyPress}
+                          onChange={this.onFilterChange}
+                        />
                         <div className="text">
                           <div className="circular empty label ui" style={{ background: `#${workHours.project.color}` }} />
                           {workHours.project.name}

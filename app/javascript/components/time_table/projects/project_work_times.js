@@ -146,7 +146,14 @@ export default class ProjectWorkTimes extends React.Component {
             )}
           </h1>
           <HorizontalArrows className="row" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
-            <DateRangeFilter className="col-md-8 col-md-offset-2" from={from} to={to} onFromChange={this.onFromChange} onToChange={this.onToChange} onFilter={() => this.getWorkTimes(this.state)}>
+            <DateRangeFilter
+              className="col-md-8 col-md-offset-2"
+              from={from}
+              to={to}
+              onFromChange={this.onFromChange}
+              onToChange={this.onToChange}
+              onFilter={() => this.getWorkTimes(this.state)}
+            >
               <button type="button" className="btn btn-default" onClick={this.allUsers}>
                 {I18n.t('apps.reports.all')}
               </button>
