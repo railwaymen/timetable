@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import URI from 'urijs';
 import Filters from './filters';
@@ -115,6 +116,9 @@ function Staff() {
 
   return (
     <div className="staff-container">
+      <Helmet>
+        <title>{I18n.t('common.staff')}</title>
+      </Helmet>
       <Filters filters={filters} setFilters={setFilters} defaultFilters={defaultFilters} />
       { currentUser.canManageStaff() && (
         <div className="container vacations-container">

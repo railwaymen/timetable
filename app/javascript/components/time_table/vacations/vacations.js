@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import Entry from './entry';
 import EntryHistory from './entry_history';
@@ -29,6 +30,9 @@ function Vacations() {
 
   return (
     <div className="container vacation-entry">
+      <Helmet>
+        <title>{I18n.t('common.vacations')}</title>
+      </Helmet>
       <div className="row">
         <div className="vacations-container">
           <Entry selectedUser={selectedUser} setSelectedUser={setSelectedUser} getVacations={getVacations} />

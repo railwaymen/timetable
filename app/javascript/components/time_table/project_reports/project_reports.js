@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
@@ -68,6 +69,9 @@ export default class ProjectReports extends React.Component {
     const { projectId, reports } = this.state;
     return (
       <div className="list-of-reports">
+        <Helmet>
+          <title>{I18n.t('common.reports')}</title>
+        </Helmet>
         <p className="text-right">
           <Link to={this.newReportLink()} className="bt bt-main">
             <i className="symbol fa fa-plus" />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import _ from 'lodash';
 import Entry from './entry';
 import EntryHistory from './history/entry_history';
@@ -53,6 +54,9 @@ class Timesheet extends React.Component {
     if (projects.length > 0) {
       return (
         <div>
+          <Helmet>
+            <title>{I18n.t('common.timesheet')}</title>
+          </Helmet>
           <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projects} tags={tags} tags_disabled={tags_disabled} />
           <EntryHistory
             ref={(entryHistory) => { this.entryHistory = entryHistory; }}

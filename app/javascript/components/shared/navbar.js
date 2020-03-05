@@ -9,7 +9,6 @@ const onLogout = () => {
     });
 };
 
-
 const Navbar = () => (
   <div className="navbar">
     <div className="ui secondary menu">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
 
@@ -71,77 +72,86 @@ function EditProject(props) {
 
   if (!projectId || projectId === project.id) {
     return (
-      <form>
-        { currentUser.isSuperUser() && (
-          <div>
-            <div className="form-group">
-              {errors.name && <div className="error-description">{errors.name.join(', ')}</div>}
+      <>
+        <Helmet>
+          {project.id ? (
+            <title>{`${I18n.t('common.edit')} ${project.name}`}</title>
+          ) : (
+            <title>{I18n.t('apps.projects.new')}</title>
+          )}
+        </Helmet>
+        <form>
+          {currentUser.isSuperUser() && (
+            <div>
+              <div className="form-group">
+                {errors.name && <div className="error-description">{errors.name.join(', ')}</div>}
+                <input
+                  className={`${errors.name ? 'error' : ''} form-control`}
+                  type="text"
+                  name="name"
+                  placeholder={I18n.t('common.name')}
+                  onChange={onChange}
+                  value={project.name}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
+                <select
+                  name="leader_id"
+                  id="leader"
+                  className="form-control"
+                  value={project.leader_id || ''}
+                  onChange={onChange}
+                >
+                  <option value="" />
+                  {users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {currentUser.fullName.apply(user)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>
+                  {I18n.t('apps.projects.active')}
+                  <input type="checkbox" name="active" checked={project.active} onChange={onCheckboxChange} />
+                </label>
+              </div>
+            </div>
+          )}
+          <div className="form-group" />
+          <input
+            type="color"
+            name="color"
+            value={((project.color && project.color[0] !== '#') ? '#' : '') + project.color}
+            onChange={onChange}
+          />
+          <div className="form-group">
+            <label>
+              {I18n.t('apps.projects.work_times_allows_task')}
               <input
-                className={`${errors.name ? 'error' : ''} form-control`}
-                type="text"
-                name="name"
-                placeholder={I18n.t('common.name')}
-                onChange={onChange}
-                value={project.name}
+                type="checkbox"
+                name="work_times_allows_task"
+                checked={project.work_times_allows_task}
+                onChange={onCheckboxChange}
               />
-            </div>
-            <div className="form-group">
-              <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
-              <select
-                name="leader_id"
-                id="leader"
-                className="form-control"
-                value={project.leader_id || ''}
-                onChange={onChange}
-              >
-                <option value="" />
-                { users.map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {currentUser.fullName.apply(user)}
-                  </option>
-                )) }
-              </select>
-            </div>
-            <div className="form-group">
-              <label>
-                {I18n.t('apps.projects.active')}
-                <input type="checkbox" name="active" checked={project.active} onChange={onCheckboxChange} />
-              </label>
-            </div>
+            </label>
           </div>
-        )}
-        <div className="form-group" />
-        <input
-          type="color"
-          name="color"
-          value={((project.color && project.color[0] !== '#') ? '#' : '') + project.color}
-          onChange={onChange}
-        />
-        <div className="form-group">
-          <label>
-            {I18n.t('apps.projects.work_times_allows_task')}
-            <input
-              type="checkbox"
-              name="work_times_allows_task"
-              checked={project.work_times_allows_task}
-              onChange={onCheckboxChange}
-            />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            {I18n.t('apps.projects.external_integration_enabled')}
-            <input
-              type="checkbox"
-              name="external_integration_enabled"
-              checked={project.external_integration_enabled}
-              onChange={onCheckboxChange}
-            />
-          </label>
-        </div>
-        <NavLink className="btn btn-default" to="/projects/list">{I18n.t('common.cancel')}</NavLink>
-        <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={onSubmit} />
-      </form>
+          <div className="form-group">
+            <label>
+              {I18n.t('apps.projects.external_integration_enabled')}
+              <input
+                type="checkbox"
+                name="external_integration_enabled"
+                checked={project.external_integration_enabled}
+                onChange={onCheckboxChange}
+              />
+            </label>
+          </div>
+          <NavLink className="btn btn-default" to="/projects/list">{I18n.t('common.cancel')}</NavLink>
+          <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={onSubmit} />
+        </form>
+      </>
     );
   }
   return <Preloader rowsNumber={5} />;

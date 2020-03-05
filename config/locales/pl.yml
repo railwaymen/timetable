@@ -27,6 +27,7 @@ pl:
       filter_active_label: Pokaż tylko
       work_times_allows_task: Zezwalaj na dodawanie urli do zadań
       external_integration_enabled: Integracja z JIRA
+      new: Nowy projekt
     reports:
       new: Nowy Raport
       remove: Usuń Raport
@@ -45,7 +46,7 @@ pl:
       owner: Pracownik
       owners_hourly_wage: Stawka godzinowa pracownika
       hourly_wage: Stawka godzinowa
-      time_spent: Poświecony czas
+      time_spent: Poświęcony czas
       cost: Koszt
       merge: Połącz
       ignore: Ignoruj
@@ -54,6 +55,8 @@ pl:
       collision: Kolizja z następującymi raportami
     accounting_periods:
       add: Dodaj okres rozliczeniowy
+      new: Nowy okres rozliczeniowy
+      edit: Edycja okresu rozliczeniowego
       note: Notatka
       full_time: Etat
       closed: Zamknięty
@@ -89,10 +92,11 @@ pl:
       button_disabled_tooltip: Tworzenie kont zablokowane. Automatyczne tworzenie poprzez logowanie LDAP.
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
       birthday: Urodziny
+      new: Nowe konto
     external_auths:
       authorized: Zewnętrzne autoryzacje
       generate_link: Wygeneruj link
-      follow_link: Kliknij by autoryzować
+      follow_link: Kliknij, by autoryzować
       new: Nowe uwierzytelnienie
       domain: Domena
       token: Token
@@ -160,7 +164,10 @@ pl:
       note: Notatka
       closed: Zamknięty
       generate_periods: Generuj okresy urlopowe
+      edit: Edycja okresu urlopowego
     birthday_templates:
+      new: Nowy szablon urodzinowy
+      edit: Edycja szablonu urodzinowego
       email_content: Wprowadź treść maila
       incoming_birthdays: 'Nadchodzące urodziny:'
       last_used: Ostatnio użyte
@@ -219,7 +226,7 @@ pl:
     others: Inne
     paternity: Urlop ojcowski
     parental: Urlop macierzyński
-    upbringing: Urlop wychowaczy
+    upbringing: Urlop wychowawczy
     unpaid: Urlop bezpłatny
     rehabilitation: Urlop rehabilitacyjny
     illness: Urlop chorobowy
@@ -291,7 +298,7 @@ pl:
         work_time: &worktime
           basic: Nie udało się dodać czasu pracy
           base:
-            validates_date: 'Nie można utworzyć wpisu który kończy się następnego dnia'
+            validates_date: 'Nie można utworzyć wpisu, który kończy się następnego dnia'
             validates_time: 'Nie można utworzyć lub edytować wpisu'
             validates_body: 'Musisz wypełnić opis lub url taska'
           attributes:

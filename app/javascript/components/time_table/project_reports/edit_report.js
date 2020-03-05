@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import {
   bindAll, get, sumBy, uniq, partition, without, isEmpty, cloneDeep,
@@ -588,6 +589,13 @@ export default class EditReport extends React.Component {
     if (!report || !currentBody) return <div />;
     return (
       <div className="edit-report-form">
+        <Helmet>
+          {report.state === 'done' ? (
+            <title>{`${I18n.t('common.show')} ${report.name} - ${report.project_name}`}</title>
+          ) : (
+            <title>{`${I18n.t('common.edit')} ${report.name} - ${report.project_name}`}</title>
+          )}
+        </Helmet>
         {without(Object.keys(currentBody), 'ignored').sort().map(this.renderCategory)}
         {this.renderWorkTimeModal()}
         {this.renderIgnored()}

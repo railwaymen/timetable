@@ -8,8 +8,8 @@ en:
     projects:
       last: 'Last'
       days: 'days'
-      name: Nazwa
-      leader: Lider
+      name: Name
+      leader: Leader
       project: Project
       tests_count: Tests count
       tests_duration: Tests duration
@@ -27,6 +27,7 @@ en:
       filter_active_label: Show only
       work_times_allows_task: Allow for adding task urls
       external_integration_enabled: JIRA integration
+      new: New Project
     reports:
       new: New Report
       remove: Remove Report
@@ -54,6 +55,8 @@ en:
       collision: Collision with following reports
     accounting_periods:
       add: Add accounting period
+      new: New accounting period
+      edit: Edit accounting period
       note: Note
       full_time: Fulltime
       closed: Closed
@@ -89,6 +92,7 @@ en:
       button_disabled_tooltip: Account creation disabled. Automatic creation with LDAP login.
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
       birthday: Birthday
+      new: New account
     external_auths:
       authorized: External authorizations
       generate_link: Generate link
@@ -160,7 +164,10 @@ en:
       note: Note
       closed: Closed
       generate_periods: Generate vacation periods
+      edit: Edit vacation period
     birthday_templates:
+      new: New birthday template
+      edit: Edit birthday template
       email_content: Enter email content
       incoming_birthdays: 'Incoming birthdays:'
       last_used: Last used

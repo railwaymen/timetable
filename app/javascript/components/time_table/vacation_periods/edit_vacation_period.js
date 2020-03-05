@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect, NavLink } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
 
@@ -86,6 +87,9 @@ class EditVacationPeriod extends React.Component {
     if (!periodId || periodId === period.id) {
       result = (
         <div className="container">
+          <Helmet>
+            <title>{I18n.t('apps.vacation_periods.edit')}</title>
+          </Helmet>
           <div id="content" className="edit-vacation-period col-md-6">
             <form className="row" onSubmit={this.onSubmit}>
               { errors.vacation_days && (

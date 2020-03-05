@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { NavLink } from 'react-router-dom';
 import User from './user';
 
@@ -20,6 +21,9 @@ function Users() {
 
   return (
     <div>
+      <Helmet>
+        <title>{I18n.t('common.people')}</title>
+      </Helmet>
       <div className="actions pull-left">
         <div className="disabled-button-wrapper" data-toggle="tooltip" data-placement="right" title="button_disabled_tooltip">
           <NavLink className="btn btn-default" to="/users/new">{I18n.t('common.add')}</NavLink>
