@@ -70,6 +70,7 @@ module Api
       if current_user.admin?
         WorkTime.new(work_time_create_params).tap do |work_time|
           work_time.updated_by_admin = true if work_time.user_id != current_user.id
+          work_time.user_id = work_time_create_params[:user_id] || current_user.id
           work_time.creator = current_user
         end
       else

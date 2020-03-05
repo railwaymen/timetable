@@ -18,7 +18,6 @@ class WorkTime < ApplicationRecord
   }
 
   validates :project_id, :starts_at, :ends_at, presence: true
-  validates :project_id, :starts_at, :ends_at, presence: true
   validates :duration, numericality: { greater_than: 0 }, unless: :project_zero?
   validates :starts_at, :ends_at, overlap: { scope: 'user_id', query_options: { active: nil }, exclude_edges: %i[starts_at ends_at] }
   validate :validates_time, on: :user

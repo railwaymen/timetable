@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-json.id @user.id
-json.first_name @user.first_name
-json.last_name @user.last_name
+json.extract! @user, :id, :first_name, :last_name
 json.is_leader @user.leader?
 json.admin @user.admin?
 json.manager @user.manager?
+json.staff_manager @user.staff_manager?
 json.token @token
