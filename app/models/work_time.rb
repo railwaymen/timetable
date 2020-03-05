@@ -72,4 +72,8 @@ class WorkTime < ApplicationRecord
   def external_task_id
     integration_payload&.dig(external_auth&.provider, 'task_id')
   end
+
+  def external_summary
+    integration_payload&.dig(external_auth&.provider, 'summary')
+  end
 end
