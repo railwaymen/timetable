@@ -64,6 +64,7 @@ class WorkTimeForm
   end
 
   def copy_errors(*args)
+    errors.clear
     work_time.valid?(*args)
     work_time.errors.details.each do |key, value|
       errors.add(key, value.first[:error], value.first.except(:error))
