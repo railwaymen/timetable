@@ -6,6 +6,7 @@ import URI from 'urijs';
 import bindAll from 'lodash/bindAll';
 import * as Api from '../../shared/api';
 import DateRangeFilter from '../../shared/date_range_filter';
+import Preloader from '../../shared/preloader';
 
 export default class NewReport extends React.Component {
   static roles = ['developer', 'qa', 'ux', 'pm', 'ignored'];
@@ -24,6 +25,7 @@ export default class NewReport extends React.Component {
       name: '',
       collisions: [],
       redirectTo: null,
+      sync: false,
     };
   }
 
@@ -48,10 +50,11 @@ export default class NewReport extends React.Component {
   }
 
   getRoles() {
+    this.setState({ sync: true });
     const url = `/api/projects/${this.state.projectId}/project_reports/roles?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}`;
     Api.makeGetRequest({ url })
       .then(({ data }) => {
-        this.setState(({ currency }) => ({ userRoles: data.user_roles, currency: currency || data.currency }));
+        this.setState(({ currency }) => ({ sync: false, userRoles: data.user_roles, currency: currency || data.currency }));
       });
     this.checkForCollision();
   }
@@ -140,6 +143,7 @@ export default class NewReport extends React.Component {
         />
         {this.collisionAlert()}
         <div className="table-responsive">
+          {this.state.sync && <Preloader rowsNumber={1} />}
           <table className="table table-hover">
             <thead>
               <tr>

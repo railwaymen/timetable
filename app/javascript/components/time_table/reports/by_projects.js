@@ -10,6 +10,7 @@ import * as Api from '../../shared/api';
 import Report from './report';
 import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
+import Preloader from '../../shared/preloader';
 
 class ByProjects extends Report {
   constructor(props) {
@@ -22,6 +23,7 @@ class ByProjects extends Report {
       to: moment().endOf('month').format(),
       redirectToReferer: undefined,
       order: 'duration',
+      sync: false,
     };
   }
 
@@ -43,6 +45,8 @@ class ByProjects extends Report {
     const url = URI(`/api/reports/work_times?${original.query()}`)
       .addSearch(prepareParams);
 
+    this.setState({ sync: true });
+
     Api.makeGetRequest({ url })
       .then((response) => {
         const newPath = URI(window.location.href)
@@ -61,6 +65,7 @@ class ByProjects extends Report {
         }, () => {
           this.setState((prevState) => ({
             projects: Object.keys(prevState.reports),
+            sync: false,
           }));
         });
       });
@@ -68,7 +73,7 @@ class ByProjects extends Report {
 
   render() {
     const {
-      projects, reports, from, to, redirectToReferer, order,
+      projects, reports, from, to, redirectToReferer, order, sync,
     } = this.state;
 
     if (redirectToReferer) return (<Redirect to={redirectToReferer} />);
@@ -102,6 +107,7 @@ class ByProjects extends Report {
             </div>
           </div>
         </header>
+        {sync && <Preloader rowsNumber={1} />}
         <div className="row row-eq-height">
           { projects.map((project) => (
             <div key={project} className="col-md-4">
