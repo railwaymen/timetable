@@ -42,6 +42,13 @@ module Api
       respond_with @report
     end
 
+    def synchronize
+      report = @project.project_reports.find(params[:id])
+      authorize report
+      compared_reports = ReportsComparator.new.call(report)
+      render json: { synchronized: compared_reports }
+    end
+
     def destroy
       @report = @project.project_reports.find(params[:id])
       authorize @report

@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :project_report_role do
     project_report
     user
-    role { 'dev' }
+    role { 'developer' }
     description { 'Frontend' }
   end
 end

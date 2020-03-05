@@ -5,14 +5,13 @@ import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
+import SynchronizeReport from './synchronize_report';
 
 const simpleDateFormat = (date) => moment(date).format('YYYY/MM/DD');
 export default class ProjectReports extends React.Component {
   constructor(props) {
     super(props);
-
     this.onDelete = this.onDelete.bind(this);
-
     this.state = {
       projectId: parseInt(this.props.match.params.projectId, 10),
       reports: [],
@@ -88,6 +87,7 @@ export default class ProjectReports extends React.Component {
                 <th className="text-center">{I18n.t('common.duration')}</th>
                 <th className="text-center">{I18n.t('common.cost')}</th>
                 <th />
+                <th />
               </tr>
             </thead>
             <tbody>
@@ -120,13 +120,17 @@ export default class ProjectReports extends React.Component {
                     {' '}
                     {cost.toFixed(2)}
                   </td>
+                  <td className="text-center">
+                    <SynchronizeReport id={id} projectId={this.state.projectId} />
+                  </td>
                   <td className="report-actions text-right">
-                    {generated && (
-                      <a className="bt bt-second bt-download" href={`/api/projects/${projectId}/project_reports/${id}/file`}>
-                        <i className="symbol fa fa-file-pdf-o" />
-                        <span className="txt">{I18n.t('common.download')}</span>
-                      </a>
-                    )}
+                    {generated
+                        && (
+                          <a className="bt bt-second bt-download" href={`/api/projects/${projectId}/project_reports/${id}/file`}>
+                            <i className="symbol fa fa-file-pdf-o" />
+                            <span className="txt">{I18n.t('common.download')}</span>
+                          </a>
+                        )}
                     <Link className="bt bt-second" to={`/projects/${projectId}/edit_report/${id}`}>
                       <i className="symbol fa fa-search" />
                       <span className="bt-txt">{I18n.t('common.show')}</span>

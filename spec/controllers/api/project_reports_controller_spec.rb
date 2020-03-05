@@ -232,6 +232,34 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
     end
   end
 
+  describe 'GET #synchronize' do
+    it 'checks if project record and its work times are equal' do
+      time = Time.zone.now
+      user = create(:user)
+      project = create(:project)
+      work_time = create(:work_time, user: user, project: project, active: true, starts_at: time - 1.hour, ends_at: time)
+      report = create(
+        :project_report,
+        duration_sum: work_time.duration,
+        last_body: { developer: [cost: 30.0] },
+        cost: 30.0,
+        project: project,
+        starts_at: 1.day.ago,
+        ends_at: Time.zone.now
+      )
+      report.project_report_roles.create!(user: user, role: 'developer', hourly_wage: 30.0, description: 'Frontend')
+      params = { project_id: report.project.id, id: report.id }
+
+      get :synchronize, params: params
+
+      synchronize_response = {
+        synchronized: true
+      }
+      expect(response).to be_ok
+      expect(response.body).to be_json_eql(synchronize_response.to_json)
+    end
+  end
+
   describe 'GET #edit' do
     let(:project_report) { create(:project_report) }
 
