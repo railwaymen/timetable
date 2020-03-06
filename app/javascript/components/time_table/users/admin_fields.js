@@ -7,7 +7,6 @@ function AdminFields(props) {
     user,
     errors,
     onChange,
-    onCheckboxChange,
   } = props;
 
   return (
@@ -80,7 +79,7 @@ function AdminFields(props) {
         <div className="form-group">
           <label>
             {I18n.t('apps.users.user_active')}
-            <input type="checkbox" name="active" checked={user.active || false} onChange={onCheckboxChange} />
+            <input type="checkbox" name="active" checked={user.active || false} onChange={onChange} />
           </label>
         </div>
       )}
@@ -98,7 +97,6 @@ AdminFields.propTypes = {
   user: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  onCheckboxChange: PropTypes.func.isRequired,
 };
 
 export default AdminFields;

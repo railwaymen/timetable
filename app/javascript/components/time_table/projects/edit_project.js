@@ -3,6 +3,7 @@ import { NavLink, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
+import useFormHendler from '../../../hooks/use_form_hendler';
 
 function EditProject(props) {
   const projectId = parseInt(props.match.params.id, 10);
@@ -16,7 +17,7 @@ function EditProject(props) {
     active: true,
   };
 
-  const [project, setProject] = useState(defaultProjectParams);
+  const [project, setProject, onChange] = useFormHendler(defaultProjectParams);
   const [errors, setErrors] = useState({});
   const [users, setUsers] = useState([]);
   const [redirectToReferer, setRedirectToReferer] = useState();
@@ -33,18 +34,6 @@ function EditProject(props) {
   function getUsers() {
     Api.makeGetRequest({ url: '/api/users' })
       .then((response) => setUsers(response.data));
-  }
-
-  function onChange(e) {
-    const { name, value } = e.target;
-
-    setProject({ ...project, [name]: value });
-  }
-
-  function onCheckboxChange(e) {
-    const { name } = e.target;
-
-    setProject({ ...project, [name]: !project[name] });
   }
 
   function onSubmit(e) {
@@ -114,7 +103,7 @@ function EditProject(props) {
               <div className="form-group">
                 <label>
                   {I18n.t('apps.projects.active')}
-                  <input type="checkbox" name="active" checked={project.active} onChange={onCheckboxChange} />
+                  <input type="checkbox" name="active" checked={project.active} onChange={onChange} />
                 </label>
               </div>
             </div>
@@ -133,7 +122,7 @@ function EditProject(props) {
                 type="checkbox"
                 name="work_times_allows_task"
                 checked={project.work_times_allows_task}
-                onChange={onCheckboxChange}
+                onChange={onChange}
               />
             </label>
           </div>
@@ -144,7 +133,7 @@ function EditProject(props) {
                 type="checkbox"
                 name="external_integration_enabled"
                 checked={project.external_integration_enabled}
-                onChange={onCheckboxChange}
+                onChange={onChange}
               />
             </label>
           </div>

@@ -6,11 +6,12 @@ import { unnullifyFields } from '../../shared/helpers';
 import Preloader from '../../shared/preloader';
 import AdminFields from './admin_fields';
 import UserFields from './user_fields';
+import useFormHendler from '../../../hooks/use_form_hendler';
 
 function EditUser(props) {
   const userId = parseInt(props.match.params.id, 10);
 
-  const [user, setUser] = useState({});
+  const [user, setUser, onChange] = useFormHendler({});
   const [errors, setErrors] = useState({});
   const [redirectToReferer, setRedirectToReferer] = useState();
 
@@ -22,18 +23,6 @@ function EditUser(props) {
         const updatedUser = unnullifyFields(response.data);
         setUser(updatedUser);
       });
-  }
-
-  function onChange(e) {
-    const { name, value } = e.target;
-
-    setUser({ ...user, [name]: value });
-  }
-
-  function onCheckboxChange(e) {
-    const { name } = e.target;
-
-    setUser({ ...user, [name]: !user[name] });
   }
 
   function saveUser() {
@@ -65,7 +54,7 @@ function EditUser(props) {
   function renderFields() {
     if (user.id === userId || !userId) {
       return currentUser.admin
-        ? <AdminFields user={user} errors={errors} onChange={onChange} onCheckboxChange={onCheckboxChange} />
+        ? <AdminFields user={user} errors={errors} onChange={onChange} />
         : <UserFields user={user} errors={errors} onChange={onChange} />;
     }
 
