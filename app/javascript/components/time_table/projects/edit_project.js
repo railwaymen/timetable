@@ -3,7 +3,7 @@ import { NavLink, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
-import useFormHendler from '../../../hooks/use_form_hendler';
+import useFormHandler from '../../../hooks/use_form_handler';
 
 function EditProject(props) {
   const projectId = parseInt(props.match.params.id, 10);
@@ -17,7 +17,7 @@ function EditProject(props) {
     active: true,
   };
 
-  const [project, setProject, onChange] = useFormHendler(defaultProjectParams);
+  const [project, setProject, onChange] = useFormHandler(defaultProjectParams);
   const [errors, setErrors] = useState({});
   const [users, setUsers] = useState([]);
   const [redirectToReferer, setRedirectToReferer] = useState();

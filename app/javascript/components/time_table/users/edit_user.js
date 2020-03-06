@@ -6,12 +6,12 @@ import { unnullifyFields } from '../../shared/helpers';
 import Preloader from '../../shared/preloader';
 import AdminFields from './admin_fields';
 import UserFields from './user_fields';
-import useFormHendler from '../../../hooks/use_form_hendler';
+import useFormHandler from '../../../hooks/use_form_handler';
 
 function EditUser(props) {
   const userId = parseInt(props.match.params.id, 10);
 
-  const [user, setUser, onChange] = useFormHendler({});
+  const [user, setUser, onChange] = useFormHandler({});
   const [errors, setErrors] = useState({});
   const [redirectToReferer, setRedirectToReferer] = useState();
 

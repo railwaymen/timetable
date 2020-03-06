@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function useFormHendler(def) {
+export default function useFormHandler(def) {
   const [entry, setEntry] = useState(def);
 
   function handleInputChange(event) {
