@@ -44,6 +44,7 @@ Rails.application.routes.draw do
         get :file, on: :member
         get :synchronize, on: :member
       end
+      resources :group_project_reports, defaults: { format: 'json' }
       get :list, on: :collection
       get :simple, on: :collection
       get :tags, on: :collection

@@ -1,0 +1,1 @@
+json.(@group_project_report, :name, :state, :created_at)

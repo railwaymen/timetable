@@ -62,6 +62,24 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
     t.index ["user_id"], name: "index_external_auths_on_user_id"
   end
 
+  create_table "group_project_reports", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.string "state", default: "", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "project_id"
+    t.index ["project_id"], name: "index_group_project_reports_on_project_id"
+  end
+
+  create_table "project_report_relations", force: :cascade do |t|
+    t.bigint "project_report_id"
+    t.bigint "group_project_report_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_project_report_id"], name: "index_project_report_relations_on_group_project_report_id"
+    t.index ["project_report_id"], name: "index_project_report_relations_on_project_report_id"
+  end
+
   create_table "project_report_roles", force: :cascade do |t|
     t.bigint "project_report_id", null: false
     t.bigint "user_id", null: false
@@ -267,6 +285,9 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
   add_foreign_key "accounting_periods_recounts", "users"
   add_foreign_key "external_auths", "projects"
   add_foreign_key "external_auths", "users"
+  add_foreign_key "group_project_reports", "projects"
+  add_foreign_key "project_report_relations", "group_project_reports"
+  add_foreign_key "project_report_relations", "project_reports"
   add_foreign_key "project_report_roles", "project_reports"
   add_foreign_key "project_report_roles", "users"
   add_foreign_key "project_reports", "projects"

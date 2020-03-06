@@ -9,6 +9,7 @@ class Project < ApplicationRecord
   has_many :project_reports, dependent: :nullify
   has_one :external_auth, dependent: :destroy
   has_many :assignments, class_name: 'ProjectResourceAssignment', dependent: :destroy
+  has_many :group_project_reports, dependent: :nullify
   belongs_to :leader, class_name: 'User'
 
   validates :name, presence: true
