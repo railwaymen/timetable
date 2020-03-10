@@ -19,7 +19,8 @@ class User < ApplicationRecord
   has_many :vacation_interactions, dependent: :destroy
   has_many :vacation_periods, dependent: :destroy
   has_one :external_auth, dependent: :destroy
-
+  has_many :resources, dependent: :destroy
+  has_many :events, dependent: :destroy
   validates :first_name, :last_name, presence: true
   validates :phone, format: { with: PHONE_REGEX }
 

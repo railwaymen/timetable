@@ -181,6 +181,16 @@ en:
         many: '%{count} days'
         one: '%{count} day'
         other: '%{count} days'
+    projects_distribution:
+      add_resource: Add resource
+      resource_menu: Resource menu
+      delete_resource: Delete resource
+      resource_group: Resource group
+      group_only: Group?
+      exit: Exit
+      add_event: Add event
+      edit_event: Edit event
+      confirm_delete: 'Are you sure you want to delete {{resource_name}}?'
   common:
     rank: 'Rank'
     add: Add
@@ -251,6 +261,8 @@ en:
     vacation_periods: Vacation Periods
     birthday_templates: Birthday Templates
     title: Title
+    user: User
+    projects_distribution: Projects distribution
   activerecord:
     errors:
       models:

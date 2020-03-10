@@ -72,6 +72,27 @@ ActiveRecord::Schema.define(version: 2020_03_16_100733) do
     t.index ["vacation_id"], name: "index_events_on_vacation_id"
   end
 
+  create_table "events", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "resource_id", null: false
+    t.bigint "project_id", null: false
+    t.bigint "vacation_id"
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.string "title"
+    t.string "color"
+    t.string "resource_rid", null: false
+    t.integer "type", default: 1, null: false
+    t.boolean "resizable", default: true
+    t.boolean "movable", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_events_on_project_id"
+    t.index ["resource_id"], name: "index_events_on_resource_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
+    t.index ["vacation_id"], name: "index_events_on_vacation_id"
+  end
+
   create_table "external_auths", force: :cascade do |t|
     t.bigint "project_id"
     t.jsonb "data", null: false

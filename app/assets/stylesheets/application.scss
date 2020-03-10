@@ -33,6 +33,8 @@
 @import 'timesheet/blocks/*';
 @import 'timer';
 @import 'react-datepicker/dist/react-datepicker';
+@import '../../../node_modules/antd/dist/antd';
+@import '../../javascript/components/src/css/style';
 
 
 .bootbox.ui.modal.fade.bootbox-confirm {
@@ -200,5 +202,290 @@ ol.projects .dl-horizontal {
 .birthday-templates {
   th:first-child {
     text-align: center;
+  }
+}
+
+table.resource-table th, table.scheduler-table th, table.resource-table td, table.scheduler-bg-table td, table.scheduler-bg-table tr, table.scheduler-table td {
+  border: none;
+}
+
+table {
+  .resource-view {
+    border: none;
+    >:first-child {
+      border: none !important;
+    }
+  }
+  .resource-table {
+    tr, td, th {
+      border: none;
+    }
+    .resource-tooltip {
+      cursor: auto;
+      .tooltip-arrow {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        transform: rotate(45deg);
+        left: 17px;
+        border-top: 1px solid lightgray;
+        border-left: 1px solid lightgray;
+        z-index: 999;
+        background-color: white;
+      }
+      .tooltip-box {
+        border: 1px solid lightgray;
+        position: absolute;
+        top: 5px;
+        background-color: white;
+        width: 200px;
+        height: 35px;
+        border-radius: 4px;
+        box-shadow: 1px 1px 1px lightgray;
+        .tooltip-content {
+          width: max-content;
+          margin: 6px auto;
+          cursor: pointer;
+          padding: 0 10px;
+          border-radius: 4px;
+          &:hover {
+            background-color: lightgray;
+          }
+        }
+      }
+    }
+  }
+  .scheduler-view {
+    border: none;
+    border-left: 1px solid #828282;
+    >:first-child {
+      border: none !important;
+      .scheduler-bg-table tr {
+        border: none;
+      }
+    }
+  }
+}
+
+.scheduler {
+  position: absolute;
+  left: 3%;
+  margin-top: 40px !important;
+  .friday {
+    border-right: 1px dashed #E0E0E0;
+  }
+  .last-day {
+    border-right: 1px solid #828282;
+  }
+  .timeline-event {
+    z-index: 1;
+    &.vacation {
+      top: -7px !important;
+      height: calc(100% - 3px);
+      z-index: 0;
+    }
+  }
+  .event-item {
+    margin-top: 8px;
+    text-align: center;
+    padding-right: 0 !important;
+    &.vacation {
+      position: relative;
+      span {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+      }
+    }
+  }
+  .resource-table a, .scheduler-header {
+    color: #000000;
+  }
+  .scheduler-bg-table th {
+    color: #000000;
+  }
+}
+
+.scheduler-header {
+  position: absolute;
+  left: 3%;
+  width: 100%;
+  padding-right: 6%;
+  display: flex;
+  text-align: center;
+  margin-bottom: 25px;
+  .chevron-left {
+    float: left;
+  }
+  .chevron-right {
+    float: right;
+  }
+  .chevron-left i, .chevron-right i {
+    cursor: pointer;
+  }
+}
+
+#modal .centered-modal {
+  height: 55%;
+  .content {
+    height: 75%;
+  }
+  .event-info {
+    .project {
+      display: inline-block;
+      border: 3px solid;
+      padding: 5px 9px;
+      margin-top: 5px;
+      border-radius: 20px;
+      color: white;
+    }
+    .date-range {
+      > span {
+        cursor: pointer;
+      }
+      input {
+        width: 120px;
+        text-align: center;
+      }
+    }
+  }
+  .form {
+    display: flex;
+    justify-content: space-around;
+  }
+}
+.waiting {
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 9999;
+  background-image: image_url('resized.gif');
+}
+
+.faded {
+  opacity: .2;
+}
+.footer-container {
+  .footer {
+    display: inline-flex;
+    max-width: 100%;
+    position: absolute;
+    left: 0;
+    padding: 30px 0 10px 0;
+    margin-left: 3%;
+    margin-right: 3%;
+    border-top: 1px solid;
+    .menu.transition.visible {
+      transform: translateY(-15px);
+    }
+    .projects-legend-container {
+      display: flex;
+      flex-flow: wrap row;
+      justify-content: space-evenly;
+      margin: auto;
+      padding: 15px;
+      border: 1px solid;
+      background-color: rgb(248, 248, 248);
+      border-right: none;
+      border-radius: 4px 0 0 4px;
+      .project-legend {
+        margin-bottom: 5px;
+        margin-right: 10px;
+      }
+    }
+    .all-button-container {
+      width: 8%;
+      margin: auto;
+      padding-top: 31px;
+      padding-bottom: 31px;
+      border: 1px solid;
+      background-color: rgb(248, 248, 248);
+      border-left: none;
+      border-radius: 0 4px 4px 0;
+      .all-button {
+        margin: auto;
+        background-color: $main-color;
+        color: white;
+        border: 1px solid #b34f27;
+      }
+    }
+    .all-button, .project-legend {
+      cursor: pointer;
+      border-radius: 4px;
+      height: 22px;
+      width: max-content;
+      padding: 0 20px;
+    }
+    .ui.dropdown {
+      cursor: default;
+    }
+    .separation-line {
+      border-top: 1px solid;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+    .selected-user {
+      padding-left: 8px;
+      &:hover {
+        background-color: lightgray;
+      }
+      i {
+        margin-top: 4px;
+      }
+    }
+    .dropdown {
+      max-width: fit-content;
+    }
+    .user-filter-container {
+      flex-shrink: 0;
+      border: 1px solid;
+      border-radius: 4px;
+      padding: 5px;
+      background-color: rgb(248, 248, 248);
+      margin-right: 10px;
+      .vertical-separation-line {
+        position: absolute;
+        height: 100%;
+        width: 1px;
+        background-color: black;
+        right: 4%;
+        top: -7px;
+      }
+    }
+    .user-filter {
+      display: flex;
+      .reset-button-container {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 1px;
+        cursor: pointer;
+        .reset-button {
+          border: 1px solid #C6C6C6;
+          border-radius: 4px;
+          padding: 5px 10px 5px 10px;
+        }
+      }
+    }
+  }
+}
+
+.popover-event-title, #modal .centered-modal {
+  .circular.empty.label.ui {
+    margin-right: 10px;
+  }
+}
+
+.event-buttons {
+  display: flex;
+  .event-delete {
+    margin-right: 5px;
+  }
+  .event-delete, .event-edit {
+    cursor: pointer;
   }
 }

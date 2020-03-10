@@ -4,6 +4,8 @@
     "@babel/preset-react": "^7.8.3",
     "@rails/webpacker": "4.2.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "antd": "^3.25.0",
+    "babel-preset-react": "^6.24.1",
     "classnames": "^2.2.6",
     "component-webpack-plugin": "^0.2.1",
     "jquery": "^3.4.1",
@@ -16,6 +18,10 @@
     "react-helmet": "^5.2.1",
     "react-router-dom": "^5.1.2",
     "react_ujs": "^2.6.1",
+    "react-big-scheduler": "0.2.6",
+    "react-dnd": "5.0.0",
+    "react-dnd-html5-backend": "5.0.1",
+    "tinycolor2": "^1.4.1",
     "urijs": "^1.19.1"
   },
   "devDependencies": {

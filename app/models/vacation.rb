@@ -4,6 +4,7 @@ class Vacation < ApplicationRecord
   belongs_to :user
   has_many :vacation_interactions, dependent: :destroy
   has_many :work_times, dependent: :destroy
+  has_many :events, dependent: :destroy
 
   validates :description, presence: true, if: :others?
   validates :vacation_sub_type, presence: true, if: :accepting_other_vacation, on: :update

@@ -65,6 +65,10 @@ Rails.application.routes.draw do
     resources :birthday_email_templates do
       put :set_last_used
     end
+    resources :resources
+    resources :events do
+      get :find_by_slot, on: :collection
+    end
   end
 
   resources :reports, only: [] do
