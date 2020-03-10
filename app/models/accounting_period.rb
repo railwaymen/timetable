@@ -18,6 +18,6 @@ class AccountingPeriod < ApplicationRecord
   private
 
   def validates_starts_at_less_than_ends_at
-    errors.add(:starts_at, 'starts_at should be less than ends_at') if starts_at && ends_at && starts_at >= ends_at
+    errors.add(:starts_at, :greater_than_ends_at) if starts_at && ends_at && starts_at >= ends_at
   end
 end

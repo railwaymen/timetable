@@ -6,6 +6,7 @@ import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import { Redirect, NavLink } from 'react-router-dom';
 import { defaultDatePickerProps } from '../../shared/helpers';
+import translateErrors from '../../shared/translate_errors';
 import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
 
@@ -171,7 +172,7 @@ class EditPeriod extends React.Component {
         });
       }).catch((results) => {
         this.setState({
-          errors: results.errors,
+          errors: translateErrors('accounting_period', results.errors),
         });
       });
   }
@@ -271,8 +272,8 @@ class EditPeriod extends React.Component {
               <div className="col-12 col-md-6">
                 <div className="row calendar-row">
                   <div className="col-md-6 form-group">
-                    { errors.starts_at && (
-                      <div className="error-description">{errors.starts_at.join(', ')}</div>
+                    { errors.startsAt && (
+                      <div className="error-description">{errors.startsAt.join(', ')}</div>
                     )}
                     <DatePicker
                       {...defaultDatePickerProps}
@@ -286,8 +287,8 @@ class EditPeriod extends React.Component {
                     />
                   </div>
                   <div className="col-md-6 form-group">
-                    { errors.ends_at && (
-                      <div className="error-description">{errors.ends_at.join(', ')}</div>
+                    { errors.endsAt && (
+                      <div className="error-description">{errors.endsAt.join(', ')}</div>
                     ) }
                     <DatePicker
                       {...defaultDatePickerProps}

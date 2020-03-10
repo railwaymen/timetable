@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { NavLink } from 'react-router-dom';
 
 function AdminFields(props) {
   const {
@@ -82,6 +83,11 @@ function AdminFields(props) {
             {I18n.t('apps.users.user_active')}
             <input type="checkbox" name="active" checked={user.active || false} onChange={onCheckboxChange} />
           </label>
+        </div>
+      )}
+      { user.id === currentUser.id && (
+        <div className="form-group">
+          <NavLink className="btn btn-primary" to={`/users/${user.id}/external_authorization`}>{I18n.t('common.external_auth')}</NavLink>
         </div>
       )}
       <div className="form-group">

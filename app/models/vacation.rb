@@ -22,8 +22,7 @@ class Vacation < ApplicationRecord
   scope :current_year, -> { where("date_part('year', start_date) = ?", Time.current.year) }
 
   def validates_start_date_less_than_end_date
-    errors.add(:end_date, I18n.t('activerecord.errors.models.vacation.attributes.end_date.validates_end_date')) if
-      start_date && end_date && start_date > end_date
+    errors.add(:end_date, :validates_end_date) if start_date && end_date && start_date > end_date
   end
 
   def validates_work_time
@@ -33,7 +32,7 @@ class Vacation < ApplicationRecord
                                            (ends_at::timestamp::date >= :start_date AND ends_at::timestamp::date <= :end_date) OR
                                            ((starts_at::timestamp::date, starts_at::timestamp::date) OVERLAPS (:start_date, :end_date))) AND
                                            active = :active', start_date: start_date, end_date: end_date, active: true).any?
-    errors.add(:base, I18n.t('activerecord.errors.models.vacation.base.validates_work_time')) if any_work_time
+    errors.add(:base, :work_time_exists) if any_work_time
   end
 
   def accepting_other_vacation

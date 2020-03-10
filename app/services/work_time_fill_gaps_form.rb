@@ -32,7 +32,7 @@ class WorkTimeFillGapsForm
       work_time = @saved.first
       UpdateExternalAuthWorker.perform_async(work_time.project_id, work_time.external_task_id, work_time.id)
     end
-    errors.add(:starts_at, I18n.t('activemodel.errors.models.work_time_fill_gaps_form.no_gaps_to_fill')) if @saved == []
+    errors.add(:starts_at, :no_gaps_to_fill) if @saved == []
     @saved.present?
   end
 

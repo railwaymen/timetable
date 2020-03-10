@@ -253,31 +253,37 @@ en:
         work_time: &worktime
           basic: There was an error while trying to add work time
           base:
-            validates_date: 'Can not create work times that ends in next day'
-            validates_time: 'Can not create or update past work times'
-            validates_body: 'You need fill description or task url'
           attributes:
+            body:
+              body_or_task_blank: You need fill description or task url
             task:
-              invalid_uri: 'Task URL is not valid'
-              invalid_external: 'Task URL does not point to a valid external task'
-            ends_at:
-              validates_ends_at: 'Can not create work times that starts more than 1 month from now'
+              invalid_uri: Task URL is not valid
+              invalid_external: Task URL does not point to a valid external task
             starts_at:
               overlap: There is another task overlapping the specified time
+              overlap_midnight: Can not create work times that ends in next day
+              too_old: Can not create or update past work times
+              no_gaps_to_fill: No gaps to fill
             duration:
               greater_than: Duration should be greater than zero
+            project_id:
+              blank: Project is required
         external_auth:
           basic: Error during authorization
         vacation:
           basic: There was an error while trying to add application for vacation
-          base:
-            validates_work_time: There is work time with same date
           attributes:
+            base:
+              work_time_exists: There is work time with same date
             end_date:
               validates_end_date: Invalid end date
         vacation_interaction:
           base:
             already_interacted: This vacation is already %{action} by you
+        accounting_period:
+          attributes:
+            starts_at:
+              greater_than_ends_at: Starts at date is greater than ends at
         vacation_period:
           attributes:
             user_id:
@@ -289,4 +295,3 @@ en:
           <<: *worktime
         work_time_fill_gaps_form:
           <<: *worktime
-          no_gaps_to_fill: No gaps to fill

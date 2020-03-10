@@ -69,6 +69,13 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  errors:
+                    type: object
+                example:
+                  errors:
+                    base:
+                      - error: invalid_email_or_password
   /projects:
     get:
       tags:
@@ -186,6 +193,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WorkTime'
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkTimeValidation'
   /work_times/create_filling_gaps:
     post:
       tags:
@@ -227,6 +239,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WorkTime'
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkTimeValidation'
   /work_times/{id}:
     put:
       tags:
@@ -274,6 +291,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WorkTime'
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkTimeValidation'
     delete:
       tags:
         - Work times
@@ -375,6 +397,29 @@ components:
             taggable:
               type: boolean
               example: true
+    WorkTimeValidation:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: object
+      example:
+        errors:
+          body:
+            - error: body_or_task_blank
+          task:
+            - error: invalid_uri
+            - error: invalid_external
+          starts_at:
+            - error: overlap
+            - error: too_old
+            - error: overlap_midnight
+            - error: no_gaps_to_fill
+          duration:
+            - error: greater_than
+          project_id:
+            - error: blank
   securitySchemes:
     authentication:
       type: apiKey

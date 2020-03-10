@@ -8,6 +8,7 @@ import ProjectsList from '../projects_list';
 import TagsDropdown from '../tags_dropdown';
 import ErrorTooltip from '../errors/error_tooltip';
 import { defaultDatePickerProps } from '../../../shared/helpers';
+import translateErrors from '../../../shared/translate_errors';
 import WorkTimeTask from '../../../shared/work_time_task';
 import WorkTimeDuration from '../../../shared/work_time_duration';
 import WorkTimeTag from '../../../shared/work_time_tag';
@@ -361,7 +362,7 @@ class WorkHours extends React.Component {
       this.setState({
         starts_at_hours: formattedStartsAtTime,
         ends_at_hours: formattedEndsAtTime,
-        errors: Object.values(e.errors),
+        errors: translateErrors('work_time', e.errors),
       }, () => {
         const event = new CustomEvent(
           'edit-entry',
@@ -423,8 +424,7 @@ class WorkHours extends React.Component {
 
     return (
       <div className={`time-entries-list-container ${!_.isEmpty(errors) ? 'has-error' : ''}`}>
-        {/* eslint-disable-next-line */}
-        { errors.map((error, index) => (<ErrorTooltip key={index} errors={error} />)) }
+        { Object.values(errors).map((error) => (<ErrorTooltip key={error} errors={error} />)) }
         <ul className="time-entries-list">
           <li className={`time-entry time-entry-main entry ${editing ? 'card edit-mode' : ''} ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
             {!_.isEmpty(errors) && <div className="error-info-container"><i className="fa fa-exclamation-circle" /></div>}

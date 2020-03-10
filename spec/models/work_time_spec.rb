@@ -70,7 +70,7 @@ RSpec.describe WorkTime, type: :model do
         work_time = build_stubbed :work_time
         work_time.body = ''
         expect(work_time).to_not be_valid
-        expect(work_time.errors[:base].present?).to eql(true)
+        expect(work_time.errors[:body].present?).to eql(true)
       end
 
       it 'should not be required for lunch' do

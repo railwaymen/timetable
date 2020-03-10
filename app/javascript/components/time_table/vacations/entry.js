@@ -5,6 +5,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import URI from 'urijs';
 import { defaultDatePickerProps } from '../../shared/helpers';
+import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 import * as Validations from '../../shared/validations';
 import Description from './description_field';
@@ -143,7 +144,7 @@ function Entry(props) {
   }
 
   function onSubmit() {
-    let newErrors = validate();
+    const newErrors = validate();
     if (!_.isEmpty(newErrors)) { return setErrors(newErrors); }
     const userId = (window.currentUser.staff_manager) ? parseInt(selectedUser, 10) : URI(window.location.href).search(true).user_id || currentUser.id;
     const entryData = {
@@ -170,17 +171,17 @@ function Entry(props) {
       };
       setVacation(newVacation);
     }).catch((e) => {
-      if (e.errors && (e.errors.base || e.errors.start_date || e.errors.end_date || e.errors.description || e.errors.vacation_type)) {
-        newErrors = {};
-        if (e.errors.start_date) newErrors.startDate = e.errors.start_date;
-        if (e.errors.end_date) newErrors.endDate = e.errors.end_date;
-        if (e.errors.description) newErrors.description = e.errors.description;
-        if (e.errors.vacation_type) newErrors.vacationType = e.errors.vacation_type;
-        if (e.errors.base) newErrors.base = e.errors.base;
-        setErrors(newErrors);
-      } else {
-        alert(I18n.t('activerecord.errors.models.vacation.basic'));
-      }
+      // if (e.errors && (e.errors.base || e.errors.start_date || e.errors.end_date || e.errors.description || e.errors.vacation_type)) {
+      //   newErrors = {};
+      //   if (e.errors.start_date) newErrors.startDate = e.errors.start_date;
+      //   if (e.errors.end_date) newErrors.endDate = e.errors.end_date;
+      //   if (e.errors.description) newErrors.description = e.errors.description;
+      //   if (e.errors.vacation_type) newErrors.vacationType = e.errors.vacation_type;
+      //   if (e.errors.base) newErrors.base = e.errors.base;
+      setErrors(translateErrors('vacation', e.errors));
+      // } else {
+      //   alert(I18n.t('activerecord.errors.models.vacation.basic'));
+      // }
     });
     if (!_.isEmpty(errors)) {
       return false;

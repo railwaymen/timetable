@@ -7,6 +7,7 @@ import URI from 'urijs';
 import ProjectsDropdown from './projects_dropdown';
 import TagsDropdown from './tags_dropdown';
 import ErrorTooltip from './errors/error_tooltip';
+import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 import * as Validations from '../../shared/validations';
 import { defaultDatePickerProps } from '../../shared/helpers';
@@ -183,14 +184,7 @@ class Entry extends React.Component {
         if (!this.state.project.lunch) this.lastProject = this.state.project;
         this.setState(newState);
       }).catch((e) => {
-        if (e.errors && (e.errors.starts_at || e.errors.ends_at || e.errors.task)) {
-          const newErrors = {};
-          if (e.errors.starts_at || e.errors.ends_at) newErrors.duration = (e.errors.starts_at || []).concat(e.errors.ends_at || []);
-          if (e.errors.task) newErrors.task = e.errors.task;
-          this.setState({ errors: newErrors });
-        } else {
-          alert(I18n.t('activerecord.errors.models.work_time.basic'));
-        }
+        this.setState({ errors: translateErrors('work_time', e.errors) });
       });
     }
   }
@@ -312,7 +306,7 @@ class Entry extends React.Component {
               </div>
               <div className="col-sm-4 col-md-2 project">
                 <div className="project-dropdown">
-                  {errors.project_id && <ErrorTooltip errors={errors.project_id} />}
+                  {errors.projectId && <ErrorTooltip errors={errors.projectId} />}
                   <div>
                     <ProjectsDropdown updateProject={this.updateProject} selectedProject={this.state.project} projects={this.props.projects} />
                   </div>
@@ -354,6 +348,7 @@ class Entry extends React.Component {
                   </div>
                 </div>
                 <div className="duration manual">
+                  {errors.startsAt && <ErrorTooltip errors={errors.startsAt} />}
                   {errors.duration && <ErrorTooltip errors={errors.duration} />}
                   <span id="duration">{durationHours}</span>
                 </div>

@@ -42,7 +42,7 @@ class WorkTime < ApplicationRecord
 
     URI.parse(task)
   rescue URI::InvalidURIError
-    errors.add(:task, I18n.t('activerecord.errors.models.work_time.attributes.task.invalid_uri'))
+    errors.add(:task, :invalid_uri)
   end
 
   def assign_duration
@@ -58,15 +58,15 @@ class WorkTime < ApplicationRecord
   end
 
   def validates_date
-    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_date')) if starts_at && ends_at && starts_at.to_date != ends_at.to_date
+    errors.add(:starts_at, :overlap_midnight) if starts_at && ends_at && starts_at.to_date != ends_at.to_date
   end
 
   def validates_time
-    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_time')) if starts_at && ends_at && (starts_at < 3.business_days.ago.beginning_of_day || ends_at < 3.business_days.ago.beginning_of_day)
+    errors.add(:starts_at, :too_old) if starts_at && ends_at && (starts_at < 3.business_days.ago.beginning_of_day || ends_at < 3.business_days.ago.beginning_of_day)
   end
 
   def validates_body
-    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_body')) if (body.presence.nil? && task.presence.nil?) && !body_optional?
+    errors.add(:body, :body_or_task_blank) if (body.presence.nil? && task.presence.nil?) && !body_optional?
   end
 
   def external_task_id

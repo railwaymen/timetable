@@ -297,29 +297,34 @@ pl:
       models:
         work_time: &worktime
           basic: Nie udało się dodać czasu pracy
-          base:
-            validates_date: 'Nie można utworzyć wpisu, który kończy się następnego dnia'
-            validates_time: 'Nie można utworzyć lub edytować wpisu'
-            validates_body: 'Musisz wypełnić opis lub url taska'
           attributes:
+            body:
+              body_or_task_blank: 'Musisz wypełnić opis lub url taska'
             task:
               invalid_uri: 'URL Taska nie jest poprawny'
               invalid_external: 'URL nie wskazuje na poprawny zewnętrzny task'
-            ends_at:
-              validates_ends_at: 'Nie można utworzyć wpisu z wyprzedzeniem o miesiąc'
             starts_at:
               overlap: Istnieje inne zadanie o pokrywającym się czasie wykonania
+              too_old: Nie można utworzyć lub edytować wpisu
+              overlap_midnight: Nie można utworzyć wpisu, który kończy się następnego dnia
+              no_gaps_to_fill: Brak luk do uzupełnienia
             duration:
               greater_than: Czas trwania musi być większy od zera
+            project_id:
+              blank: Projekt jest wymagany
         external_auth:
           basic: Błąd uwierzytelnienia
         vacation:
           basic: Nie udało się dodać podania o urlop
-          base:
-            validates_work_time: Jest już czas pracy z tą samą datą
           attributes:
+            base:
+              work_time_exists: Jest już czas pracy z tą samą datą
             end_date:
               validates_end_date: Nieprawidłowa data końcowa
+        accounting_period:
+          attributes:
+            starts_at:
+              greater_than_ends_at: Data początkowa jest większa niż końcowa
         vacation_interaction:
           base:
             already_interacted: Ten urlop już został przez ciebie %{action}
@@ -334,4 +339,4 @@ pl:
           <<: *worktime
         work_time_fill_gaps_form:
           <<: *worktime
-          no_gaps_to_fill: Brak luk do uzupełnienia
+          
