@@ -48,7 +48,8 @@ export default class NewReport extends React.Component {
   }
 
   getRoles() {
-    Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}/project_reports/roles?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}` })
+    const url = `/api/projects/${this.state.projectId}/project_reports/roles?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}`;
+    Api.makeGetRequest({ url })
       .then(({ data }) => {
         this.setState(({ currency }) => ({ userRoles: data.user_roles, currency: currency || data.currency }));
       });
@@ -56,7 +57,8 @@ export default class NewReport extends React.Component {
   }
 
   checkForCollision() {
-    Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}/project_reports?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}` })
+    const url = `/api/projects/${this.state.projectId}/project_reports?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}`;
+    Api.makeGetRequest({ url })
       .then(({ data }) => this.setState({ collisions: data }));
   }
 
@@ -129,7 +131,13 @@ export default class NewReport extends React.Component {
           </div>
         </div>
         <h1>{I18n.t('apps.reports.roles')}</h1>
-        <DateRangeFilter from={this.state.startsAt.format()} to={this.state.endsAt.format()} onFromChange={this.onRangeStartChange} onToChange={this.onRangeEndChange} onFilter={this.getRoles} />
+        <DateRangeFilter
+          from={this.state.startsAt.format()}
+          to={this.state.endsAt.format()}
+          onFromChange={this.onRangeStartChange}
+          onToChange={this.onRangeEndChange}
+          onFilter={this.getRoles}
+        />
         {this.collisionAlert()}
         <div className="table-responsive">
           <table className="table table-hover">

@@ -342,7 +342,12 @@ class Periods extends React.Component {
           </thead>
           <tbody>
             { periods.accounting_periods.map((period) => (
-              <Period key={period.id} period={period} onDelete={this.onDelete} userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`} />
+              <Period
+                key={period.id}
+                period={period}
+                onDelete={this.onDelete}
+                userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`}
+              />
             )) }
           </tbody>
         </table>
@@ -359,7 +364,14 @@ class Periods extends React.Component {
                 <div className="fields inline">
                   <div className="field">
                     <label>{I18n.t('apps.accounting_periods.periods_count')}</label>
-                    <input type="number" onChange={this.onGeneratePeriodsChange} max={MONTHS_IN_YEAR * 5} value={generatePeriods.periods_count} name="periods_count" placeholder="periods count" />
+                    <input
+                      type="number"
+                      onChange={this.onGeneratePeriodsChange}
+                      max={MONTHS_IN_YEAR * 5}
+                      value={generatePeriods.periods_count}
+                      name="periods_count"
+                      placeholder="periods count"
+                    />
                   </div>
                   <div className="field">
                     <label>{I18n.t('apps.accounting_periods.starting_from_month')}</label>
