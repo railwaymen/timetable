@@ -23,7 +23,6 @@ module TimeTable
     config.action_mailer.default_url_options = { host: Rails.application.secrets.mailer[:host] }
     config.action_mailer.delivery_method = :sendmail
     config.action_mailer.default_options = { from: Rails.application.secrets.mailer[:from] }
-    config.hosts << Rails.application.secrets[:host]
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
