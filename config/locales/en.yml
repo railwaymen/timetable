@@ -283,6 +283,7 @@ en:
         accounting_period:
           attributes:
             starts_at:
+              overlap: Overlaps with another period
               greater_than_ends_at: Starts at date is greater than ends at
         vacation_period:
           attributes:

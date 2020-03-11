@@ -324,6 +324,7 @@ pl:
         accounting_period:
           attributes:
             starts_at:
+              overlap: Pokrywa się z innym okresem
               greater_than_ends_at: Data początkowa jest większa niż końcowa
         vacation_interaction:
           base:
