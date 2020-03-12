@@ -22,6 +22,6 @@ production:
 staging:
   stage: deploy
   only:
-    - upgrade_sidekiq
+    - develop
   script:
     - bundle exec cap staging deploy
