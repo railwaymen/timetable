@@ -533,6 +533,19 @@ export default class EditReport extends React.Component {
         </p>
         <div className="table-responsive">
           <table className="table">
+            <thead>
+              <tr>
+                <th>
+                  {I18n.t('apps.reports.role')}
+                </th>
+                <th>
+                  {I18n.t('apps.reports.time_spent')}
+                </th>
+                <th>
+                  {I18n.t('apps.reports.cost')}
+                </th>
+              </tr>
+            </thead>
             <tbody>
               {categories.map((category, idx) => (
                 <tr key={category}>
