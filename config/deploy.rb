@@ -72,11 +72,11 @@ namespace :deploy do
     end
   end
 
-  after :publishing, :restart do
-    on roles :web do
-      execute :systemctl, '--user', :restart, fetch(:sidekiq_systemd_name)
-    end
-  end
+  after :publishing, :restart do
+    on roles :web do
+      execute :systemctl, '--user', :restart, fetch(:sidekiq_systemd_name)
+    end
+  end
 
   after :updated, 'sidekiq:stop'
   after :published, 'sidekiq:start'
