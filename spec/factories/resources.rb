@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :resource do
     user
     sequence(:rid) { |n| "test-rid-#{n}" }
-    name 'John Test'
+    name { 'John Test' }
   end
 end
