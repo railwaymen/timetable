@@ -35,6 +35,26 @@ set :linked_dirs, %w[log tmp/pids tmp/cache tmp/sockets vendor/bundle public/ima
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
+namespace :sidekiq do
+  task :stop do
+    on roles(:app) do
+      execute :systemctl, '--user', :stop, fetch(:sidekiq_systemd_name)
+    end
+  end
+
+  task :start do
+    on roles(:app) do
+      execute :systemctl, '--user', :start, fetch(:sidekiq_systemd_name)
+    end
+  end
+
+  task :restart do
+    on roles(:app) do
+      execute :systemctl, '--user', :restart, fetch(:sidekiq_systemd_name)
+    end
+  end
+end
+
 namespace :deploy do
   after :publishing, :export_translations do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
@@ -51,4 +71,14 @@ namespace :deploy do
       execute :touch, release_path.join('tmp/restart.txt')
     end
   end
+
+  after :publishing, :restart do
+    on roles :web do
+      execute :systemctl, '--user', :restart, fetch(:sidekiq_systemd_name)
+    end
+  end
+
+  after :updated, 'sidekiq:stop'
+  after :published, 'sidekiq:start'
+  after :failed, 'sidekiq:restart'
 end

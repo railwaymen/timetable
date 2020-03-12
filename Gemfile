@@ -51,7 +51,6 @@ group :development do
   gem 'capistrano-nvm'
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
-  gem 'capistrano-sidekiq'
   gem 'capistrano-yarn'
   gem 'immigrant'
   gem 'rubocop'
