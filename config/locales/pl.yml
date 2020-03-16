@@ -169,9 +169,12 @@ pl:
       new: Nowy szablon urodzinowy
       edit: Edycja szablonu urodzinowego
       email_content: Wprowadź treść maila
+      email_header: Wprowadź nagłówek maila
+      email_body: Wprowadź stopke maila
       incoming_birthdays: 'Nadchodzące urodziny:'
       last_used: Ostatnio użyte
       set_as_last_used: Ustaw jako ostatnio użyte
+      save_and_preview: Zapisz i odśwież podgląd
       days:
         few: '%{count} dni'
         many: '%{count} dni'
@@ -314,6 +317,12 @@ pl:
               blank: Projekt jest wymagany
         external_auth:
           basic: Błąd uwierzytelnienia
+        birthday_email_template:
+          attributes:
+            name:
+              blank: Nazwa jest wymagana
+            title:
+              blank: Tytuł jest wymagany
         vacation:
           basic: Nie udało się dodać podania o urlop
           attributes:

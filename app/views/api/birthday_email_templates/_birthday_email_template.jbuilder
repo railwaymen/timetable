@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-json.call birthday_email_template, :id, :name, :body, :title, :last_used
+json.call birthday_email_template, :id, :name, :body, :bottom, :header, :title, :last_used

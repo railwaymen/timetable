@@ -1,5 +1,93 @@
-<html>
-  <div>
-    <%= simple_format(body, {}, wrapper_tag: 'div') %>
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet"/>
+</head>
+<style>
+  body {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eeeeee;
+  }
+</style>
+
+<body>
+  <table
+    style="background-color: #ffffff; border-collapse: collapse; border-spacing: 0; min-width: 600px; width:600px; height: 800px; min-height: 800px; max-height: 800px; font-family: 'Roboto', sans-serif;"
+    cellspacing=0>    
+    <tr>
+      <td style="padding: 0; height: 400px; min-height: 400px; max-height: 400px; box-sizing: border-box;">
+        <img src=<%= asset_path('birthday.png') %> alt="card" width="600px" height="400px" style="padding: 0; height: 400px; max-width: 600px; max-height: 400px; width: 600px; box-sizing: border-box;">
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 0; height: 400px; min-height: 400px; max-height: 400px;">
+        <table style="border-spacing: 0; border-collapse: collapse; height: 400px; width: 600px;" cellspacing=0>
+          <tr style="height: 110px"></tr>
+          <tr>
+            <td style="padding: 0;">
+              <table style="border-spacing: 0; border-collapse: collapse; height: 100%; width: 600px;" cellspacing=0>
+                <tr>
+                  <td rowspan="3" style="padding: 0; width: 120px"></td>
+                  <td style="padding: 0; height: 32px; color: #C60F27; font-size: 32px; text-align: center; font-weight: 900;">
+                    <%= simple_format(header, {}, wrapper_tag: 'div') %>
+                  </td>
+                  <td rowspan="3" style="padding: 0; width: 120px"></td>
+                </tr>
+                <tr>
+                  <td style="padding: 0; box-sizing: border-box; height: 60px;">
+                    <table style="border-spacing: 0; border-collapse: collapse; width: 100%;" cellspacing=0>
+                      <tr>
+                        <td rowspan="2" style="padding: 0; height: 30px; box-sizing: border-box;"></td>
+                        <td rowspan="1"></td>
+                        <td rowspan="2" style="padding: 0; height: 30px; box-sizing: border-box;"></td>
+                      </tr>
+                      <tr>
+                        <td
+                          style="padding: 0; height: 1px; width: 100px; background-color: #d6d6d6; box-sizing: border-box;">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td rowspan="1" colspan="3" style="padding: 0; height: 30px; box-sizing: border-box;"></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0; box-sizing: border-box;">
+                    <table style="border-spacing: 0; border-collapse: collapse; width: 100%; height: 100%; text-align: center; line-height: 20px;" cellspacing=0>
+                      <tr>
+                        <td style="padding: 0; box-sizing: border-box; font-size: 14px;">
+                          <%= simple_format(body, {}, wrapper_tag: 'div') %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 0; box-sizing: border-box; height: 30px;">
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 0; box-sizing: border-box; font-size: 18px;">
+                          <%= simple_format(bottom, {}, wrapper_tag: 'div') %>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr style="height: 110px"></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
 </html>

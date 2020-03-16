@@ -169,9 +169,12 @@ en:
       new: New birthday template
       edit: Edit birthday template
       email_content: Enter email content
+      email_body: Enter email bottom
+      email_hedaer: Enter email header
       incoming_birthdays: 'Incoming birthdays:'
       last_used: Last used
       set_as_last_used: Set as last used
+      save_and_preview: Save and refresh preview
       days:
         few: '%{count} days'
         many: '%{count} days'
@@ -270,6 +273,12 @@ en:
               blank: Project is required
         external_auth:
           basic: Error during authorization
+        birthday_email_template:
+          attributes:
+            name:
+              blank: Name is required
+            title:
+              blank: Title is required
         vacation:
           basic: There was an error while trying to add application for vacation
           attributes:

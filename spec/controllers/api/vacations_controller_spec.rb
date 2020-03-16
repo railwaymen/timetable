@@ -68,6 +68,18 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('200')
       expect(response.body).to eql({ vacations: [], available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
     end
+
+    it 'filters user vacation applications by user' do
+      sign_in(staff_manager)
+      user2 = create(:user)
+      vacation = create(:vacation, user: user2)
+      vacations_response = [
+        vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count')
+      ]
+      get :index, params: { user_id: user2.id, year: Time.current.year }, format: :json
+      expect(response.code).to eql('200')
+      expect(response.body).to eql({ vacations: vacations_response, available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
+    end
   end
 
   describe '#create' do

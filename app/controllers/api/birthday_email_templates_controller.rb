@@ -40,7 +40,7 @@ module Api
     private
 
     def birthday_email_template_params
-      params.fetch(:birthday_email_template).permit(:name, :body, :title, :last_used)
+      params.fetch(:birthday_email_template).permit(:name, :body, :bottom, :header, :title, :last_used)
     end
 
     def find_birthday

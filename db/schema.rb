@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_03_103236) do
+ActiveRecord::Schema.define(version: 2020_03_16_100733) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,12 +41,35 @@ ActiveRecord::Schema.define(version: 2020_03_03_103236) do
   end
 
   create_table "birthday_email_templates", force: :cascade do |t|
-    t.text "body", null: false
+    t.text "body", default: "", null: false
     t.string "name", null: false
     t.string "title", null: false
     t.boolean "last_used", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "bottom", default: "", null: false
+    t.text "header", default: "", null: false
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "resource_id", null: false
+    t.bigint "project_id", null: false
+    t.bigint "vacation_id"
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.string "title"
+    t.string "color"
+    t.string "resource_rid", null: false
+    t.integer "type", default: 1, null: false
+    t.boolean "resizable", default: true
+    t.boolean "movable", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_events_on_project_id"
+    t.index ["resource_id"], name: "index_events_on_resource_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
+    t.index ["vacation_id"], name: "index_events_on_vacation_id"
   end
 
   create_table "external_auths", force: :cascade do |t|
@@ -105,6 +128,18 @@ ActiveRecord::Schema.define(version: 2020_03_03_103236) do
     t.boolean "external_integration_enabled", default: false, null: false
     t.index ["leader_id"], name: "index_projects_on_leader_id"
     t.index ["name"], name: "index_projects_on_name", unique: true
+  end
+
+  create_table "resources", force: :cascade do |t|
+    t.bigint "user_id"
+    t.integer "resource_id"
+    t.string "rid", null: false
+    t.string "name", null: false
+    t.boolean "group_only", default: false, null: false
+    t.string "parent_rid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_resources_on_user_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -203,12 +238,17 @@ ActiveRecord::Schema.define(version: 2020_03_03_103236) do
 
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"
   add_foreign_key "accounting_periods_recounts", "users"
+  add_foreign_key "events", "projects"
+  add_foreign_key "events", "resources"
+  add_foreign_key "events", "users"
+  add_foreign_key "events", "vacations"
   add_foreign_key "external_auths", "projects"
   add_foreign_key "external_auths", "users"
   add_foreign_key "project_report_roles", "project_reports"
   add_foreign_key "project_report_roles", "users"
   add_foreign_key "project_reports", "projects"
   add_foreign_key "projects", "users", column: "leader_id"
+  add_foreign_key "resources", "users"
   add_foreign_key "vacation_interactions", "users"
   add_foreign_key "vacation_interactions", "vacations"
   add_foreign_key "vacation_periods", "users"
