@@ -24,7 +24,7 @@ class ProjectReportGenerator
                       end]
     @description_hash = Hash[roles.map { |role| [role.user_id, role.description] }]
     @name_hash = Hash[roles.includes(:user).map do |role|
-                        [role.user_id, "#{role.user.first_name} #{role.user.last_name[0]}."]
+                        [role.user_id, { name: role.user.name, anonymized_name: role.user.anonymized_name }]
                       end]
   end
 
@@ -82,10 +82,10 @@ class ProjectReportGenerator
       translated_key = translate_role(key)
 
       content = work_times.group_by { |wt| [wt['owner'], wt['user_id']] }.map do |(owner, user_id), wts|
-        name = if user_id.nil?
+        name = if user_id.nil? || owner != name_hash[user_id][:name]
                  +owner
                else
-                 +name_hash[user_id]
+                 +name_hash[user_id][:anonymized_name]
                end
         if (description = description_hash[user_id]).present?
           name << "- #{description}"
