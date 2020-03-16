@@ -169,8 +169,8 @@ en:
       new: New birthday template
       edit: Edit birthday template
       email_content: Enter email content
-      email_body: Enter email bottom
-      email_hedaer: Enter email header
+      email_header: Enter email header
+      email_bottom: Enter email bottom
       incoming_birthdays: 'Incoming birthdays:'
       last_used: Last used
       set_as_last_used: Set as last used

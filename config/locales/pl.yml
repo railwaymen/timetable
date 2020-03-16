@@ -170,7 +170,7 @@ pl:
       edit: Edycja szablonu urodzinowego
       email_content: Wprowadź treść maila
       email_header: Wprowadź nagłówek maila
-      email_body: Wprowadź stopke maila
+      email_bottom: Wprowadź stopke maila
       incoming_birthdays: 'Nadchodzące urodziny:'
       last_used: Ostatnio użyte
       set_as_last_used: Ustaw jako ostatnio użyte
