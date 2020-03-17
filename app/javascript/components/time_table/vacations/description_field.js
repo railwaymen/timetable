@@ -13,7 +13,7 @@ function Description(props) {
         className="form-control"
         placeholder={I18n.t('apps.vacations.vacation_description')}
         name="description"
-        defaultValue={description}
+        value={description}
         onChange={(e) => onVacationChange('description', e.target.value)}
         onKeyPress={onKeyPress}
       />

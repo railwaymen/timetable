@@ -13,7 +13,7 @@ import Description from './description_field';
 const defaultVacation = {
   startDate: moment().format('DD/MM/YYYY'),
   endDate: moment().format('DD/MM/YYYY'),
-  description: undefined,
+  description: '',
   vacationType: 'planned',
 };
 
@@ -204,7 +204,13 @@ function Entry(props) {
         <VacationTypes />
       </div>
       <div className="row description-containter">
-        <Description description={description} onVacationChange={onVacationChange} onKeyPress={onKeyPress} ErrorTooltip={ErrorTooltip} errors={errors} />
+        <Description
+          description={description}
+          onVacationChange={onVacationChange}
+          onKeyPress={onKeyPress}
+          ErrorTooltip={ErrorTooltip}
+          errors={errors}
+        />
       </div>
       <div className="row">
         <div className="base-error">
