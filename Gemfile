@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 ruby '2.7.0'
 
+gem 'awesome_print'
 gem 'bootstrap-sass'
 gem 'business_time'
 gem 'devise'
