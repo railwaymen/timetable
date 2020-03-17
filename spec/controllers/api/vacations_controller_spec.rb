@@ -33,7 +33,10 @@ RSpec.describe Api::VacationsController do
   end
 
   def used_vacation_days_response
-    { requested: 0, compassionate: 0, paternity: 0, parental: 0, upbringing: 0, unpaid: 0, rehabilitation: 0, illness: 0, care: 0 }
+    {
+      planned: 0, requested: 0, compassionate: 0, paternity: 0, parental: 0, upbringing: 0, unpaid: 0,
+      rehabilitation: 0, illness: 0, care: 0
+    }
   end
 
   describe '#index' do
@@ -57,7 +60,7 @@ RSpec.describe Api::VacationsController do
       get :index, params: { year: Time.current.year }, format: :json
       expect(response.code).to eql('200')
       available_vacation_days = user.available_vacation_days
-      used_vacation_days = user.used_vacation_days(Vacation.all, true)
+      used_vacation_days = user.used_vacation_days(Vacation.all)
       expect(response.body).to be_json_eql({ vacations: vacations_response, available_vacation_days: available_vacation_days, used_vacation_days: used_vacation_days }.to_json)
     end
 
