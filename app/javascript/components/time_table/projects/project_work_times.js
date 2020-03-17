@@ -127,7 +127,7 @@ export default class ProjectWorkTimes extends React.Component {
 
   render() {
     const {
-      groupedWorkTimes, from, to, project, reports, tag_reports, tags_disabled,
+      groupedWorkTimes, from, to, project, reports, tag_reports, tags_disabled, user_id,
     } = this.state;
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
 
@@ -154,9 +154,11 @@ export default class ProjectWorkTimes extends React.Component {
               onToChange={this.onToChange}
               onFilter={() => this.getWorkTimes(this.state)}
             >
-              <button type="button" className="btn btn-default" onClick={this.allUsers}>
-                {I18n.t('apps.reports.all')}
-              </button>
+              {user_id && (
+                <button type="button" className="btn btn-default" onClick={this.allUsers}>
+                  {I18n.t('apps.reports.all_users')}
+                </button>
+              )}
             </DateRangeFilter>
           </HorizontalArrows>
         </header>

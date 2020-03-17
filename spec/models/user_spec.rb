@@ -28,6 +28,16 @@ RSpec.describe User, type: :model do
     expect(user.to_s).to eq 'Smith John'
   end
 
+  it '#name returns joined first_name and last_name' do
+    user = build :user, first_name: 'John', last_name: 'Smith'
+    expect(user.name).to eq 'John Smith'
+  end
+
+  it '#anonymized_name returns joined first_name and first letter of last_name' do
+    user = build :user, first_name: 'John', last_name: 'Smith'
+    expect(user.anonymized_name).to eq 'John S'
+  end
+
   it '#destroy changes active to false' do
     user = create :user
     user.destroy

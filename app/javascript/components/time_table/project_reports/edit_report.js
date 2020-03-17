@@ -254,9 +254,11 @@ export default class EditReport extends React.Component {
             <input name="toMerge" type="checkbox" className="merge-check-box" checked={toMerge} onChange={(e) => this.handleMergeChange(e, category, id)} />
             <span className="checkbox" />
           </label>
-          {
-            (toMerge && toMergeTasks.length >= 2 && this.renderMergeButton(category)) || this.renderEditOrMergeButton(category, id, willBeAddedToMerge)
-          }
+          {toMerge && toMergeTasks.length >= 2 ? (
+            this.renderMergeButton(category)
+          ) : (
+            this.renderEditOrMergeButton(category, id, willBeAddedToMerge)
+          )}
         </React.Fragment>,
         <button key="ignore" type="button" className="action-item destroy" onClick={(e) => this.onIgnore(e, category, id)} data-tooltip-bottom={I18n.t('apps.reports.ignore')}>
           <i className="symbol fa fa-trash-o" />

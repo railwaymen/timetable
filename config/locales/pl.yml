@@ -53,6 +53,7 @@ pl:
       restore_previous: Przywróć poprzednią wersję
       restore_first: Przywróć pierwszą wersję
       collision: Kolizja z następującymi raportami
+      all_users: Wszyscy użytkownicy
     accounting_periods:
       add: Dodaj okres rozliczeniowy
       new: Nowy okres rozliczeniowy
@@ -349,4 +350,4 @@ pl:
           <<: *worktime
         work_time_fill_gaps_form:
           <<: *worktime
-          
+
