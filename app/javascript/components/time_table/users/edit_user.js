@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import * as Api from '../../shared/api';
 import { unnullifyFields } from '../../shared/helpers';
 import Preloader from '../../shared/preloader';
+import translateErrors from '../../shared/translate_errors';
 import AdminFields from './admin_fields';
 import UserFields from './user_fields';
 import useFormHandler from '../../../hooks/use_form_handler';
@@ -37,12 +38,12 @@ function EditUser(props) {
 
           if (currentUser.id === user.id) window.currentUser = { ...currentUser, ...user };
         }).catch((results) => {
-          setErrors(results.errors);
+          setErrors(translateErrors('user', results.errors));
         });
     } else {
       Api.makePostRequest({ url: '/api/users', body: { user } })
         .then(() => setRedirectToReferer('/users'))
-        .catch((results) => setErrors(results.errors));
+        .catch((results) => setErrors(translateErrors('user', results.errors)));
     }
   }
 

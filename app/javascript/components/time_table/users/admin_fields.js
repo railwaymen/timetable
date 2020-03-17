@@ -25,9 +25,9 @@ function AdminFields(props) {
       </div>
 
       <div className="form-group">
-        {errors.first_name && <div className="error-description">{errors.first_name.join(', ')}</div>}
+        {errors.firstName && <div className="error-description">{errors.firstName.join(', ')}</div>}
         <input
-          className={`${errors.first_name ? 'error' : ''} form-control`}
+          className={`${errors.firstName ? 'error' : ''} form-control`}
           type="text"
           name="first_name"
           placeholder={I18n.t('apps.users.first_name')}
@@ -36,9 +36,9 @@ function AdminFields(props) {
         />
       </div>
       <div className="form-group">
-        {errors.last_name && <div className="error-description">{errors.last_name.join(', ')}</div>}
+        {errors.lastName && <div className="error-description">{errors.lastName.join(', ')}</div>}
         <input
-          className={`${errors.last_name ? 'error' : ''} form-control`}
+          className={`${errors.lastName ? 'error' : ''} form-control`}
           type="text"
           name="last_name"
           placeholder={I18n.t('apps.users.last_name')}

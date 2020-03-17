@@ -295,10 +295,23 @@ en:
             starts_at:
               overlap: Overlaps with another period
               greater_than_ends_at: Starts at date is greater than ends at
+              blank: From date is required
+            ends_at:
+              blank: To date is required
+            position:
+              blank: Position is required
         vacation_period:
           attributes:
             user_id:
               validates_uniqueness: There is already a record with the same user_id, starts_at and ends_at
+        user:
+          attributes:
+            email:
+              blank: Email is required
+            first_name:
+              blank: First name is required
+            last_name:
+              blank: Last name is required
   activemodel:
     errors:
       models:

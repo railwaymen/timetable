@@ -336,6 +336,11 @@ pl:
             starts_at:
               overlap: Pokrywa się z innym okresem
               greater_than_ends_at: Data początkowa jest większa niż końcowa
+              blank: Data początkowa jest wymagana
+            ends_at:
+              blank: Data końcowa jest wymagana
+            position:
+              blank: Pozycja jest wymagana
         vacation_interaction:
           base:
             already_interacted: Ten urlop już został przez ciebie %{action}
@@ -343,6 +348,14 @@ pl:
           attributes:
             user_id:
               validates_uniqueness: Jest już rekord o tym samym user_id, starts_at i ends_at
+        user:
+          attributes:
+            email:
+              blank: Email jest wymagany
+            first_name:
+              blank: Imię jest wymagane
+            last_name:
+              blank: Nazwisko jest wymagane
   activemodel:
     errors:
       models:
