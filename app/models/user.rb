@@ -97,7 +97,7 @@ class User < ApplicationRecord
     last_vacation_period.nil? ? 0 - already_used_vacation_days : last_vacation_period.vacation_days - already_used_vacation_days
   end
 
-  def used_vacation_days(selected_vacations = vacations.current_year, except_planned = false)
+  def used_vacation_days(selected_vacations = vacations.current_year)
     hash = { planned: 0, requested: 0, compassionate: 0, paternity: 0, parental: 0, upbringing: 0,
              unpaid: 0, rehabilitation: 0, illness: 0, care: 0 }
     selected_vacations.accepted.find_each do |vacation|
@@ -107,6 +107,6 @@ class User < ApplicationRecord
         hash[vacation.vacation_type.to_sym] += vacation.start_date.business_days_until(vacation.end_date + 1.day)
       end
     end
-    except_planned ? hash.except(:planned) : hash
+    hash
   end
 end
