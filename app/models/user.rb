@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  PHONE_REGEX = /\A[0-9()\-+\s]*\z/.freeze
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable,
@@ -17,7 +19,9 @@ class User < ApplicationRecord
   has_many :vacation_interactions, dependent: :destroy
   has_many :vacation_periods, dependent: :destroy
   has_one :external_auth, dependent: :destroy
+
   validates :first_name, :last_name, presence: true
+  validates :phone, format: { with: PHONE_REGEX }
 
   scope :active, -> { where(active: true) }
 
