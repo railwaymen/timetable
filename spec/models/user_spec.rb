@@ -43,4 +43,13 @@ RSpec.describe User, type: :model do
     user.destroy
     expect(user.active).to be_falsey
   end
+
+  describe 'phone validation' do
+    it { is_expected.to allow_value('123456789').for(:phone) }
+    it { is_expected.to allow_value('+1 (123) 456 789').for(:phone) }
+    it { is_expected.to allow_value('123-456-789').for(:phone) }
+
+    it { is_expected.to_not allow_value('asd asd asd').for(:phone) }
+    it { is_expected.to_not allow_value('*123 456 789').for(:phone) }
+  end
 end
