@@ -5,19 +5,23 @@ import { Link } from 'react-router-dom';
 
 function ProjectStats(props) {
   function projectLabel() {
-    const data = props.stats[0];
-    if (currentUser.canManageProject({ id: data.project_id })) {
+    const { stats } = props;
+
+    if (currentUser.canManageProject({ id: stats.project_id })) {
       return (
-        <Link to={`/projects/${data.project_id}/work_times`}>
-          {data.name}
+        <Link to={`/projects/${stats.project_id}/work_times`}>
+          {stats.name}
         </Link>
       );
     }
-    return data.name;
+    return stats.name;
+  }
+
+  function renderName(first_name, last_name) {
+    return [first_name, last_name].join(' ');
   }
 
   const { stats } = props;
-  const data = stats[0];
 
   return (
     <div className="col-xs-12 col-sm-6 col-lg-4 card-container project-card">
@@ -27,17 +31,17 @@ function ProjectStats(props) {
           <div
             className="badge"
             style={{
-              backgroundColor: `#${data.color}`, width: '18px', height: '18px', display: 'block',
+              backgroundColor: `#${stats.color}`, width: '18px', height: '18px', display: 'block',
             }}
           />
         </h3>
         <p className="text-center">
-          {data.leader ? data.leader.name : ''}
+          {stats.leader_first_name ? renderName(stats.leader_first_name, stats.leader_last_name) : ''}
         </p>
         <ul>
-          { stats.map((stat) => (
-            <li className="person" key={stat.id}>
-              {stat.user.name}
+          { stats.users.map((user) => (
+            <li className="person" key={user.id}>
+              {renderName(user.first_name, user.last_name)}
             </li>
           )) }
         </ul>
@@ -47,7 +51,7 @@ function ProjectStats(props) {
 }
 
 ProjectStats.propTypes = {
-  stats: PropTypes.array.isRequired,
+  stats: PropTypes.object.isRequired,
 };
 
 export default ProjectStats;

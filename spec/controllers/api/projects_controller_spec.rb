@@ -32,19 +32,22 @@ RSpec.describe Api::ProjectsController do
 
     it 'returns projects' do
       sign_in(user)
-      project = create(:project)
+      project = create(:project, :with_leader)
       FactoryBot.create :work_time, project: project, user: user, starts_at: Time.current - 40.minutes, ends_at: Time.current - 30.minutes
       project_rate = ProjectRateQuery.new(active: true).results.first
       get :index, format: :json
+      project_user = project_rate.users.first
 
       expected_json = [
         {
           color: project_rate.color,
           name: project_rate.name,
           project_id: project_rate.project_id,
-          user: {
-            name: "#{project_rate.user_first_name} #{project_rate.user_last_name}"
-          }
+          leader_first_name: project.leader.first_name,
+          leader_last_name: project.leader.last_name,
+          users: [
+            { id: project_user.id, first_name: project_user.first_name, last_name: project_user.last_name }
+          ]
         }
       ].to_json
 
@@ -54,20 +57,23 @@ RSpec.describe Api::ProjectsController do
 
     it 'filters by active' do
       sign_in(user)
-      active_project = create(:project)
+      active_project = create(:project, :with_leader)
 
       FactoryBot.create :work_time, project: active_project, user: user, starts_at: Time.current - 40.minutes, ends_at: Time.current - 30.minutes
 
       active_project_rate = ProjectRateQuery.new(active: true).results.first
+      project_user = active_project_rate.users.first
 
       expected_active_json = [
         {
           color: active_project_rate.color,
           name: active_project_rate.name,
           project_id: active_project_rate.project_id,
-          user: {
-            name: "#{active_project_rate.user_first_name} #{active_project_rate.user_last_name}"
-          }
+          leader_first_name: active_project.leader.first_name,
+          leader_last_name: active_project.leader.last_name,
+          users: [
+            { id: project_user.id, first_name: project_user.first_name, last_name: project_user.last_name }
+          ]
         }
       ].to_json
 

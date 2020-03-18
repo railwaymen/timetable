@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
-json.array! @projects do |project|
-  json.id project.id
-  json.project_id project.project_id
-  json.name project.name
-  json.color project.color
-  json.user do
-    json.name "#{project.user_first_name} #{project.user_last_name}"
-  end
-  json.leader do
-    json.name "#{project.leader_first_name} #{project.leader_last_name}" if project.leader_first_name
-  end
+json.array! @project_stats do |project_stats|
+  json.extract! project_stats, :project_id, :name, :color, :leader_first_name, :leader_last_name
+  json.users project_stats.users, :id, :first_name, :last_name
 end

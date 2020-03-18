@@ -12,12 +12,12 @@ function Projects() {
   function getProjects() {
     Api.makeGetRequest({ url: `/api/projects?range=${range}` })
       .then((response) => {
-        setProjectsStats(_.groupBy(response.data, 'name'));
+        setProjectsStats(response.data);
       });
   }
 
   function renderGroupedRecords() {
-    return _.map(projectsStats, (value, key) => <ProjectStats stats={value} key={key} />);
+    return _.map(projectsStats, (value) => <ProjectStats stats={value} key={value.project_id} />);
   }
 
   function renderOption(value) {

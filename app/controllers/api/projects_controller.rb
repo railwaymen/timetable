@@ -8,7 +8,7 @@ module Api
 
     def index
       range = params[:range].presence_in(valid_days) || 30
-      @projects = ProjectRate.stats(starts_at: range.to_i.days)
+      @project_stats = ProjectRateQuery.new(active: true, starts_at: Time.current - range.to_i.days, ends_at: Time.current).results
 
       respond_with @projects
     end

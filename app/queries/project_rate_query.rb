@@ -3,6 +3,8 @@
 require_relative 'querable'
 
 class ProjectRateQuery
+  UserStats = Struct.new(:id, :first_name, :last_name, :total, keyword_init: true)
+  ProjectStats = Struct.new(:project_id, :name, :users, :color, :total, :leader_first_name, :leader_last_name, keyword_init: true)
   include Querable
 
   def initialize(active:, starts_at: Time.current - 30.days, ends_at: Time.current)
@@ -12,14 +14,19 @@ class ProjectRateQuery
   end
 
   def results
-    execute_sql(sanitized_sql).map(&method(:assign_to_class))
+    project_stats = []
+    execute_sql(sanitized_sql).each do |record|
+      project_stat = project_stats.find { |p| p.project_id == record['project_id'] } || project_stats.push(project_stats(record)).last
+      project_stat.users.push UserStats.new(id: record['user_id'], first_name: record['user_first_name'], last_name: record['user_last_name'], total: record['total_for_user'])
+    end
+    project_stats
+  end
+
+  def project_stats(record)
+    ProjectStats.new(record.slice('project_id', 'name', 'color', 'leader_first_name', 'leader_last_name').merge(total: record['total_for_project'], users: []))
   end
 
   private
-
-  def assign_to_class(row)
-    ProjectRate.new(row.symbolize_keys)
-  end
 
   def sanitized_sql
     sanitize_array [raw, @active, @starts_at, @ends_at]
@@ -35,6 +42,7 @@ class ProjectRateQuery
         projects.name,
         SUM(work_times.duration) OVER(PARTITION BY work_times.user_id, projects) AS total_for_user,
         SUM(work_times.duration) OVER(PARTITION BY projects) AS total_for_project,
+        users.id AS user_id,
         users.first_name AS user_first_name,
         users.last_name AS user_last_name,
         leaders.first_name AS leader_first_name,

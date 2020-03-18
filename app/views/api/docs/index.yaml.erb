@@ -95,6 +95,7 @@ paths:
                     - project_id
                     - name
                     - color
+                    - users
                   properties:
                     id:
                       type: integer
@@ -108,22 +109,30 @@ paths:
                     color:
                       type: string
                       example: 08e51a
-                    user:
-                      type: object
-                      required:
-                        - name
-                      properties:
-                        name:
-                          type: string
-                          example: John Smith
-                    leader:
-                      type: object
-                      required:
-                        - name
-                      properties:
-                        name:
-                          type: string
-                          example: John Smith
+                    leader_first_name:
+                      type: string
+                      example: John
+                    leader_last_name:
+                      type: string
+                      example: Smith
+                    users:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - id
+                          - first_name
+                          - last_name
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          first_name:
+                            type: string
+                            example: John
+                          last_name:
+                            type: string
+                            example: Smith
   /projects/simple:
     get:
       tags:
