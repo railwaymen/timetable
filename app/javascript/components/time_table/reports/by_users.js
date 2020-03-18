@@ -9,6 +9,7 @@ import * as Api from '../../shared/api';
 import Report from './report';
 import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
+import Preloader from '../../shared/preloader';
 
 class ByUsers extends Report {
   constructor(props) {
@@ -21,6 +22,7 @@ class ByUsers extends Report {
       to: moment().endOf('month').format(),
       redirectToReferer: undefined,
       list: 'self',
+      sync: false,
     };
   }
 
@@ -46,6 +48,8 @@ class ByUsers extends Report {
     const url = URI(`/api/reports/work_times/by_users?${original.query()}`)
       .addSearch(prepareParams);
 
+    this.setState({ sync: true });
+
     Api.makeGetRequest({ url })
       .then((response) => {
         const newPath = URI(window.location.href)
@@ -65,6 +69,7 @@ class ByUsers extends Report {
         }, () => {
           this.setState((prevState) => ({
             users: Object.keys(prevState.reports),
+            sync: false,
           }));
         });
       });
@@ -72,7 +77,7 @@ class ByUsers extends Report {
 
   render() {
     const {
-      users, reports, from, to, redirectToReferer, list,
+      users, reports, from, to, redirectToReferer, list, sync,
     } = this.state;
 
     if (redirectToReferer) return (<Redirect to={redirectToReferer} />);
@@ -108,6 +113,7 @@ class ByUsers extends Report {
             )}
           </div>
         </header>
+        {sync && <Preloader rowsNumber={1} />}
         <div className="row row-eq-height">
           {/* eslint-disable */}
           { users.map((user, index) => (

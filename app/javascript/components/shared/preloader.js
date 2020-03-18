@@ -7,7 +7,7 @@ function Preloader(props) {
   const { rowsNumber } = props;
 
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       {_.times(rowsNumber, (number) => (
         <div className="form-group" key={number}>
           <div className="preloader" />

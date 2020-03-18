@@ -5,14 +5,12 @@ import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import moment from 'moment';
 import * as Api from '../../shared/api';
-import { displayDayInfo, displayDuration } from '../../shared/helpers';
-import WorkTimeDuration from '../../shared/work_time_duration';
-import WorkTimeTime from '../../shared/work_time_time';
-import WorkTimeTimeDescription from '../../shared/work_time_description';
 import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
 import ReportProjectRecord from '../reports/report_project_record';
 import ReportProjectTagRecord from '../reports/report_project_tag_record';
+import ProjectWorkTimeEntry from './project_work_time_entry';
+import Preloader from '../../shared/preloader';
 
 export default class ProjectWorkTimes extends React.Component {
   constructor(props) {
@@ -31,6 +29,7 @@ export default class ProjectWorkTimes extends React.Component {
       reports: [],
       tag_reports: [],
       tags_disabled: false,
+      sync: false,
     };
 
     this.filterByUser = this.filterByUser.bind(this);
@@ -99,6 +98,7 @@ export default class ProjectWorkTimes extends React.Component {
 
   getWorkTimes({ from, to, user_id }, stateCallback = this.pushUrl) {
     const url = URI(`/api/projects/${this.state.projectId}/work_times`).addSearch({ from, to, user_id });
+    this.setState({ sync: true });
     Api.makeGetRequest({ url })
       .then((response) => {
         const {
@@ -108,7 +108,7 @@ export default class ProjectWorkTimes extends React.Component {
           moment(workTime.starts_at).format('YYYYMMDD')
         ));
         this.setState({
-          project, reports, tag_reports, tags_disabled, groupedWorkTimes, from, to, user_id,
+          project, reports, tag_reports, tags_disabled, groupedWorkTimes, from, to, user_id, sync: false,
         }, stateCallback);
       });
   }
@@ -127,7 +127,7 @@ export default class ProjectWorkTimes extends React.Component {
 
   render() {
     const {
-      groupedWorkTimes, from, to, project, reports, tag_reports, tags_disabled, user_id,
+      groupedWorkTimes, from, to, project, reports, tag_reports, tags_disabled, user_id, sync,
     } = this.state;
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
 
@@ -163,41 +163,15 @@ export default class ProjectWorkTimes extends React.Component {
           </HorizontalArrows>
         </header>
         <div className="row row-eq-height">
+          {sync && <Preloader rowsNumber={1} />}
           <div className="col-md-8">
             {dayKeys.map((dayKey) => (
-              <section key={dayKey} className="time-entries-day">
-                <header>
-                  <div className="date-container">
-                    <span className="title">{displayDayInfo(groupedWorkTimes[dayKey][0].starts_at)}</span>
-                    <span className="super">{displayDuration(_.sumBy(groupedWorkTimes[dayKey], (w) => w.duration))}</span>
-                    <div className="time-entries-list-container">
-                      <ul className="time-entries-list">
-                        {groupedWorkTimes[dayKey].map((workTime) => (
-                          <li className={`entry ${workTime.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workTime.id}`} key={workTime.id}>
-                            <div className="col-md-2 project-container">{`${workTime.user.first_name} ${workTime.user.last_name}`}</div>
-                            <div className="col-md-4 description-container" style={{ cursor: 'inherit' }}>
-                              <span className="description-text">
-                                {WorkTimeTimeDescription(workTime)}
-                              </span>
-                            </div>
-                            { workTime.tag && !tags_disabled && (
-                              <div className="col-md-2 tag-container" style={{ marginTop: '15px' }}>
-                                <input disabled className={`tags selected ${workTime.tag}`} type="button" value={workTime.tag.toUpperCase()} />
-                              </div>
-                            )}
-                            <div className="col-md-1">
-                              <WorkTimeDuration workTime={workTime} />
-                            </div>
-                            <div className="col-md-2">
-                              <WorkTimeTime workTime={workTime} />
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </header>
-              </section>
+              <ProjectWorkTimeEntry
+                key={dayKey}
+                dayKey={dayKey}
+                groupedWorkTimes={groupedWorkTimes}
+                tags_disabled={tags_disabled}
+              />
             ))}
           </div>
           <div className="col-md-4">
