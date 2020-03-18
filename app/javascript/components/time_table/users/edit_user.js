@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import useFormHandler from '@hooks/use_form_handler';
 import * as Api from '../../shared/api';
 import { unnullifyFields } from '../../shared/helpers';
 import Preloader from '../../shared/preloader';
 import translateErrors from '../../shared/translate_errors';
 import AdminFields from './admin_fields';
 import UserFields from './user_fields';
-import useFormHandler from '../../../hooks/use_form_handler';
 
 function EditUser(props) {
   const userId = parseInt(props.match.params.id, 10);

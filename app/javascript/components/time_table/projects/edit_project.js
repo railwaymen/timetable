@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import useFormHandler from '@hooks/use_form_handler';
 import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
-import useFormHandler from '../../../hooks/use_form_handler';
 
 function EditProject(props) {
   const projectId = parseInt(props.match.params.id, 10);
