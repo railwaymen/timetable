@@ -2,7 +2,8 @@
 
 class BirthdayMailerPreview < ActionMailer::Preview
   def send_birthday_email
-    username = User.first!.to_s
+    user = User.first!
+    username = [user.first_name, user.last_name].join(' ')
     email_template = BirthdayEmailTemplate.find_by(id: params[:birthday_email_template_id]) || BirthdayEmailTemplate.first!
     email_header = email_template.header.gsub(/{{username}}/, username)
     email_body = email_template.body.gsub(/{{username}}/, username)

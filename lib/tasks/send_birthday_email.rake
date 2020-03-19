@@ -11,7 +11,8 @@ namespace :tasks do
         last_used&.update(last_used: false)
         email_template = last_used.next || BirthdayEmailTemplate.first
         email_template.update(last_used: true)
-        SendBirthdayEmailWorker.perform_async(birthday_user.to_s, email_template.id)
+        username = [birthday_user.first_name, birthday_user.last_name].join(' ')
+        SendBirthdayEmailWorker.perform_async(username, email_template.id)
         last_used = email_template
       end
     end
