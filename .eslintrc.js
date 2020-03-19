@@ -49,5 +49,17 @@ module.exports = {
   globals: {
     I18n: 'readonly',
     currentUser: 'readonly',
+  },
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [
+          ['@', './app/javascript'],
+          ['@components', './app/javascript/components'],
+          ['@hooks', './app/javascript/hooks'],
+          ['@models', './app/javascript/models'],
+        ]
+      }
+    }
   }
 };
