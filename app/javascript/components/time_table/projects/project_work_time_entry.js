@@ -7,7 +7,7 @@ import WorkTimeTime from '../../shared/work_time_time';
 import WorkTimeTimeDescription from '../../shared/work_time_description';
 
 function ProjectWorkTimeEntry(props) {
-  const { dayKey, groupedWorkTimes, tags_disabled } = props;
+  const { dayKey, groupedWorkTimes } = props;
 
   return (
     <section className="time-entries-day">
@@ -31,7 +31,7 @@ function ProjectWorkTimeEntry(props) {
                       {WorkTimeTimeDescription(workTime)}
                     </span>
                   </div>
-                  {workTime.tag && !tags_disabled && (
+                  {workTime.tag && (
                     <div className="col-md-2 tag-container" style={{ marginTop: '15px' }}>
                       <input
                         disabled
@@ -60,7 +60,6 @@ function ProjectWorkTimeEntry(props) {
 ProjectWorkTimeEntry.propTypes = {
   dayKey: PropTypes.string,
   groupedWorkTimes: PropTypes.object,
-  tags_disabled: PropTypes.bool,
 };
 
 export default ProjectWorkTimeEntry;

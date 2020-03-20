@@ -17,12 +17,12 @@ class Timesheet extends React.Component {
     this.state = {
       projects: [],
       tags: [],
-      tags_disabled: false,
     };
   }
 
   componentDidMount() {
     this.getProjects();
+    this.getTags();
   }
 
   pushEntry(object) {
@@ -37,9 +37,16 @@ class Timesheet extends React.Component {
     Api.makeGetRequest({ url: '/api/projects/simple' })
       .then((response) => {
         this.setState({
-          projects: response.data.projects,
-          tags: response.data.tags,
-          tags_disabled: response.data.tags_disabled,
+          projects: response.data,
+        });
+      });
+  }
+
+  getTags() {
+    Api.makeGetRequest({ url: '/api/projects/tags' })
+      .then((response) => {
+        this.setState({
+          tags: response.data,
         });
       });
   }
@@ -49,7 +56,7 @@ class Timesheet extends React.Component {
   }
 
   render() {
-    const { projects, tags_disabled, tags } = this.state;
+    const { projects, tags } = this.state;
 
     if (projects.length > 0) {
       return (
@@ -57,13 +64,12 @@ class Timesheet extends React.Component {
           <Helmet>
             <title>{I18n.t('common.timesheet')}</title>
           </Helmet>
-          <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projects} tags={tags} tags_disabled={tags_disabled} />
+          <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projects} tags={tags} />
           <EntryHistory
             ref={(entryHistory) => { this.entryHistory = entryHistory; }}
             onCopy={this.onCopy}
             projects={projects}
             setLastProject={this.setLastProject}
-            tags_disabled={tags_disabled}
             tags={tags}
           />
         </div>

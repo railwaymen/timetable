@@ -46,6 +46,7 @@ Rails.application.routes.draw do
       end
       get :list, on: :collection
       get :simple, on: :collection
+      get :tags, on: :collection
       get :work_times, on: :member
     end
     resources :external_auths, only: %i[new create destroy]

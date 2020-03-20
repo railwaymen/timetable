@@ -22,11 +22,11 @@ class ProjectRateQuery
     project_stats
   end
 
+  private
+
   def project_stats(record)
     ProjectStats.new(record.slice('project_id', 'name', 'color', 'leader_first_name', 'leader_last_name').merge(total: record['total_for_project'], users: []))
   end
-
-  private
 
   def sanitized_sql
     sanitize_array [raw, @active, @starts_at, @ends_at]

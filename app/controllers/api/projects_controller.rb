@@ -8,7 +8,7 @@ module Api
 
     def index
       range = params[:range].presence_in(valid_days) || 30
-      @project_stats = ProjectRateQuery.new(active: true, starts_at: Time.current - range.to_i.days, ends_at: Time.current).results
+      @project_stats = ProjectRateQuery.new(active: true, starts_at: range.to_i.days.ago, ends_at: Time.current).results
 
       respond_with @projects
     end
@@ -21,8 +21,12 @@ module Api
     def simple
       @projects = Project.order(:internal, :name)
       @projects = @projects.where("name != 'Vacation' AND name != 'ZKS'") unless current_user.admin?
-      @tags = WorkTime.tags
       respond_with @projects
+    end
+
+    def tags
+      @tags = WorkTime.tags
+      respond_with @tags
     end
 
     def show

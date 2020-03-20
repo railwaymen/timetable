@@ -12,14 +12,6 @@ RSpec.describe Api::ProjectsController do
   let(:project_name) { SecureRandom.hex }
   let(:tags_list) { WorkTime.tags.keys }
 
-  def prepare_expected_json(projects_json)
-    {
-      projects: projects_json,
-      tags: tags_list,
-      tags_disabled: false
-    }.to_json
-  end
-
   def full_project_response(project)
     project.attributes.slice('id', 'name', 'work_times_allows_task', 'external_integration_enabled', 'color', 'active', 'leader_id')
   end
@@ -232,11 +224,7 @@ RSpec.describe Api::ProjectsController do
       project = create(:project)
       get :simple, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql(
-        prepare_expected_json(
-          [project_response(project)]
-        )
-      )
+      expect(response.body).to be_json_eql([project_response(project)].to_json)
     end
   end
 

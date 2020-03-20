@@ -140,64 +140,64 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - projects
-                  - tags
-                  - tags_disabled
-                properties:
-                  projects:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - id
-                        - name
-                        - internal
-                        - active
-                        - work_times_allows_task
-                        - color
-                        - lunch
-                        - autofill
-                        - count_duration
-                        - taggable
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        name:
-                          type: string
-                          example: Project 1
-                        internal:
-                          type: boolean
-                          example: false
-                        active:
-                          type: boolean
-                          example: true
-                        work_times_allows_task:
-                          type: boolean
-                          example: true
-                        color:
-                          type: string
-                          example: 0c0c0c
-                        lunch:
-                          type: boolean
-                          example: false
-                        autofill:
-                          type: boolean
-                          example: false
-                        count_duration:
-                          type: boolean
-                          example: false
-                        taggable:
-                          type: boolean
-                          example: false
-                  tags:
-                    type: array
-                    example: ["dev", "im", "cc", "res"]
-                  tags_disabled:
-                    type: boolean
-                    example: false
+                type: array
+                items:
+                  type: object
+                  required:
+                    - id
+                    - name
+                    - internal
+                    - active
+                    - work_times_allows_task
+                    - color
+                    - lunch
+                    - autofill
+                    - count_duration
+                    - taggable
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: Project 1
+                    internal:
+                      type: boolean
+                      example: false
+                    active:
+                      type: boolean
+                      example: true
+                    work_times_allows_task:
+                      type: boolean
+                      example: true
+                    color:
+                      type: string
+                      example: 0c0c0c
+                    lunch:
+                      type: boolean
+                      example: false
+                    autofill:
+                      type: boolean
+                      example: false
+                    count_duration:
+                      type: boolean
+                      example: false
+                    taggable:
+                      type: boolean
+                      example: false
+  /tags:
+    get:
+      tags:
+        - Projects
+      security:
+        - authentication: []
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                example: ["dev", "im", "cc", "res"]
   /work_times:
     get:
       tags:

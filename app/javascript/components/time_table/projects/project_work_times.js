@@ -28,7 +28,6 @@ export default class ProjectWorkTimes extends React.Component {
       groupedWorkTimes: {},
       reports: [],
       tag_reports: [],
-      tags_disabled: false,
       sync: false,
     };
 
@@ -102,13 +101,13 @@ export default class ProjectWorkTimes extends React.Component {
     Api.makeGetRequest({ url })
       .then((response) => {
         const {
-          project, work_times, reports, tag_reports, tags_disabled,
+          project, work_times, reports, tag_reports,
         } = response.data;
         const groupedWorkTimes = _.groupBy(work_times, (workTime) => (
           moment(workTime.starts_at).format('YYYYMMDD')
         ));
         this.setState({
-          project, reports, tag_reports, tags_disabled, groupedWorkTimes, from, to, user_id, sync: false,
+          project, reports, tag_reports, groupedWorkTimes, from, to, user_id, sync: false,
         }, stateCallback);
       });
   }
@@ -127,7 +126,7 @@ export default class ProjectWorkTimes extends React.Component {
 
   render() {
     const {
-      groupedWorkTimes, from, to, project, reports, tag_reports, tags_disabled, user_id, sync,
+      groupedWorkTimes, from, to, project, reports, tag_reports, user_id, sync,
     } = this.state;
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
 
@@ -170,13 +169,12 @@ export default class ProjectWorkTimes extends React.Component {
                 key={dayKey}
                 dayKey={dayKey}
                 groupedWorkTimes={groupedWorkTimes}
-                tags_disabled={tags_disabled}
               />
             ))}
           </div>
           <div className="col-md-4">
             <div className="sticky-record">
-              { !tags_disabled && tag_reports.length > 0 && (
+              { tag_reports.length > 0 && (
                 <div className="row">
                   <ReportProjectTagRecord reportRows={tag_reports} />
                 </div>

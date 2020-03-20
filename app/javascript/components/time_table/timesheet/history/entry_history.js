@@ -278,7 +278,6 @@ class EntryHistory extends React.Component {
             pushEntry={this.pushEntry}
             projects={this.props.projects}
             tags={this.props.tags}
-            tags_disabled={this.props.tags_disabled}
             updateWorkHours={this.updateWorkHours}
             assignModalInfo={this.assignModalInfo}
           />

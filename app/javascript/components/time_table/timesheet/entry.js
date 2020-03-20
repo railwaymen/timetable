@@ -373,7 +373,7 @@ class Entry extends React.Component {
                 />
               </div>
             </div>
-            { !this.props.tags_disabled && project.taggable && (
+            { project.taggable && (
               <div className="tag-container">
                 {errors.tag && <ErrorTooltip errors={errors.tag} />}
                 <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />

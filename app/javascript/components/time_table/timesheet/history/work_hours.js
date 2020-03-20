@@ -184,8 +184,6 @@ class WorkHours extends React.Component {
   }
 
   onTagChange(tag) {
-    if (this.props.tags_disabled) return;
-
     this.setState((prevState) => ({
       workHours: {
         ...prevState.workHours,
@@ -417,7 +415,6 @@ class WorkHours extends React.Component {
   }
 
   render() {
-    const { tags_disabled } = this.props;
     const {
       workHours, projectEditable, editing, errors, tagEditable, filter,
     } = this.state;
@@ -462,7 +459,7 @@ class WorkHours extends React.Component {
                   )}
                 </div>
               </div>
-              { !tags_disabled && workHours.project.taggable && (
+              { workHours.project.taggable && (
               <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>
                 { tagEditable && this.renderTagEditable() }
               </WorkTimeTag>
