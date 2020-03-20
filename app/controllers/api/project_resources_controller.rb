@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 module Api
-  class ResourcesController < Api::BaseController
+  class ProjectResourcesController < Api::BaseController
     before_action :authenticate_admin_or_manager_or_leader!
     respond_to :json
 
     def index
       if params[:selected_users].present?
         selected_users = params[:selected_users].split(',')
-        @resources = Resource.where('user_id IN (?) OR group_only = ?', selected_users, true)
+        @resources = ProjectResource.where('user_id IN (?) OR group_only = ?', selected_users, true)
       else
-        @resources = Resource.all
+        @resources = ProjectResource.all
       end
       respond_with @resources
     end
@@ -21,7 +21,7 @@ module Api
     end
 
     def destroy
-      @resource = Resource.find_by(rid: params[:id])
+      @resource = ProjectResource.find_by(rid: params[:id])
       @resource.destroy
       respond_with @resource
     end
@@ -34,7 +34,7 @@ module Api
 
     def generate_rid_and_parent_id(name, parent_id)
       if parent_id.present?
-        parent_resource = Resource.find(parent_id)
+        parent_resource = ProjectResource.find(parent_id)
         rid = "#{parent_resource.rid}-#{name}"
         parent_rid = parent_resource.rid
       else

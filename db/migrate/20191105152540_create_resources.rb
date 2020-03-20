@@ -1,5 +1,8 @@
 class CreateResources < ActiveRecord::Migration[5.1]
   def up
+    class Resource < ApplicationRecord
+    end
+
     create_table :resources do |t|
       t.belongs_to :user, foreign_key: true
       t.integer :resource_id, foreign_key: true

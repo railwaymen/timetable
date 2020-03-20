@@ -68,10 +68,10 @@ class ProjectsDistribution extends React.Component {
 
   getData(schedulerData) {
     const resources_promise = Api.makeGetRequest({
-      url: '/api/resources',
+      url: '/api/project_resources',
     });
     const events_promise = Api.makeGetRequest({
-      url: '/api/events/find_by_slot',
+      url: '/api/project_resource_assignments/find_by_slot',
     });
     const users_promise = Api.makeGetRequest({
       url: '/api/users?filter=active',
@@ -149,9 +149,9 @@ class ProjectsDistribution extends React.Component {
     const { expandedResources, selectedProjects, selectedUsers } = this.state;
     const selectedUsersIds = selectedUsers.map(u => u.id);
     const resources_promise = Api.makeGetRequest({
-      url: `/api/resources?selected_users=${selectedUsersIds}`,
+      url: `/api/project_resources?selected_users=${selectedUsersIds}`,
     });
-    let url = `/api/events/find_by_slot?expanded_resources=${expandedResources}`;
+    let url = `/api/project_resource_assignments/find_by_slot?expanded_resources=${expandedResources}`;
     url += `&selected_projects=${selectedProjects}`;
     url += `&selected_users=${selectedUsersIds}`
     const events_promise = Api.makeGetRequest({
@@ -216,7 +216,7 @@ class ProjectsDistribution extends React.Component {
 
   updateEvent(event, params) {
     const promise = Api.makePutRequest({
-      url: `/api/events/${event.id}`,
+      url: `/api/project_resource_assignments/${event.id}`,
       body: params,
     });
     return promise;
@@ -235,7 +235,7 @@ class ProjectsDistribution extends React.Component {
     const schedulerData = this.state.viewModel;
     const { expandedResources, selectedUsers } = this.state;
     const selectedUsersIds =  selectedUsers.map(u => u.id);
-    let url = `/api/events/find_by_slot?expanded_resources=${expandedResources}`;
+    let url = `/api/project_resource_assignments/find_by_slot?expanded_resources=${expandedResources}`;
     url += `&selected_projects=${selectedProjects}`;
     url += `&selected_users=${selectedUsersIds}`;
     Api.makeGetRequest({
@@ -255,9 +255,9 @@ class ProjectsDistribution extends React.Component {
     const { expandedResources, selectedProjects, viewModel } = this.state;
     const selectedUsersIds = selectedUsers.map(u => u.id);
     const resources_promise = Api.makeGetRequest({
-      url: `/api/resources?selected_users=${selectedUsersIds}`,
+      url: `/api/project_resources?selected_users=${selectedUsersIds}`,
     });
-    let url = `/api/events/find_by_slot?expanded_resources=${expandedResources}`;
+    let url = `/api/project_resource_assignments/find_by_slot?expanded_resources=${expandedResources}`;
     url += `&selected_projects=${selectedProjects}`;
     url += `&selected_users=${selectedUsersIds}`;
     const events_promise = Api.makeGetRequest({
@@ -371,7 +371,7 @@ class ProjectsDistribution extends React.Component {
     const schedulerData = this.state.viewModel;
     Loader.showLoader();
     Api.makeDeleteRequest({
-      url: `/api/events/${event.id}`,
+      url: `/api/project_resource_assignments/${event.id}`,
     }).then(() => {
       schedulerData.removeEventById(event.id);
       this.foldResources(schedulerData)
@@ -453,7 +453,7 @@ class ProjectsDistribution extends React.Component {
     if ($(`td[data-resource-id='${slotId}']`).find('i.anticon.anticon-plus-square').length) {
       const newExpandedResources = expandedResources.concat(slotId)
       Api.makeGetRequest({
-        url: `/api/events/find_by_slot?expanded_resources=${newExpandedResources}&selected_projects=${selectedProjects}`,
+        url: `/api/project_resource_assignments/find_by_slot?expanded_resources=${newExpandedResources}&selected_projects=${selectedProjects}`,
       }).then((response) => {
         schedulerData.setEvents(response.data)
         this.foldResources(schedulerData, { expandedResources: newExpandedResources })
