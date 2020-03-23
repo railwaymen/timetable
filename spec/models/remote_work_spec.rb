@@ -44,5 +44,17 @@ RSpec.describe RemoteWork, type: :model do
         expect(remote_work).to_not be_valid
       end
     end
+
+    context 'validates_time' do
+      it 'user context' do
+        remote_work = create(:remote_work, starts_at: 4.business_days.ago)
+        expect(remote_work.valid?(:user)).to eql(false)
+      end
+
+      it 'without context' do
+        remote_work = create(:remote_work, starts_at: 4.business_days.ago)
+        expect(remote_work.valid?).to eql(true)
+      end
+    end
   end
 end
