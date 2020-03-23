@@ -280,6 +280,7 @@ en:
     title: Title
     user: User
     projects_distribution: Projects distribution
+    remote_work: Remote Work
   activerecord:
     errors:
       models:

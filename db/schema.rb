@@ -152,7 +152,7 @@ ActiveRecord::Schema.define(version: 2020_03_26_130110) do
     t.datetime "starts_at", null: false
     t.datetime "ends_at", null: false
     t.integer "duration", default: 0, null: false
-    t.text "body"
+    t.text "note"
     t.boolean "active", default: true, null: false
     t.boolean "updated_by_admin", default: false, null: false
     t.datetime "created_at", precision: 6, null: false

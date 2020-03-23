@@ -25,6 +25,7 @@ import EditVacationPeriod from './time_table/vacation_periods/edit_vacation_peri
 import BirthdayTemplates from './time_table/birthday_templates/birthday_templates';
 import EditBirthdayTemplate from './time_table/birthday_templates/edit_birthday_template';
 import ProjectsDistribution from './time_table/projects_distribution/projects_distribution';
+import RemoteWork from './time_table/remote_work/remote_work';
 
 class TimeTable extends React.Component {
   constructor(props) {
@@ -62,6 +63,7 @@ class TimeTable extends React.Component {
             <Route path="/vacation_periods/edit/:id" component={EditVacationPeriod} />
             <Route path="/timesheet" component={Timesheet} />
             <Route path="/vacations" exact component={Vacations} />
+            <Route path="/remote_work" exact component={RemoteWork} />
             <Route path="/birthday_templates" exact component={BirthdayTemplates} />
             <Route path="/birthday_templates/new" component={EditBirthdayTemplate} />
             <Route path="/birthday_templates/edit/:id" component={EditBirthdayTemplate} />

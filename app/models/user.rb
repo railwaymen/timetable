@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :vacations, dependent: :destroy
   has_many :vacation_interactions, dependent: :destroy
   has_many :vacation_periods, dependent: :destroy
+  has_many :remote_works, dependent: :destroy
   has_one :external_auth, dependent: :destroy
   has_many :project_resources, dependent: :destroy
   has_many :project_resource_assignments, dependent: :destroy

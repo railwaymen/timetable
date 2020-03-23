@@ -279,6 +279,7 @@ pl:
     title: Tytuł
     user: Użytkownik
     projects_distribution: Obłożenie projektów
+    remote_work: Praca zdalna
   errors:
     format: "%{attribute} %{message}"
     messages:

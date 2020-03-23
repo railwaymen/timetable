@@ -6,7 +6,7 @@ class CreateRemoteWorks < ActiveRecord::Migration[6.0]
       t.datetime :starts_at, null: false
       t.datetime :ends_at, null: false
       t.integer :duration, default: 0, null: false
-      t.text :body
+      t.text :note
       t.boolean :active, default: true, null: false
       t.boolean :updated_by_admin, default: false, null: false
 
