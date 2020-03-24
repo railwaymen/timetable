@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -14,8 +15,12 @@ class Dropdown extends React.Component {
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onBlur = this.onBlur.bind(this);
-
     this.searchRef = React.createRef();
+    this.state = {
+      isExpanded: false,
+      filter: '',
+      filteredObjects: this.filterObjects(''),
+    };
   }
 
   componentDidMount() {
@@ -24,18 +29,6 @@ class Dropdown extends React.Component {
     });
   }
 
-  static propTypes = {
-    objects: PropTypes.array,
-    selectedObject: PropTypes.object,
-    isExpanded: PropTypes.bool,
-    filter: PropTypes.string,
-  }
-
-  state = {
-    isExpanded: false,
-    filter: '',
-    filteredObjects: this.filterObjects(''),
-  }
 
   onFilterChange(e) {
     this.setState({
@@ -48,7 +41,7 @@ class Dropdown extends React.Component {
     const { filteredObjects } = this.state;
     if (e.key === 'Enter' && filteredObjects.length > 0) {
       const objects = this.filterObjects();
-      const selectedObject = _.find(objects, p => (
+      const selectedObject = _.find(objects, (p) => (
         p.id === filteredObjects[0]
       )) || objects[0];
 
@@ -82,7 +75,7 @@ class Dropdown extends React.Component {
 
     if (objectId !== this.props.selectedObject) {
       const objects = this.filterObjects('');
-      const selectedObject = _.find(objects, p => (
+      const selectedObject = _.find(objects, (p) => (
         p.id === objectId
       )) || objects[0];
 
@@ -94,7 +87,12 @@ class Dropdown extends React.Component {
   renderDropdownList() {
     return (
       <div style={{ marginTop: '15px' }}>
-        <DropdownList objects={this.state.filteredObjects} currentObject={this.props.selectedObject} onChangeObject={this.onChangeObject} renderObjectsList={this.props.renderObjectsList} />
+        <DropdownList
+          objects={this.state.filteredObjects}
+          currentObject={this.props.selectedObject}
+          onChangeObject={this.onChangeObject}
+          renderObjectsList={this.props.renderObjectsList}
+        />
       </div>
     );
   }
@@ -106,7 +104,19 @@ class Dropdown extends React.Component {
     return (
       <div className="dropdown fluid search ui" style={{ minWidth: '90px' }}>
         <input type="hidden" name="object" value="12" />
-        <input placeholder={this.props.placeholder} onFocus={this.expandDropdown} ref={this.searchRef} className="form-control input-search" name="filter" value={filter} autoComplete="off" tabIndex="0" onChange={this.onFilterChange} id="search-input" onKeyPress={this.onKeyPress} />
+        <input
+          placeholder={this.props.placeholder}
+          onFocus={this.expandDropdown}
+          ref={this.searchRef}
+          className="form-control input-search"
+          name="filter"
+          value={filter}
+          autoComplete="off"
+          tabIndex="0"
+          onChange={this.onFilterChange}
+          id="search-input"
+          onKeyPress={this.onKeyPress}
+        />
         <div className={`text active ${(isExpanded ? 'hidden' : '')}`} onClick={this.expandDropdown}>
           {this.props.renderSelectedObject(selectedObject)}
         </div>
@@ -115,5 +125,12 @@ class Dropdown extends React.Component {
     );
   }
 }
+
+Dropdown.propTypes = {
+  objects: PropTypes.array,
+  selectedObject: PropTypes.object,
+  isExpanded: PropTypes.bool,
+  filter: PropTypes.string,
+};
 
 export default Dropdown;

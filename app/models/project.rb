@@ -6,12 +6,12 @@ class Project < ApplicationRecord
   has_many :users, through: :work_times
   has_many :project_reports, dependent: :nullify
   has_one :external_auth, dependent: :destroy
-  has_many :events, dependent: :destroy
+  has_many :assignments, class_name: 'ProjectResourceAssignment', dependent: :destroy
   belongs_to :leader, class_name: 'User'
-  
+
   validates :name, presence: true
   validates :name, uniqueness: true
-  
+
   after_save :change_events_color_and_name, if: proc { |project| project.saved_change_to_color? || project.saved_change_to_name? }
 
   scope :active, -> { where(active: true) }
@@ -42,6 +42,6 @@ class Project < ApplicationRecord
   end
 
   def change_events_color_and_name
-    events.update(color: "##{color}", title: name) if events.any?
+    assignments.update_all(color: "##{color}", title: name) if assignments.any?
   end
 end

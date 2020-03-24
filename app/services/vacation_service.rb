@@ -22,10 +22,7 @@ class VacationService
   end
 
   def decline
-    ids = @vacation_work_times.pluck(:id)
-
     decline_transaction
-
     response
   end
 
@@ -38,7 +35,7 @@ class VacationService
     increase_work_times if @vacation.status == 'accepted' && previous_status == 'declined'
     decrease_work_times(ids) if ids.any? && previous_status == 'accepted' && @vacation.status != 'accepted'
 
-    @vacation.events.destroy_all if @vacation.events.any? && @previous_status == 'accepted' && !@vacation.accepted?
+    @vacation.assignments.destroy_all if @vacation.assignments.any? && @previous_status == 'accepted' && !@vacation.accepted?
     response
   end
 
@@ -75,14 +72,14 @@ class VacationService
 
   def create_vacation_event
     vacation_user = User.find(@vacation.user_id)
-    user_resources_ids = vacation_user.resources.pluck(:id, :rid)
+    user_resources_ids = vacation_user.project_resources.pluck(:id, :rid)
     vacation_project = Project.find_by(name: 'Vacation')
     starts_at = @vacation.start_date.beginning_of_day
     ends_at = @vacation.end_date.end_of_day
     user_resources_ids.each do |id, rid|
-      Event.create(user_id: vacation_user.id, project_id: vacation_project.id, resource_id: id, resource_rid: rid, vacation_id: @vacation.id,
-                   starts_at: starts_at, ends_at: ends_at, title: vacation_project.name, color: "##{vacation_project.color}", type: 2,
-                   resizable: false, movable: false)
+      ProjectResourceAssignment.create(user_id: vacation_user.id, project_id: vacation_project.id, project_resource_id: id, resource_rid: rid, vacation_id: @vacation.id,
+                                       starts_at: starts_at, ends_at: ends_at, title: vacation_project.name, color: "##{vacation_project.color}", type: 2,
+                                       resizable: false, movable: false)
     end
   end
 
@@ -110,12 +107,12 @@ class VacationService
   def deactivate_vacation_work_times
     @vacation.work_times.active.find_each { |wt| wt.update(active: false) }
   end
-  
+
   def decline_transaction
     ActiveRecord::Base.transaction do
       @vacation.update!(status: :declined)
       deactivate_vacation_work_times if @vacation.work_times.any?
-      @vacation.events.destroy_all if @vacation.events.any?
+      @vacation.assignments.destroy_all if @vacation.assignments.any?
       @vacation_interaction = create_vacation_interaction(:declined)
       remove_previous_interaction(%w[approved accepted])
 

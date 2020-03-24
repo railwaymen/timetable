@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-json.partial! 'resource', collection: @resources, as: :resource
+json.partial! 'project_resource', collection: @project_resources, as: :project_resource

@@ -15,14 +15,13 @@ class Event extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.onDateClick = this.onDateClick.bind(this);
-  }
-
-  state = {
-    selectedProject: undefined,
-    startsAt: undefined,
-    endsAt: undefined,
-    editStartsAt: false,
-    editEndsAt: false,
+    this.state = {
+      selectedProject: undefined,
+      startsAt: undefined,
+      endsAt: undefined,
+      editStartsAt: false,
+      editEndsAt: false,
+    };
   }
 
   updateAddModal(startsAt, endsAt) {
@@ -37,7 +36,7 @@ class Event extends React.Component {
   updateEditModal(event) {
     const { projects } = this.props;
     this.setState({
-      selectedProject: projects.filter(p => p.id === event.projectId)[0],
+      selectedProject: projects.filter((p) => p.id === event.projectId)[0],
       startsAt: event.start,
       endsAt: event.end,
     });
@@ -51,7 +50,7 @@ class Event extends React.Component {
 
   filterProjects = (filter) => {
     const lowerFilter = filter.toLowerCase();
-    return _.filter(this.props.projects, p => (
+    return _.filter(this.props.projects, (p) => (
       p.active && p.name.toLowerCase().match(lowerFilter)
     ));
   }
@@ -85,31 +84,29 @@ class Event extends React.Component {
     } = this.state;
 
     const params = {
-      event: {
-        project_id: selectedProject.id,
-        starts_at: startsAt,
-        ends_at: endsAt,
-        resource_rid: this.props.slotId,
-        title: selectedProject.name,
-        color: `#${selectedProject.color}`,
-      },
+      project_id: selectedProject.id,
+      starts_at: startsAt,
+      ends_at: endsAt,
+      resource_rid: this.props.slotId,
+      title: selectedProject.name,
+      color: `#${selectedProject.color}`,
     };
     if (this.props.eventInstance) {
       Api.makePutRequest({
-        url: `/api/events/${this.props.eventInstance.id}`,
+        url: `/api/project_resource_assignments/${this.props.eventInstance.id}`,
         body: params,
       }).then((response) => {
         this.props.showUpdatedEvent(response.data);
-      }).catch(() => { 
+      }).catch(() => {
         Loader.hideLoader();
       });
     } else {
       Api.makePostRequest({
-        url: '/api/events',
+        url: '/api/project_resource_assignments',
         body: params,
       }).then((response) => {
         this.props.addEvent(response.data);
-      }).catch(() => { 
+      }).catch(() => {
         Loader.hideLoader();
       });
     }
@@ -149,7 +146,14 @@ class Event extends React.Component {
   renderEditableDate(dateName) {
     const date = this.state[dateName];
     return (
-      <DatePicker {...defaultDatePickerProps} className="form-control" selected={moment(date, 'YYYY/MM/DD')} value={moment(date, 'YYYY/MM/DD').format('DD/MM/YYYY')} onChange={e => this.onDateChange(dateName, e)} onSelect={e => this.onDateChange(dateName, e)} />
+      <DatePicker
+        {...defaultDatePickerProps}
+        className="form-control"
+        selected={moment(date, 'YYYY/MM/DD')}
+        value={moment(date, 'YYYY/MM/DD').format('DD/MM/YYYY')}
+        onChange={(e) => this.onDateChange(dateName, e)}
+        onSelect={(e) => this.onDateChange(dateName, e)}
+      />
     );
   }
 
@@ -171,7 +175,14 @@ class Event extends React.Component {
                 <div className="project-field field">
                   <label>{I18n.t('apps.projects.project')}</label>
                   {selectedProject ? (
-                    <Dropdown objects={projects} updateObject={this.updateProject} selectedObject={selectedProject} filterObjects={this.filterProjects} renderSelectedObject={this.renderSelectedProject} renderObjectsList={this.renderProjectsList} />
+                    <Dropdown
+                      objects={projects}
+                      updateObject={this.updateProject}
+                      selectedObject={selectedProject}
+                      filterObjects={this.filterProjects}
+                      renderSelectedObject={this.renderSelectedProject}
+                      renderObjectsList={this.renderProjectsList}
+                    />
                   ) : null }
                 </div>
               </div>

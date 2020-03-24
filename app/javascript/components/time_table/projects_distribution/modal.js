@@ -7,10 +7,9 @@ class Modal extends React.Component {
     super(props);
 
     this.showAddResource = this.showAddResource.bind(this);
-  }
-
-  state = {
-    modal: undefined,
+    this.state = {
+      modal: undefined,
+    };
   }
 
   showAddResource() {
@@ -43,13 +42,30 @@ class Modal extends React.Component {
 
   renderAddResource() {
     return (
-      <AddResource ref={(addResource) => { this.addResource = addResource; }} users={this.props.users} resources={this.props.resources} updateResourcesAndEvents={this.props.updateResourcesAndEvents} />
+      <AddResource
+        ref={(addResource) => { this.addResource = addResource; }}
+        users={this.props.users}
+        resources={this.props.resources}
+        updateResourcesAndEvents={this.props.updateResourcesAndEvents}
+      />
     );
   }
 
   renderEvent(slotId, slotName, start, end, eventInstance = null) {
     return (
-      <Event ref={(event) => { this.event = event; }} projects={this.props.projects} updateResourcesAndEvents={this.props.updateResourcesAndEvents} slotId={slotId} slotName={slotName} start={start} end={end} eventInstance={eventInstance} addEvent={this.props.addEvent} showUpdatedEvent={this.props.showUpdatedEvent} destroyEvent={this.props.destroyEvent} />
+      <Event
+        ref={(event) => { this.event = event; }}
+        projects={this.props.projects}
+        updateResourcesAndEvents={this.props.updateResourcesAndEvents}
+        slotId={slotId}
+        slotName={slotName}
+        start={start}
+        end={end}
+        eventInstance={eventInstance}
+        addEvent={this.props.addEvent}
+        showUpdatedEvent={this.props.showUpdatedEvent}
+        destroyEvent={this.props.destroyEvent}
+      />
     );
   }
 

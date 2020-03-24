@@ -14,13 +14,12 @@ class AddResource extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onNameChange = this.onNameChange.bind(this);
     this.filterUsers = this.filterUsers.bind(this);
-  }
-
-  state = {
-    selectedUser: undefined,
-    selectedResourceGroup: undefined,
-    groupOnly: false,
-    name: '',
+    this.state = {
+      selectedUser: undefined,
+      selectedResourceGroup: undefined,
+      groupOnly: false,
+      name: '',
+    };
   }
 
   updateUser(selectedUser) {
@@ -40,8 +39,8 @@ class AddResource extends React.Component {
 
   generateResourceGroups() {
     const options = [];
-    _.filter(this.props.resources, r => (r.groupOnly))
-      .map(resourceGroup => (options.push(
+    _.filter(this.props.resources, (r) => (r.groupOnly))
+      .map((resourceGroup) => (options.push(
         <option value={resourceGroup.realId} key={resourceGroup.id}>
           {resourceGroup.name}
         </option>,
@@ -56,9 +55,7 @@ class AddResource extends React.Component {
   }
 
   onCheckboxChange() {
-    this.setState({
-      groupOnly: !this.state.groupOnly,
-    });
+    this.setState((prevState) => ({ groupOnly: !prevState.groupOnly }));
   }
 
   onNameChange(e) {
@@ -82,7 +79,7 @@ class AddResource extends React.Component {
     if (groupOnly) { delete params.resource.user_id; }
     Loader.showLoader();
     Api.makePostRequest({
-      url: '/api/resources',
+      url: '/api/project_resources',
       body: params,
     }).then(() => {
       this.props.updateResourcesAndEvents();
@@ -104,7 +101,7 @@ class AddResource extends React.Component {
 
   filterUsers = (filter) => {
     const lowerFilter = filter.toLowerCase();
-    return _.filter(this.props.users, p => (
+    return _.filter(this.props.users, (p) => (
       p.active && (`${p.first_name} ${p.last_name}`.toLowerCase().match(lowerFilter) || `${p.last_name} ${p.first_name}`.toLowerCase().match(lowerFilter))
     ));
   }
@@ -155,7 +152,14 @@ class AddResource extends React.Component {
                 <div className="users-field field">
                   <label>{I18n.t('common.user')}</label>
                   { selectedUser ? (
-                    <Dropdown objects={this.props.users} updateObject={this.updateUser} selectedObject={selectedUser} filterObjects={this.filterUsers} renderSelectedObject={this.renderSelectedUser} renderObjectsList={this.renderUsersList} />
+                    <Dropdown
+                      objects={this.props.users}
+                      updateObject={this.updateUser}
+                      selectedObject={selectedUser}
+                      filterObjects={this.filterUsers}
+                      renderSelectedObject={this.renderSelectedUser}
+                      renderObjectsList={this.renderUsersList}
+                    />
                   ) : null }
                 </div>
               )}

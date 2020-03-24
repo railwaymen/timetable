@@ -1,21 +1,20 @@
 import React from 'react';
-import * as Api from './../../shared/api';
+import * as Api from '../../shared/api';
 
 class ResourceTooltip extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.toggleTooltip = this.toggleTooltip.bind(this);
     this.onDocumentBodyClick = this.onDocumentBodyClick.bind(this);
     this.deleteResource = this.deleteResource.bind(this);
-  }
-
-  state = {
-    show: true,
+    this.state = {
+      show: true,
+    };
   }
 
   componentDidMount() {
-    $(document.body).on('click.tooltip', this.onDocumentBodyClick)
+    $(document.body).on('click.tooltip', this.onDocumentBodyClick);
   }
 
   toggleTooltip() {
@@ -29,7 +28,7 @@ class ResourceTooltip extends React.Component {
       this.setState({
         show: true,
       });
-      $(document.body).on('click.tooltip', this.onDocumentBodyClick)
+      $(document.body).on('click.tooltip', this.onDocumentBodyClick);
     }
   }
 
@@ -41,17 +40,18 @@ class ResourceTooltip extends React.Component {
   }
 
   onDocumentBodyClick(e) {
-    if ($(e.target).closest(`.resource-tooltip#${this.props.slotId}`).length === 0 && $(e.target).closest('.slot-text').find(`.resource-tooltip#${this.props.slotId}`).length === 0) {
-      this.closeTooltip(); 
+    if ($(e.target).closest(`.resource-tooltip#${this.props.slotId}`).length === 0
+        && $(e.target).closest('.slot-text').find(`.resource-tooltip#${this.props.slotId}`).length === 0) {
+      this.closeTooltip();
     }
   }
 
   deleteResource() {
     const { slotId, slotName } = this.props;
-    if (confirm(I18n.t('apps.projects_distribution.confirm_delete', { resource_name: slotName }))) {
+    if (window.confirm(I18n.t('apps.projects_distribution.confirm_delete', { resource_name: slotName }))) {
       Api.makeDeleteRequest({
-        url: `/api/resources/${slotId}`,
-      }).then((response) => {
+        url: `/api/project_resources/${slotId}`,
+      }).then(() => {
         this.props.updateResourcesAndEvents();
         this.closeTooltip();
       });
@@ -64,7 +64,7 @@ class ResourceTooltip extends React.Component {
       <div>
         { show ? (
           <div className="resource-tooltip" id={this.props.slotId}>
-            <div className="tooltip-arrow"/>
+            <div className="tooltip-arrow" />
             <div className="tooltip-box">
               <div className="tooltip-content" onClick={this.deleteResource}>
                 {I18n.t('apps.projects_distribution.delete_resource')}

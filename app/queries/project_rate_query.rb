@@ -7,7 +7,7 @@ class ProjectRateQuery
   ProjectStats = Struct.new(:project_id, :name, :users, :color, :total, :leader_first_name, :leader_last_name, keyword_init: true)
   include Querable
 
-  def initialize(active:, starts_at: Time.current - 30.days, ends_at: Time.current)
+  def initialize(active:, starts_at: 30.days.ago, ends_at: Time.current)
     @active    = active
     @starts_at = starts_at
     @ends_at   = ends_at

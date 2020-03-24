@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::ResourcesController do
+RSpec.describe Api::ProjectResourcesController do
   render_views
 
   let(:user) { create(:user) }
@@ -22,7 +22,7 @@ RSpec.describe Api::ResourcesController do
 
     it 'returns resources' do
       sign_in(admin)
-      resource = create(:resource)
+      resource = create(:project_resource)
       resource_response = [{
         id: resource.rid,
         name: resource.name,
@@ -31,6 +31,22 @@ RSpec.describe Api::ResourcesController do
         realId: resource.id
       }].to_json
       get :index, format: :json
+      expect(response.body).to be_json_eql(resource_response)
+    end
+
+    it 'filters by users' do
+      sign_in(admin)
+      resource = create(:project_resource)
+      create(:project_resource)
+
+      resource_response = [{
+        id: resource.rid,
+        name: resource.name,
+        groupOnly: resource.group_only,
+        parentId: resource.parent_rid,
+        realId: resource.id
+      }].to_json
+      get :index, params: { selected_users: resource.user_id }, format: :json
       expect(response.body).to be_json_eql(resource_response)
     end
   end
@@ -50,16 +66,16 @@ RSpec.describe Api::ResourcesController do
     context 'creates resource' do
       it 'as not group with parent' do
         sign_in(admin)
-        resource = create(:resource, user: nil, group_only: true, name: 'Test group')
+        resource = create(:project_resource, user: nil, group_only: true, name: 'Test group')
         params = {
           group_only: false,
           parent_rid: resource.id,
           user_id: user.id
         }
         post :create, params: { resource: params }, as: :json
-        new_resource = Resource.last
+        new_resource = ProjectResource.last
         expect(new_resource.name).to eql(user.to_s)
-        expect(new_resource.resource_id).to eql(resource.id)
+        expect(new_resource.project_resource_id).to eql(resource.id)
         expect(new_resource.rid).to eql("#{resource.rid}-#{user.id}")
         expect(new_resource.parent_rid).to eql(resource.rid)
       end
@@ -71,9 +87,9 @@ RSpec.describe Api::ResourcesController do
           group_only: true
         }
         post :create, params: { resource: params }, as: :json
-        new_resource = Resource.last
+        new_resource = ProjectResource.last
         expect(new_resource.name).to eql('Test group')
-        expect(new_resource.resource_id).to eql(nil)
+        expect(new_resource.project_resource_id).to eql(nil)
         expect(new_resource.rid).to eql('test-group')
         expect(new_resource.parent_rid).to eql(nil)
       end
@@ -92,15 +108,15 @@ RSpec.describe Api::ResourcesController do
       expect(response.code).to eql('403')
     end
 
-    it 'destroys resource, child resources and resource events' do
+    it 'destroys resource, child resources and resource assignments' do
       sign_in(admin)
-      parent_resource = create(:resource)
-      child_resource = create(:resource, resource_id: parent_resource.id)
-      event = create(:event, resource: parent_resource)
+      parent_resource = create(:project_resource)
+      child_resource = create(:project_resource, project_resource_id: parent_resource.id)
+      assignment = create(:project_resource_assignment, project_resource: parent_resource)
       delete :destroy, params: { id: parent_resource.rid }, format: :json
       expect { parent_resource.reload }.to raise_exception(ActiveRecord::RecordNotFound)
       expect { child_resource.reload }.to raise_exception(ActiveRecord::RecordNotFound)
-      expect { event.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+      expect { assignment.reload }.to raise_exception(ActiveRecord::RecordNotFound)
     end
   end
 end

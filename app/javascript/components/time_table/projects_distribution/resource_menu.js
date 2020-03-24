@@ -14,7 +14,7 @@ class ResourceMenu extends React.Component {
 
   onDeleteClick() {
     Api.makeDeleteRequest({
-      url: `/api/resources/${this.props.resourceId}`,
+      url: `/api/project_resources/${this.props.resourceId}`,
     }).then(() => {
       this.props.updateResourcesAndEvents();
     });

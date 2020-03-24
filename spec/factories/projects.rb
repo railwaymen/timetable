@@ -7,5 +7,9 @@ FactoryBot.define do
     trait :with_leader do
       association :leader, factory: :user
     end
+
+    trait :vacation do
+      name { 'Vacation' }
+    end
   end
 end

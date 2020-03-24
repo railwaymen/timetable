@@ -1,4 +1,6 @@
 import React from 'react';
+import _ from 'lodash';
+
 import tinycolor from 'tinycolor2';
 import Dropdown from '../../shared/dropdown';
 
@@ -10,12 +12,11 @@ class Footer extends React.Component {
     this.onAllClick = this.onAllClick.bind(this);
     this.updateUser = this.updateUser.bind(this);
     this.onUserDelete = this.onUserDelete.bind(this);
-  }
-
-  state = {
-    buffer: this.renderBuffer(),
-    users: [],
-    selectedUser: undefined,
+    this.state = {
+      buffer: this.renderBuffer(),
+      users: [],
+      selectedUser: undefined,
+    };
   }
 
   componentDidMount() {
@@ -35,9 +36,9 @@ class Footer extends React.Component {
 
   getUsers() {
     fetch('/api/users?filter=active&staff')
-      .then(response => response.json())
+      .then((response) => response.json())
       .then((data) => {
-        this.setState({ 
+        this.setState({
           users: data,
           selectedUser: data[0],
           userFilter: this.renderUserFilter(data[0]),
@@ -48,7 +49,7 @@ class Footer extends React.Component {
   onClick(projectId) {
     let { selectedProjects } = this.props;
     if (_.includes(selectedProjects, projectId)) {
-      selectedProjects = selectedProjects.filter(p => p !== projectId);
+      selectedProjects = selectedProjects.filter((p) => p !== projectId);
     } else {
       selectedProjects = selectedProjects.concat(projectId);
     }
@@ -61,29 +62,29 @@ class Footer extends React.Component {
 
   updateUser(selectedUser) {
     let { selectedUsers } = this.props;
-    if (_.findIndex(selectedUsers, u => u.id === selectedUser.id) !== -1) { return; }
-    selectedUsers = selectedUsers.concat({ name: `${selectedUser.last_name} ${selectedUser.first_name}`, id: selectedUser.id })
+    if (_.findIndex(selectedUsers, (u) => u.id === selectedUser.id) !== -1) { return; }
+    selectedUsers = selectedUsers.concat({ name: `${selectedUser.last_name} ${selectedUser.first_name}`, id: selectedUser.id });
     this.props.showSelectedUsers(selectedUsers);
   }
 
   onUserDelete(userId) {
     let { selectedUsers } = this.props;
-    selectedUsers = selectedUsers.filter(u => u.id !== userId);
+    selectedUsers = selectedUsers.filter((u) => u.id !== userId);
     this.props.showSelectedUsers(selectedUsers);
   }
 
   filterUsers = (filter) => {
     const { users } = this.state;
     const lowerFilter = filter.toLowerCase();
-    return _.filter(users, p => (
+    return _.filter(users, (p) => (
       p.active && (`${p.first_name} ${p.last_name}`.toLowerCase().match(lowerFilter) || `${p.last_name} ${p.first_name}`.toLowerCase().match(lowerFilter))
     ));
   }
 
-  renderUsersList(object, currentObject) {
+  renderUsersList(object) {
     return (
       <div>
-          {`${object.last_name} ${object.first_name}`}
+        {`${object.last_name} ${object.first_name}`}
       </div>
     );
   }
@@ -105,9 +106,16 @@ class Footer extends React.Component {
       <div className="user-filter-container" style={{ width }}>
         <div className="user-filter">
           { selectedUser ? (
-            <Dropdown objects={users} updateObject={this.updateUser} selectedObject={selectedUser} filterObjects={this.filterUsers} renderSelectedObject={() => undefined} renderObjectsList={this.renderUsersList} />
+            <Dropdown
+              objects={users}
+              updateObject={this.updateUser}
+              selectedObject={selectedUser}
+              filterObjects={this.filterUsers}
+              renderSelectedObject={() => undefined}
+              renderObjectsList={this.renderUsersList}
+            />
           ) : null }
-          <div className="reset-button-container" onClick={() => {this.props.showSelectedUsers([])}}>
+          <div className="reset-button-container" onClick={() => { this.props.showSelectedUsers([]); }}>
             <div className="reset-button">
               Reset
             </div>
@@ -115,13 +123,13 @@ class Footer extends React.Component {
         </div>
         {this.renderSelectedUsersList()}
       </div>
-    )
+    );
   }
 
   renderSelectedUsersList() {
     const { selectedUsers } = this.props;
     if (selectedUsers.length === 0) { return undefined; }
-    let list = [];
+    const list = [];
     selectedUsers.forEach((user) => {
       list.push(
         <div className="selected-user" key={user.id}>
@@ -132,7 +140,7 @@ class Footer extends React.Component {
     });
     return (
       <div className="selected-users-list">
-        {list}  
+        {list}
       </div>
     );
   }
@@ -144,12 +152,17 @@ class Footer extends React.Component {
       const tempBorderColor = tinycolor(`#${project.color}`).darken(5);
       let backgroundColor = `#${project.color}`;
       let fontColor = 'white';
-      if (selectedProjects.length !== 0 && !_.includes(selectedProjects, project.id)) { 
+      if (selectedProjects.length !== 0 && !_.includes(selectedProjects, project.id)) {
         backgroundColor = 'transparent';
-        fontColor = `#${project.color}`; 
+        fontColor = `#${project.color}`;
       }
       legend.push(
-        <div className="project-legend" key={project.id} style={{ border: `2px solid ${tempBorderColor}`, backgroundColor: backgroundColor, color: fontColor }} onClick={() => this.onClick(project.id)}>
+        <div
+          className="project-legend"
+          key={project.id}
+          style={{ border: `2px solid ${tempBorderColor}`, backgroundColor, color: fontColor }}
+          onClick={() => this.onClick(project.id)}
+        >
           {project.name}
         </div>,
       );
@@ -173,7 +186,7 @@ class Footer extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   render() {

@@ -9,11 +9,6 @@ class UsersList extends React.Component {
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
-  static propTypes = {
-    users: PropTypes.array,
-    currentUser: PropTypes.object,
-  }
-
   onChangeUser(e) {
     this.props.onChangeUser(e);
   }
@@ -27,7 +22,7 @@ class UsersList extends React.Component {
   render() {
     return (
       <div className="menu transition visible" tabIndex="-1" style={{ display: 'block !important' }}>
-        { this.props.users.map(user => (
+        { this.props.users.map((user) => (
           <div key={user.id} data-value={user.id} tabIndex="0" className="item" onClick={this.onChangeUser} onKeyPress={this.handleKeyPress}>
             <div className="circular empty label ui" style={{ background: `#${user.color}` }} />
             {user.id === this.props.currentUser.id ? (
@@ -41,5 +36,10 @@ class UsersList extends React.Component {
     );
   }
 }
+
+UsersList.propTypes = {
+  users: PropTypes.array,
+  currentUser: PropTypes.object,
+};
 
 export default UsersList;

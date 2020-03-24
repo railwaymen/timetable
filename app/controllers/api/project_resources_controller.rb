@@ -8,40 +8,28 @@ module Api
     def index
       if params[:selected_users].present?
         selected_users = params[:selected_users].split(',')
-        @resources = ProjectResource.where('user_id IN (?) OR group_only = ?', selected_users, true)
+        @project_resources = ProjectResource.where('user_id IN (?) OR group_only = ?', selected_users, true)
       else
-        @resources = ProjectResource.all
+        @project_resources = ProjectResource.all
       end
-      respond_with @resources
+      respond_with @project_resources
     end
 
     def create
-      @resource = ResourcesService.new.call(resource_params)
-      respond_with @resource
+      @project_resource = ResourcesService.new.call(project_resource_params)
+      respond_with @project_resource
     end
 
     def destroy
-      @resource = ProjectResource.find_by(rid: params[:id])
-      @resource.destroy
-      respond_with @resource
+      @project_resource = ProjectResource.find_by(rid: params[:id])
+      @project_resource.destroy
+      respond_with @project_resource
     end
 
     private
 
-    def resource_params
+    def project_resource_params
       params.fetch(:resource).permit(:name, :group_only, :parent_rid, :user_id)
-    end
-
-    def generate_rid_and_parent_id(name, parent_id)
-      if parent_id.present?
-        parent_resource = ProjectResource.find(parent_id)
-        rid = "#{parent_resource.rid}-#{name}"
-        parent_rid = parent_resource.rid
-      else
-        rid = name
-        parent_rid = nil
-      end
-      [rid, parent_rid]
     end
   end
 end

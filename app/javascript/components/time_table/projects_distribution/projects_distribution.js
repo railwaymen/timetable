@@ -1,5 +1,7 @@
+/* eslint-disable react/no-unused-state */
 import React from 'react';
 import moment from 'moment';
+import _ from 'lodash';
 import tinycolor from 'tinycolor2';
 import ReactDOM from 'react-dom';
 import Scheduler, {
@@ -23,20 +25,17 @@ class ProjectsDistribution extends React.Component {
     this.showSelectedUsers = this.showSelectedUsers.bind(this);
     this.addEvent = this.addEvent.bind(this);
     this.showUpdatedEvent = this.showUpdatedEvent.bind(this);
-  }
-
-  variable = 0;
-
-  state = {
-    resources: [],
-    viewModel: undefined,
-    users: [],
-    projects: [],
-    events: [],
-    schedulerHeader: null,
-    expandedResources: [],
-    selectedProjects: [],
-    selectedUsers: [],
+    this.state = {
+      resources: [],
+      viewModel: undefined,
+      users: [],
+      projects: [],
+      events: [],
+      schedulerHeader: null,
+      expandedResources: [],
+      selectedProjects: [],
+      selectedUsers: [],
+    };
   }
 
   componentDidMount() {
@@ -83,11 +82,11 @@ class ProjectsDistribution extends React.Component {
       const resources = values[0].data;
       const events = values[1].data;
       const users = values[2].data;
-      const { projects } = values[3].data;
+      const projects = values[3].data;
       schedulerData.setResources(resources);
       schedulerData.setEvents(events);
-      const groupssss = resources.filter(e => e.groupOnly === true)
-      _.forEach(groupssss, g => schedulerData.toggleExpandStatus(g.id))
+      const groupssss = resources.filter((e) => e.groupOnly === true);
+      _.forEach(groupssss, (g) => schedulerData.toggleExpandStatus(g.id));
       this.setState({
         viewModel: schedulerData,
         resources,
@@ -147,15 +146,15 @@ class ProjectsDistribution extends React.Component {
 
   getResourcesAndEvents(schedulerData) {
     const { expandedResources, selectedProjects, selectedUsers } = this.state;
-    const selectedUsersIds = selectedUsers.map(u => u.id);
+    const selectedUsersIds = selectedUsers.map((u) => u.id);
     const resources_promise = Api.makeGetRequest({
       url: `/api/project_resources?selected_users=${selectedUsersIds}`,
     });
     let url = `/api/project_resource_assignments/find_by_slot?expanded_resources=${expandedResources}`;
     url += `&selected_projects=${selectedProjects}`;
-    url += `&selected_users=${selectedUsersIds}`
+    url += `&selected_users=${selectedUsersIds}`;
     const events_promise = Api.makeGetRequest({
-      url: url,
+      url,
     });
     Promise.all([resources_promise, events_promise]).then((values) => {
       const resources = values[0].data;
@@ -196,6 +195,7 @@ class ProjectsDistribution extends React.Component {
   }
 
   addEvent(event) {
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const schedulerData = this.state.viewModel;
     schedulerData.addEvent(event);
     this.foldResources(schedulerData);
@@ -205,8 +205,9 @@ class ProjectsDistribution extends React.Component {
   }
 
   showUpdatedEvent(event) {
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const schedulerData = this.state.viewModel;
-    schedulerData.removeEventById(event.id)
+    schedulerData.removeEventById(event.id);
     schedulerData.addEvent(event);
     this.foldResources(schedulerData);
     this.setState({
@@ -226,34 +227,34 @@ class ProjectsDistribution extends React.Component {
     const selectedUsers = options.selectedUsers ? options.selectedUsers : this.state.selectedUsers;
     if (selectedUsers.length > 0) { return; }
     const expandedResources = options.expandedResources ? options.expandedResources : this.state.expandedResources;
-    const groups = this.state.resources.filter(r => r.groupOnly === true && !_.includes(expandedResources, r.id))
-    _.forEach(groups, g => schedulerData.toggleExpandStatus(g.id))
+    const groups = this.state.resources.filter((r) => r.groupOnly === true && !_.includes(expandedResources, r.id));
+    _.forEach(groups, (g) => schedulerData.toggleExpandStatus(g.id));
   }
 
   showSelectedProjects(selectedProjects) {
     if (selectedProjects.length === this.state.selectedProjects.length) { return; }
     const schedulerData = this.state.viewModel;
     const { expandedResources, selectedUsers } = this.state;
-    const selectedUsersIds =  selectedUsers.map(u => u.id);
+    const selectedUsersIds = selectedUsers.map((u) => u.id);
     let url = `/api/project_resource_assignments/find_by_slot?expanded_resources=${expandedResources}`;
     url += `&selected_projects=${selectedProjects}`;
     url += `&selected_users=${selectedUsersIds}`;
     Api.makeGetRequest({
-      url: url,
+      url,
     }).then((response) => {
       schedulerData.setEvents(response.data);
       if (selectedUsers.length === 0) { this.foldResources(schedulerData); }
       this.setState({
         schedulerData,
         events: response.data,
-        selectedProjects: selectedProjects,
+        selectedProjects,
       });
     });
   }
 
   showSelectedUsers(selectedUsers) {
     const { expandedResources, selectedProjects, viewModel } = this.state;
-    const selectedUsersIds = selectedUsers.map(u => u.id);
+    const selectedUsersIds = selectedUsers.map((u) => u.id);
     const resources_promise = Api.makeGetRequest({
       url: `/api/project_resources?selected_users=${selectedUsersIds}`,
     });
@@ -261,14 +262,14 @@ class ProjectsDistribution extends React.Component {
     url += `&selected_projects=${selectedProjects}`;
     url += `&selected_users=${selectedUsersIds}`;
     const events_promise = Api.makeGetRequest({
-      url: url,
+      url,
     });
     Promise.all([resources_promise, events_promise]).then((values) => {
       const resources = values[0].data;
       const events = values[1].data;
       viewModel.setResources(resources);
       viewModel.setEvents(events);
-      this.foldResources(viewModel, { selectedUsers: selectedUsers })
+      this.foldResources(viewModel, { selectedUsers });
       this.setState({
         selectedUsers,
         viewModel,
@@ -296,7 +297,7 @@ class ProjectsDistribution extends React.Component {
               onSelectDate={this.onSelectDate}
               onViewChange={this.onViewChange}
               eventItemClick={this.eventClicked}
-              updateEventStart={this.updateEventStart}
+              Footer={this.Footer}
               updateEventEnd={this.updateEventEnd}
               moveEvent={this.moveEvent}
               newEvent={this.newEvent}
@@ -306,18 +307,34 @@ class ProjectsDistribution extends React.Component {
               slotClickedFunc={this.slotClickedFunc}
               eventItemPopoverTemplateResolver={this.eventItemPopoverTemplateResolver}
             />
-            <Footer projects={projects} showSelectedProjects={this.showSelectedProjects} selectedProjects={selectedProjects} showSelectedUsers={this.showSelectedUsers} selectedUsers={selectedUsers} />
+            <Footer
+              projects={projects}
+              showSelectedProjects={this.showSelectedProjects}
+              selectedProjects={selectedProjects}
+              showSelectedUsers={this.showSelectedUsers}
+              selectedUsers={selectedUsers}
+            />
           </div>
         ) : (
           'Loading'
         ) }
 
-        <Modal ref={(modal) => { this.modal = modal; }} users={users} projects={projects} resources={resources} updateResourcesAndEvents={this.updateResourcesAndEvents} addEvent={this.addEvent} showUpdatedEvent={this.showUpdatedEvent} destroyEvent={this.destroyEvent} />
+        <Modal
+          ref={(modal) => { this.modal = modal; }}
+          users={users}
+          projects={projects}
+          resources={resources}
+          updateResourcesAndEvents={this.updateResourcesAndEvents}
+          addEvent={this.addEvent}
+          showUpdatedEvent={this.showUpdatedEvent}
+          destroyEvent={this.destroyEvent}
+        />
       </div>
     );
   }
 
   prevClick = () => {
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const schedulerData = this.state.viewModel;
     schedulerData.prev();
     schedulerData.setEvents(this.state.events);
@@ -331,6 +348,7 @@ class ProjectsDistribution extends React.Component {
   }
 
   nextClick = () => {
+    // eslint-disable-next-line react/no-access-state-in-setstate
     const schedulerData = this.state.viewModel;
     schedulerData.next();
     schedulerData.setEvents(this.state.events);
@@ -374,7 +392,7 @@ class ProjectsDistribution extends React.Component {
       url: `/api/project_resource_assignments/${event.id}`,
     }).then(() => {
       schedulerData.removeEventById(event.id);
-      this.foldResources(schedulerData)
+      this.foldResources(schedulerData);
       this.setState({
         viewModel: schedulerData,
       });
@@ -451,22 +469,22 @@ class ProjectsDistribution extends React.Component {
     schedulerData.toggleExpandStatus(slotId);
     const { expandedResources, selectedProjects } = this.state;
     if ($(`td[data-resource-id='${slotId}']`).find('i.anticon.anticon-plus-square').length) {
-      const newExpandedResources = expandedResources.concat(slotId)
+      const newExpandedResources = expandedResources.concat(slotId);
       Api.makeGetRequest({
         url: `/api/project_resource_assignments/find_by_slot?expanded_resources=${newExpandedResources}&selected_projects=${selectedProjects}`,
       }).then((response) => {
-        schedulerData.setEvents(response.data)
-        this.foldResources(schedulerData, { expandedResources: newExpandedResources })
+        schedulerData.setEvents(response.data);
+        this.foldResources(schedulerData, { expandedResources: newExpandedResources });
         this.setState({
           viewModel: schedulerData,
           events: response.data,
-          expandedResources: newExpandedResources
+          expandedResources: newExpandedResources,
         });
-      })
+      });
     } else {
       this.setState({
         viewModel: schedulerData,
-        expandedResources: expandedResources.filter(r => r !== slotId),
+        expandedResources: expandedResources.filter((r) => r !== slotId),
       });
     }
   }
@@ -507,6 +525,7 @@ class ProjectsDistribution extends React.Component {
       <th key={item.time} className={className} style={style}>
         <div
           key={datetime}
+          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: `<b>${datetime.format('ddd, DD/MM')}</b>` }}
         />
       </th>
@@ -543,17 +562,23 @@ class ProjectsDistribution extends React.Component {
       tooltipContainer.className = slot.slotId;
       resource.append(tooltipContainer);
       ReactDOM.render(
-        <ResourceTooltip ref={(resourceTooltip) => { this[`resourceTooltip-${slot.slotId}`] = resourceTooltip; }} slotName={slot.slotName} slotId={slot.slotId} updateResourcesAndEvents={this.updateResourcesAndEvents} />, resource.find(`div.${slot.slotId}`)[0],
+        <ResourceTooltip
+          ref={(resourceTooltip) => { this[`resourceTooltip-${slot.slotId}`] = resourceTooltip; }}
+          slotName={slot.slotName}
+          slotId={slot.slotId}
+          updateResourcesAndEvents={this.updateResourcesAndEvents}
+        />, resource.find(`div.${slot.slotId}`)[0],
       );
+    // eslint-disable-next-line no-restricted-globals
     } else if (event.target.className === 'slot-text') {
       this[`resourceTooltip-${slot.slotId}`].toggleTooltip();
     }
   }
 
   eventItemPopoverTemplateResolver = (schedulerData, eventItem, title, start, end) => (
-    <React.Fragment>
+    <>
       <h3 className="popover-event-title">
-        <div className="circular empty label ui" style={{ background: `${eventItem.bgColor} none repeat scroll 0% 0%` }}/>
+        <div className="circular empty label ui" style={{ background: `${eventItem.bgColor} none repeat scroll 0% 0%` }} />
         {title}
       </h3>
       <h5>{`${start.format('DD/MM/YYYY')} - ${end.format('DD/MM/YYYY')}`}</h5>
@@ -565,7 +590,7 @@ class ProjectsDistribution extends React.Component {
           {I18n.t('common.edit')}
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import tinycolor from 'tinycolor2';
 
 class ProjectsLegend extends React.Component {
@@ -7,10 +8,9 @@ class ProjectsLegend extends React.Component {
 
     this.onClick = this.onClick.bind(this);
     this.onAllClick = this.onAllClick.bind(this);
-  }
-
-  state = {
-    buffer: this.renderBuffer(),
+    this.state = {
+      buffer: this.renderBuffer(),
+    };
   }
 
   componentDidMount() {
@@ -29,7 +29,7 @@ class ProjectsLegend extends React.Component {
   onClick(projectId) {
     let { selectedProjects } = this.props;
     if (_.includes(selectedProjects, projectId)) {
-      selectedProjects = selectedProjects.filter(p => p !== projectId);
+      selectedProjects = selectedProjects.filter((p) => p !== projectId);
     } else {
       selectedProjects = selectedProjects.concat(projectId);
     }
@@ -55,12 +55,17 @@ class ProjectsLegend extends React.Component {
       const tempBorderColor = tinycolor(`#${project.color}`).darken(5);
       let backgroundColor = `#${project.color}`;
       let fontColor = 'white';
-      if (selectedProjects.length !== 0 && !_.includes(selectedProjects, project.id)) { 
+      if (selectedProjects.length !== 0 && !_.includes(selectedProjects, project.id)) {
         backgroundColor = 'transparent';
-        fontColor = `#${project.color}`; 
+        fontColor = `#${project.color}`;
       }
       legend.push(
-        <div className="project-legend" key={project.id} style={{ border: `2px solid ${tempBorderColor}`, backgroundColor: backgroundColor, color: fontColor }} onClick={() => this.onClick(project.id)}>
+        <div
+          className="project-legend"
+          key={project.id}
+          style={{ border: `2px solid ${tempBorderColor}`, backgroundColor, color: fontColor }}
+          onClick={() => this.onClick(project.id)}
+        >
           {project.name}
         </div>,
       );

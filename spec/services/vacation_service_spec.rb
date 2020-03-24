@@ -44,6 +44,8 @@ RSpec.describe VacationService do
 
     context 'when current user can manage staff and is staff manager' do
       it 'accepts vacation, creates vacation work times, creates vacation interaction, creates event, deletes previous opposite vacation interaction' do
+        create(:project, :vacation)
+
         vacation = create(:vacation, start_date: Time.current.to_date, end_date: Time.current.to_date + 7.days,
                                      status: :declined, description: 'Others', vacation_type: :others)
         create(:project, name: 'ZKS')
@@ -51,7 +53,7 @@ RSpec.describe VacationService do
 
         expect(WorkTime.count).to eql(0)
         work_times_count = vacation.start_date.business_days_until(vacation.end_date + 1.day)
-        create(:resource, user: vacation.user)
+        create(:project_resource, user: vacation.user)
 
         described_class.new(current_user: staff_manager, vacation: vacation,
                             params: ActionController::Parameters.new(vacation: { vacation_sub_type: 'parental' })).approve
@@ -61,8 +63,8 @@ RSpec.describe VacationService do
         expect(WorkTime.count).to eql(work_times_count)
         expect(VacationInteraction.first).to_not eql(vacation_interaction)
         expect(VacationInteraction.first.action).to eql('accepted')
-        expect(Event.count).to eql(1)
-        expect(Event.first.user_id).to eql(vacation.user.id)
+        expect(ProjectResourceAssignment.count).to eql(1)
+        expect(ProjectResourceAssignment.first.user_id).to eql(vacation.user.id)
       end
     end
 
@@ -110,13 +112,13 @@ RSpec.describe VacationService do
         create(:vacation_interaction, user: admin1, vacation: vacation, action: :approved)
         create(:vacation_interaction, user: admin2, vacation: vacation, action: :declined)
         interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :accepted)
-        create(:resource, user: vacation.user)
-        event = create(:event, user: vacation.user, vacation: vacation)
+        create(:project_resource, user: vacation.user)
+        assignment = create(:project_resource_assignment, user: vacation.user, vacation: vacation)
 
         described_class.new(current_user: staff_manager, vacation: vacation).undone
 
         expect { interaction.reload }.to raise_exception(ActiveRecord::RecordNotFound)
-        expect { event.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+        expect { assignment.reload }.to raise_exception(ActiveRecord::RecordNotFound)
         expect(vacation.reload.status).to eql('declined')
         expect(WorkTime.all.uniq.pluck(:active)).to eql([false])
       end
@@ -142,8 +144,8 @@ RSpec.describe VacationService do
         staff_manager = create(:staff_manager)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :approved)
         interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :accepted)
-        create(:resource, user: vacation.user)
-        event = create(:event, user: vacation.user, vacation: vacation)
+        create(:project_resource, user: vacation.user)
+        create(:project_resource_assignment, user: vacation.user, vacation: vacation)
 
         described_class.new(current_user: staff_manager, vacation: vacation).undone
         expect { interaction.reload }.to raise_exception(ActiveRecord::RecordNotFound)
@@ -158,8 +160,8 @@ RSpec.describe VacationService do
         staff_manager = create(:staff_manager)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :declined)
         interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :accepted)
-        create(:resource, user: vacation.user)
-        event = create(:event, user: vacation.user, vacation: vacation)
+        create(:project_resource, user: vacation.user)
+        create(:project_resource_assignment, user: vacation.user, vacation: vacation)
 
         described_class.new(current_user: staff_manager, vacation: vacation).undone
         expect { interaction.reload }.to raise_exception(ActiveRecord::RecordNotFound)
@@ -184,8 +186,8 @@ RSpec.describe VacationService do
         create(:work_time, user: vacation.user, vacation: vacation, starts_at: vacation.start_date.beginning_of_day + 8.hours, ends_at: vacation.start_date.beginning_of_day + 12.hours)
         staff_manager = create(:staff_manager)
         interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :accepted)
-        create(:resource, user: vacation.user)
-        event = create(:event, user: vacation.user, vacation: vacation)
+        create(:project_resource, user: vacation.user)
+        create(:project_resource_assignment, user: vacation.user, vacation: vacation)
 
         described_class.new(current_user: staff_manager, vacation: vacation).undone
         expect { interaction.reload }.to raise_exception(ActiveRecord::RecordNotFound)

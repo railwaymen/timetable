@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :event do
-    resource
+  factory :project_resource_assignment do
+    project_resource
     project
     user
     sequence(:resource_rid) { |n| "test-rid-#{n}" }
