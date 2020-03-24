@@ -181,6 +181,15 @@ pl:
         many: '%{count} dni'
         one: '%{count} dzień'
         other: '%{count} dni'
+    projects_distribution:
+      add_resource: Dodaj zasoby
+      resource_menu: Menu zasobów
+      delete_resource: Usuń zasób
+      resource_group: Grupa zasobów
+      group_only: Grupa?
+      exit: Wyjdź
+      add_event: Dodaj event
+      edit_event: Edytuj event
   common:
     rank: 'Ranking'
     add: Dodaj
@@ -251,6 +260,8 @@ pl:
     vacation_periods: Okresy urlopowe
     birthday_templates: Szablony urodzinowe
     title: Tytuł
+    user: Użytkownik
+    projects_distribution: Obłożenie projektów
   errors:
     format: "%{attribute} %{message}"
     messages:

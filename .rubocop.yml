@@ -32,6 +32,9 @@ Rails/UnknownEnv:
     - production
     - staging
 
+Rails/SkipsModelValidations:
+  Enabled: false
+
 Style/ExpandPathArguments:
   Exclude:
     - 'spec/rails_helper.rb'
