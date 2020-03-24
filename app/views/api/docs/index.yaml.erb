@@ -384,8 +384,111 @@ paths:
       responses:
         204:
           description:
+  /accounting_periods:
+    get:
+      tags:
+        - Accounting periods
+      security:
+        - authentication: []
+      parameters:
+        - name: page
+          description: API returns 24 records per page
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - total_pages
+                  - recounting
+                  - accounting_periods
+                properties:
+                  total_pages:
+                    type: integer
+                    example: 20
+                  recounting:
+                    type: boolean
+                    example: false
+                  accounting_periods:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AccountingPeriod'
+  /accounting_periods/matching_fulltime:
+    get:
+      tags:
+        - Accounting periods
+      security:
+        - authentication: []
+      parameters:
+        - name: date
+          description: Date for which it should calculate work time statistics based on accounting periods
+          in: query
+          schema:
+            type: string
+            example: "<%= Date.today %>"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accounting_period:
+                    $ref: '#/components/schemas/AccountingPeriod'
+                  should_worked:
+                    type: integer
+                    example: 604800
 components:
   schemas:
+    AccountingPeriod:
+      type: object
+      required:
+        - id
+        - user_id
+        - duration
+        - count_duration
+        - closed
+        - protected
+        - full_time
+        - position
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        starts_at:
+          type: 
+          example: null
+        ends_at:
+          type: 
+          example: null
+        counted_duration:
+          type: integer
+          example: 0
+        duration:
+          type: integer
+          example: 604800
+        closed:
+          type: boolean
+          example: false
+        note:
+          type: string
+          example: Some note
+        position:
+          type: integer
+          example: 3
+        full_time:
+          type: boolean
+          example: false
+        protected:
+          type: boolean
+          example: false
     WorkTime:
       type: object
       required:

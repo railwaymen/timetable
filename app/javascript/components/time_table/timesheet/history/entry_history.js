@@ -216,10 +216,10 @@ class EntryHistory extends React.Component {
 
     Api.makeGetRequest({ url: `/api/accounting_periods/matching_fulltime?date=${moment(from).format('YYYY-MM-DD')}&user_id=${userId || currentUser.id}` })
       .then((results) => {
-        const { period } = results.data;
+        const { accounting_period } = results.data;
 
-        if (period) {
-          const { duration } = period;
+        if (accounting_period) {
+          const { duration } = accounting_period;
           const { should_worked } = results.data;
 
           mandatoryHours = this.formattedDuration(duration);

@@ -26,7 +26,7 @@ class Periods extends React.Component {
     this.state = {
       periods: {
         accounting_periods: [],
-        total_count: 0,
+        total_pages: 0,
       },
       generatePeriods: {
         periods_count: undefined,
@@ -212,13 +212,12 @@ class Periods extends React.Component {
   renderPagination() {
     let { page } = this.state;
     const { userId, periods } = this.state;
-    const { total_count } = periods;
-    const pages = Math.ceil(total_count / 25);
+    const { total_pages } = periods;
 
     page = parseInt(page, 10);
 
     const isBackAvailable = (page !== 1);
-    const isForwardAvailable = (pages > 1 && page !== pages);
+    const isForwardAvailable = (total_pages > 1 && page !== total_pages);
 
     return (
       <ul className="pagination pull-right">
@@ -227,7 +226,7 @@ class Periods extends React.Component {
             <a className="symbol fa fa-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`} />
           </li>
         )}
-        {this.paginationBody(pages, page, userId)}
+        {this.paginationBody(total_pages, page, userId)}
         {isForwardAvailable && (
           <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
             <a className="symbol fa fa-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />

@@ -28,17 +28,7 @@ RSpec.describe Api::AccountingPeriodsController do
       expect(accounting_periods_manager).to receive(:job_exist?).and_return(false)
       get :index, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ accounting_periods: [accounting_period_response(accounting_period)], total_count: 1, recounting: false }.to_json)
-    end
-
-    it 'returns all account periods as admin' do
-      sign_in(admin)
-      accounting_period = create(:accounting_period)
-      expect(AccountingPeriodsManager).to receive(:new).with(user_id: nil).and_return(accounting_periods_manager)
-      expect(accounting_periods_manager).to receive(:job_exist?).and_return(false)
-      get :index, format: :json
-      expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ accounting_periods: [accounting_period_response(accounting_period)], total_count: 1, recounting: false }.to_json)
+      expect(response.body).to be_json_eql({ accounting_periods: [accounting_period_response(accounting_period)], total_pages: 1, recounting: false }.to_json)
     end
 
     it 'filters by user_id as admin' do
@@ -48,7 +38,7 @@ RSpec.describe Api::AccountingPeriodsController do
       expect(accounting_periods_manager).to receive(:job_exist?).and_return(false)
       get :index, params: { user_id: user.id }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ accounting_periods: [accounting_period_response(accounting_period)], total_count: 1, recounting: false }.to_json)
+      expect(response.body).to be_json_eql({ accounting_periods: [accounting_period_response(accounting_period)], total_pages: 1, recounting: false }.to_json)
     end
   end
 
@@ -178,7 +168,7 @@ RSpec.describe Api::AccountingPeriodsController do
       should_worked = accounting_period.starts_at.to_date.business_days_until(Time.zone.today + 1.day) * 8 * 3600
       get :matching_fulltime, params: { user_id: user.id, date: Time.zone.now.to_date }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ period: accounting_period, should_worked: should_worked }.to_json)
+      expect(response.body).to be_json_eql({ accounting_period: accounting_period_response(accounting_period), should_worked: should_worked }.to_json)
     end
   end
 

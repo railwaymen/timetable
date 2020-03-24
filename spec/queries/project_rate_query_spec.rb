@@ -11,7 +11,7 @@ RSpec.describe ProjectRateQuery do
       create(:work_time, project: project1, starts_at: Time.zone.now.beginning_of_day + 8.hours, ends_at: Time.zone.now.beginning_of_day + 10.hours)
       create(:work_time, project: project2, starts_at: Time.zone.now.beginning_of_day + 8.hours, ends_at: Time.zone.now.beginning_of_day + 9.hours)
 
-      results = described_class.new(active: true, starts_at: 30.days.ago, ends_at: Time.zone.now).results
+      results = described_class.new(active: true, starts_at: 30.days.ago, ends_at: Time.zone.now.end_of_day).results
       expect(results.first.project_id).to eql(project1.id)
       expect(results.first.total).to eql(7200)
       expect(results.second.project_id).to eql(project2.id)
