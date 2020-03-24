@@ -43,10 +43,7 @@ module Api
         else
           ProjectResource.where('group_only = ? AND parent_rid IS NULL', false).pluck(:id)
         end
-      if params[:expanded_resources].present?
-        resources = params[:expanded_resources].split(',')
-        ProjectResource.where(rid: resources).each { |r| resource_ids.push(r.child_resources.where(group_only: false).pluck(:id)) }
-      end
+      ProjectResource.where(parent_rid: nil).each { |r| resource_ids.push(r.child_resources.where(group_only: false).pluck(:id)) }
       @project_resource_assignments = ProjectResourceAssignment.where(project_resource_id: resource_ids.flatten).order(:starts_at)
       if params[:selected_projects].present?
         projects = params[:selected_projects].split(',')

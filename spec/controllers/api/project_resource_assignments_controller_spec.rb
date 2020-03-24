@@ -47,28 +47,6 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
       expect(response.code).to eql('401')
     end
 
-    it 'expands resources' do
-      sign_in(admin)
-      group = create(:project_resource, rid: 'ror')
-      resource1 = create(:project_resource, parent_resource: group)
-      assignment = create(:project_resource_assignment, project_resource: resource1)
-      assignment_response = [{
-        id: assignment.id,
-        start: assignment.starts_at,
-        end: assignment.ends_at,
-        resourceId: assignment.resource_rid,
-        title: assignment.title,
-        bgColor: assignment.color,
-        projectId: assignment.project_id,
-        resourceRealId: assignment.project_resource_id,
-        type: assignment.type,
-        resizable: assignment.resizable,
-        movable: assignment.movable
-      }].to_json
-      get :find_by_slot, params: { expanded_resources: group.rid }, format: :json
-      expect(response.body).to be_json_eql(assignment_response)
-    end
-
     it 'filters assignments by user' do
       sign_in(admin)
       assignment = create(:project_resource_assignment)

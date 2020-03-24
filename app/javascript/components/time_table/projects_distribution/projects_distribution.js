@@ -85,8 +85,6 @@ class ProjectsDistribution extends React.Component {
       const projects = values[3].data;
       schedulerData.setResources(resources);
       schedulerData.setEvents(events);
-      const groupssss = resources.filter((e) => e.groupOnly === true);
-      _.forEach(groupssss, (g) => schedulerData.toggleExpandStatus(g.id));
       this.setState({
         viewModel: schedulerData,
         resources,
