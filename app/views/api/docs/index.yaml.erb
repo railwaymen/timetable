@@ -319,6 +319,73 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkTimeValidation'
   /work_times/{id}:
+    get:
+      tags:
+        - Work times
+      security:
+        - authentication: []
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/WorkTime'
+                  - type: object
+                    properties:
+                      sum_duration:
+                        type: integer
+                        example: 3600
+                      versions:
+                        type: array
+                        items:
+                          properties:
+                            event:
+                              type: string
+                              enum: ['create', 'update']
+                            updated_by:
+                              type: string
+                              example: John Smith
+                            created_at:
+                              type: string
+                              format: date-time
+                            project_name_was:
+                              type: string
+                            project_name:
+                              type: string
+                            body_was:
+                              type: string
+                            body:
+                              type: string
+                            starts_at_was:
+                              type: string
+                              format: date-time
+                            starts_at:
+                              type: string
+                              format: date-time
+                            tag_was:
+                              type: string
+                            tag:
+                              type: string
+                            task_was:
+                              type: string
+                            task:
+                              type: string
+                            ends_at_was:
+                              type: string
+                              format: date-time
+                            ends_at:
+                              type: string
+                              format: date-time
+                            duration_was:
+                              type: integer
+                            duration:
+                              type: integer
     put:
       tags:
         - Work times
