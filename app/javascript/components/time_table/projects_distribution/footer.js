@@ -63,7 +63,7 @@ class Footer extends React.Component {
   updateUser(selectedUser) {
     let { selectedUsers } = this.props;
     if (_.findIndex(selectedUsers, (u) => u.id === selectedUser.id) !== -1) { return; }
-    selectedUsers = selectedUsers.concat({ name: `${selectedUser.last_name} ${selectedUser.first_name}`, id: selectedUser.id });
+    selectedUsers = selectedUsers.concat({ name: selectedUser.name, id: selectedUser.id });
     this.props.showSelectedUsers(selectedUsers);
   }
 
@@ -77,14 +77,14 @@ class Footer extends React.Component {
     const { users } = this.state;
     const lowerFilter = filter.toLowerCase();
     return _.filter(users, (p) => (
-      p.active && (`${p.first_name} ${p.last_name}`.toLowerCase().match(lowerFilter) || `${p.last_name} ${p.first_name}`.toLowerCase().match(lowerFilter))
+      p.active && (`${p.first_name} ${p.last_name}`.toLowerCase().match(lowerFilter) || `${p.first_name} ${p.last_name}`.toLowerCase().match(lowerFilter))
     ));
   }
 
   renderUsersList(object) {
     return (
       <div>
-        {`${object.last_name} ${object.first_name}`}
+        {object.name}
       </div>
     );
   }

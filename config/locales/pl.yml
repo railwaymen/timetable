@@ -190,6 +190,12 @@ pl:
       exit: Wyjdź
       add_event: Dodaj event
       edit_event: Edytuj event
+      activity:
+        create_resource: '{{user}} dodał zasób {{resource}}'
+        delete_resource: '{{user}} usunął zasób {{resource}}'
+        create_assignment: '{{user}} przypisał zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
+        update_assignment: '{{user}} zaktualizował zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
+        delete_assignment: '{{user}} usunął zasób {{resource}} przypisany do projektu {{project}} od {{start}} do {{end}}'
   common:
     rank: 'Ranking'
     add: Dodaj

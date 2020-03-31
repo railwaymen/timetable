@@ -21,7 +21,7 @@ class ResourcesService
     parent_id = params[:parent_rid]
     user = User.find(params[:user_id])
     rid, parent_rid = generate_rid_and_parent_id(user.id.to_s, parent_id)
-    resource = ProjectResource.create(params.merge(name: user.to_s, rid: rid, parent_rid: parent_rid, project_resource_id: parent_id))
+    resource = ProjectResource.create(params.merge(name: user.name, rid: rid, parent_rid: parent_rid, project_resource_id: parent_id))
     create_vacation_events(resource, user) if user.vacations.any?
     resource
   end
