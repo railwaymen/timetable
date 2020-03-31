@@ -104,7 +104,7 @@ RSpec.describe Api::ProjectResourcesController do
         }
         post :create, params: params, as: :json
         new_resource = ProjectResource.last
-        expect(new_resource.name).to eql(user.to_s)
+        expect(new_resource.name).to eql(user.name)
         expect(new_resource.project_resource_id).to eql(resource.id)
         expect(new_resource.rid).to eql("#{resource.rid}-#{user.id}")
         expect(new_resource.parent_rid).to eql(resource.rid)
