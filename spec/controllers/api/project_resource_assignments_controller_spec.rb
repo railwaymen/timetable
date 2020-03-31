@@ -175,7 +175,7 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
       sign_in(admin)
       assignment = create(:project_resource_assignment)
       delete :destroy, params: { id: assignment.id }, as: :json
-      expect { assignment.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+      expect(assignment.reload.discarded?).to be(true)
     end
   end
 end

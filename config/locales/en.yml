@@ -191,6 +191,12 @@ en:
       add_event: Add event
       edit_event: Edit event
       confirm_delete: 'Are you sure you want to delete {{resource_name}}?'
+      activity:
+        create_resource: '{{user}} added resource {{resource}}'
+        delete_resource: '{{user}} deleted resource {{resource}}'
+        create_assignment: '{{user}} assigned resource {{resource}} to project {{project}} from {{start}} to {{end}}'
+        update_assignment: '{{user}} updated assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
+        delete_assignment: '{{user}} deleted assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
   common:
     rank: 'Rank'
     add: Add

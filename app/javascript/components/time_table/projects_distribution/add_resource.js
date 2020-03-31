@@ -69,14 +69,12 @@ class AddResource extends React.Component {
       selectedUser, selectedResourceGroup, groupOnly, name,
     } = this.state;
     const params = {
-      resource: {
-        user_id: selectedUser.id,
-        parent_rid: selectedResourceGroup,
-        group_only: groupOnly,
-        name,
-      },
+      user_id: selectedUser.id,
+      parent_rid: selectedResourceGroup,
+      group_only: groupOnly,
+      name,
     };
-    if (groupOnly) { delete params.resource.user_id; }
+    if (groupOnly) { delete params.user_id; }
     Loader.showLoader();
     Api.makePostRequest({
       url: '/api/project_resources',

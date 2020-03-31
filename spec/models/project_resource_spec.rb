@@ -10,9 +10,4 @@ RSpec.describe ProjectResource, type: :model do
 
   it { should validate_presence_of :rid }
   it { should validate_presence_of :name }
-
-  describe 'validate uniqueness of rid' do
-    subject { create(:project_resource) }
-    it { should validate_uniqueness_of :rid }
-  end
 end

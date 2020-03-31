@@ -12,7 +12,7 @@ RSpec.describe Api::UsersController do
   let(:email) { "#{SecureRandom.hex}@example.com" }
 
   def user_response(user)
-    user.attributes.slice('email', 'first_name', 'last_name', 'prev_id', 'next_id', 'active', 'lang')
+    user.attributes.slice('id', 'email', 'first_name', 'last_name', 'active', 'lang').merge(name: user.name, accounting_name: user.accounting_name)
   end
 
   describe '#index' do
@@ -46,20 +46,10 @@ RSpec.describe Api::UsersController do
           get :index, params: { filter: 'all' }, format: :json
 
           expected_json = User.all.map do |user|
-            {
-              id: user.id,
-              first_name: user.first_name,
-              last_name: user.last_name,
-              email: user.email,
-              lang: user.lang,
-              active: user.active,
-              phone: user.phone,
-              contract_name: user.contract_name,
-              birthdate: user.birthdate
-            }
-          end.to_json
+            user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
+          end
 
-          expect(response.body).to eq expected_json
+          expect(response.body).to be_json_eql(expected_json.to_json)
         end
       end
 
@@ -72,20 +62,10 @@ RSpec.describe Api::UsersController do
           get :index, params: { filter: 'active' }, format: :json
 
           expected_json = User.where(active: true).map do |user|
-            {
-              id: user.id,
-              first_name: user.first_name,
-              last_name: user.last_name,
-              email: user.email,
-              lang: user.lang,
-              active: user.active,
-              phone: user.phone,
-              contract_name: user.contract_name,
-              birthdate: user.birthdate
-            }
-          end.to_json
+            user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
+          end
 
-          expect(response.body).to eq expected_json
+          expect(response.body).to be_json_eql(expected_json.to_json)
         end
       end
 
@@ -98,20 +78,10 @@ RSpec.describe Api::UsersController do
           get :index, params: { filter: 'inactive' }, format: :json
 
           expected_json = User.where(active: false).map do |user|
-            {
-              id: user.id,
-              first_name: user.first_name,
-              last_name: user.last_name,
-              email: user.email,
-              lang: user.lang,
-              active: user.active,
-              phone: user.phone,
-              contract_name: user.contract_name,
-              birthdate: user.birthdate
-            }
-          end.to_json
+            user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
+          end
 
-          expect(response.body).to eq expected_json
+          expect(response.body).to be_json_eql(expected_json.to_json)
         end
       end
     end
@@ -129,7 +99,7 @@ RSpec.describe Api::UsersController do
       user = User.with_next_and_previous_user_id.find(user.id)
       get :show, params: { id: user.id }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql(user_response(user).to_json)
+      expect(response.body).to be_json_eql(user_response(user).merge(next_id: user.next_id, prev_id: user.prev_id).to_json)
     end
   end
 

@@ -27,6 +27,7 @@ class ProjectsDistribution extends React.Component {
     this.showUpdatedEvent = this.showUpdatedEvent.bind(this);
     this.state = {
       resources: [],
+      activities: [],
       viewModel: undefined,
       users: [],
       projects: [],
@@ -78,11 +79,15 @@ class ProjectsDistribution extends React.Component {
     const projects_promise = Api.makeGetRequest({
       url: '/api/projects/simple',
     });
-    Promise.all([resources_promise, events_promise, users_promise, projects_promise]).then((values) => {
+    const activity_promise = Api.makeGetRequest({
+      url: '/api/project_resources/activity',
+    });
+    Promise.all([resources_promise, events_promise, users_promise, projects_promise, activity_promise]).then((values) => {
       const resources = values[0].data;
       const events = values[1].data;
       const users = values[2].data;
       const projects = values[3].data;
+      const activities = values[4].data;
       schedulerData.setResources(resources);
       schedulerData.setEvents(events);
       this.setState({
@@ -90,6 +95,7 @@ class ProjectsDistribution extends React.Component {
         resources,
         users,
         projects,
+        activities,
       }, () => {
         this.setState({
           schedulerHeader: this.schedulerHeader(),
@@ -151,12 +157,12 @@ class ProjectsDistribution extends React.Component {
     let url = `/api/project_resource_assignments/find_by_slot?expanded_resources=${expandedResources}`;
     url += `&selected_projects=${selectedProjects}`;
     url += `&selected_users=${selectedUsersIds}`;
-    const events_promise = Api.makeGetRequest({
-      url,
-    });
-    Promise.all([resources_promise, events_promise]).then((values) => {
+    const events_promise = Api.makeGetRequest({ url });
+    const activity_promise = Api.makeGetRequest({ url: '/api/project_resources/activity' });
+    Promise.all([resources_promise, events_promise, activity_promise]).then((values) => {
       const resources = values[0].data;
       const events = values[1].data;
+      const activities = values[2].data;
       schedulerData.setResources(resources);
       schedulerData.setEvents(events);
       if (selectedUsers.length === 0) { this.foldResources(schedulerData); }
@@ -164,6 +170,7 @@ class ProjectsDistribution extends React.Component {
         viewModel: schedulerData,
         resources,
         events,
+        activities,
       });
     });
   }
@@ -197,6 +204,7 @@ class ProjectsDistribution extends React.Component {
     const schedulerData = this.state.viewModel;
     schedulerData.addEvent(event);
     this.foldResources(schedulerData);
+    this.updateResourcesAndEvents();
     this.setState({
       viewModel: schedulerData,
     });
@@ -208,6 +216,7 @@ class ProjectsDistribution extends React.Component {
     schedulerData.removeEventById(event.id);
     schedulerData.addEvent(event);
     this.foldResources(schedulerData);
+    this.updateResourcesAndEvents();
     this.setState({
       viewModel: schedulerData,
     });
@@ -277,6 +286,73 @@ class ProjectsDistribution extends React.Component {
     });
   }
 
+  renderUser(id) {
+    return this.state.users.find((user) => user.id === id).name;
+  }
+
+  renderProjectTitle(id) {
+    return this.state.projects.find((project) => project.id === id).name;
+  }
+
+  renderCreateAssignmentActivity(activity) {
+    const values = {
+      user: this.renderUser(activity.creator_id),
+      project: this.renderProjectTitle(activity.project_id),
+      start: moment(activity.starts_at).format('YYYY-MM-DD'),
+      end: moment(activity.ends_at).format('YYYY-MM-DD'),
+      resource: this.renderUser(activity.user_id),
+    };
+    return <div>{I18n.t('apps.projects_distribution.activity.create_assignment', values)}</div>;
+  }
+
+  renderUpdateAssignmentActivity(activity) {
+    const values = {
+      user: this.renderUser(activity.creator_id),
+      project: this.renderProjectTitle(activity.project_id),
+      start: moment(activity.starts_at).format('YYYY-MM-DD'),
+      end: moment(activity.ends_at).format('YYYY-MM-DD'),
+      resource: this.renderUser(activity.user_id),
+    };
+    return <div>{I18n.t('apps.projects_distribution.activity.update_assignment', values)}</div>;
+  }
+
+  renderDeleteAssignmentActivity(activity) {
+    const values = {
+      user: this.renderUser(activity.creator_id),
+      project: this.renderProjectTitle(activity.project_id),
+      start: moment(activity.starts_at).format('YYYY-MM-DD'),
+      end: moment(activity.ends_at).format('YYYY-MM-DD'),
+      resource: this.renderUser(activity.user_id),
+    };
+    return <div>{I18n.t('apps.projects_distribution.activity.delete_assignment', values)}</div>;
+  }
+
+  renderCreateResourceActivity(activity) {
+    return <div>{I18n.t('apps.projects_distribution.activity.create_resource', { user: this.renderUser(activity.creator_id), resource: activity.name })}</div>;
+  }
+
+  renderUpdateResourceActivity(activity) {
+    return <div>{I18n.t('apps.projects_distribution.activity.delete_resource', { user: this.renderUser(activity.creator_id), resource: activity.name })}</div>;
+  }
+
+  // eslint-disable-next-line consistent-return
+  renderActivity(activity) {
+    if (activity.item_type === 'ProjectResource' && activity.event === 'create') return this.renderCreateResourceActivity(activity);
+    if (activity.item_type === 'ProjectResource' && activity.event === 'update') return this.renderUpdateResourceActivity(activity);
+    if (activity.item_type === 'ProjectResourceAssignment' && activity.event === 'create') return this.renderCreateAssignmentActivity(activity);
+    if (activity.item_type === 'ProjectResourceAssignment' && activity.event === 'update' && activity.deleted === true) return this.renderDeleteAssignmentActivity(activity);
+    if (activity.item_type === 'ProjectResourceAssignment' && activity.event === 'update') return this.renderUpdateAssignmentActivity(activity);
+  }
+
+  renderActivities() {
+    const { activities } = this.state;
+    return activities.map((activity) => (
+      <div key={activity.id}>
+        {this.renderActivity(activity)}
+      </div>
+    ));
+  }
+
   render() {
     const {
       viewModel, users, resources, projects, schedulerHeader, selectedProjects, selectedUsers,
@@ -316,6 +392,10 @@ class ProjectsDistribution extends React.Component {
         ) : (
           'Loading'
         ) }
+
+        <div className="scheduler-activity">
+          {this.renderActivities()}
+        </div>
 
         <Modal
           ref={(modal) => { this.modal = modal; }}
@@ -391,6 +471,7 @@ class ProjectsDistribution extends React.Component {
     }).then(() => {
       schedulerData.removeEventById(event.id);
       this.foldResources(schedulerData);
+      this.updateResourcesAndEvents();
       this.setState({
         viewModel: schedulerData,
       });
@@ -401,15 +482,14 @@ class ProjectsDistribution extends React.Component {
 
   updateEventStart = (schedulerData, event, newStart) => {
     const params = {
-      event: {
-        starts_at: newStart,
-      },
+      starts_at: newStart,
     };
     const promise = this.updateEvent(event, params);
     Loader.showLoader();
     promise.then(() => {
       schedulerData.updateEventStart(event, newStart);
       this.foldResources(schedulerData);
+      this.updateResourcesAndEvents();
       this.setState({
         viewModel: schedulerData,
       });
@@ -420,15 +500,14 @@ class ProjectsDistribution extends React.Component {
 
   updateEventEnd = (schedulerData, event, newEnd) => {
     const params = {
-      event: {
-        ends_at: newEnd,
-      },
+      ends_at: newEnd,
     };
     const promise = this.updateEvent(event, params);
     Loader.showLoader();
     promise.then(() => {
       schedulerData.updateEventEnd(event, newEnd);
       this.foldResources(schedulerData);
+      this.updateResourcesAndEvents();
       this.setState({
         viewModel: schedulerData,
       });
@@ -439,17 +518,16 @@ class ProjectsDistribution extends React.Component {
 
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
     const params = {
-      event: {
-        resource_rid: slotId,
-        starts_at: start,
-        ends_at: end,
-      },
+      resource_rid: slotId,
+      starts_at: start,
+      ends_at: end,
     };
     const promise = this.updateEvent(event, params);
     Loader.showLoader();
     promise.then(() => {
       schedulerData.moveEvent(event, slotId, slotName, start, end);
       this.foldResources(schedulerData);
+      this.updateResourcesAndEvents();
       this.setState({
         viewModel: schedulerData,
       });

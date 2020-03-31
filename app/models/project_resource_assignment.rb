@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ProjectResourceAssignment < ApplicationRecord
+  include Discard::Model
+  has_paper_trail
   self.inheritance_column = 'inheritance_type'
 
   belongs_to :user

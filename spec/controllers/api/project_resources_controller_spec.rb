@@ -51,6 +51,36 @@ RSpec.describe Api::ProjectResourcesController do
     end
   end
 
+  describe '#activity' do
+    it 'authenticates user' do
+      get :activity, format: :json
+      expect(response.code).to eql('401')
+    end
+
+    it 'forbids regular user' do
+      sign_in(user)
+      get :index, format: :json
+      expect(response.code).to eql('403')
+    end
+
+    it 'returns valid response' do
+      sign_in(admin)
+      PaperTrail.enabled = true
+      PaperTrail.request(whodunnit: admin.id) do
+        resource = create(:project_resource)
+        get :activity, format: :json
+        version_response = [{
+          name: resource.name,
+          event: :create,
+          item_type: resource.class.to_s,
+          creator_id: admin.id
+        }]
+        expect(response.body).to be_json_eql(version_response.to_json)
+      end
+      PaperTrail.enabled = false
+    end
+  end
+
   describe '#create' do
     it 'authenticates user' do
       post :create, format: :json
@@ -72,7 +102,7 @@ RSpec.describe Api::ProjectResourcesController do
           parent_rid: resource.id,
           user_id: user.id
         }
-        post :create, params: { resource: params }, as: :json
+        post :create, params: params, as: :json
         new_resource = ProjectResource.last
         expect(new_resource.name).to eql(user.to_s)
         expect(new_resource.project_resource_id).to eql(resource.id)
@@ -86,7 +116,7 @@ RSpec.describe Api::ProjectResourcesController do
           name: 'Test group',
           group_only: true
         }
-        post :create, params: { resource: params }, as: :json
+        post :create, params: params, as: :json
         new_resource = ProjectResource.last
         expect(new_resource.name).to eql('Test group')
         expect(new_resource.project_resource_id).to eql(nil)
@@ -108,15 +138,11 @@ RSpec.describe Api::ProjectResourcesController do
       expect(response.code).to eql('403')
     end
 
-    it 'destroys resource, child resources and resource assignments' do
+    it 'destroys resource' do
       sign_in(admin)
-      parent_resource = create(:project_resource)
-      child_resource = create(:project_resource, project_resource_id: parent_resource.id)
-      assignment = create(:project_resource_assignment, project_resource: parent_resource)
-      delete :destroy, params: { id: parent_resource.rid }, format: :json
-      expect { parent_resource.reload }.to raise_exception(ActiveRecord::RecordNotFound)
-      expect { child_resource.reload }.to raise_exception(ActiveRecord::RecordNotFound)
-      expect { assignment.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+      resource = create(:project_resource)
+      delete :destroy, params: { id: resource.rid }, format: :json
+      expect(resource.reload.discarded?).to be(true)
     end
   end
 end

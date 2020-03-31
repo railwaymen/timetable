@@ -67,6 +67,10 @@ class User < ApplicationRecord
     [first_name, last_name].join(' ')
   end
 
+  def accounting_name
+    [last_name, first_name].join(' ')
+  end
+
   def anonymized_name
     [first_name, last_name[0]].join(' ')
   end

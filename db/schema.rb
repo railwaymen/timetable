@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_20_112300) do
+ActiveRecord::Schema.define(version: 2020_03_26_130110) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,6 +107,8 @@ ActiveRecord::Schema.define(version: 2020_03_20_112300) do
     t.boolean "movable", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_project_resource_assignments_on_discarded_at"
     t.index ["project_id"], name: "index_project_resource_assignments_on_project_id"
     t.index ["project_resource_id"], name: "index_project_resource_assignments_on_project_resource_id"
     t.index ["user_id"], name: "index_project_resource_assignments_on_user_id"
@@ -122,6 +124,8 @@ ActiveRecord::Schema.define(version: 2020_03_20_112300) do
     t.string "parent_rid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_project_resources_on_discarded_at"
     t.index ["user_id"], name: "index_project_resources_on_user_id"
   end
 
