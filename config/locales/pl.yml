@@ -358,6 +358,7 @@ pl:
               blank: Data końcowa jest wymagana
             position:
               blank: Pozycja jest wymagana
+              taken: Pozycja jest już zajęta
         vacation_interaction:
           base:
             already_interacted: Ten urlop już został przez ciebie %{action}

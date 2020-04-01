@@ -318,6 +318,7 @@ en:
               blank: To date is required
             position:
               blank: Position is required
+              taken: Position is already taken
         vacation_period:
           attributes:
             user_id:
