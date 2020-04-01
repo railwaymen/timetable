@@ -27,7 +27,7 @@ function Filters(props) {
     users.forEach((user) => {
       options.push(
         <option key={user.id} value={user.id}>
-          {`${user.last_name} ${user.first_name}`}
+          {user.accounting_name}
         </option>,
       );
     });

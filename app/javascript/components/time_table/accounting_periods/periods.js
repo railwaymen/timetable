@@ -298,7 +298,7 @@ class Periods extends React.Component {
       );
     }
     return (
-      <span><NavLink to={`/timesheet?user_id=${user.id}`}>{`${user.first_name} ${user.last_name}`}</NavLink></span>
+      <span><NavLink to={`/timesheet?user_id=${user.id}`}>{user.name}</NavLink></span>
     );
   }
 

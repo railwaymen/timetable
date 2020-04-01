@@ -12,7 +12,7 @@ describe SendBirthdayEmailWorker do
       expect(BirthdayMailer).to receive(:with).with(title: template.title, header: template.header, body: template.body, bottom: template.bottom).and_return(double_mailer)
       expect(double_mailer).to receive(:send_birthday_email).and_return(double_mailer)
       expect(double_mailer).to receive(:deliver_later)
-      SendBirthdayEmailWorker.new.perform(user.to_s, template.id)
+      SendBirthdayEmailWorker.new.perform(user.name, template.id)
     end
   end
 end

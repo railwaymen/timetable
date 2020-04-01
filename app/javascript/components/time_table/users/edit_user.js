@@ -72,7 +72,7 @@ function EditUser(props) {
     <form>
       <Helmet>
         {user.id ? (
-          <title>{`${I18n.t('common.edit')} ${user.first_name} ${user.last_name}`}</title>
+          <title>{`${I18n.t('common.edit')} ${user.accounting_name}`}</title>
         ) : (
           <title>{I18n.t('apps.users.new')}</title>
         )}

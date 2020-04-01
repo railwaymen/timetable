@@ -29,7 +29,7 @@ RSpec.describe Api::Reports::WorkTimesController do
 
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql([{ project_id: project.id, project_name: project.name, project_duration: 2.hours,
-                                              user_name: user.to_s, user_id: user.id, duration: 2.hours }].to_json)
+                                              user_name: user.accounting_name, user_id: user.id, duration: 2.hours }].to_json)
     end
 
     it 'returns work times grouped by projects for admin' do
@@ -41,7 +41,7 @@ RSpec.describe Api::Reports::WorkTimesController do
 
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql([{ project_id: project.id, project_name: project.name, project_duration: 2.hours,
-                                              user_name: user.to_s, user_id: user.id, duration: 2.hours }].to_json)
+                                              user_name: user.accounting_name, user_id: user.id, duration: 2.hours }].to_json)
     end
 
     it 'returns work times grouped by projects for leader' do
