@@ -80,6 +80,16 @@ pl:
       add_manually: Dodaj ręcznie
       work_time: Czas pracy
       unsaved_changes: Masz niezapisane zmiany!
+      history:
+        date: Data
+        who: Kto
+        project: Projekt
+        from: Od
+        to: Do
+        task: Zadanie
+        url: Url
+        tag: Tag
+        duration: Czas trwania
     users:
       user_active: Aktywny
       active: Aktywne
@@ -204,6 +214,7 @@ pl:
     generate: Generuj
     fill_save: Zapisz z wypełnieniem
     cancel: Anuluj
+    close: Zamknij
     edit: Edytuj
     destroy: Usuń
     from: Od

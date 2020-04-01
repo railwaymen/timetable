@@ -405,6 +405,11 @@ class EntryHistory extends React.Component {
               : <span>{(version.body_was || '').replace(/\n/g, '<br />')}</span> }
           </td>
           <td>
+            { version.task_preview
+              ? <span className={(version.event === 'update' ? 'changed' : '')}>{version.task_preview}</span>
+              : <span>{version.task_preview_was}</span> }
+          </td>
+          <td>
             { version.tag
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{this.translateTag(version.tag)}</span>
               : <span>{this.translateTag(version.tag_was)}</span> }
@@ -536,6 +541,20 @@ class EntryHistory extends React.Component {
             </div>
             <div className="content">
               <table className="history table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>{I18n.t('apps.timesheet.history.date')}</th>
+                    <th>{I18n.t('apps.timesheet.history.who')}</th>
+                    <th>{I18n.t('apps.timesheet.history.project')}</th>
+                    <th>{I18n.t('apps.timesheet.history.task')}</th>
+                    <th>{I18n.t('apps.timesheet.history.url')}</th>
+                    <th>{I18n.t('apps.timesheet.history.tag')}</th>
+                    <th>{I18n.t('apps.timesheet.history.from')}</th>
+                    <th>{I18n.t('apps.timesheet.history.to')}</th>
+                    <th>{I18n.t('apps.timesheet.history.duration')}</th>
+                  </tr>
+                </thead>
                 <tbody>
                   { this.state.info ? this.renderVersions()
                     : (
@@ -554,7 +573,7 @@ class EntryHistory extends React.Component {
             </div>
             <div className="actions">
               <button className="button cancel right ui" type="button">
-                Close
+                {I18n.t('common.close')}
               </button>
             </div>
           </div>
