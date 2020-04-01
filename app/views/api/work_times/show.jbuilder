@@ -21,4 +21,6 @@ json.versions @work_time.versions do |version|
   json.ends_at version.changeset['ends_at'].try(:last)
   json.duration_was version.reify.try(:duration)
   json.duration version.changeset['duration'].try(:last)
+  json.task_preview_was sanitize(task_preview_helper(version.reify.try(:task)))
+  json.task_preview sanitize(task_preview_helper(version.changeset['task'].try(:last)))
 end
