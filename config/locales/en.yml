@@ -330,6 +330,8 @@ en:
             position:
               blank: Position is required
               taken: Position is already taken
+            duration:
+              greater_than: Duration should be greater than zero
         vacation_period:
           attributes:
             user_id:
