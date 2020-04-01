@@ -369,10 +369,13 @@ pl:
           attributes:
             email:
               blank: Email jest wymagany
+              taken: Email jest już zajęty
             first_name:
               blank: Imię jest wymagane
             last_name:
               blank: Nazwisko jest wymagane
+            phone:
+              invalid: Numer telefonu jest niepoprawny
   activemodel:
     errors:
       models:

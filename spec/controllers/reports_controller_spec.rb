@@ -84,7 +84,7 @@ RSpec.describe ReportsController do
       expect(response.code).to eql('200')
       require 'csv'
       csv = CSV.parse(response.body)
-      expect(csv[0]).to eql(['Poject', 'Date', 'Task URL', 'Description', 'Duration'])
+      expect(csv[0]).to eql(['Project', 'Date', 'Task URL', 'Description', 'Duration'])
       expect(csv[1]).to eql(['Test project', '2016-01-05', 'http://example.com/task/24', work_time1.body, '02:00'])
       expect(csv[2]).to eql(['Test project', '2016-01-05', 'http://example.com/task/24', work_time2.body, '01:00'])
       expect(csv[3]).to eql([nil, nil, nil, nil, '03:00'])

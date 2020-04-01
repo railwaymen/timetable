@@ -19,7 +19,7 @@ module Reports
 
     def generate
       CSV.generate(headers: true) do |csv|
-        headers = (@params.key?(:user_id) ? %w[Poject Date Description Duration] : %w[Developer Date Description Duration])
+        headers = (@params.key?(:user_id) ? %w[Project Date Description Duration] : %w[Developer Date Description Duration])
         headers.insert(2, 'Task URL') if @project&.work_times_allows_task?
         csv << headers
 

@@ -326,10 +326,13 @@ en:
           attributes:
             email:
               blank: Email is required
+              taken: Email is already taken
             first_name:
               blank: First name is required
             last_name:
               blank: Last name is required
+            phone:
+              invalid: Invalid phone number
   activemodel:
     errors:
       models:
