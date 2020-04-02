@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe ReportsController do
   render_views
   let(:user) { create(:user) }
-  let(:manager) { create(:manager) }
+  let(:manager) { create(:user, :manager) }
 
   describe '#project' do
     it 'authenticates user' do

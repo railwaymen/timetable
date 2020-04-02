@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::VacationPeriodsController do
   render_views
   let(:user) { create(:user) }
-  let(:staff_manager) { create(:staff_manager) }
+  let(:staff_manager) { create(:user, :staff_manager) }
   let(:note) { SecureRandom.hex }
   let(:vacation_period_generator) { instance_double(VacationPeriodsGenerator) }
 

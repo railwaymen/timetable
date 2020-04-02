@@ -20,6 +20,8 @@ module TimeTable
     config.autoload_paths += %W[#{config.root}/lib]
     config.eager_load_paths += %W[#{config.root}/lib]
 
+    config.action_dispatch.rescue_responses['Pundit::NotAuthorizedError'] = :forbidden
+
     config.action_mailer.default_url_options = { host: Rails.application.secrets.mailer[:host] }
     config.action_mailer.delivery_method = :sendmail
     config.action_mailer.default_options = { from: Rails.application.secrets.mailer[:from] }

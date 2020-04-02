@@ -4,7 +4,6 @@ module Api
   class VacationsController < Api::BaseController
     before_action :authenticate_admin_or_manager_or_leader!, only: %i[vacation_applications show decline approve undone generate_csv generate_yearly_report]
     before_action :find_vacation, only: %i[approve decline undone self_decline]
-    respond_to :json
 
     def index
       user_id =

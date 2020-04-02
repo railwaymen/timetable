@@ -7,8 +7,8 @@ RSpec.describe Api::ProjectsController do
 
   render_views
   let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
-  let(:manager) { create(:manager) }
+  let(:admin) { create(:user, :admin) }
+  let(:manager) { create(:user, :manager) }
   let(:project_name) { SecureRandom.hex }
   let(:tags_list) { WorkTime.tags.keys }
 

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::AccountingPeriodsController do
   render_views
   let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
+  let(:admin) { create(:user, :admin) }
   let(:note) { SecureRandom.hex }
   let(:starts_at) { Time.zone.now.beginning_of_day + 2.hours }
   let(:ends_at) { Time.zone.now.beginning_of_day + 4.hours }

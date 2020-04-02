@@ -10,6 +10,9 @@ Object.assign(window.currentUser, {
   isSuperUser() {
     return this.admin || this.manager || this.staff_manager;
   },
+  isAdminOrManager() {
+    return this.admin || this.manager || this.is_leader;
+  },
   isAdminOrManagerOrLeader() {
     return this.admin || this.manager || this.is_leader;
   },

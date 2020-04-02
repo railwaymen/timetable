@@ -11,7 +11,7 @@ RSpec.describe Api::ExternalAuthsController do
     end
   end
 
-  let(:admin) { create(:admin) }
+  let(:admin) { create(:user, :admin) }
 
   describe 'GET new' do
     it 'authenticates user' do

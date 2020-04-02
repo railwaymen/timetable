@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::BirthdayEmailTemplatesController do
   render_views
   let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
+  let(:admin) { create(:user, :admin) }
 
   describe 'GET #index' do
     it 'authenticates user' do

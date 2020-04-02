@@ -6,18 +6,12 @@ RSpec.describe Api::ProjectResourcesController do
   render_views
 
   let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
+  let(:admin) { create(:user, :admin) }
 
   describe '#index' do
     it 'authenticates user' do
       get :index, format: :json
       expect(response.code).to eql('401')
-    end
-
-    it 'forbids regular user' do
-      sign_in(user)
-      get :index, format: :json
-      expect(response.code).to eql('403')
     end
 
     it 'returns resources' do
@@ -57,12 +51,6 @@ RSpec.describe Api::ProjectResourcesController do
       expect(response.code).to eql('401')
     end
 
-    it 'forbids regular user' do
-      sign_in(user)
-      get :index, format: :json
-      expect(response.code).to eql('403')
-    end
-
     it 'returns valid response' do
       sign_in(admin)
       PaperTrail.enabled = true
@@ -85,12 +73,6 @@ RSpec.describe Api::ProjectResourcesController do
     it 'authenticates user' do
       post :create, format: :json
       expect(response.code).to eql('401')
-    end
-
-    it 'forbids regular user' do
-      sign_in(user)
-      post :create, format: :json
-      expect(response.code).to eql('403')
     end
 
     context 'creates resource' do
@@ -130,12 +112,6 @@ RSpec.describe Api::ProjectResourcesController do
     it 'authenticates user' do
       delete :destroy, params: { id: 1 }, format: :json
       expect(response.code).to eql('401')
-    end
-
-    it 'forbids regular user' do
-      sign_in(user)
-      delete :destroy, params: { id: 1 }, format: :json
-      expect(response.code).to eql('403')
     end
 
     it 'destroys resource' do

@@ -2,8 +2,8 @@
 
 module Api
   class ProjectResourcesController < Api::BaseController
-    before_action :authenticate_admin_or_manager_or_leader!
-    respond_to :json
+    before_action :authorize_project_resource
+    after_action :verify_authorized
 
     def index
       if params[:selected_users].present?
@@ -32,6 +32,10 @@ module Api
     end
 
     private
+
+    def authorize_project_resource
+      authorize ProjectResource
+    end
 
     def project_resource_params
       params.permit(:name, :group_only, :parent_rid, :user_id)

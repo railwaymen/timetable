@@ -2,7 +2,6 @@
 
 module Api
   class ProjectReportsController < BaseController
-    respond_to :json
     before_action :load_project
 
     def create

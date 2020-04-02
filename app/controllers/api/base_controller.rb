@@ -6,6 +6,7 @@ module Api
     before_action :set_paper_trail_whodunnit
     before_action :authenticate_user!
     before_action :set_raven_context
+    respond_to :json
 
     skip_before_action :verify_authenticity_token
 

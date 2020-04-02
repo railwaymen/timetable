@@ -2,8 +2,6 @@
 
 module Api
   class ExternalAuthsController < Api::BaseController
-    respond_to :json
-
     def new
       @provider = ExternalAuthStrategy.const_get(params[:provider].camelize).new(request.query_parameters.except(:provider))
       @data = JwtService.encode(payload: @provider.request_data)

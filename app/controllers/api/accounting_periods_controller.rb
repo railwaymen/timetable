@@ -3,8 +3,6 @@
 module Api
   class AccountingPeriodsController < Api::BaseController
     before_action :authenticate_admin!, except: %i[index matching_fulltime]
-    respond_to :json
-
     helper_method :recounting
 
     def index

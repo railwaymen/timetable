@@ -4,8 +4,6 @@ module Api
   # rubocop:disable Metrics/ClassLength
   # rubocop:disable Metrics/MethodLength
   class WorkTimesController < Api::BaseController
-    respond_to :json
-
     def index
       @work_times = WorkTime.active.includes(:project).order(starts_at: :desc).where(permitted_search_params)
 

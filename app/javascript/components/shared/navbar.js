@@ -22,7 +22,7 @@ const Navbar = () => (
       <NavLink className="item" to={(currentUser.isSuperUser() || currentUser.is_leader) ? '/reports/work_times/by_projects' : '/reports/work_times/by_users'}>
         {I18n.t('common.reports')}
       </NavLink>
-      { currentUser.canManageStaff()
+      { currentUser.isAdminOrManager()
             && <NavLink className="item" to="/projects_distribution">{I18n.t('common.projects_distribution')}</NavLink>}
       <NavLink className="item" to="/accounting_periods">{I18n.t('common.accounting_periods')}</NavLink>
       <NavLink className="item" to="/vacation_periods">{I18n.t('common.vacation_periods')}</NavLink>

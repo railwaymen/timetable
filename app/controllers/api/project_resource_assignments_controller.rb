@@ -2,8 +2,8 @@
 
 module Api
   class ProjectResourceAssignmentsController < Api::BaseController
-    before_action :authenticate_admin_or_manager_or_leader!
-    respond_to :json
+    before_action :authorize_project_resource_assignment
+    after_action :verify_authorized
 
     def index
       @project_resource_assignments = ProjectResourceAssignment.kept.order(:starts_at)
@@ -50,6 +50,10 @@ module Api
     end
 
     private
+
+    def authorize_project_resource_assignment
+      authorize ProjectResourceAssignment
+    end
 
     def events_params
       params.permit(:project_id, :resource_rid, :starts_at, :ends_at, :title, :color)

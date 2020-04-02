@@ -4,7 +4,6 @@ module Api
   module Reports
     class WorkTimesController < Api::BaseController
       before_action :authenticate_admin_or_manager_or_leader!, only: :index
-      respond_to :json
 
       def index
         from = Time.zone.parse(params[:from])

@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe VacationService do
-  let(:staff_manager) { create(:staff_manager) }
-  let(:admin) { create(:admin) }
+  let(:staff_manager) { create(:user, :staff_manager) }
+  let(:admin) { create(:user, :admin) }
 
   def response(vacation, interactor_name, previous_status, errors, warnings = [])
     {
@@ -106,9 +106,9 @@ RSpec.describe VacationService do
       it 'when vacation is accepted, user accepts vacation and vacation have approvers and decliners' do
         vacation = create(:vacation, status: :accepted)
         create(:work_time, user: vacation.user, vacation: vacation, starts_at: vacation.start_date.beginning_of_day + 8.hours, ends_at: vacation.start_date.beginning_of_day + 12.hours)
-        admin1 = create(:admin)
-        admin2 = create(:admin)
-        staff_manager = create(:staff_manager)
+        admin1 = create(:user, :admin)
+        admin2 = create(:user, :admin)
+        staff_manager = create(:user, :staff_manager)
         create(:vacation_interaction, user: admin1, vacation: vacation, action: :approved)
         create(:vacation_interaction, user: admin2, vacation: vacation, action: :declined)
         interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :accepted)
@@ -125,9 +125,9 @@ RSpec.describe VacationService do
 
       it 'when vacation is declined, user accepts vacation and vacation have approvers and decliners' do
         vacation = create(:vacation, status: :declined)
-        admin = create(:admin)
-        staff_manager1 = create(:staff_manager)
-        staff_manager2 = create(:staff_manager)
+        admin = create(:user, :admin)
+        staff_manager1 = create(:user, :staff_manager)
+        staff_manager2 = create(:user, :staff_manager)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :approved)
         create(:vacation_interaction, user: staff_manager1, vacation: vacation, action: :declined)
         interaction = create(:vacation_interaction, user: staff_manager2, vacation: vacation, action: :accepted)
@@ -140,8 +140,8 @@ RSpec.describe VacationService do
       it 'when vacation is accepted, user accepts vacation and vacation have only approvers' do
         vacation = create(:vacation, status: :accepted)
         create(:work_time, user: vacation.user, vacation: vacation, starts_at: vacation.start_date.beginning_of_day + 8.hours, ends_at: vacation.start_date.beginning_of_day + 12.hours)
-        admin = create(:admin)
-        staff_manager = create(:staff_manager)
+        admin = create(:user, :admin)
+        staff_manager = create(:user, :staff_manager)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :approved)
         interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :accepted)
         create(:project_resource, user: vacation.user)
@@ -156,8 +156,8 @@ RSpec.describe VacationService do
       it 'when vacation is accepted, user accepts vacation and vacation have only decliners' do
         vacation = create(:vacation, status: :accepted)
         create(:work_time, user: vacation.user, vacation: vacation, starts_at: vacation.start_date.beginning_of_day + 8.hours, ends_at: vacation.start_date.beginning_of_day + 12.hours)
-        admin = create(:admin)
-        staff_manager = create(:staff_manager)
+        admin = create(:user, :admin)
+        staff_manager = create(:user, :staff_manager)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :declined)
         interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :accepted)
         create(:project_resource, user: vacation.user)
@@ -171,8 +171,8 @@ RSpec.describe VacationService do
 
       it 'when vacation is declined, user accepts vacation and vacation is declined by other staff manager' do
         vacation = create(:vacation, status: :declined)
-        staff_manager1 = create(:staff_manager)
-        staff_manager2 = create(:staff_manager)
+        staff_manager1 = create(:user, :staff_manager)
+        staff_manager2 = create(:user, :staff_manager)
         create(:vacation_interaction, user: staff_manager1, vacation: vacation, action: :declined)
         interaction = create(:vacation_interaction, user: staff_manager2, vacation: vacation, action: :accepted)
 
@@ -184,7 +184,7 @@ RSpec.describe VacationService do
       it 'when vacation is accepted, user accepts vacation and vacation have no other interactions' do
         vacation = create(:vacation, status: :accepted)
         create(:work_time, user: vacation.user, vacation: vacation, starts_at: vacation.start_date.beginning_of_day + 8.hours, ends_at: vacation.start_date.beginning_of_day + 12.hours)
-        staff_manager = create(:staff_manager)
+        staff_manager = create(:user, :staff_manager)
         interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :accepted)
         create(:project_resource, user: vacation.user)
         create(:project_resource_assignment, user: vacation.user, vacation: vacation)
@@ -197,9 +197,9 @@ RSpec.describe VacationService do
 
       it 'when vacation is declined, user declines vacation and vacation have approvers and decliners' do
         vacation = create(:vacation, status: :declined)
-        admin = create(:admin)
-        staff_manager1 = create(:staff_manager)
-        staff_manager2 = create(:staff_manager)
+        admin = create(:user, :admin)
+        staff_manager1 = create(:user, :staff_manager)
+        staff_manager2 = create(:user, :staff_manager)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :declined)
         create(:vacation_interaction, user: staff_manager1, vacation: vacation, action: :accepted)
         interaction = create(:vacation_interaction, user: staff_manager2, vacation: vacation, action: :declined)
@@ -212,9 +212,9 @@ RSpec.describe VacationService do
       it 'when vacation is accepted, user declines vacation, vacation has beed accepted by other staff manager and have decliners' do
         vacation = create(:vacation, status: :accepted)
         create(:work_time, user: vacation.user, vacation: vacation, starts_at: vacation.start_date.beginning_of_day + 8.hours, ends_at: vacation.start_date.beginning_of_day + 12.hours)
-        admin = create(:admin)
-        staff_manager1 = create(:staff_manager)
-        staff_manager2 = create(:staff_manager)
+        admin = create(:user, :admin)
+        staff_manager1 = create(:user, :staff_manager)
+        staff_manager2 = create(:user, :staff_manager)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :declined)
         create(:vacation_interaction, user: staff_manager1, vacation: vacation, action: :accepted)
         interaction = create(:vacation_interaction, user: staff_manager2, vacation: vacation, action: :declined)
@@ -228,8 +228,8 @@ RSpec.describe VacationService do
       it 'when vacation is declined, user declines vacation, vacation has been accepted by other staff manager' do
         vacation = create(:vacation, status: :declined)
         create(:project, name: 'Vacation')
-        staff_manager1 = create(:staff_manager)
-        staff_manager2 = create(:staff_manager)
+        staff_manager1 = create(:user, :staff_manager)
+        staff_manager2 = create(:user, :staff_manager)
         create(:vacation_interaction, user: staff_manager1, vacation: vacation, action: :accepted)
         create(:vacation_interaction, user: staff_manager2, vacation: vacation, action: :declined)
 
@@ -240,8 +240,8 @@ RSpec.describe VacationService do
 
       it 'when vacation is declined, user declines vacation, vacation have only approvers' do
         vacation = create(:vacation, status: :declined)
-        admin = create(:admin)
-        staff_manager = create(:staff_manager)
+        admin = create(:user, :admin)
+        staff_manager = create(:user, :staff_manager)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :approved)
         interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :declined)
 
@@ -252,8 +252,8 @@ RSpec.describe VacationService do
 
       it 'when vacation is declined, user declines vacation, vacation have only decliners' do
         vacation = create(:vacation, status: :declined)
-        admin = create(:admin)
-        staff_manager = create(:staff_manager)
+        admin = create(:user, :admin)
+        staff_manager = create(:user, :staff_manager)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :declined)
         interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :declined)
 
@@ -264,7 +264,7 @@ RSpec.describe VacationService do
 
       it 'when vacation is decline, user declines vacation, vacation have no other interactions' do
         vacation = create(:vacation, status: :declined)
-        staff_manager = create(:staff_manager)
+        staff_manager = create(:user, :staff_manager)
         interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :declined)
 
         described_class.new(current_user: staff_manager, vacation: vacation).undone
@@ -276,9 +276,9 @@ RSpec.describe VacationService do
     context 'when current user can manage staff and is not staff manager' do
       it 'when vacation is declined, user declines vacation, vacation have approvers and decliners' do
         vacation = create(:vacation, status: :declined)
-        admin1 = create(:admin)
-        admin2 = create(:admin)
-        user = create(:admin)
+        admin1 = create(:user, :admin)
+        admin2 = create(:user, :admin)
+        user = create(:user, :admin)
         create(:vacation_interaction, user: admin1, vacation: vacation, action: :declined)
         create(:vacation_interaction, user: admin2, vacation: vacation, action: :approved)
         interaction = create(:vacation_interaction, user: user, vacation: vacation, action: :declined)
@@ -290,8 +290,8 @@ RSpec.describe VacationService do
 
       it 'when vacation is declined, user declines vacation, vacation have only approvers' do
         vacation = create(:vacation, status: :declined)
-        admin = create(:admin)
-        user = create(:admin)
+        admin = create(:user, :admin)
+        user = create(:user, :admin)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :approved)
         interaction = create(:vacation_interaction, user: user, vacation: vacation, action: :declined)
 
@@ -302,8 +302,8 @@ RSpec.describe VacationService do
 
       it 'when vacation is declined, user declines vacation, vacation have only decliners' do
         vacation = create(:vacation, status: :declined)
-        admin = create(:admin)
-        user = create(:admin)
+        admin = create(:user, :admin)
+        user = create(:user, :admin)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :declined)
         interaction = create(:vacation_interaction, user: user, vacation: vacation, action: :declined)
 
@@ -314,7 +314,7 @@ RSpec.describe VacationService do
 
       it 'when vacation is declined, user declines vacation, vacation have no other interactions' do
         vacation = create(:vacation, status: :declined)
-        user = create(:admin)
+        user = create(:user, :admin)
         interaction = create(:vacation_interaction, user: user, vacation: vacation, action: :declined)
 
         described_class.new(current_user: user, vacation: vacation).undone
@@ -324,8 +324,8 @@ RSpec.describe VacationService do
 
       it 'when vacation is approved, user approves vacation, vacation have only approvers' do
         vacation = create(:vacation, status: :approved)
-        admin = create(:admin)
-        user = create(:admin)
+        admin = create(:user, :admin)
+        user = create(:user, :admin)
         create(:vacation_interaction, user: admin, vacation: vacation, action: :approved)
         interaction = create(:vacation_interaction, user: user, vacation: vacation, action: :approved)
 
@@ -336,7 +336,7 @@ RSpec.describe VacationService do
 
       it 'when vacation is approved, user approves vacation, vacation have no other interactions' do
         vacation = create(:vacation, status: :approved)
-        user = create(:admin)
+        user = create(:user, :admin)
         interaction = create(:vacation_interaction, user: user, vacation: vacation, action: :approved)
 
         described_class.new(current_user: user, vacation: vacation).undone

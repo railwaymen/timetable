@@ -2,9 +2,21 @@
 
 FactoryBot.define do
   factory :user do
-    first_name { 'Tohn' }
-    last_name { 'Test' }
+    sequence(:first_name) { |n| "John #{n}" }
+    sequence(:last_name) { |n| "Smith #{n}" }
     sequence(:email) { |n| "test#{n}@example.com" }
+
+    trait :admin do
+      admin { true }
+    end
+
+    trait :manager do
+      manager { true }
+    end
+
+    trait :staff_manager do
+      staff_manager { true }
+    end
   end
 
   factory :admin, class: User do

@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe Api::VacationsController do
   render_views
   let(:user) { create(:user) }
-  let(:staff_manager) { create(:staff_manager) }
-  let(:admin) { create(:admin) }
+  let(:staff_manager) { create(:user, :staff_manager) }
+  let(:admin) { create(:user, :admin) }
   let(:vacation_applications_query) { instance_double(VacationApplicationsQuery) }
   let(:vacation_service) { instance_double(VacationService) }
   let(:csv_staff_generator_service) { instance_double(CsvStaffGeneratorService) }

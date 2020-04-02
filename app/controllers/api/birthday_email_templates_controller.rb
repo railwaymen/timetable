@@ -4,7 +4,6 @@ module Api
   class BirthdayEmailTemplatesController < Api::BaseController
     before_action :authenticate_admin!
     before_action :find_birthday, only: %i[show update destroy]
-    respond_to :json
 
     def index
       @birthday_email_templates = BirthdayEmailTemplate.all.order(:created_at)

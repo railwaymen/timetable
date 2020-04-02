@@ -6,18 +6,12 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
   render_views
 
   let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
+  let(:admin) { create(:user, :admin) }
 
   describe '#index' do
     it 'authenticates user' do
       get :index, format: :json
       expect(response.code).to eql('401')
-    end
-
-    it 'forbids regular user' do
-      sign_in(user)
-      get :index, format: :json
-      expect(response.code).to eql('403')
     end
 
     it 'returns assignments' do
@@ -94,12 +88,6 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
       expect(response.code).to eql('401')
     end
 
-    it 'forbids regular user' do
-      sign_in(user)
-      post :create, format: :json
-      expect(response.code).to eql('403')
-    end
-
     it 'creates assignment' do
       sign_in(admin)
       resource = create(:project_resource)
@@ -130,12 +118,6 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
       expect(response.code).to eql('401')
     end
 
-    it 'forbids regular user' do
-      sign_in(user)
-      put :update, params: { id: 1 }, format: :json
-      expect(response.code).to eql('403')
-    end
-
     it 'updates assignment' do
       sign_in(admin)
       project = create(:project)
@@ -163,12 +145,6 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
     it 'authenticates user' do
       delete :destroy, params: { id: 1 }, format: :json
       expect(response.code).to eql('401')
-    end
-
-    it 'forbids regular user' do
-      sign_in(user)
-      delete :destroy, params: { id: 1 }, format: :json
-      expect(response.code).to eql('403')
     end
 
     it 'destroys assignment' do

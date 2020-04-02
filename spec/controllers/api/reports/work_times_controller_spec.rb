@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe Api::Reports::WorkTimesController do
   render_views
   let(:user) { create(:user) }
-  let(:manager) { create(:manager) }
-  let(:admin) { create(:admin) }
+  let(:manager) { create(:user, :manager) }
+  let(:admin) { create(:user, :admin) }
 
   describe '#index' do
     it 'authenticates user' do
