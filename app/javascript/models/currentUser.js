@@ -11,7 +11,7 @@ Object.assign(window.currentUser, {
     return this.admin || this.manager || this.staff_manager;
   },
   isAdminOrManager() {
-    return this.admin || this.manager || this.is_leader;
+    return this.admin || this.manager;
   },
   isAdminOrManagerOrLeader() {
     return this.admin || this.manager || this.is_leader;
