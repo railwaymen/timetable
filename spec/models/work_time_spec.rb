@@ -22,7 +22,7 @@ RSpec.describe WorkTime, type: :model do
     it 'counts duration' do
       work_time = create :work_time, starts_at: Time.current,
                                      ends_at: 2.hours.from_now
-      expect(work_time.duration).to eq 7200
+      expect(work_time.duration).to eq 2.hours
     end
   end
 

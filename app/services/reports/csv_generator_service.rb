@@ -74,8 +74,8 @@ module Reports
 
     def format_duration(duration)
       duration = duration.to_f
-      h = (duration / 3600).to_i
-      m = ((duration % 3600) / 60).to_i
+      h = (duration / 1.hour).to_i
+      m = ((duration % 1.hour) / 60).to_i
       m = "0#{m}" if m < 10
       h = "0#{h}" if h < 10
       "#{h}:#{m}"

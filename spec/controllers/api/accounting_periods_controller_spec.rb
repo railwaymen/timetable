@@ -164,9 +164,25 @@ RSpec.describe Api::AccountingPeriodsController do
     it 'returns stats information for full time employees' do
       user = create(:user)
       sign_in(user)
-      accounting_period = create(:accounting_period, user: user, full_time: true, starts_at: Time.zone.now.beginning_of_month, ends_at: Time.zone.now.end_of_month)
-      should_worked = accounting_period.starts_at.to_date.business_days_until(Time.zone.today + 1.day) * 8 * 3600
-      get :matching_fulltime, params: { user_id: user.id, date: Time.zone.now.to_date }, format: :json
+      date = Time.zone.now.beginning_of_month + 3.days
+
+      accounting_period = create(:accounting_period, user: user, full_time: true,
+                                                     duration: Time.zone.now.beginning_of_month.to_date.business_days_until(Time.zone.now.end_of_month + 1.day) * 8.hours,
+                                                     starts_at: Time.zone.now.beginning_of_month, ends_at: Time.zone.now.end_of_month)
+      should_worked = accounting_period.starts_at.to_date.business_days_until(Time.zone.today + 1.day) * 8.hours
+      get :matching_fulltime, params: { user_id: user.id, date: date }, format: :json
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql({ accounting_period: accounting_period_response(accounting_period), should_worked: should_worked }.to_json)
+    end
+
+    it 'returns stats information for custom full time employees' do
+      user = create(:user)
+      sign_in(user)
+      date = Time.zone.now.beginning_of_month + 3.days
+
+      accounting_period = create(:accounting_period, duration: 147.hours, user: user, full_time: true, starts_at: Time.zone.now.beginning_of_month, ends_at: Time.zone.now.end_of_month)
+      should_worked = 7.hours * 3
+      get :matching_fulltime, params: { user_id: user.id, date: date }, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql({ accounting_period: accounting_period_response(accounting_period), should_worked: should_worked }.to_json)
     end

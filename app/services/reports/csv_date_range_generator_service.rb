@@ -75,7 +75,7 @@ module Reports
     end
 
     def format_duration(duration)
-      (duration.to_f / (3600 * 8)).to_i
+      (duration.to_f / (1.hour * 8)).to_i
     end
 
     def sanitized_sql

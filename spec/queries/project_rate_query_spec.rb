@@ -13,9 +13,9 @@ RSpec.describe ProjectRateQuery do
 
       results = described_class.new(active: true, starts_at: 30.days.ago, ends_at: Time.zone.now.end_of_day).results
       expect(results.first.project_id).to eql(project1.id)
-      expect(results.first.total).to eql(7200)
+      expect(results.first.total).to eql(2.hours.to_i)
       expect(results.second.project_id).to eql(project2.id)
-      expect(results.second.total).to eql(3600)
+      expect(results.second.total).to eql(1.hour.to_i)
     end
   end
 end
