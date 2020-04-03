@@ -1,21 +1,24 @@
 import React from 'react';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
+import Popup from './popup';
 
 const simpleDateFormat = (date) => moment(date).format('YYYY/MM/DD');
 export default class NewGroupReport extends React.Component {
   constructor(props) {
     super(props);
     this.onDelete = this.onDelete.bind(this);
+    this.handleChecked = this.handleChecked.bind(this);
     this.state = {
       projectId: parseInt(this.props.match.params.projectId, 10),
       reports: [],
       from: '',
       to: '',
+      showPopup: false,
+      isChecked: false,
     };
   }
 
@@ -29,6 +32,16 @@ export default class NewGroupReport extends React.Component {
   newReportLink() {
     const { from, to, projectId } = this.state;
     return `/projects/${projectId}/new_report?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+  }
+
+  togglePopup = () => {
+    this.setState({
+      showPopup: !this.state.showPopup,
+    });
+  }
+
+  handleChecked = () => {
+    this.setState({ isChecked: !this.state.isChecked });
   }
 
   onDelete(e) {
@@ -71,10 +84,7 @@ export default class NewGroupReport extends React.Component {
           <title>{I18n.t('common.reports')}</title>
         </Helmet>
         <p className="text-right">
-          <Link to={this.newReportLink()} className="bt bt-main">
-            <i className="symbol fa fa-plus" />
-            <span className="bt-txt">{I18n.t('apps.reports.new')}</span>
-          </Link>
+          <button type="button" className="bt bt-main" onClick={this.togglePopup.bind(this)}>show popup</button>
         </p>
         <div className="table-responsive">
           <table className="table">
@@ -126,13 +136,8 @@ export default class NewGroupReport extends React.Component {
                             <span className="txt">{I18n.t('common.download')}</span>
                           </a>
                         )}
-                    <Link className="bt bt-second" to={`/projects/${projectId}/edit_report/${id}`}>
-                      <i className="symbol fa fa-search" />
-                      <span className="bt-txt">{I18n.t('common.show')}</span>
-                    </Link>
-                    <a className="bt bt-danger" onClick={this.onDelete} href={`/api/projects/${projectId}/project_reports/${id}`}>
-                      <i className="symbol fa fa-trash-o" />
-                      <span className="bt-txt">{I18n.t('apps.reports.remove')}</span>
+                    <a href={`/api/projects/${projectId}/project_reports/${id}`}>
+                      <input type="checkbox" onChange={this.handleChecked} />
                     </a>
                   </td>
                 </tr>
@@ -140,6 +145,13 @@ export default class NewGroupReport extends React.Component {
             </tbody>
           </table>
         </div>
+        {this.state.showPopup ? (
+          <Popup
+            text="Close Me"
+            closePopup={this.togglePopup.bind(this)}
+          />
+        )
+          : null}
       </div>
     );
   }
