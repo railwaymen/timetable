@@ -407,5 +407,14 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       expect(work_time.updated_by_admin).to be true
       expect(response.body).to eq('')
     end
+
+    it 'does not allow to destroy work time older that 3 business days for regular user' do
+      sign_in(user)
+      work_time = create(:work_time, starts_at: 10.days.ago.beginning_of_day + 8.hours, ends_at: 10.days.ago.beginning_of_day + 10.hours, user: user)
+      delete :destroy, params: { id: work_time.id }, format: :json
+      expect(response.code).to eql('422')
+      expect(response.body).to include_json({ error: :too_old }.to_json).at_path('errors/starts_at')
+      expect(work_time.reload.active).to be true
+    end
   end
 end
