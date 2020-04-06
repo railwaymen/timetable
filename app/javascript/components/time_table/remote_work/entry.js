@@ -4,22 +4,37 @@ import moment from 'moment';
 import { displayDuration } from '@components/shared/helpers';
 
 function Entry(props) {
-  const { work } = props;
+  const { work, onDelete, setEditedWorkTimeId } = props;
 
   function formatDate(date) {
-    return moment(date).format('YYYY-MM-DD HH:mm');
+    return moment(date).format('YYYY-MM-DD');
+  }
+
+  function hourFormat(date) {
+    return moment(date).format('HH:mm');
+  }
+
+  function setAsActive() {
+    setEditedWorkTimeId(work.id);
   }
 
   return (
     <tr>
-      <td>{work.starts_at ? formatDate(work.starts_at) : ''}</td>
-      <td>{work.ends_at ? formatDate(work.ends_at) : ''}</td>
+      <td className="switch-edition" onClick={setAsActive}>{work.note}</td>
+      <td className="switch-edition" onClick={setAsActive}>{work.starts_at ? formatDate(work.starts_at) : ''}</td>
       <td>{displayDuration(work.duration)}</td>
-      <td>{work.note}</td>
+      <td className="switch-edition" onClick={setAsActive}>{work.starts_at ? hourFormat(work.starts_at) : ''}</td>
+      <td className="switch-edition" onClick={setAsActive}>{work.ends_at ? hourFormat(work.ends_at) : ''}</td>
       <td>
-        {currentUser.admin && (
-          <span>Actions</span>
-        )}
+        <div className="actions-container">
+          <span
+            className="action-item destroy"
+            onClick={() => onDelete(work.id)}
+            data-tooltip-bottom={I18n.t('common.remove')}
+          >
+            <i className="symbol fa fa-trash-o" />
+          </span>
+        </div>
       </td>
     </tr>
   );

@@ -281,6 +281,8 @@ en:
     user: User
     projects_distribution: Projects distribution
     remote_work: Remote Work
+    hours: Hours
+    date: Date
   activerecord:
     errors:
       models:

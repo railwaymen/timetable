@@ -280,6 +280,8 @@ pl:
     user: Użytkownik
     projects_distribution: Obłożenie projektów
     remote_work: Praca zdalna
+    hours: Godziny
+    date: Data
   errors:
     format: "%{attribute} %{message}"
     messages:
