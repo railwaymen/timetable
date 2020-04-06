@@ -4,6 +4,8 @@ import DatePicker from 'react-datepicker';
 import useFormHandler from '@hooks/use_form_handler';
 import { defaultDatePickerProps } from '@components/shared/helpers';
 import PropTypes from 'prop-types';
+import ErrorTooltip from '@components/shared/error_tooltip';
+import translateErrors from '@components/shared/translate_errors';
 import { makeGetRequest, makePostRequest } from '../../shared/api';
 
 const NewEntryForm = (props) => {
@@ -17,6 +19,7 @@ const NewEntryForm = (props) => {
 
   const [remoteWork, setRemoteWork, onChange] = useFormHandler(defaultRemoteWork);
   const [users, setUsers] = useState([]);
+  const [errors, setErrors] = useState({});
 
   function getUsers() {
     makeGetRequest({ url: '/api/users' })
@@ -35,8 +38,12 @@ const NewEntryForm = (props) => {
     e.preventDefault();
 
     makePostRequest({ url: '/api/remote_works', body: { remote_work: remoteWork } })
-      .then(() => handleNewEntry(remoteWork.user_id))
-      .catch(() => {});
+      .then(() => {
+        handleNewEntry(remoteWork.user_id);
+        setErrors({});
+      }).catch((response) => {
+        setErrors(translateErrors('remote_work', response.errors));
+      });
   }
 
   useEffect(() => {
@@ -48,24 +55,20 @@ const NewEntryForm = (props) => {
     setRemoteWork({ ...remoteWork, user_id: userId });
   }, [userId]);
 
-  const { errors = {} } = remoteWork;
-
   return (
     <div id="content" className="new-remote-work">
       <form className="row" onSubmit={onSubmit}>
         <div className="col-12 col-md-6">
           <div className="row calendar-row">
             <div className="col-md-6 form-group">
-              {errors.startsAt && (
-                <div className="error-description">{errors.startsAt.join(', ')}</div>
-              )}
+              {errors.startsAt && <ErrorTooltip errors={errors.startsAt} />}
               <DatePicker
                 {...defaultDatePickerProps}
                 dateFormat="YYYY-MM-DD HH:mm"
                 timeFormat="HH:mm"
                 showTimeSelect
                 timeIntervals={15}
-                className={`${errors.starts_at ? 'error' : ''} form-control`}
+                className={`${errors.startsAt ? 'error' : ''} form-control`}
                 selected={remoteWork.starts_at}
                 name="starts_at"
                 placeholderText={I18n.t('common.from')}
@@ -73,16 +76,14 @@ const NewEntryForm = (props) => {
               />
             </div>
             <div className="col-md-6 form-group">
-              {errors.endsAt && (
-                <div className="error-description">{errors.endsAt.join(', ')}</div>
-              )}
+              {errors.endsAt && <ErrorTooltip errors={errors.endsAt} />}
               <DatePicker
                 {...defaultDatePickerProps}
                 dateFormat="YYYY-MM-DD HH:mm"
                 timeFormat="HH:mm"
                 showTimeSelect
                 timeIntervals={15}
-                className={`${errors.ends_at ? 'error' : ''} form-control`}
+                className={`${errors.endsAt ? 'error' : ''} form-control`}
                 selected={remoteWork.ends_at}
                 name="ends_at"
                 placeholderText={I18n.t('common.to')}
@@ -127,6 +128,7 @@ const NewEntryForm = (props) => {
 
 NewEntryForm.propTypes = {
   refreshList: PropTypes.func,
+  userId: PropTypes.number,
 };
 
 export default NewEntryForm;

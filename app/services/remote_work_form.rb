@@ -40,7 +40,7 @@ class RemoteWorkForm
       days = (starts_at.to_date..ends_at.to_date).map do |date|
         next unless date.workday?
 
-        create_entry(additional_params)
+        create_entry(date, additional_params)
       end
 
       @saved = days.compact
@@ -49,7 +49,7 @@ class RemoteWorkForm
 
   private
 
-  def create_entry(additional_params)
+  def create_entry(date, additional_params)
     entry = @remote_work.dup
     entry.starts_at = Time.zone.parse(date.to_s).change({ hour: starts_at.hour, min: starts_at.min, sec: 0 })
     entry.ends_at = Time.zone.parse(date.to_s).change({ hour: ends_at.hour, min: ends_at.min, sec: 0 })
@@ -63,7 +63,7 @@ class RemoteWorkForm
   end
 
   def validates_date
-    errors.add(:starts_at, :incorrect_range) if starts_at && ends_at && starts_at > ends_at
+    errors.add(:starts_at, :incorrect_range) if starts_at && ends_at && starts_at.to_date > ends_at.to_date
   end
 
   def validates_hours

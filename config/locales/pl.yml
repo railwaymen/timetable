@@ -393,6 +393,20 @@ pl:
               blank: Nazwisko jest wymagane
             phone:
               invalid: Numer telefonu jest niepoprawny
+        remote_work:
+          basic: Nie udało się dodać pracy zdalnej
+          base:
+          attributes:
+            starts_at:
+              blank: Data początkowa jest wymagana
+              overlap: Istnieje inny wpis o pokrywającym się czasie
+              too_old: Nie można utworzyć lub edytować wpisu
+              incorrect_range: Nieprawny zakres dat
+              incorrect_hours: Godzina początkowa jest większa niż końcowa
+            ends_at:
+              blank: Data końcowa jest wymagana
+            duration:
+              greater_than: Czas trwania musi być większy od zera
   activemodel:
     errors:
       models:
@@ -400,4 +414,3 @@ pl:
           <<: *worktime
         work_time_fill_gaps_form:
           <<: *worktime
-

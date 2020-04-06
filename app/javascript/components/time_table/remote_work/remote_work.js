@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Pagination from '@components/shared/pagination';
 import { locationParams, replaceLocationParams } from '@components/shared/helpers';
+import translateErrors from '@components/shared/translate_errors';
 import UserSlider from '@components/shared/user_slider';
 import { Helmet } from 'react-helmet';
 import useOutsideClick from '@hooks/use_outside_click';
@@ -14,15 +15,15 @@ function RemoteWork() {
   const currentPage = parseInt(params.page, 10) || 1;
   const userId = parseInt(params.user_id, 10) || currentUser.id;
 
-  const [remoteWorks, setRemoteWorks] = useState({ total_count: 0, remote_works: [] });
+  const [remoteWorkList, setRemoteWorkList] = useState({ total_count: 0, remote_works: [] });
   const [user, setUser] = useState({ id: userId });
   const [page, setPage] = useState(currentPage);
   const [editedWorkTimeId, setEditedWorkTimeId] = useState();
 
-  function getRemoteWorks() {
+  function getRemoteWorkList() {
     makeGetRequest({ url: `/api/remote_works?page=${page}&user_id=${user.id}` })
       .then((response) => {
-        setRemoteWorks(response.data);
+        setRemoteWorkList(response.data);
       });
   }
 
@@ -33,13 +34,36 @@ function RemoteWork() {
       });
   }
 
-  function updateRemoteWork(newRemoteWork) {
+  function setErrors(remoteWorkId, errors) {
+    const currentRemoteWork = remoteWorkList.remote_works.find((rw) => remoteWorkId === rw.id);
+    currentRemoteWork.errors = translateErrors('remote_work', errors);
+    setRemoteWorkList({ ...remoteWorkList, remote_works: remoteWorkList.remote_works });
+  }
+
+  function updateRemoteWork(updatedRemoteWork) {
     makePutRequest({
-      url: `/api/remote_works/${newRemoteWork.id}`,
-      body: { remote_work: newRemoteWork },
+      url: `/api/remote_works/${updatedRemoteWork.id}`,
+      body: { remote_work: updatedRemoteWork },
     }).then(() => {
-      getRemoteWorks();
+      getRemoteWorkList();
+    }).catch((response) => {
+      setErrors(updatedRemoteWork.id, response.errors);
     });
+  }
+
+  function onDelete(remoteWorkId) {
+    if (window.confirm(I18n.t('common.confirm'))) {
+      makeDeleteRequest({ url: `/api/remote_works/${remoteWorkId}` })
+        .then((data) => {
+          if (data.status >= 400 && data.status < 500) {
+            data.json().then((response) => {
+              setErrors(remoteWorkId, response.errors);
+            });
+          } else {
+            getRemoteWorkList();
+          }
+        });
+    }
   }
 
   function handleNewEntry(entryUserid) {
@@ -49,19 +73,12 @@ function RemoteWork() {
     } else if (page !== 1) {
       setPage(1);
     } else {
-      getRemoteWorks();
+      getRemoteWorkList();
     }
   }
 
-  function onDelete(id) {
-    makeDeleteRequest({ url: `/api/remote_works/${id}`})
-      .then(() => {
-        getRemoteWorks();
-      });
-  }
-
   useEffect(() => {
-    getRemoteWorks();
+    getRemoteWorkList();
     replaceLocationParams({ page, user_id: user.id });
   }, [page, user.id]);
 
@@ -96,12 +113,11 @@ function RemoteWork() {
           </tr>
         </thead>
         <tbody>
-          {remoteWorks.remote_works.map((work) => (
+          {remoteWorkList.remote_works.map((work) => (
             <React.Fragment key={work.id}>
               {work.id === editedWorkTimeId ? (
                 <EditEntry
                   work={work}
-                  onDelete={onDelete}
                   updateRemoteWork={updateRemoteWork}
                 />
               ) : (
@@ -115,7 +131,7 @@ function RemoteWork() {
           ))}
         </tbody>
       </table>
-      <Pagination page={page} setPage={setPage} totalCount={remoteWorks.total_count} />
+      <Pagination page={page} setPage={setPage} totalCount={remoteWorkList.total_count} />
     </div>
   );
 }
