@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 const ErrorTooltip = ({ errors }) => (
   <div className="error-tooltip">
-    {console.log(errors)}
     <ul>
       {errors.map((error) => (
         <li key={error}>{error}</li>
