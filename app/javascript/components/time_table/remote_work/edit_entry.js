@@ -14,13 +14,12 @@ function EditEntry(props) {
     date: moment(work.starts_at),
     starts_at_hours: moment(work.starts_at).format('HH:mm'),
     ends_at_hours: moment(work.ends_at).format('HH:mm'),
-    version: 0,
   };
 
   const [remoteWork, setRemoteWork, onChange] = useFormHandler(defaultRemoteWork);
 
   function onDateChange(date) {
-    setRemoteWork({ ...remoteWork, date, version: remoteWork.version + 1 });
+    setRemoteWork({ ...remoteWork, date });
   }
 
   function recountTime() {
@@ -46,7 +45,7 @@ function EditEntry(props) {
     refWork.current = remoteWork;
   }, [remoteWork]);
 
-  // cleanup: update remote work
+  // on cleanup: update remote work
   useEffect(() => () => {
     const newRemoteWork = prepareToSave(refWork.current);
     updateRemoteWork(newRemoteWork);
@@ -62,7 +61,6 @@ function EditEntry(props) {
             onChange={onChange}
             value={remoteWork.note || ''}
           />
-
           <DatePicker
             {...defaultDatePickerProps}
             dateFormat="YYYY-MM-DD"
@@ -73,7 +71,6 @@ function EditEntry(props) {
             onChange={onDateChange}
             onSelect={onDateChange}
           />
-
           <input
             className="start-input"
             type="text"

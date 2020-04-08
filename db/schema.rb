@@ -151,7 +151,7 @@ ActiveRecord::Schema.define(version: 2020_03_26_130110) do
     t.bigint "creator_id", null: false
     t.datetime "starts_at", null: false
     t.datetime "ends_at", null: false
-    t.integer "duration", default: 0, null: false
+    t.integer "duration", null: false
     t.text "note"
     t.boolean "active", default: true, null: false
     t.boolean "updated_by_admin", default: false, null: false

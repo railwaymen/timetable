@@ -23,11 +23,7 @@ const NewEntryForm = (props) => {
 
   function getUsers() {
     makeGetRequest({ url: '/api/users' })
-      .then((response) => {
-        if (response.status === 200) {
-          setUsers(response.data);
-        }
-      });
+      .then((response) => setUsers(response.data));
   }
 
   function onDateChange(date, name) {

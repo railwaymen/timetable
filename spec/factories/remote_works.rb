@@ -4,7 +4,9 @@ FactoryBot.define do
   factory :remote_work do
     user
     creator { user }
-    sequence(:starts_at) { |n| Time.zone.now.beginning_of_day + (15 * n).minutes }
-    sequence(:ends_at) { starts_at + 15.minutes }
+    starts_at do
+      Time.zone.today.workday? ? Time.zone.now.beginning_of_day + 9.hours : 1.business_day.from_now.beginning_of_day + 9.hours
+    end
+    ends_at { starts_at + 8.hours }
   end
 end
