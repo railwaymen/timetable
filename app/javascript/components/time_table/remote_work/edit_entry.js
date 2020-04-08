@@ -101,6 +101,7 @@ EditEntry.propTypes = {
     duration: PropTypes.number,
     note: PropTypes.string,
   }),
+  updateRemoteWork: PropTypes.func,
 };
 
 export default EditEntry;

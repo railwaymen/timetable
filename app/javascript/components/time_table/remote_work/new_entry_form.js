@@ -123,7 +123,7 @@ const NewEntryForm = (props) => {
 };
 
 NewEntryForm.propTypes = {
-  refreshList: PropTypes.func,
+  handleNewEntry: PropTypes.func,
   userId: PropTypes.number,
 };
 

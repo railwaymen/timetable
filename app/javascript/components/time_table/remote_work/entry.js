@@ -53,6 +53,8 @@ Entry.propTypes = {
     duration: PropTypes.number,
     note: PropTypes.string,
   }),
+  onDelete: PropTypes.func,
+  setEditedWorkTimeId: PropTypes.func,
 };
 
 export default Entry;
