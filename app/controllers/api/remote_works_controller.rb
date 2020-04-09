@@ -15,6 +15,7 @@ module Api
     def create
       @remote_work_form = RemoteWorkForm.new(remote_work_params.merge(creator_id: current_user.id))
       authorize @remote_work_form.remote_work
+
       @remote_work_form.save(save_params)
       respond_with @remote_work_form
     end

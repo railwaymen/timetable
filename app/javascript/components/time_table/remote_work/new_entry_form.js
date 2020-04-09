@@ -54,7 +54,7 @@ const NewEntryForm = (props) => {
   return (
     <div id="content" className="new-remote-work">
       <form className="row" onSubmit={onSubmit}>
-        <div className="col-12 col-md-6">
+        <div className="col-12 col-md-8">
           <div className="row calendar-row">
             <div className="col-md-6 form-group">
               {errors.startsAt && <ErrorTooltip errors={errors.startsAt} />}
@@ -89,7 +89,7 @@ const NewEntryForm = (props) => {
           </div>
           {currentUser.admin && (
             <div className="row calendar-row">
-              <div className="form-group">
+              <div className="col-md-6 form-group">
                 <select className="form-control" name="user_id" value={remoteWork.user_id} onChange={onChange}>
                   {users.map((user) => (
                     <option key={user.id} value={user.id}>
@@ -101,7 +101,7 @@ const NewEntryForm = (props) => {
             </div>
           )}
         </div>
-        <div className="col-12 col-md-6">
+        <div className="col-12 col-md-4">
           <div className="form-group">
             <textarea
               className="form-control"

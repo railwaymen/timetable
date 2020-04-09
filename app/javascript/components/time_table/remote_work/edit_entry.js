@@ -55,39 +55,43 @@ function EditEntry(props) {
     <tr>
       <td colSpan="6" className="switch-edition">
         <form>
-          <textarea
-            name="note"
-            placeholder={I18n.t('apps.accounting_periods.note')}
-            onChange={onChange}
-            value={remoteWork.note || ''}
-          />
-          <DatePicker
-            {...defaultDatePickerProps}
-            dateFormat="YYYY-MM-DD"
-            className="form-control"
-            selected={remoteWork.date}
-            name="date"
-            placeholderText={I18n.t('common.date')}
-            onChange={onDateChange}
-            onSelect={onDateChange}
-          />
-          <input
-            className="start-input"
-            type="text"
-            name="starts_at_hours"
-            value={remoteWork.starts_at_hours}
-            onChange={onChange}
-            onBlur={recountTime}
-          />
-          <span className="time-divider">-</span>
-          <input
-            className="end-input"
-            type="text"
-            name="ends_at_hours"
-            value={remoteWork.ends_at_hours}
-            onChange={onChange}
-            onBlur={recountTime}
-          />
+          <div className="edit-entry-wrapper">
+            <textarea
+              name="note"
+              placeholder={I18n.t('apps.accounting_periods.note')}
+              onChange={onChange}
+              value={remoteWork.note || ''}
+            />
+            <div>
+              <DatePicker
+                {...defaultDatePickerProps}
+                dateFormat="YYYY-MM-DD"
+                className="form-control datepicker"
+                selected={remoteWork.date}
+                name="date"
+                placeholderText={I18n.t('common.date')}
+                onChange={onDateChange}
+                onSelect={onDateChange}
+              />
+              <input
+                className="start-input"
+                type="text"
+                name="starts_at_hours"
+                value={remoteWork.starts_at_hours}
+                onChange={onChange}
+                onBlur={recountTime}
+              />
+              <span className="time-divider">-</span>
+              <input
+                className="end-input"
+                type="text"
+                name="ends_at_hours"
+                value={remoteWork.ends_at_hours}
+                onChange={onChange}
+                onBlur={recountTime}
+              />
+            </div>
+          </div>
         </form>
       </td>
     </tr>

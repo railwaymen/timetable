@@ -90,7 +90,7 @@ function RemoteWork() {
   useOutsideClick('.switch-edition', () => setEditedWorkTimeId(''));
 
   return (
-    <div>
+    <div className="remote-work-container">
       <Helmet>
         <title>{I18n.t('common.remote_work')}</title>
       </Helmet>
