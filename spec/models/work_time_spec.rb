@@ -32,6 +32,21 @@ RSpec.describe WorkTime, type: :model do
       allow(@work_time).to receive(:assign_duration)
     end
 
+    it 'should not allow to create work time for dates older than 3 days for regular user' do
+      @work_time.starts_at = 10.days.ago.beginning_of_day
+      @work_time.ends_at = 10.days.ago.beginning_of_day + 1.hour
+      expect(@work_time.valid?(:user)).to be false
+      expect(@work_time.errors[:starts_at].present?).to eql(true)
+    end
+
+    it 'should not allow to update work time for dates older than 3 days for regular user' do
+      work_time = create(:work_time, starts_at: 10.days.ago.beginning_of_day, ends_at: 10.days.ago.beginning_of_day + 1.hour)
+      work_time.starts_at = Time.zone.now.beginning_of_day
+      work_time.ends_at = Time.zone.now.beginning_of_day + 1.hour
+      expect(work_time.valid?(:user)).to be false
+      expect(work_time.errors[:starts_at].present?).to eql(true)
+    end
+
     it 'should not throw exceptions for empty values' do
       expect(WorkTime.new).to_not be_valid
     end

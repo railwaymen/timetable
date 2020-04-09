@@ -62,7 +62,8 @@ class WorkTime < ApplicationRecord
   end
 
   def validates_time
-    errors.add(:starts_at, :too_old) if starts_at && ends_at && (starts_at < 3.business_days.ago.beginning_of_day || ends_at < 3.business_days.ago.beginning_of_day)
+    errors.add(:starts_at, :too_old) if (starts_at && ends_at && (starts_at < 3.business_days.ago.beginning_of_day || ends_at < 3.business_days.ago.beginning_of_day)) ||
+                                        (starts_at_was && ends_at_was && (starts_at_was < 3.business_days.ago.beginning_of_day || ends_at_was < 3.business_days.ago.beginning_of_day))
   end
 
   def validates_body
