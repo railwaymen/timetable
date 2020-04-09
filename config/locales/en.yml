@@ -280,6 +280,9 @@ en:
     title: Title
     user: User
     projects_distribution: Projects distribution
+    remote_work: Remote Work
+    hours: Hours
+    date: Date
   activerecord:
     errors:
       models:
@@ -347,6 +350,20 @@ en:
               blank: Last name is required
             phone:
               invalid: Invalid phone number
+        remote_work:
+          basic: There was an error while trying to add remote work
+          base:
+          attributes:
+            starts_at:
+              blank: From date is required
+              overlap: There is another entry overlapping the specified time
+              too_old: Can not create or update past remote work
+              incorrect_range: Incorrect range of dates
+              incorrect_hours: Starts at hour is greater than ends at
+            ends_at:
+              blank: To date is required
+            duration:
+              greater_than: Duration should be greater than zero
   activemodel:
     errors:
       models:

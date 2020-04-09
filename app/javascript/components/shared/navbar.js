@@ -28,6 +28,7 @@ const Navbar = () => (
       <NavLink className="item" to="/vacation_periods">{I18n.t('common.vacation_periods')}</NavLink>
       <NavLink className="item" to="/timesheet">{I18n.t('common.timesheet')}</NavLink>
       <NavLink className="item" to="/vacations">{I18n.t('common.vacations')}</NavLink>
+      <NavLink className="item" to="/remote_work">{I18n.t('common.remote_work')}</NavLink>
       { currentUser.admin && (
         <NavLink className="item" to="/birthday_templates">{I18n.t('common.birthday_templates')}</NavLink>
       )}

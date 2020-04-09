@@ -146,6 +146,21 @@ ActiveRecord::Schema.define(version: 2020_03_26_130110) do
     t.index ["name"], name: "index_projects_on_name", unique: true
   end
 
+  create_table "remote_works", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "creator_id", null: false
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.integer "duration", null: false
+    t.text "note"
+    t.boolean "active", default: true, null: false
+    t.boolean "updated_by_admin", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["creator_id"], name: "index_remote_works_on_creator_id"
+    t.index ["user_id"], name: "index_remote_works_on_user_id"
+  end
+
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -253,6 +268,8 @@ ActiveRecord::Schema.define(version: 2020_03_26_130110) do
   add_foreign_key "project_resource_assignments", "vacations"
   add_foreign_key "project_resources", "users"
   add_foreign_key "projects", "users", column: "leader_id"
+  add_foreign_key "remote_works", "users"
+  add_foreign_key "remote_works", "users", column: "creator_id"
   add_foreign_key "vacation_interactions", "users"
   add_foreign_key "vacation_interactions", "vacations"
   add_foreign_key "vacation_periods", "users"
