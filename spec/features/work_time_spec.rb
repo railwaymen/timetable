@@ -86,8 +86,8 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   end
 
   it 'Timesheet' do
-    project = Project.create(name: 'test', active: true, work_times_allows_task: true)
-    Project.create(name: 'another', active: true, work_times_allows_task: true)
+    project = Project.create(name: 'test', work_times_allows_task: true)
+    Project.create(name: 'another', work_times_allows_task: true)
     user = FactoryBot.create :user, lang: 'en', password: 'password'
 
     work_time = create(:work_time, user: user, project: project, starts_at: 2.months.ago.beginning_of_day, ends_at: 2.months.ago.end_of_day)
@@ -135,10 +135,10 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
   it 'Projects' do
     user = FactoryBot.create :user, lang: 'en', password: 'password'
-    project = FactoryBot.create :project, active: true, internal: false, name: 'Project30'
-    project2 = FactoryBot.create :project, active: true, internal: false, name: 'Project60'
-    project3 = FactoryBot.create :project, active: true, internal: false, name: 'Project90'
-    FactoryBot.create :project, active: false, internal: false, name: 'Inactive'
+    project = FactoryBot.create :project, internal: false, name: 'Project30'
+    project2 = FactoryBot.create :project, internal: false, name: 'Project60'
+    project3 = FactoryBot.create :project, internal: false, name: 'Project90'
+    FactoryBot.create :project, :discarded, internal: false, name: 'Inactive'
 
     FactoryBot.create :work_time, project: project, user: user, creator: user, starts_at: Time.current - 1.day - 30.minutes, ends_at: Time.current - 1.day
     FactoryBot.create :work_time, project: project2, user: user, creator: user, starts_at: Time.current - 31.days - 30.minutes, ends_at: Time.current - 31.days

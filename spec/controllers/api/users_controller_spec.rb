@@ -12,7 +12,7 @@ RSpec.describe Api::UsersController do
   let(:email) { "#{SecureRandom.hex}@example.com" }
 
   def user_response(user)
-    user.attributes.slice('id', 'email', 'first_name', 'last_name', 'active', 'lang').merge(name: user.name, accounting_name: user.accounting_name)
+    user.attributes.slice('id', 'email', 'first_name', 'last_name', 'lang').merge(active: user.kept?, name: user.name, accounting_name: user.accounting_name)
   end
 
   describe '#index' do
@@ -40,8 +40,8 @@ RSpec.describe Api::UsersController do
       context 'all' do
         it 'return all possible records' do
           sign_in admin
-          FactoryBot.create :user, active: false
-          FactoryBot.create :user, active: true
+          FactoryBot.create :user, :discarded
+          FactoryBot.create :user
 
           get :index, params: { filter: 'all' }, format: :json
 
@@ -56,12 +56,12 @@ RSpec.describe Api::UsersController do
       context 'active' do
         it 'return all possible records' do
           sign_in admin
-          FactoryBot.create :user, active: false
-          FactoryBot.create :user, active: true
+          FactoryBot.create :user, :discarded
+          FactoryBot.create :user
 
           get :index, params: { filter: 'active' }, format: :json
 
-          expected_json = User.where(active: true).map do |user|
+          expected_json = User.kept.map do |user|
             user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
           end
 
@@ -72,12 +72,12 @@ RSpec.describe Api::UsersController do
       context 'inactive' do
         it 'return all possible records' do
           sign_in admin
-          FactoryBot.create :user, active: false
-          FactoryBot.create :user, active: true
+          FactoryBot.create :user, :discarded
+          FactoryBot.create :user
 
           get :index, params: { filter: 'inactive' }, format: :json
 
-          expected_json = User.where(active: false).map do |user|
+          expected_json = User.discarded.map do |user|
             user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
           end
 

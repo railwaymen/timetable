@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class WorkTime < ApplicationRecord
+  include Discard::Model
+
   has_paper_trail skip: %i[contract_name updated_by_admin]
   belongs_to :project
   belongs_to :user
@@ -19,13 +21,11 @@ class WorkTime < ApplicationRecord
 
   validates :project_id, :starts_at, :ends_at, presence: true
   validates :duration, numericality: { greater_than: 0 }, unless: :project_zero?
-  validates :starts_at, :ends_at, overlap: { scope: 'user_id', query_options: { active: nil }, exclude_edges: %i[starts_at ends_at] }
+  validates :starts_at, :ends_at, overlap: { scope: 'user_id', query_options: { kept: nil }, exclude_edges: %i[starts_at ends_at] }
   validate :validates_time, on: :user
   validate :validates_date
   validate :validates_body
   validate :task_url
-
-  scope :active, -> { where(active: true) }
 
   delegate :external_auth, to: :user
 

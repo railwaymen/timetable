@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RemoteWork < ApplicationRecord
+  include Discard::Model
+
   has_paper_trail skip: %i[updated_by_admin]
   belongs_to :user
   belongs_to :creator, class_name: 'User'
@@ -9,11 +11,9 @@ class RemoteWork < ApplicationRecord
 
   validates :starts_at, :ends_at, presence: true
   validates :duration, numericality: { greater_than: 0 }
-  validates :starts_at, :ends_at, overlap: { scope: 'user_id', query_options: { active: nil } }
+  validates :starts_at, :ends_at, overlap: { scope: 'user_id', query_options: { kept: nil } }
   validate :validates_time, on: :user
   validate :validates_date
-
-  scope :active, -> { where(active: true) }
 
   def assign_duration
     self.duration = ends_at - starts_at if ends_at && starts_at

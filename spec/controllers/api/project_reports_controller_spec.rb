@@ -237,7 +237,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
       time = Time.zone.now
       user = create(:user)
       project = create(:project)
-      work_time = create(:work_time, user: user, project: project, active: true, starts_at: time - 1.hour, ends_at: time)
+      work_time = create(:work_time, user: user, project: project, starts_at: time - 1.hour, ends_at: time)
       report = create(
         :project_report,
         duration_sum: work_time.duration,

@@ -17,6 +17,10 @@ FactoryBot.define do
     trait :staff_manager do
       staff_manager { true }
     end
+
+    trait :discarded do
+      discarded_at { Time.zone.now }
+    end
   end
 
   factory :admin, class: User do

@@ -31,7 +31,7 @@ class UpdateExternalAuth
   attr_reader :logger, :name
 
   def calculate_sum
-    WorkTime.where(project_id: project.id, active: true, user_id: work_time.user_id)
+    WorkTime.kept.where(project_id: project.id, user_id: work_time.user_id)
             .where("integration_payload->:provider->>'task_id' = :task_id", provider: name, task_id: work_time_task)
             .sum('EXTRACT(EPOCH FROM ends_at - starts_at)::int')
   end

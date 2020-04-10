@@ -11,5 +11,9 @@ FactoryBot.define do
     trait :vacation do
       name { 'Vacation' }
     end
+
+    trait :discarded do
+      discarded_at { Time.zone.now }
+    end
   end
 end

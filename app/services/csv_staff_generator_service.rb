@@ -100,7 +100,7 @@ class CsvStaffGeneratorService
         v.start_date, v.end_date, v.vacation_type, v.vacation_sub_type, v.status
       FROM vacations AS v
       JOIN users AS u ON u.id = v.user_id
-      WHERE u.active = 't'
+      WHERE u.discarded_at IS NULL
         #{date_filter}
         #{user_filter}
       ORDER BY v.start_date;

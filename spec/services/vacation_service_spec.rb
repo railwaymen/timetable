@@ -95,7 +95,7 @@ RSpec.describe VacationService do
       described_class.new(current_user: admin, vacation: vacation).decline
 
       expect(vacation.reload.status).to eql('declined')
-      expect(WorkTime.all.uniq.pluck(:active)).to eql([false])
+      expect(WorkTime.all.all?(&:discarded?)).to be true
       expect(VacationInteraction.first).to_not eql(vacation_interaction)
       expect(VacationInteraction.first.action).to eql('declined')
     end
@@ -120,7 +120,7 @@ RSpec.describe VacationService do
         expect { interaction.reload }.to raise_exception(ActiveRecord::RecordNotFound)
         expect { assignment.reload }.to raise_exception(ActiveRecord::RecordNotFound)
         expect(vacation.reload.status).to eql('declined')
-        expect(WorkTime.all.uniq.pluck(:active)).to eql([false])
+        expect(WorkTime.all.all?(&:discarded?)).to be true
       end
 
       it 'when vacation is declined, user accepts vacation and vacation have approvers and decliners' do
@@ -149,7 +149,7 @@ RSpec.describe VacationService do
 
         described_class.new(current_user: staff_manager, vacation: vacation).undone
         expect { interaction.reload }.to raise_exception(ActiveRecord::RecordNotFound)
-        expect(WorkTime.all.uniq.pluck(:active)).to eql([false])
+        expect(WorkTime.all.all?(&:discarded?)).to be true
         expect(vacation.reload.status).to eql('approved')
       end
 
@@ -165,7 +165,7 @@ RSpec.describe VacationService do
 
         described_class.new(current_user: staff_manager, vacation: vacation).undone
         expect { interaction.reload }.to raise_exception(ActiveRecord::RecordNotFound)
-        expect(WorkTime.all.uniq.pluck(:active)).to eql([false])
+        expect(WorkTime.all.all?(&:discarded?)).to be true
         expect(vacation.reload.status).to eql('declined')
       end
 
@@ -191,7 +191,7 @@ RSpec.describe VacationService do
 
         described_class.new(current_user: staff_manager, vacation: vacation).undone
         expect { interaction.reload }.to raise_exception(ActiveRecord::RecordNotFound)
-        expect(WorkTime.all.uniq.pluck(:active)).to eql([false])
+        expect(WorkTime.all.all?(&:discarded?)).to be true
         expect(vacation.reload.status).to eql('unconfirmed')
       end
 

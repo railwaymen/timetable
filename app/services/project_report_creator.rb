@@ -50,7 +50,7 @@ class ProjectReportCreator
     body
   SQL
   def get_work_times(project_report)
-    project_report.project.work_times.active
+    project_report.project.work_times.kept
                   .joins(:user)
                   .where('work_times.starts_at BETWEEN ? AND ?', project_report.starts_at, project_report.ends_at)
                   .group('user_id, users.last_name, users.first_name, task, body, tag')

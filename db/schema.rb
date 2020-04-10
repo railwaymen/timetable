@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_26_130110) do
+ActiveRecord::Schema.define(version: 2020_04_06_085027) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,13 +135,15 @@ ActiveRecord::Schema.define(version: 2020_03_26_130110) do
     t.datetime "updated_at", null: false
     t.boolean "internal", default: false, null: false
     t.string "color", default: "000000", null: false
-    t.boolean "active", default: true, null: false
+    t.boolean "_active", default: true, null: false
     t.boolean "work_times_allows_task", default: false, null: false
     t.bigint "leader_id"
     t.boolean "autofill", default: false, null: false
     t.boolean "lunch", default: false, null: false
     t.boolean "count_duration", default: true, null: false
     t.boolean "external_integration_enabled", default: false, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["leader_id"], name: "index_projects_on_leader_id"
     t.index ["name"], name: "index_projects_on_name", unique: true
   end
@@ -153,11 +155,13 @@ ActiveRecord::Schema.define(version: 2020_03_26_130110) do
     t.datetime "ends_at", null: false
     t.integer "duration", null: false
     t.text "note"
-    t.boolean "active", default: true, null: false
+    t.boolean "_active", default: true, null: false
     t.boolean "updated_by_admin", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "discarded_at"
     t.index ["creator_id"], name: "index_remote_works_on_creator_id"
+    t.index ["discarded_at"], name: "index_remote_works_on_discarded_at"
     t.index ["user_id"], name: "index_remote_works_on_user_id"
   end
 
@@ -179,11 +183,13 @@ ActiveRecord::Schema.define(version: 2020_03_26_130110) do
     t.string "last_name", null: false
     t.string "phone"
     t.string "contract_name"
-    t.boolean "active", default: true, null: false
+    t.boolean "_active", default: true, null: false
     t.boolean "manager", default: false, null: false
     t.string "lang", default: "pl", null: false
     t.boolean "staff_manager", default: false, null: false
     t.date "birthdate"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -246,13 +252,15 @@ ActiveRecord::Schema.define(version: 2020_03_26_130110) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "contract_name"
-    t.boolean "active", default: true, null: false
+    t.boolean "_active", default: true, null: false
     t.integer "creator_id", null: false
     t.boolean "updated_by_admin", default: false, null: false
     t.string "task"
     t.jsonb "integration_payload"
     t.string "tag", default: "dev", null: false
     t.integer "vacation_id"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_work_times_on_discarded_at"
   end
 
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"

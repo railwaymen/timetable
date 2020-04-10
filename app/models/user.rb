@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  include Discard::Model
   PHONE_REGEX = /\A[0-9()\-+\s]*\z/.freeze
 
   # Include default devise modules. Others available are:
@@ -25,15 +26,13 @@ class User < ApplicationRecord
   validates :first_name, :last_name, presence: true
   validates :phone, format: { with: PHONE_REGEX }
 
-  scope :active, -> { where(active: true) }
-
   def self.with_next_and_previous_user_id
     from(%(
       (
         SELECT
           users.*,
-          LAG(users.id) OVER(PARTITION BY active ORDER BY contract_name::bytea ASC) AS prev_id,
-          LEAD(users.id) OVER(PARTITION BY active ORDER BY contract_name::bytea ASC) AS next_id
+          LAG(users.id) OVER(PARTITION BY discarded_at ORDER BY contract_name::bytea ASC) AS prev_id,
+          LEAD(users.id) OVER(PARTITION BY discarded_at ORDER BY contract_name::bytea ASC) AS next_id
         FROM users
         ORDER BY contract_name::bytea ASC
       ) users
@@ -42,14 +41,14 @@ class User < ApplicationRecord
 
   def self.filter_by(action)
     case action
-    when :active then where(active: true)
-    when :inactive then where(active: false)
+    when :active then kept
+    when :inactive then discarded
     else all
     end
   end
 
   def active_for_authentication?
-    super && active?
+    super && kept?
   end
 
   def password_required?
@@ -95,11 +94,6 @@ class User < ApplicationRecord
     }
   end
   # rubocop:enable Metrics/MethodLength
-
-  def destroy
-    update(active: false)
-    self
-  end
 
   def available_vacation_days(selected_vacations = vacations.current_year)
     last_vacation_period = vacation_periods.last

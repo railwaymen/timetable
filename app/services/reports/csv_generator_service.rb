@@ -112,7 +112,7 @@ module Reports
         FROM work_times w
         JOIN users u on w.user_id = u.id
         JOIN projects p on w.project_id = p.id
-        WHERE w.active = 't' AND #{by_what} = ? AND w.starts_at >= ? AND w.ends_at <= ? #{projects_access}
+        WHERE w.discarded_at IS NULL AND #{by_what} = ? AND w.starts_at >= ? AND w.ends_at <= ? #{projects_access}
         ORDER BY user_name, task
       )
     end

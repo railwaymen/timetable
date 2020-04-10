@@ -394,7 +394,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       work_time = create(:work_time, user: user)
       delete :destroy, params: { id: work_time.id }, format: :json
       expect(response.code).to eql('204')
-      expect(work_time.reload.active).to be false
+      expect(work_time.reload.discarded?).to be true
       expect(response.body).to eq('')
     end
 
@@ -403,7 +403,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       work_time = create(:work_time)
       delete :destroy, params: { id: work_time.id }, format: :json
       expect(response.code).to eql('204')
-      expect(work_time.reload.active).to be false
+      expect(work_time.reload.discarded?).to be true
       expect(work_time.updated_by_admin).to be true
       expect(response.body).to eq('')
     end
@@ -414,7 +414,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       delete :destroy, params: { id: work_time.id }, format: :json
       expect(response.code).to eql('422')
       expect(response.body).to include_json({ error: :too_old }.to_json).at_path('errors/starts_at')
-      expect(work_time.reload.active).to be true
+      expect(work_time.reload.discarded?).to be false
     end
   end
 end

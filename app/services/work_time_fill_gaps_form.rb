@@ -41,7 +41,7 @@ class WorkTimeFillGapsForm
   private
 
   def work_times_ranges
-    filled = WorkTime.active.where(user_id: user_id, ends_at: (starts_at..ends_at)).order(ends_at: :asc).pluck(:starts_at, :ends_at)
+    filled = WorkTime.kept.where(user_id: user_id, ends_at: (starts_at..ends_at)).order(ends_at: :asc).pluck(:starts_at, :ends_at)
     return [(starts_at..ends_at)] if filled.empty?
 
     ranges = []

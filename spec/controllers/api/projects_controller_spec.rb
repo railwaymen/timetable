@@ -13,7 +13,7 @@ RSpec.describe Api::ProjectsController do
   let(:tags_list) { WorkTime.tags.keys }
 
   def full_project_response(project)
-    project.attributes.slice('id', 'name', 'work_times_allows_task', 'external_integration_enabled', 'color', 'active', 'leader_id')
+    project.attributes.slice('id', 'name', 'work_times_allows_task', 'external_integration_enabled', 'color', 'leader_id').merge(active: project.kept?)
   end
 
   describe '#index' do
@@ -26,7 +26,7 @@ RSpec.describe Api::ProjectsController do
       sign_in(user)
       project = create(:project, :with_leader)
       FactoryBot.create :work_time, project: project, user: user, starts_at: Time.current - 40.minutes, ends_at: Time.current - 30.minutes
-      project_rate = ProjectRateQuery.new(active: true).results.first
+      project_rate = ProjectRateQuery.new.results.first
       get :index, format: :json
       project_user = project_rate.users.first
 
@@ -53,7 +53,7 @@ RSpec.describe Api::ProjectsController do
 
       FactoryBot.create :work_time, project: active_project, user: user, starts_at: Time.current - 40.minutes, ends_at: Time.current - 30.minutes
 
-      active_project_rate = ProjectRateQuery.new(active: true).results.first
+      active_project_rate = ProjectRateQuery.new.results.first
       project_user = active_project_rate.users.first
 
       expected_active_json = [
@@ -92,56 +92,56 @@ RSpec.describe Api::ProjectsController do
     it 'correctly display active projects' do
       sign_in user
       project = FactoryBot.create :project
-      FactoryBot.create :project, active: false
+      FactoryBot.create :project, :discarded
 
       expected_json = [
         {
           id: project.id,
           name: project.name,
           color: project.color,
-          active: project.active,
+          active: project.kept?,
           leader_id: project.leader_id
         }
       ].to_json
 
       get :list, format: :json
 
-      expect(response.body).to eq(expected_json)
+      expect(response.body).to be_json_eql(expected_json)
     end
 
     it 'correctly display all projects' do
       sign_in user
       project = FactoryBot.create :project
-      inactive_project = FactoryBot.create :project, active: false
+      inactive_project = FactoryBot.create :project, :discarded
 
       projects_json = [
         {
           id: project.id,
           name: project.name,
           color: project.color,
-          active: project.active,
+          active: project.kept?,
           leader_id: project.leader_id
         },
         {
           id: inactive_project.id,
           name: inactive_project.name,
           color: inactive_project.color,
-          active: inactive_project.active,
+          active: inactive_project.kept?,
           leader_id: inactive_project.leader_id
         }
       ].to_json
 
       get :list, params: { display: 'all' }, format: :json
 
-      expect(response.body).to eq(projects_json)
+      expect(response.body).to be_json_eql(projects_json)
     end
 
     describe 'filters' do
       context 'all' do
         it 'return all possible records' do
           sign_in admin
-          FactoryBot.create :project, active: false
-          FactoryBot.create :project, active: true
+          FactoryBot.create :project, :discarded
+          FactoryBot.create :project
 
           get :list, params: { display: 'all' }, format: :json
 
@@ -150,56 +150,56 @@ RSpec.describe Api::ProjectsController do
               id: project.id,
               name: project.name,
               color: project.color,
-              active: project.active,
+              active: project.kept?,
               leader_id: project.leader_id
             }
           end.to_json
 
-          expect(response.body).to eq expected_json
+          expect(response.body).to be_json_eql(expected_json)
         end
       end
 
       context 'active' do
         it 'return all possible records' do
           sign_in admin
-          FactoryBot.create :project, active: false
-          FactoryBot.create :project, active: true
+          FactoryBot.create :project, :discarded
+          FactoryBot.create :project
 
           get :list, params: { display: 'active' }, format: :json
 
-          expected_json = Project.where(active: true).map do |project|
+          expected_json = Project.kept.map do |project|
             {
               id: project.id,
               name: project.name,
               color: project.color,
-              active: project.active,
+              active: project.kept?,
               leader_id: project.leader_id
             }
           end.to_json
 
-          expect(response.body).to eq expected_json
+          expect(response.body).to be_json_eql(expected_json)
         end
       end
 
       context 'inactive' do
         it 'return all possible records' do
           sign_in admin
-          FactoryBot.create :project, active: false
-          FactoryBot.create :project, active: true
+          FactoryBot.create :project, :discarded
+          FactoryBot.create :project
 
           get :list, params: { display: 'inactive' }, format: :json
 
-          expected_json = Project.where(active: false).map do |project|
+          expected_json = Project.discarded.map do |project|
             {
               id: project.id,
               name: project.name,
               color: project.color,
-              active: project.active,
+              active: project.kept?,
               leader_id: project.leader_id
             }
           end.to_json
 
-          expect(response.body).to eq expected_json
+          expect(response.body).to be_json_eql(expected_json)
         end
       end
     end
@@ -208,10 +208,10 @@ RSpec.describe Api::ProjectsController do
   describe '#simple' do
     def project_response(project)
       project.attributes.slice(
-        'id', 'name', 'internal', 'active',
+        'id', 'name', 'internal',
         'work_times_allows_task', 'color', 'autofill',
         'lunch', 'count_duration'
-      ).merge(taggable: project.taggable?)
+      ).merge(active: project.kept?, taggable: project.taggable?)
     end
 
     it 'authenticates user' do
@@ -246,7 +246,7 @@ RSpec.describe Api::ProjectsController do
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
         color: project.color,
-        active: project.active,
+        active: project.kept?,
         leader_id: project.leader_id,
         leader: {
           id: user.id,
@@ -257,7 +257,7 @@ RSpec.describe Api::ProjectsController do
       }.to_json
 
       expect(response.code).to eq '200'
-      expect(response.body).to eq expected_json
+      expect(response.body).to be_json_eql(expected_json)
     end
 
     it 'returns info for admin' do
@@ -272,12 +272,12 @@ RSpec.describe Api::ProjectsController do
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
         color: project.color,
-        active: project.active,
+        active: project.kept?,
         leader_id: project.leader_id
       }.to_json
 
       expect(response.code).to eq '200'
-      expect(response.body).to eq expected_json
+      expect(response.body).to be_json_eql(expected_json)
     end
 
     it 'returns info for manager' do
@@ -292,12 +292,12 @@ RSpec.describe Api::ProjectsController do
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
         color: project.color,
-        active: project.active,
+        active: project.kept?,
         leader_id: project.leader_id
       }.to_json
 
       expect(response.code).to eq '200'
-      expect(response.body).to eq expected_json
+      expect(response.body).to be_json_eql(expected_json)
     end
 
     it 'returns unauth status for user' do

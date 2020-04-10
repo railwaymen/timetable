@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Project < ApplicationRecord
+  include Discard::Model
+
   has_many :metrics, dependent: :destroy
   has_many :work_times, dependent: :nullify
   has_many :users, through: :work_times
@@ -14,19 +16,16 @@ class Project < ApplicationRecord
 
   after_save :change_events_color_and_name, if: proc { |project| project.saved_change_to_color? || project.saved_change_to_name? }
 
-  scope :active, -> { where(active: true) }
-  scope :inactive, -> { where(active: false) }
-
   def self.filter_by(action)
     case action
-    when :active then where(active: true)
-    when :inactive then where(active: false)
+    when :active then kept
+    when :inactive then discarded
     else all
     end
   end
 
   def users_participating(range)
-    users.joins(:work_times).merge(WorkTime.active).where(work_times: { starts_at: range })
+    users.joins(:work_times).merge(WorkTime.kept).where(work_times: { starts_at: range })
   end
 
   def taggable?

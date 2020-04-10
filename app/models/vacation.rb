@@ -32,7 +32,7 @@ class Vacation < ApplicationRecord
     any_work_time = user.work_times.where('((starts_at::timestamp::date >= :start_date AND starts_at::timestamp::date <= :end_date) OR
                                            (ends_at::timestamp::date >= :start_date AND ends_at::timestamp::date <= :end_date) OR
                                            ((starts_at::timestamp::date, starts_at::timestamp::date) OVERLAPS (:start_date, :end_date))) AND
-                                           active = :active', start_date: start_date, end_date: end_date, active: true).any?
+                                           discarded_at IS NULL', start_date: start_date, end_date: end_date).any?
     errors.add(:base, :work_time_exists) if any_work_time
   end
 

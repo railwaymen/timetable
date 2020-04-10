@@ -7,8 +7,7 @@ class ProjectRateQuery
   ProjectStats = Struct.new(:project_id, :name, :users, :color, :total, :leader_first_name, :leader_last_name, keyword_init: true)
   include Querable
 
-  def initialize(active:, starts_at: 30.days.ago, ends_at: Time.current)
-    @active    = active
+  def initialize(starts_at: 30.days.ago, ends_at: Time.current)
     @starts_at = starts_at
     @ends_at   = ends_at
   end
@@ -29,7 +28,7 @@ class ProjectRateQuery
   end
 
   def sanitized_sql
-    sanitize_array [raw, @active, @starts_at, @ends_at]
+    sanitize_array [raw, @starts_at, @ends_at]
   end
 
   # rubocop:disable Metrics/MethodLength
@@ -51,10 +50,10 @@ class ProjectRateQuery
       LEFT JOIN work_times ON projects.id = work_times.project_id
       INNER JOIN users ON users.id = work_times.user_id
       LEFT  JOIN users leaders ON leaders.id = projects.leader_id
-      WHERE projects.active = ?
+      WHERE projects.discarded_at IS NULL
         AND starts_at >= ? AND ends_at <= ?
         AND projects.internal = 'f'
-        AND work_times.active = 't'
+        AND work_times.discarded_at IS NULL
       ORDER BY total_for_project DESC, total_for_user DESC
     )
   end

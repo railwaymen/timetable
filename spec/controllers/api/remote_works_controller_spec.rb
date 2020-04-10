@@ -189,7 +189,7 @@ RSpec.describe Api::RemoteWorksController do
       delete :destroy, params: { id: remote_work.id }, format: :json
 
       expect(response.code).to eql('204')
-      expect(remote_work.reload.active).to eql(false)
+      expect(remote_work.reload.discarded?).to eql(true)
     end
 
     it 'destroys remote work of other user by admin' do
@@ -198,7 +198,7 @@ RSpec.describe Api::RemoteWorksController do
       delete :destroy, params: { id: remote_work.id }, format: :json
 
       expect(response.code).to eql('204')
-      expect(remote_work.reload.active).to eql(false)
+      expect(remote_work.reload.discarded?).to eql(true)
       expect(remote_work.updated_by_admin).to eql(true)
     end
 

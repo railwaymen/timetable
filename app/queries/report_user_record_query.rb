@@ -67,7 +67,7 @@ class ReportUserRecordQuery
       INNER JOIN users ON users.id = work_times.user_id
       WHERE work_times.starts_at >= ?
         AND work_times.ends_at <= ?
-        AND work_times.active = 't'
+        AND work_times.discarded_at IS NULL
         #{projects_access}
       ORDER BY last_name ASC, projects.internal ASC, time_worked DESC
     )

@@ -5,7 +5,7 @@ module Api
     respond_to :json
 
     def index
-      @remote_works = policy_scope(RemoteWork).active.order(starts_at: :desc)
+      @remote_works = policy_scope(RemoteWork).kept.order(starts_at: :desc)
       @remote_works.where!(user_id: params.require(:user_id))
       @remote_works = @remote_works.page(params[:page])
 
@@ -21,7 +21,7 @@ module Api
     end
 
     def update
-      @remote_work = RemoteWork.active.find(params[:id])
+      @remote_work = RemoteWork.kept.find(params[:id])
       authorize @remote_work
 
       @remote_work.assign_attributes(remote_work_params)
@@ -32,12 +32,12 @@ module Api
     end
 
     def destroy
-      @remote_work = RemoteWork.active.find(params[:id])
+      @remote_work = RemoteWork.kept.find(params[:id])
       authorize @remote_work
 
       @remote_work.updated_by_admin = true if @remote_work.user_id != current_user.id
-      @remote_work.active = false
       @remote_work.save(save_params)
+      @remote_work.discard
 
       respond_with @remote_work
     end

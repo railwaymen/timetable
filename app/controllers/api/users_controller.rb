@@ -25,7 +25,7 @@ module Api
 
     def update
       @user = User.find(params[:id])
-      @user.update(user_params)
+      UpdateUserForm.new(user_params.merge(user: @user)).save
       respond_with @user
     end
 

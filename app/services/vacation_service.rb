@@ -5,7 +5,7 @@ class VacationService
   def initialize(current_user:, vacation:, params: {})
     @current_user = current_user
     @vacation = vacation
-    @vacation_work_times = @vacation.work_times.active
+    @vacation_work_times = @vacation.work_times.kept
     @previous_status = @vacation.status
     @params = params
     @errors = []
@@ -31,7 +31,7 @@ class VacationService
     previous_status = @vacation.status
     ids = @vacation_work_times.pluck(:id)
     undone_vacation
-    vacation_work_times_service.save if @vacation.status == 'accepted' && @vacation.work_times.active.empty?
+    vacation_work_times_service.save if @vacation.status == 'accepted' && @vacation.work_times.kept.empty?
     increase_work_times if @vacation.status == 'accepted' && previous_status == 'declined'
     decrease_work_times(ids) if ids.any? && previous_status == 'accepted' && @vacation.status != 'accepted'
 
@@ -105,7 +105,7 @@ class VacationService
   end
 
   def deactivate_vacation_work_times
-    @vacation.work_times.active.find_each { |wt| wt.update(active: false) }
+    @vacation.work_times.kept.each(&:discard!)
   end
 
   def decline_transaction
@@ -173,7 +173,7 @@ class VacationService
   end
 
   def increase_work_times
-    @vacation.work_times.active.each do |wt|
+    @vacation.work_times.kept.each do |wt|
       IncreaseWorkTimeWorker.perform_async(user_id: @vacation.user_id, duration: wt.duration, starts_at: wt.starts_at, ends_at: wt.ends_at, date: wt.starts_at.to_date)
     end
   end

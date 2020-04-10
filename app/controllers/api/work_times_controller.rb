@@ -5,14 +5,14 @@ module Api
   # rubocop:disable Metrics/MethodLength
   class WorkTimesController < Api::BaseController
     def index
-      @work_times = WorkTime.active.includes(:project).order(starts_at: :desc).where(permitted_search_params)
+      @work_times = WorkTime.kept.includes(:project).order(starts_at: :desc).where(permitted_search_params)
 
       respond_with @work_times
     end
 
     def show
       @work_time = find_work_time
-      @work_time_duration = current_user.work_times.active.where(task: @work_time.task).sum(:duration)
+      @work_time_duration = current_user.work_times.kept.where(task: @work_time.task).sum(:duration)
 
       respond_with @work_time
     end
@@ -47,7 +47,7 @@ module Api
     def destroy
       @work_time = find_work_time
       @work_time.assign_attributes(updated_by_admin: true) if @work_time.user_id != current_user.id
-      @work_time.assign_attributes(active: false)
+      @work_time.assign_attributes(discarded_at: Time.zone.now)
       @work_time.save(work_hours_save_params)
       UpdateExternalAuthWorker.perform_async(@work_time.project_id, @work_time.external_task_id, @work_time.id) if @work_time.external_task_id
       decrease_work_time(@work_time, @work_time.duration)
@@ -121,9 +121,9 @@ module Api
 
     def find_work_time
       if current_user.admin?
-        WorkTime.active.find(params[:id])
+        WorkTime.kept.find(params[:id])
       else
-        current_user.work_times.active.find(params[:id])
+        current_user.work_times.kept.find(params[:id])
       end
     end
 
