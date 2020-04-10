@@ -65,9 +65,9 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
   create_table "group_project_reports", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "state", default: "", null: false
+    t.bigint "project_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "project_id"
     t.index ["project_id"], name: "index_group_project_reports_on_project_id"
   end
 
