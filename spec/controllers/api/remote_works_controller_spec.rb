@@ -84,8 +84,8 @@ RSpec.describe Api::RemoteWorksController do
       it 'does not create remote work when params are invalid' do
         sign_in(user)
         params = {
-          starts_at: 4.business_days.before(starts_at),
-          ends_at: 4.business_days.before(ends_at),
+          starts_at: 5.business_days.before(starts_at),
+          ends_at: 5.business_days.before(ends_at),
           user_id: user.id
         }
 
@@ -123,7 +123,7 @@ RSpec.describe Api::RemoteWorksController do
 
       it 'does not create remote work entries when params are invalid' do
         sign_in(user)
-        params = { note: 'note 1', starts_at: 4.business_days.before(starts_at), ends_at: ends_at, user_id: user.id }
+        params = { note: 'note 1', starts_at: 5.business_days.before(starts_at), ends_at: ends_at, user_id: user.id }
 
         expect do
           post :create, params: { remote_work: params }, format: :json
