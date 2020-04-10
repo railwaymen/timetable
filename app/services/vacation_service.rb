@@ -43,6 +43,7 @@ class VacationService
 
   def approve_transaction
     ActiveRecord::Base.transaction do
+      PaperTrail.request.disable_model(ProjectResourceAssignment)
       vacation_sub_type_error unless approve_vacation
       create_vacation_event if @vacation.accepted?
       vacation_work_times_service.save
@@ -77,9 +78,9 @@ class VacationService
     starts_at = @vacation.start_date.beginning_of_day
     ends_at = @vacation.end_date.end_of_day
     user_resources_ids.each do |id, rid|
-      ProjectResourceAssignment.create(user_id: vacation_user.id, project_id: vacation_project.id, project_resource_id: id, resource_rid: rid, vacation_id: @vacation.id,
-                                       starts_at: starts_at, ends_at: ends_at, title: vacation_project.name, color: "##{vacation_project.color}", type: 2,
-                                       resizable: false, movable: false)
+      ProjectResourceAssignment.create!(user_id: vacation_user.id, project_id: vacation_project.id, project_resource_id: id, resource_rid: rid, vacation_id: @vacation.id,
+                                        starts_at: starts_at, ends_at: ends_at, title: vacation_project.name, color: "##{vacation_project.color}", type: 2,
+                                        resizable: false, movable: false)
     end
   end
 
@@ -111,8 +112,9 @@ class VacationService
   def decline_transaction
     ActiveRecord::Base.transaction do
       @vacation.update!(status: :declined)
+      PaperTrail.request.disable_model(ProjectResourceAssignment)
       deactivate_vacation_work_times if @vacation.work_times.any?
-      @vacation.assignments.destroy_all if @vacation.assignments.any?
+      @vacation.assignments.discard_all if @vacation.assignments.any?
       @vacation_interaction = create_vacation_interaction(:declined)
       remove_previous_interaction(%w[approved accepted])
 

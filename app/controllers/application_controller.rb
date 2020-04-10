@@ -25,6 +25,12 @@ class ApplicationController < ActionController::Base
     return head(:forbidden) unless current_user.admin? || current_user.manager? || current_user.leader?
   end
 
+  def disable_paper_trail
+    PaperTrail.request.enabled = false
+    yield
+    PaperTrail.request.enabled = true
+  end
+
   private
 
   def set_raven_context
