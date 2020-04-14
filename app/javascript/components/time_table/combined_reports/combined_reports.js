@@ -7,7 +7,7 @@ import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
 
 const simpleDateFormat = (date) => moment(date).format('YYYY/MM/DD');
-export default class GroupProjectReports extends React.Component {
+export default class CombinedReports extends React.Component {
   constructor(props) {
     super(props);
     this.onDelete = this.onDelete.bind(this);
@@ -28,7 +28,7 @@ export default class GroupProjectReports extends React.Component {
 
   newReportLink() {
     const { from, to, projectId } = this.state;
-    return `/projects/${projectId}/new_group_report?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+    return `/projects/${projectId}/new_combined_report?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
   }
 
   onDelete(e) {

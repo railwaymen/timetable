@@ -56,7 +56,6 @@ export default class EditReport extends React.Component {
         workTime.toMerge = false;
       });
     });
-    console.log('newBody -->>', newBody);
     return newBody;
   }
 

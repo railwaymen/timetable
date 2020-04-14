@@ -5,20 +5,14 @@ import { Helmet } from 'react-helmet';
 import useFormHandler from '@hooks/use_form_handler';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
-import SummaryPopup from './summary_popup';
 
 const simpleDateFormat = (date) => moment(date).format('YYYY/MM/DD');
 
-export default function NewGroupReport(props) {
+export default function NewCombinedReport(props) {
   const projectId = parseInt(props.match.params.projectId, 10);
 
   const [reports, setReports] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
   const [gropuReport, setGropuReport, onChange] = useFormHandler({ name: '', report_ids: [] });
-
-  function togglePopup() {
-    setShowPopup(!showPopup);
-  }
 
   function getReports() {
     Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports` })
@@ -28,10 +22,6 @@ export default function NewGroupReport(props) {
   function selectReport(reportId) {
     const newrReportIds = _.xor(gropuReport.report_ids, [reportId]);
     setGropuReport({ ...gropuReport, report_ids: newrReportIds });
-  }
-
-  function selectedReports() {
-    return reports.filter((report) => gropuReport.report_ids.includes(report.id));
   }
 
   function renderReportState(state) {
@@ -48,6 +38,20 @@ export default function NewGroupReport(props) {
     );
   }
 
+  function onSubmit(e) {
+    e.preventDefault();
+    console.log('onSubmit');
+
+    Api.makePostRequest({
+      url: `/api/projects/${projectId}/combined_reports`,
+      body: { combined_report: gropuReport },
+    }).then(({ data }) => {
+      console.log(data);
+    }).catch(() => {
+      alert('Failed to create report');
+    });
+  }
+
   useEffect(() => {
     getReports();
   }, []);
@@ -59,10 +63,7 @@ export default function NewGroupReport(props) {
       <Helmet>
         <title>{I18n.t('common.reports')}</title>
       </Helmet>
-      <p className="text-right">
-        <button type="button" className="bt bt-main" onClick={togglePopup}>show popup</button>
-      </p>
-      <form className="row" onSubmit={(e) => e.preventDefault()}>
+      <form className="row" onSubmit={onSubmit}>
         <div className="form-group">
           <label>{I18n.t('common.name')}</label>
           <input
@@ -114,10 +115,12 @@ export default function NewGroupReport(props) {
             </tbody>
           </table>
         </div>
+        <p className="text-right">
+          <button type="submit" className="bt bt-main">
+            {I18n.t('apps.combined_reports.combine_reports')}
+          </button>
+        </p>
       </form>
-      {showPopup && (
-        <SummaryPopup closePopup={togglePopup} reports={selectedReports()} />
-      )}
     </div>
   );
 }

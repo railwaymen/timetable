@@ -34,7 +34,7 @@ export default class ProjectReports extends React.Component {
 
   groupReportsLink() {
     const { from, to, projectId } = this.state;
-    return `/projects/${projectId}/group_reports?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+    return `/projects/${projectId}/combined_reports?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
   }
 
   onDelete(e) {
@@ -83,7 +83,7 @@ export default class ProjectReports extends React.Component {
           </Link>
         </p>
         <div className="btn-group pull-right">
-          <Link className="btn btn-default active" to={this.groupReportsLink()}>{I18n.t('common.group_reports')}</Link>
+          <Link className="btn btn-default active" to={this.groupReportsLink()}>{I18n.t('common.combined_reports')}</Link>
           <Link className="btn btn-default" to={this.groupReportsLink()}>{I18n.t('common.reports')}</Link>
         </div>
         <div className="table-responsive">
