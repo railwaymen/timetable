@@ -204,7 +204,7 @@ RSpec.describe Api::RemoteWorksController do
 
     it 'user cannot destroy remote work older than 3 business days' do
       sign_in(user)
-      remote_work = create(:remote_work, user: user, starts_at: starts_at - 7.days, ends_at: ends_at - 7.days)
+      remote_work = create(:remote_work, user: user, starts_at: starts_at - 15.days, ends_at: ends_at - 15.days)
       delete :destroy, params: { id: remote_work.id }, format: :json
 
       expect(response.code).to eql('422')
