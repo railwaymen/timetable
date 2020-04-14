@@ -391,7 +391,7 @@ class EntryHistory extends React.Component {
           <td>{moment(version.created_at).format('YYYY-MM-DD HH:mm')}</td>
           <td>{version.updated_by}</td>
           <td>
-            { version.project_name
+            { version.hasOwnProperty('project_name')
               ? (
                 <span className={(version.event === 'update' ? 'changed' : '')}>
                   {version.project_name}
@@ -400,32 +400,32 @@ class EntryHistory extends React.Component {
               : <span>{version.project_name_was}</span> }
           </td>
           <td>
-            { version.body
+            { version.hasOwnProperty('body')
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{(version.body || '').replace(/\n/g, '<br />')}</span>
               : <span>{(version.body_was || '').replace(/\n/g, '<br />')}</span> }
           </td>
           <td>
-            { version.task_preview
+            { version.hasOwnProperty('task_preview')
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{version.task_preview}</span>
               : <span>{version.task_preview_was}</span> }
           </td>
           <td>
-            { version.tag
+            { version.hasOwnProperty('tag')
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{this.translateTag(version.tag)}</span>
               : <span>{this.translateTag(version.tag_was)}</span> }
           </td>
           <td>
-            { version.starts_at
+            { version.hasOwnProperty('starts_at')
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{moment(version.starts_at).format('HH:mm')}</span>
               : <span>{moment(version.starts_at_was).format('HH:mm')}</span> }
           </td>
           <td>
-            { version.ends_at
+            { version.hasOwnProperty('ends_at')
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{moment(version.ends_at).format('HH:mm')}</span>
               : <span>{moment(version.ends_at_was).format('HH:mm')}</span> }
           </td>
           <td>
-            { version.duration
+            { version.hasOwnProperty('duration')
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{this.formattedDuration(version.duration)}</span>
               : <span>{this.formattedDuration(version.duration_was)}</span> }
           </td>
