@@ -6,7 +6,8 @@ import {
 } from 'lodash';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
-import Modal from '../../shared/modal';
+// TODO: this modal should be replaced with '@components/shared/modal'
+import Modal from './modal';
 import TagPill from '../timesheet/tag_pill';
 
 export default class EditReport extends React.Component {
@@ -55,6 +56,7 @@ export default class EditReport extends React.Component {
         workTime.toMerge = false;
       });
     });
+    console.log('newBody -->>', newBody);
     return newBody;
   }
 
