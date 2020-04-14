@@ -94,7 +94,7 @@ class WorkHours extends React.Component {
           if (data.status >= 400 && data.status < 500) {
             data.json().then((response) => {
               this.setState({
-                errors: Object.values(response.errors),
+                errors: translateErrors('work_time', response.errors),
               });
             });
           } else if (parseInt(data.status, 10) === 204) {
