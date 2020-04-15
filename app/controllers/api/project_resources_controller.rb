@@ -26,7 +26,7 @@ module Api
     end
 
     def destroy
-      @project_resource = ProjectResource.find_by(rid: params[:id])
+      @project_resource = ProjectResource.kept.find_by(rid: params[:id])
       @project_resource.discard!
       respond_with @project_resource
     end

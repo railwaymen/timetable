@@ -11,4 +11,8 @@ class ProjectResource < ApplicationRecord
   validates :rid, :name, presence: true
   validates :user_id, presence: true, if: proc { |r| !r.group_only }
   validates :rid, uniqueness: { scope: :discarded_at }
+
+  after_discard do
+    child_resources.discard_all
+  end
 end
