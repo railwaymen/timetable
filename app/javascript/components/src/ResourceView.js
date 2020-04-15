@@ -14,12 +14,11 @@ class ResourceView extends Component {
         contentScrollbarHeight: PropTypes.number.isRequired,
         slotClickedFunc: PropTypes.func,
         slotItemTemplateResolver: PropTypes.func,
-        toggleExpandFunc: PropTypes.func
     }
 
     render() {
 
-        const {schedulerData, contentScrollbarHeight, slotClickedFunc, slotItemTemplateResolver, toggleExpandFunc} = this.props;
+        const {schedulerData, contentScrollbarHeight, slotClickedFunc, slotItemTemplateResolver} = this.props;
         const {renderData} = schedulerData;
 
         let width = schedulerData.getResourceTableWidth() - 2;
@@ -31,21 +30,6 @@ class ResourceView extends Component {
                 indents.push(<span key={`es${i}`} className="expander-space"></span>);
             }
             let indent = <span key={`es${item.indent}`} className="expander-space"></span>;
-            if(item.hasChildren) {
-                indent = item.expanded ? (
-                    <Icon type="minus-square" key={`es${item.indent}`} style={{}} className=""
-                        onClick={() => {
-                            if(!!toggleExpandFunc)
-                                toggleExpandFunc(schedulerData, item.slotId);
-                        }}/>
-                ) : (
-                    <Icon type="plus-square" key={`es${item.indent}`} style={{}} className=""
-                        onClick={() => {
-                            if(!!toggleExpandFunc)
-                                toggleExpandFunc(schedulerData, item.slotId);
-                        }}/>
-                );
-            }
             indents.push(indent);
                     
             let a = slotClickedFunc != undefined ? <span className="slot-cell">{indents}<a className="slot-text" onClick={() => {

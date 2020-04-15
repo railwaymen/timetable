@@ -33,13 +33,6 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
       get :index, format: :json
       expect(response.body).to be_json_eql(assignment_response)
     end
-  end
-
-  describe '#find_by_slot' do
-    it 'authenticates user' do
-      get :find_by_slot, format: :json
-      expect(response.code).to eql('401')
-    end
 
     it 'filters assignments by user' do
       sign_in(admin)
@@ -57,7 +50,7 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
         resizable: assignment.resizable,
         movable: assignment.movable
       }].to_json
-      get :find_by_slot, params: { selected_users: assignment.project_resource.user_id }, format: :json
+      get :index, params: { selected_users: assignment.project_resource.user_id }, format: :json
       expect(response.body).to be_json_eql(assignment_response)
     end
 
@@ -77,7 +70,7 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
         resizable: assignment.resizable,
         movable: assignment.movable
       }].to_json
-      get :find_by_slot, params: { selected_projects: assignment.project_id }, format: :json
+      get :index, params: { selected_projects: assignment.project_id }, format: :json
       expect(response.body).to be_json_eql(assignment_response)
     end
   end

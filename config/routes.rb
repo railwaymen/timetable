@@ -69,9 +69,7 @@ Rails.application.routes.draw do
     resources :project_resources do
       get :activity, on: :collection
     end
-    resources :project_resource_assignments do
-      get :find_by_slot, on: :collection
-    end
+    resources :project_resource_assignments
   end
 
   resources :reports, only: [] do
