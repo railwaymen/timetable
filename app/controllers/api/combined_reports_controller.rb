@@ -2,11 +2,15 @@
 
 module Api
   class CombinedReportsController < Api::BaseController
+    before_action :load_project, only: [:index, :create]
     respond_to :json
 
+    def index
+      @combined_reports = policy_scope(CombinedReport).kept.where(project_id: @project.id)
+    end
+
     def create
-      project = Project.find(params[:project_id])
-      @combined_report = project.combined_reports.build(combined_reports_prams)
+      @combined_report = @project.combined_reports.build(combined_reports_prams)
       authorize @combined_report
 
       @combined_report.save!
@@ -16,10 +20,21 @@ module Api
       end
     end
 
+    def destroy
+      @combined_report = CombinedReport.find(params[:id])
+      authorize @combined_report
+
+      @combined_report.discard
+    end
+
     private
 
     def combined_reports_prams
       params.require(:combined_report).permit(%i[name])
+    end
+
+    def load_project
+      @project = Project.find(params[:project_id])
     end
   end
 end

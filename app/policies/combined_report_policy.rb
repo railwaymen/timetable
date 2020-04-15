@@ -5,6 +5,10 @@ class CombinedReportPolicy < ApplicationPolicy
     user.admin? || user.manager?
   end
 
+  def destroy?
+    create?
+  end
+
   class Scope < Scope
     def resolve
       if user.admin? || user.manager?

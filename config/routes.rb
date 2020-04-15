@@ -44,7 +44,7 @@ Rails.application.routes.draw do
         get :file, on: :member
         get :synchronize, on: :member
       end
-      resources :combined_reports, only: %i[create]
+      resources :combined_reports, shallow: true, only: %i[index create destroy]
       get :list, on: :collection
       get :simple, on: :collection
       get :tags, on: :collection

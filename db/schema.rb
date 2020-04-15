@@ -55,8 +55,10 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
     t.string "name", default: "", null: false
     t.string "state", default: "", null: false
     t.bigint "project_id"
+    t.datetime "discarded_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["discarded_at"], name: "index_combined_reports_on_discarded_at"
     t.index ["project_id"], name: "index_combined_reports_on_project_id"
   end
 

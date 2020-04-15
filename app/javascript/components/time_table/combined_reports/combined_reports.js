@@ -12,7 +12,7 @@ export default function CombinedReports(props) {
   const [reports, setReports] = useState([]);
 
   function getReports() {
-    Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports` })
+    Api.makeGetRequest({ url: `/api/projects/${projectId}/combined_reports` })
       .then(({ data }) => setReports(data));
   }
 
@@ -29,11 +29,9 @@ export default function CombinedReports(props) {
     );
   }
 
-  function onDelete(e) {
-    e.preventDefault();
-
+  function onDelete(reportId) {
     if (window.confirm(I18n.t('common.confirm'))) {
-      Api.makeDeleteRequest({ url: e.currentTarget.href }).then((data) => {
+      Api.makeDeleteRequest({ url: `/api/combined_reports/${reportId}` }).then((data) => {
         if (parseInt(data.status, 10) === 204) {
           getReports();
         }
@@ -88,15 +86,13 @@ export default function CombinedReports(props) {
                   {renderReportState(report.state)}
                 </td>
                 <td className="text-center">
-                  {`${simpleDateFormat(report.starts_at)}-${simpleDateFormat(report.ends_at)}`}
+                  {/* {`${simpleDateFormat(report.starts_at)}-${simpleDateFormat(report.ends_at)}`} */}
                 </td>
                 <td className="text-center">
                   {displayDuration(report.duration)}
                 </td>
                 <td className="text-center">
-                  {report.currency}
-                  {' '}
-                  {report.cost.toFixed(2)}
+                  {/* {`${report.currency} ${report.cost.toFixed(2)}`} */}
                 </td>
                 <td className="report-actions text-right">
                   {report.generated
@@ -110,10 +106,10 @@ export default function CombinedReports(props) {
                     <i className="symbol fa fa-search" />
                     <span className="bt-txt">{I18n.t('common.show')}</span>
                   </Link>
-                  <a className="bt bt-danger" onClick={onDelete} href={`/api/projects/${projectId}/project_reports/${report.id}`}>
+                  <button type="button" className="bt bt-danger" onClick={() => onDelete(report.id)}>
                     <i className="symbol fa fa-trash-o" />
                     <span className="bt-txt">{I18n.t('apps.reports.remove')}</span>
-                  </a>
+                  </button>
                 </td>
               </tr>
             ))}

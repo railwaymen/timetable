@@ -4,6 +4,7 @@ class CreateCombinedReports < ActiveRecord::Migration[6.0]
       t.string :name, null: false, default: ''
       t.string :state, null: false, default: ''
       t.references :project, foreign_key: true
+      t.datetime :discarded_at, index: true
 
       t.timestamps
     end
