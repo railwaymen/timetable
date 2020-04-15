@@ -60,15 +60,13 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
     t.index ["project_id"], name: "index_combined_reports_on_project_id"
   end
 
-  create_table "combined_reports_project_reports", id: false, force: :cascade do |t|
+  create_table "combined_reports_project_reports", force: :cascade do |t|
     t.bigint "combined_report_id", null: false
     t.bigint "project_report_id", null: false
-    t.bigint "combined_reports_id"
-    t.bigint "project_reports_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["combined_reports_id"], name: "index_combined_reports_project_reports_on_combined_reports_id"
-    t.index ["project_reports_id"], name: "index_combined_reports_project_reports_on_project_reports_id"
+    t.index ["combined_report_id"], name: "index_combined_reports_project_reports_on_combined_report_id"
+    t.index ["project_report_id"], name: "index_combined_reports_project_reports_on_project_report_id"
   end
 
   create_table "external_auths", force: :cascade do |t|
@@ -286,8 +284,8 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"
   add_foreign_key "accounting_periods_recounts", "users"
   add_foreign_key "combined_reports", "projects"
-  add_foreign_key "combined_reports_project_reports", "combined_reports", column: "combined_reports_id"
-  add_foreign_key "combined_reports_project_reports", "project_reports", column: "project_reports_id"
+  add_foreign_key "combined_reports_project_reports", "combined_reports"
+  add_foreign_key "combined_reports_project_reports", "project_reports"
   add_foreign_key "external_auths", "projects"
   add_foreign_key "external_auths", "users"
   add_foreign_key "project_report_roles", "project_reports"

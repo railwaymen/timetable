@@ -2,7 +2,6 @@ import React from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import URI from 'urijs';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
 
@@ -14,21 +13,11 @@ export default class CombinedReports extends React.Component {
     this.state = {
       projectId: parseInt(this.props.match.params.projectId, 10),
       reports: [],
-      from: '',
-      to: '',
     };
   }
 
   componentDidMount() {
     this.getReports();
-    const base = URI(window.location.href);
-    const { from, to } = base.query(true);
-    this.setState({ from, to });
-  }
-
-  newReportLink() {
-    const { from, to, projectId } = this.state;
-    return `/projects/${projectId}/new_combined_report?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
   }
 
   onDelete(e) {
@@ -70,12 +59,22 @@ export default class CombinedReports extends React.Component {
         <Helmet>
           <title>{I18n.t('common.reports')}</title>
         </Helmet>
-        <p className="text-right">
-          <Link to={this.newReportLink()} className="bt bt-main">
-            <i className="symbol fa fa-plus" />
-            <span className="bt-txt">{I18n.t('apps.reports.new')}</span>
-          </Link>
-        </p>
+        <div className="reports-nav">
+          <div className="btn-group pull-right">
+            <Link className="btn btn-default" to={`/projects/${projectId}/reports`}>
+              {I18n.t('common.reports')}
+            </Link>
+            <Link className="btn btn-default active" to={`/projects/${projectId}/combined_reports`}>
+              {I18n.t('common.combined_reports')}
+            </Link>
+          </div>
+          <div className="text-right">
+            <Link to={`/projects/${projectId}/new_combined_report`} className="bt bt-main">
+              <i className="symbol fa fa-plus" />
+              <span className="bt-txt">{I18n.t('apps.reports.new')}</span>
+            </Link>
+          </div>
+        </div>
         <div className="table-responsive">
           <table className="table">
             <thead>
