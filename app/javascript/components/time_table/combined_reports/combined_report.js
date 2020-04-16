@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Helmet } from 'react-helmet';
+import SynchronizeReport from '@components/time_table/project_reports/synchronize_report';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
 
@@ -66,6 +67,9 @@ function CombinedReport(props) {
                 </td>
                 <td className="text-center">
                   {`${project_report.currency} ${project_report.cost.toFixed(2)}`}
+                </td>
+                <td className="text-center">
+                  <SynchronizeReport id={project_report.id} projectId={project_report.project_id} />
                 </td>
               </tr>
             ))}

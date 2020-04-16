@@ -4,10 +4,9 @@ import moment from 'moment';
 import _ from 'lodash';
 import { Helmet } from 'react-helmet';
 import useFormHandler from '@hooks/use_form_handler';
+import SynchronizeReport from '@components/time_table/project_reports/synchronize_report';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
-
-const simpleDateFormat = (date) => moment(date).format('YYYY/MM/DD');
 
 export default function NewCombinedReport(props) {
   const projectId = parseInt(props.match.params.projectId, 10);
@@ -82,6 +81,7 @@ export default function NewCombinedReport(props) {
                 <th className="text-center">{I18n.t('common.duration')}</th>
                 <th className="text-center">{I18n.t('common.cost')}</th>
                 <th />
+                <th />
               </tr>
             </thead>
             <tbody>
@@ -101,6 +101,9 @@ export default function NewCombinedReport(props) {
                   </td>
                   <td className="text-center">
                     {`${report.currency} ${report.cost.toFixed(2)}`}
+                  </td>
+                  <td className="text-center">
+                    <SynchronizeReport id={report.id} projectId={projectId} />
                   </td>
                   <td className="report-actions text-right">
                     <input
