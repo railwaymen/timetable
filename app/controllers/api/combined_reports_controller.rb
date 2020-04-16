@@ -13,10 +13,10 @@ module Api
       @combined_report = @project.combined_reports.build(combined_reports_prams)
       authorize @combined_report
 
-      @combined_report.save!
-
-      params[:combined_report][:report_ids].each do |id|
-        @combined_report.combined_reports_project_reports.create!(project_report_id: id)
+      if @combined_report.valid?
+        CombinedReportCreator.new(@combined_report, params[:combined_report][:report_ids]).call
+      else
+        respond_with @combined_report
       end
     end
 

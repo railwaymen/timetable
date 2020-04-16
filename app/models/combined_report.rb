@@ -8,4 +8,10 @@ class CombinedReport < ApplicationRecord
   belongs_to :project
 
   accepts_nested_attributes_for :combined_reports_project_reports
+
+  validates :name, presence: true
+
+  def generated?
+    file_path.present?
+  end
 end

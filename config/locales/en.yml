@@ -368,6 +368,10 @@ en:
               blank: To date is required
             duration:
               greater_than: Duration should be greater than zero
+        combined_report:
+          attributes:
+            name:
+              blank: Name is required
   activemodel:
     errors:
       models:

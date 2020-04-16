@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet';
 import useFormHandler from '@hooks/use_form_handler';
 import SynchronizeReport from '@components/time_table/project_reports/synchronize_report';
 import * as Api from '../../shared/api';
+import translateErrors from '../../shared/translate_errors';
 import { displayDuration } from '../../shared/helpers';
 
 export default function NewCombinedReport(props) {
@@ -13,6 +14,7 @@ export default function NewCombinedReport(props) {
 
   const [reports, setReports] = useState([]);
   const [gropuReport, setGropuReport, onChange] = useFormHandler({ name: '', report_ids: [] });
+  const [errors, setErrors] = useState({});
   const history = useHistory();
 
   function getReports() {
@@ -47,8 +49,12 @@ export default function NewCombinedReport(props) {
       body: { combined_report: gropuReport },
     }).then(({ data: report }) => {
       history.push(`/projects/${projectId}/combined_reports/${report.id}`);
-    }).catch(() => {
-      alert('Failed to create report');
+    }).catch((results) => {
+      if (results.errors) {
+        setErrors(translateErrors('combined_report', results.errors));
+      } else {
+        alert('Failed to create report');
+      }
     });
   }
 
@@ -64,13 +70,15 @@ export default function NewCombinedReport(props) {
       <form className="row" onSubmit={onSubmit}>
         <div className="form-group">
           <label>{I18n.t('common.name')}</label>
+          {errors.name && <div className="error-description">{errors.name.join(', ')}</div>}
           <input
-            className="form-control"
+            className={`${errors.name ? 'error' : ''} form-control`}
             name="name"
             onChange={onChange}
             value={gropuReport.name || ''}
           />
         </div>
+
         <div className="table-responsive">
           <table className="table">
             <thead>
@@ -80,8 +88,7 @@ export default function NewCombinedReport(props) {
                 <th className="text-center">{I18n.t('common.range')}</th>
                 <th className="text-center">{I18n.t('common.duration')}</th>
                 <th className="text-center">{I18n.t('common.cost')}</th>
-                <th />
-                <th />
+                <th colSpan={2} />
               </tr>
             </thead>
             <tbody>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import moment from 'moment';
+import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import * as Api from '../../shared/api';
@@ -12,19 +12,6 @@ export default function CombinedReports(props) {
   function getReports() {
     Api.makeGetRequest({ url: `/api/projects/${projectId}/combined_reports` })
       .then(({ data }) => setReports(data));
-  }
-
-  function renderReportState(state) {
-    const iconClass = ({
-      done: 'fa-check',
-      editing: 'fa-pencil',
-    })[state] || 'fa-info-circle';
-    return (
-      <span className="report-status">
-        <i className={`symbol fa ${iconClass}`} />
-        {state}
-      </span>
-    );
   }
 
   function onDelete(reportId) {
@@ -67,7 +54,6 @@ export default function CombinedReports(props) {
           <thead>
             <tr>
               <th>{I18n.t('common.name')}</th>
-              <th className="text-center">{I18n.t('common.state')}</th>
               <th className="text-center">{I18n.t('common.range')}</th>
               <th className="text-center">{I18n.t('common.duration')}</th>
               <th className="text-center">{I18n.t('common.cost')}</th>
@@ -81,16 +67,13 @@ export default function CombinedReports(props) {
                   {report.name}
                 </td>
                 <td className="text-center">
-                  {renderReportState(report.state)}
+                  {`${moment(report.starts_at).formatDate()} - ${moment(report.ends_at).formatDate()}`}
                 </td>
                 <td className="text-center">
-                  {/* {`${moment(report.starts_at).formatDate()} - ${moment(report.ends_at).formatDate()}`} */}
+                  {displayDuration(report.duration_sum)}
                 </td>
                 <td className="text-center">
-                  {displayDuration(report.duration)}
-                </td>
-                <td className="text-center">
-                  {/* {`${report.currency} ${report.cost.toFixed(2)}`} */}
+                  {`${report.currency} ${parseFloat(report.cost, 10).toFixed(2)}`}
                 </td>
                 <td className="report-actions text-right">
                   {report.generated
