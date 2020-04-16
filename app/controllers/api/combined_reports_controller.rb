@@ -2,7 +2,7 @@
 
 module Api
   class CombinedReportsController < Api::BaseController
-    before_action :load_project, only: [:index, :create]
+    before_action :load_project, only: %i[index create]
     respond_to :json
 
     def index
@@ -18,6 +18,11 @@ module Api
       params[:combined_report][:report_ids].each do |id|
         @combined_report.combined_reports_project_reports.create!(project_report_id: id)
       end
+    end
+
+    def show
+      @combined_report = CombinedReport.find(params[:id])
+      authorize @combined_report
     end
 
     def destroy

@@ -6,8 +6,6 @@ import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
 import SynchronizeReport from './synchronize_report';
 
-const simpleDateFormat = (date) => moment(date).format('YYYY/MM/DD');
-
 export default function ProjectReports(props) {
   const projectId = parseInt(props.match.params.projectId, 10);
   const [reports, setReports] = useState([]);
@@ -90,7 +88,7 @@ export default function ProjectReports(props) {
                   {renderReportState(report.state)}
                 </td>
                 <td className="text-center">
-                  {`${simpleDateFormat(report.starts_at)}-${simpleDateFormat(report.ends_at)}`}
+                  {`${moment(report.starts_at).formatDate()} - ${moment(report.ends_at).formatDate()}`}
                 </td>
                 <td className="text-center">
                   {displayDuration(report.duration)}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import _ from 'lodash';
 import { Helmet } from 'react-helmet';
@@ -13,6 +14,7 @@ export default function NewCombinedReport(props) {
 
   const [reports, setReports] = useState([]);
   const [gropuReport, setGropuReport, onChange] = useFormHandler({ name: '', report_ids: [] });
+  const history = useHistory();
 
   function getReports() {
     Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports` })
@@ -40,13 +42,12 @@ export default function NewCombinedReport(props) {
 
   function onSubmit(e) {
     e.preventDefault();
-    console.log('onSubmit');
 
     Api.makePostRequest({
       url: `/api/projects/${projectId}/combined_reports`,
       body: { combined_report: gropuReport },
-    }).then(({ data }) => {
-      console.log(data);
+    }).then(({ data: report }) => {
+      history.push(`/projects/${projectId}/combined_reports/${report.id}`);
     }).catch(() => {
       alert('Failed to create report');
     });
@@ -55,8 +56,6 @@ export default function NewCombinedReport(props) {
   useEffect(() => {
     getReports();
   }, []);
-
-  console.log('gropuReport', gropuReport);
 
   return (
     <div className="list-of-reports">
@@ -95,7 +94,7 @@ export default function NewCombinedReport(props) {
                     {renderReportState(report.state)}
                   </td>
                   <td className="text-center">
-                    {`${simpleDateFormat(report.starts_at)}-${simpleDateFormat(report.ends_at)}`}
+                    {`${moment(report.starts_at).formatDate()} - ${moment(report.ends_at).formatDate()}`}
                   </td>
                   <td className="text-center">
                     {displayDuration(report.duration)}

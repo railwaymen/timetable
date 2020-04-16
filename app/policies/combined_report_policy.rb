@@ -5,6 +5,10 @@ class CombinedReportPolicy < ApplicationPolicy
     user.admin? || user.manager?
   end
 
+  def show?
+    create?
+  end
+
   def destroy?
     create?
   end

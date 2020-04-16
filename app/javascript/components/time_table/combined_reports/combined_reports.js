@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import moment from 'moment';
+// import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
-
-const simpleDateFormat = (date) => moment(date).format('YYYY/MM/DD');
 
 export default function CombinedReports(props) {
   const projectId = parseInt(props.match.params.projectId, 10);
@@ -86,7 +84,7 @@ export default function CombinedReports(props) {
                   {renderReportState(report.state)}
                 </td>
                 <td className="text-center">
-                  {/* {`${simpleDateFormat(report.starts_at)}-${simpleDateFormat(report.ends_at)}`} */}
+                  {/* {`${moment(report.starts_at).formatDate()} - ${moment(report.ends_at).formatDate()}`} */}
                 </td>
                 <td className="text-center">
                   {displayDuration(report.duration)}
@@ -102,7 +100,7 @@ export default function CombinedReports(props) {
                       <span className="txt">{I18n.t('common.download')}</span>
                     </a>
                     )}
-                  <Link className="bt bt-second" to={`/projects/${projectId}/edit_report/${report.id}`}>
+                  <Link className="bt bt-second" to={`/projects/${projectId}/combined_reports/${report.id}`}>
                     <i className="symbol fa fa-search" />
                     <span className="bt-txt">{I18n.t('common.show')}</span>
                   </Link>
