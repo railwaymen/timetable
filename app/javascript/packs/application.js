@@ -8,6 +8,9 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Support component names relative to this directory:
+
+import moment from 'moment';
+
 const componentRequireContext = require.context('components', true);
 const ReactRailsUJS = require('react_ujs');
 
@@ -72,3 +75,14 @@ $(document).on('push-entry', (e) => {
     $(`#work-time-${e.detail.id}`).removeClass('new');
   }, 600);
 });
+
+moment.dateFormat = 'YYYY-MM-DD';
+moment.timeFormat = 'YYYY-MM-DD HH:mm';
+
+moment.fn.formatDate = function formatDate() {
+  return this.format(moment.dateFormat);
+};
+
+moment.fn.formatTime = function formatTime() {
+  return this.format(moment.timeFormat);
+};
