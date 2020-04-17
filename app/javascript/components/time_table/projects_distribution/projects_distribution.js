@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unused-state */
 import React from 'react';
 import moment from 'moment';
+import _ from 'lodash';
 import tinycolor from 'tinycolor2';
 import ReactDOM from 'react-dom';
 import Scheduler, {
@@ -31,6 +32,7 @@ class ProjectsDistribution extends React.Component {
       users: [],
       projects: [],
       events: [],
+      assignedProjectIds: [],
       schedulerHeader: null,
       selectedProjects: [],
       selectedUsers: [],
@@ -84,12 +86,15 @@ class ProjectsDistribution extends React.Component {
       const resources = values[0].data;
       const events = values[1].data;
       const users = values[2].data;
+      const assignedProjectIds = _.map(events, 'projectId');
       const projects = values[3].data;
       const activities = values[4].data;
       schedulerData.setResources(resources);
       schedulerData.setEvents(events);
       this.setState({
         viewModel: schedulerData,
+        events,
+        assignedProjectIds,
         resources,
         users,
         projects,
@@ -159,12 +164,14 @@ class ProjectsDistribution extends React.Component {
       const resources = values[0].data;
       const events = values[1].data;
       const activities = values[2].data;
+      const assignedProjectIds = _.map(events, 'projectId');
       schedulerData.setResources(resources);
       schedulerData.setEvents(events);
       this.setState({
         viewModel: schedulerData,
         resources,
         events,
+        assignedProjectIds,
         activities,
       });
     });
@@ -334,7 +341,7 @@ class ProjectsDistribution extends React.Component {
 
   render() {
     const {
-      viewModel, users, resources, projects, schedulerHeader, selectedProjects, selectedUsers,
+      assignedProjectIds, viewModel, users, resources, projects, schedulerHeader, selectedProjects, selectedUsers,
     } = this.state;
     Loader.hideLoader();
     return (
@@ -361,6 +368,7 @@ class ProjectsDistribution extends React.Component {
             />
             <Footer
               projects={projects}
+              assignedProjectIds={assignedProjectIds}
               showSelectedProjects={this.showSelectedProjects}
               selectedProjects={selectedProjects}
               showSelectedUsers={this.showSelectedUsers}

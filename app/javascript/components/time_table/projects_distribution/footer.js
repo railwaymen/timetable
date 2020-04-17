@@ -146,9 +146,9 @@ class Footer extends React.Component {
   }
 
   renderLegend() {
-    const { projects, selectedProjects } = this.props;
+    const { assignedProjectIds, projects, selectedProjects } = this.props;
     const legend = [];
-    projects.forEach((project) => {
+    projects.filter((project) => _.includes(assignedProjectIds, project.id)).forEach((project) => {
       const tempBorderColor = tinycolor(`#${project.color}`).darken(5);
       let backgroundColor = `#${project.color}`;
       let fontColor = 'white';
