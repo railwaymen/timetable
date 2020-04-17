@@ -7,6 +7,7 @@ class CombinedReportCreator
     @project_reports = ProjectReport.where(id: @project_report_ids)
 
     raise 'Incorrect values for project_report_ids' if @project_report_ids.length != @project_reports.length
+    raise 'Only done reports are allowed ' if @project_reports.where.not(state: :done).exists?
   end
 
   def call

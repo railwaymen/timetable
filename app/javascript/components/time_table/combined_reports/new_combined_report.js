@@ -62,6 +62,8 @@ export default function NewCombinedReport(props) {
     getReports();
   }, []);
 
+  const saveDisabled = gropuReport.report_ids.length === 0;
+
   return (
     <div className="list-of-reports">
       <Helmet>
@@ -93,7 +95,7 @@ export default function NewCombinedReport(props) {
             </thead>
             <tbody>
               {reports.map((report) => (
-                <tr key={report.id}>
+                <tr key={report.id} className={report.state !== 'done' && 'text-muted'}>
                   <td>
                     {report.name}
                   </td>
@@ -117,6 +119,7 @@ export default function NewCombinedReport(props) {
                       type="checkbox"
                       checked={gropuReport.report_ids.includes(report.id)}
                       onChange={() => selectReport(report.id)}
+                      disabled={report.state !== 'done'}
                     />
                   </td>
                 </tr>
@@ -125,7 +128,7 @@ export default function NewCombinedReport(props) {
           </table>
         </div>
         <p className="text-right">
-          <button type="submit" className="bt bt-main">
+          <button type="submit" className={`bt ${saveDisabled ? 'bt-secondary' : 'bt-main'} `} disabled={saveDisabled}>
             {I18n.t('apps.combined_reports.combine_reports')}
           </button>
         </p>

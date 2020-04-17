@@ -6,7 +6,7 @@ module Api
     respond_to :json
 
     def index
-      @combined_reports = policy_scope(CombinedReport).kept.where(project_id: @project.id)
+      @combined_reports = policy_scope(CombinedReport).kept.where(project_id: @project.id).order(created_at: :desc)
     end
 
     def create
@@ -29,7 +29,7 @@ module Api
       @combined_report = CombinedReport.find(params[:id])
       authorize @combined_report
 
-      @combined_report.discard
+      @combined_report.destroy
     end
 
     private

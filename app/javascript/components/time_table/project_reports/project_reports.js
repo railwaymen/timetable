@@ -33,8 +33,12 @@ export default function ProjectReports(props) {
 
     if (window.confirm(I18n.t('common.confirm'))) {
       Api.makeDeleteRequest({ url: e.currentTarget.href }).then((data) => {
-        if (parseInt(data.status, 10) === 204) {
+        if (data.status === 204) {
           getReports();
+        } else if (data.status === 422) {
+          data.json().then(() => {
+            alert('You cannot remove this report');
+          });
         }
       });
     }
