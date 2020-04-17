@@ -192,9 +192,9 @@ class Event extends React.Component {
                 {slotName}
               </div>
               <div className="date-range">
-                { editStartsAt ? this.renderEditableDate('startsAt') : this.renderDate('StartsAt')}
+                { editStartsAt ? this.renderEditableDate('startsAt') : this.renderDate('startsAt')}
                 {' - '}
-                { editEndsAt ? this.renderEditableDate('endsAt') : this.renderDate('EndsAt')}
+                { editEndsAt ? this.renderEditableDate('endsAt') : this.renderDate('endsAt')}
               </div>
               <div className="project" style={{ borderColor: projectColor, backgroundColor: projectColor }}>
                 {selectedProject ? selectedProject.name : null}
