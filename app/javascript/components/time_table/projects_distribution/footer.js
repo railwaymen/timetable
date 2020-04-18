@@ -13,7 +13,6 @@ class Footer extends React.Component {
     this.updateUser = this.updateUser.bind(this);
     this.onUserDelete = this.onUserDelete.bind(this);
     this.state = {
-      buffer: this.renderBuffer(),
       users: [],
       selectedUser: undefined,
     };
@@ -23,7 +22,6 @@ class Footer extends React.Component {
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
     const observer = new MutationObserver(() => {
       this.setState({
-        buffer: this.renderBuffer(),
         userFilter: this.renderUserFilter(),
       });
     });
@@ -86,14 +84,6 @@ class Footer extends React.Component {
       <div>
         {object.name}
       </div>
-    );
-  }
-
-  renderBuffer() {
-    const schedulerHeight = $('#RBS-Scheduler-root').first().outerHeight(true);
-    const height = `${schedulerHeight}px`;
-    return (
-      <div style={{ height }} />
     );
   }
 
@@ -174,27 +164,19 @@ class Footer extends React.Component {
     );
   }
 
-  renderFooter() {
+  render() {
     const { userFilter } = this.state;
     return (
       <div className="footer">
         {userFilter}
-        {this.renderLegend()}
-        <div className="all-button-container">
-          <div className="all-button" onClick={this.onAllClick}>
-            {I18n.t('common.all')}
+        <div className="footer-legend">
+          {this.renderLegend()}
+          <div className="all-button-container">
+            <div className="all-button" onClick={this.onAllClick}>
+              {I18n.t('common.all')}
+            </div>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  render() {
-    const { buffer } = this.state;
-    return (
-      <div className="footer-container">
-        {buffer}
-        {this.renderFooter()}
       </div>
     );
   }
