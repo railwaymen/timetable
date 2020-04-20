@@ -50,6 +50,7 @@ class ProjectsDistribution extends React.Component {
         customCellWidth: '1.3%',
         schedulerWidth: '95%',
         schedulerMaxHeight: '0',
+        tableHeaderHeight: '55px',
         headerEnabled: false,
         resourceName: '',
         views: [
@@ -528,25 +529,37 @@ class ProjectsDistribution extends React.Component {
     const isFriday = datetime.weekday() === 5;
     const isMonday = datetime.weekday() === 1;
     const isLastDay = datetime.date() === datetime.daysInMonth();
+    const childeStyle = {
+      display: 'inline-block',
+      lineHeight: '1.15',
+      position: 'absolute',
+      bottom: '2px',
+      backgroundColor: '#fff' 
+    };
 
     isCurrentDate = datetime.isSame(new Date(), 'day');
-    style.fontSize = '0px';
+    childeStyle.fontSize = '0px';
 
     style.border = 'none';
+    style.position = 'relative';
     if (isCurrentDate) {
       style.backgroundColor = '#66b4ee';
-      style.fontSize = '0.39vw';
+      childeStyle.fontSize = '11px';
+      childeStyle.left = '0';
+      childeStyle.bottom = '28px';
     }
     if (isFriday) {
       style.borderRight = '1px dashed #E0E0E0';
-      style.fontSize = '0.39vw';
+      childeStyle.fontSize = '11px';
+      childeStyle.right = '0';
       if (datetime.date() === datetime.daysInMonth() - 1 || datetime.date() === datetime.daysInMonth() - 2) {
         style.borderRight = '1px solid #828282';
       }
     }
 
     if (isMonday) {
-      style.fontSize = '0.39vw';
+      childeStyle.fontSize = '11px';
+      childeStyle.left = '0';
     }
 
     if (isLastDay) {
@@ -556,11 +569,7 @@ class ProjectsDistribution extends React.Component {
     const className = `header3-text ${datetime.format('MMMM').toLowerCase()}`;
     return (
       <th key={item.time} className={className} style={style}>
-        <div
-          key={datetime}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: `<b>${datetime.format('ddd, DD/MM')}</b>` }}
-        />
+        <b key={datetime} style={childeStyle}>{datetime.format('ddd, DD/MM')}</b>
       </th>
     );
   }
