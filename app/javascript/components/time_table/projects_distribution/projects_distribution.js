@@ -346,8 +346,7 @@ class ProjectsDistribution extends React.Component {
     } = this.state;
     Loader.hideLoader();
     return (
-      <div>
-
+      <>
         { viewModel ? (
           <div className="projects-distribution">
             {schedulerHeader}
@@ -394,7 +393,7 @@ class ProjectsDistribution extends React.Component {
           showUpdatedEvent={this.showUpdatedEvent}
           destroyEvent={this.destroyEvent}
         />
-      </div>
+      </>
     );
   }
 
