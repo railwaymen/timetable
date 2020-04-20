@@ -358,6 +358,7 @@ class ProjectsDistribution extends React.Component {
               onViewChange={this.onViewChange}
               eventItemClick={this.eventClicked}
               Footer={this.Footer}
+              updateEventStart={this.updateEventStart}
               updateEventEnd={this.updateEventEnd}
               moveEvent={this.moveEvent}
               newEvent={this.newEvent}
