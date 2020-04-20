@@ -19,7 +19,8 @@ module Api
     end
 
     def create
-      @user = User.create(user_params)
+      @user = User.new
+      UpdateUserForm.new(user_params.merge(user: @user)).save
       respond_with :api, @user
     end
 
