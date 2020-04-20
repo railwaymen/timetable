@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import SynchronizeReport from '@components/time_table/project_reports/synchronize_report';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
 
@@ -57,7 +58,7 @@ export default function CombinedReports(props) {
               <th className="text-center">{I18n.t('common.range')}</th>
               <th className="text-center">{I18n.t('common.duration')}</th>
               <th className="text-center">{I18n.t('common.cost')}</th>
-              <th />
+              <th colSpan={2} />
             </tr>
           </thead>
           <tbody>
@@ -75,14 +76,16 @@ export default function CombinedReports(props) {
                 <td className="text-center">
                   {`${report.currency} ${parseFloat(report.cost, 10).toFixed(2)}`}
                 </td>
+                <td>
+                  <SynchronizeReport url={`/api/combined_reports/${report.id}/synchronize`} />
+                </td>
                 <td className="report-actions text-right">
-                  {report.generated
-                    && (
-                    <a className="bt bt-second bt-download" href={`/api/projects/${projectId}/project_reports/${report.id}/file`}>
+                  {report.generated && (
+                    <a className="bt bt-second bt-download" href={`/api/combined_reports/${report.id}/file`}>
                       <i className="symbol fa fa-file-pdf-o" />
                       <span className="txt">{I18n.t('common.download')}</span>
                     </a>
-                    )}
+                  )}
                   <Link className="bt bt-second" to={`/projects/${projectId}/combined_reports/${report.id}`}>
                     <i className="symbol fa fa-search" />
                     <span className="bt-txt">{I18n.t('common.show')}</span>

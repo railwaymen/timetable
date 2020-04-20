@@ -95,7 +95,7 @@ export default function NewCombinedReport(props) {
             </thead>
             <tbody>
               {reports.map((report) => (
-                <tr key={report.id} className={report.state !== 'done' && 'text-muted'}>
+                <tr key={report.id} className={report.state === 'done' ? '' : 'text-muted'}>
                   <td>
                     {report.name}
                   </td>
@@ -112,7 +112,7 @@ export default function NewCombinedReport(props) {
                     {`${report.currency} ${report.cost.toFixed(2)}`}
                   </td>
                   <td className="text-center">
-                    <SynchronizeReport id={report.id} projectId={projectId} />
+                    <SynchronizeReport url={`/api/projects/${projectId}/project_reports/${report.id}/synchronize`} />
                   </td>
                   <td className="report-actions text-right">
                     <input

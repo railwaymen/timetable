@@ -32,6 +32,21 @@ module Api
       @combined_report.destroy
     end
 
+    def synchronize
+      combined_report = CombinedReport.find(params[:id])
+      authorize combined_report
+
+      synchronized = combined_report.project_reports.map { |report| ReportsComparator.new.call(report) }.all?
+      render json: { synchronized: synchronized }
+    end
+
+    def file
+      combined_report = CombinedReport.find(params[:id])
+      authorize combined_report
+
+      send_file combined_report.file_path
+    end
+
     private
 
     def combined_reports_prams

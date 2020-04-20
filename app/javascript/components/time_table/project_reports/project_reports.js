@@ -103,7 +103,7 @@ export default function ProjectReports(props) {
                   {report.cost.toFixed(2)}
                 </td>
                 <td className="text-center">
-                  <SynchronizeReport id={report.id} projectId={projectId} />
+                  <SynchronizeReport url={`/api/projects/${projectId}/project_reports/${report.id}/synchronize`} />
                 </td>
                 <td className="report-actions text-right">
                   {report.generated && (

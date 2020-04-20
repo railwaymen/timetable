@@ -13,6 +13,14 @@ class CombinedReportPolicy < ApplicationPolicy
     create?
   end
 
+  def synchronize?
+    create?
+  end
+
+  def file?
+    create?
+  end
+
   class Scope < Scope
     def resolve
       if user.admin? || user.manager?

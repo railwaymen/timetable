@@ -69,7 +69,9 @@ function CombinedReport(props) {
                   {`${project_report.currency} ${project_report.cost.toFixed(2)}`}
                 </td>
                 <td className="text-center">
-                  <SynchronizeReport id={project_report.id} projectId={project_report.project_id} />
+                  <SynchronizeReport
+                    url={`/api/projects/${project_report.project_id}/project_reports/${project_report.id}/synchronize`}
+                  />
                 </td>
               </tr>
             ))}

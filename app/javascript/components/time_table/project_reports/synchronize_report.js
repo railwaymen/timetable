@@ -3,15 +3,13 @@ import PropTypes from 'prop-types';
 import { makeGetRequest } from '../../shared/api';
 
 function SynchronizeReport(props) {
-  const { id, projectId } = props;
+  const { url } = props;
   const [synchronize, setSynchronize] = useState(null);
 
   function onSynchronize(e) {
     e.preventDefault();
 
-    makeGetRequest({
-      url: e.currentTarget.href,
-    }).then((response) => {
+    makeGetRequest({ url }).then((response) => {
       setSynchronize(response.data.synchronized);
     });
   }
@@ -38,7 +36,7 @@ function SynchronizeReport(props) {
 
   function checkSychrnonization() {
     return (
-      <a onClick={onSynchronize} href={`/api/projects/${projectId}/project_reports/${id}/synchronize`}>
+      <a onClick={onSynchronize}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="12" cy="12" r="12" fill="#333333" />
           {/* eslint-disable-next-line max-len */}
@@ -56,8 +54,7 @@ function SynchronizeReport(props) {
 }
 
 SynchronizeReport.propTypes = {
-  id: PropTypes.number.isRequired,
-  projectId: PropTypes.number.isRequired,
+  url: PropTypes.string.isRequired,
 };
 
 export default SynchronizeReport;

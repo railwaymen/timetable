@@ -19,6 +19,8 @@ class CombinedReportCreator
     @project_report_ids.each do |id|
       @combined_report.combined_reports_project_reports.create!(project_report_id: id)
     end
+
+    GenerateCombinedReportWorker.perform_async(@combined_report.id)
   end
 
   private
