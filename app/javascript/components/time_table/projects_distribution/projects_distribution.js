@@ -533,7 +533,7 @@ class ProjectsDistribution extends React.Component {
       lineHeight: '1.15',
       position: 'absolute',
       bottom: '2px',
-      backgroundColor: '#fff' 
+      backgroundColor: '#fff',
     };
 
     isCurrentDate = datetime.isSame(new Date(), 'day');
