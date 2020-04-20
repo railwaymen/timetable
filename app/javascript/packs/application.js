@@ -8,7 +8,9 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Support component names relative to this directory:
-
+import 'jquery';
+import 'popper.js';
+import 'bootstrap';
 import moment from 'moment';
 
 const componentRequireContext = require.context('components', true);

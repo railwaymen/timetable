@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 ruby '2.7.0'
 
 gem 'awesome_print'
-gem 'bootstrap-sass'
+gem 'bootstrap', '~> 4.4.1'
 gem 'business_time'
 gem 'devise'
 gem 'devise-i18n'
@@ -40,10 +40,6 @@ gem 'uglifier'
 gem 'validates_overlap'
 gem 'webpacker'
 gem 'whenever'
-
-source 'https://rails-assets.org' do
-  gem 'rails-assets-bootstrap', '3.3.6'
-end
 
 group :development do
   gem 'better_errors'
