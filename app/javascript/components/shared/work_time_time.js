@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
-const timeFormat = time => moment(time).format('HH:mm');
+const timeFormat = (time) => moment(time).format('HH:mm');
 
 const WorkTimeTime = ({ onClick, children, workTime }) => (
   <div className="time-container">
@@ -17,6 +17,7 @@ WorkTimeTime.defaultProps = {
   children: null,
   onClick: () => {},
 };
+
 WorkTimeTime.propTypes = {
   workTime: PropTypes.shape({
     starts_at: PropTypes.string,

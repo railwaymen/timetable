@@ -4,7 +4,6 @@ module Api
   class VacationPeriodsController < Api::BaseController
     before_action :authenticate_admin!, except: %i[index]
     before_action :find_period, only: %i[show update]
-    respond_to :json
 
     def index
       respond_with vacation_periods

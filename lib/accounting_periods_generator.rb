@@ -9,7 +9,7 @@ class AccountingPeriodsGenerator
     @start_on = start_on.beginning_of_month.in_time_zone
   end
 
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def generate
     position = User.find(@user_id).accounting_periods.maximum(:position) || 0
     AccountingPeriod.transaction do
@@ -23,5 +23,5 @@ class AccountingPeriodsGenerator
       end
     end
   end
-  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/MethodLength
 end

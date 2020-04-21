@@ -8,8 +8,8 @@ en:
     projects:
       last: 'Last'
       days: 'days'
-      name: Nazwa
-      leader: Lider
+      name: Name
+      leader: Leader
       project: Project
       tests_count: Tests count
       tests_duration: Tests duration
@@ -27,6 +27,7 @@ en:
       filter_active_label: Show only
       work_times_allows_task: Allow for adding task urls
       external_integration_enabled: JIRA integration
+      new: New Project
     reports:
       new: New Report
       remove: Remove Report
@@ -52,8 +53,11 @@ en:
       restore_previous: Restore a previous version
       restore_first: Restore the first version
       collision: Collision with following reports
+      all_users: All users
     accounting_periods:
       add: Add accounting period
+      new: New accounting period
+      edit: Edit accounting period
       note: Note
       full_time: Fulltime
       closed: Closed
@@ -76,6 +80,16 @@ en:
       add_manually: Add manually
       work_time: Worktime
       unsaved_changes: You have unsaved changes!
+      history:
+        date: Date
+        who: Who
+        project: Project
+        from: From
+        to: To
+        task: Task
+        url: Url
+        tag: Tag
+        duration: Duration
     users:
       user_active: 'Active'
       active: Active
@@ -89,6 +103,7 @@ en:
       button_disabled_tooltip: Account creation disabled. Automatic creation with LDAP login.
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
       birthday: Birthday
+      new: New account
     external_auths:
       authorized: External authorizations
       generate_link: Generate link
@@ -160,15 +175,38 @@ en:
       note: Note
       closed: Closed
       generate_periods: Generate vacation periods
+      edit: Edit vacation period
     birthday_templates:
+      new: New birthday template
+      edit: Edit birthday template
       email_content: Enter email content
+      email_header: Enter email header
+      email_bottom: Enter email bottom
       incoming_birthdays: 'Incoming birthdays:'
       last_used: Last used
+      set_as_last_used: Set as last used
+      save_and_preview: Save and refresh preview
       days:
         few: '%{count} days'
         many: '%{count} days'
         one: '%{count} day'
         other: '%{count} days'
+    projects_distribution:
+      add_resource: Add resource
+      resource_menu: Resource menu
+      delete_resource: Delete resource
+      resource_group: Resource group
+      group_only: Group?
+      exit: Exit
+      add_event: Add event
+      edit_event: Edit event
+      confirm_delete: 'Are you sure you want to delete {{resource_name}}?'
+      activity:
+        create_resource: '{{user}} added resource {{resource}}'
+        delete_resource: '{{user}} deleted resource {{resource}}'
+        create_assignment: '{{user}} assigned resource {{resource}} to project {{project}} from {{start}} to {{end}}'
+        update_assignment: '{{user}} updated assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
+        delete_assignment: '{{user}} deleted assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
   common:
     rank: 'Rank'
     add: Add
@@ -177,6 +215,7 @@ en:
     generate: Generate
     fill_save: Save with filling
     cancel: Cancel
+    close: Close
     edit: Edit
     destroy: Delete
     from: From
@@ -239,41 +278,92 @@ en:
     vacation_periods: Vacation Periods
     birthday_templates: Birthday Templates
     title: Title
+    user: User
+    projects_distribution: Projects distribution
+    remote_work: Remote Work
+    hours: Hours
+    date: Date
   activerecord:
     errors:
       models:
         work_time: &worktime
           basic: There was an error while trying to add work time
           base:
-            validates_date: 'Can not create work times that ends in next day'
-            validates_time: 'Can not create or update past work times'
-            validates_body: 'You need fill description or task url'
           attributes:
+            body:
+              body_or_task_blank: You need fill description or task url
             task:
-              invalid_uri: 'Task URL is not valid'
-              invalid_external: 'Task URL does not point to a valid external task'
-            ends_at:
-              validates_ends_at: 'Can not create work times that starts more than 1 month from now'
+              invalid_uri: Task URL is not valid
+              invalid_external: Task URL does not point to a valid external task
             starts_at:
               overlap: There is another task overlapping the specified time
+              overlap_midnight: Can not create work times that ends in next day
+              too_old: Can not create or update past work times
+              no_gaps_to_fill: No gaps to fill
             duration:
               greater_than: Duration should be greater than zero
+            project_id:
+              blank: Project is required
         external_auth:
           basic: Error during authorization
+        birthday_email_template:
+          attributes:
+            name:
+              blank: Name is required
+            title:
+              blank: Title is required
         vacation:
           basic: There was an error while trying to add application for vacation
-          base:
-            validates_work_time: There is work time with same date
           attributes:
+            base:
+              work_time_exists: There is work time with same date
             end_date:
               validates_end_date: Invalid end date
         vacation_interaction:
           base:
             already_interacted: This vacation is already %{action} by you
+        accounting_period:
+          attributes:
+            starts_at:
+              overlap: Overlaps with another period
+              greater_than_ends_at: Starts at date is greater than ends at
+              blank: From date is required
+            ends_at:
+              blank: To date is required
+            position:
+              blank: Position is required
+              taken: Position is already taken
+            duration:
+              greater_than: Duration should be greater than zero
         vacation_period:
           attributes:
             user_id:
               validates_uniqueness: There is already a record with the same user_id, starts_at and ends_at
+        user:
+          attributes:
+            email:
+              blank: Email is required
+              taken: Email is already taken
+            first_name:
+              blank: First name is required
+            last_name:
+              blank: Last name is required
+            phone:
+              invalid: Invalid phone number
+        remote_work:
+          basic: There was an error while trying to add remote work
+          base:
+          attributes:
+            starts_at:
+              blank: From date is required
+              overlap: There is another entry overlapping the specified time
+              too_old: Can not create or update past remote work
+              incorrect_range: Incorrect range of dates
+              incorrect_hours: Starts at hour is greater than ends at
+            ends_at:
+              blank: To date is required
+            duration:
+              greater_than: Duration should be greater than zero
   activemodel:
     errors:
       models:
@@ -281,4 +371,3 @@ en:
           <<: *worktime
         work_time_fill_gaps_form:
           <<: *worktime
-          no_gaps_to_fill: No gaps to fill

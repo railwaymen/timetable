@@ -4,7 +4,7 @@ require 'prawn'
 require 'prawn/table'
 require 'tempfile'
 require 'uri'
-# rubocop:disable ClassLength
+# rubocop:disable Metrics/ClassLength
 # :nocov:
 class ProjectReportGenerator
   attr_reader :project_report
@@ -13,8 +13,8 @@ class ProjectReportGenerator
   LIGHT_GRAY = 'EFEFEF'
   BORDER_COLOR = '808080'
   FORMAT_STRING = '%.2f'
-  LOGO_PATH = Rails.root.join('public', 'images', 'reports_logo.jpg')
-  FONT_PATH = Rails.root.join('app', 'assets', 'fonts')
+  LOGO_PATH = Rails.root.join('public/images/reports_logo.jpg')
+  FONT_PATH = Rails.root.join('app/assets/fonts')
 
   def initialize(project_report:)
     @project_report = project_report
@@ -24,7 +24,7 @@ class ProjectReportGenerator
                       end]
     @description_hash = Hash[roles.map { |role| [role.user_id, role.description] }]
     @name_hash = Hash[roles.includes(:user).map do |role|
-                        [role.user_id, "#{role.user.first_name} #{role.user.last_name[0]}."]
+                        [role.user_id, { name: role.user.name, anonymized_name: role.user.anonymized_name }]
                       end]
   end
 
@@ -55,7 +55,7 @@ class ProjectReportGenerator
     pdf.font 'Roboto'
   end
 
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def report_header(pdf)
     image_cell = File.file?(LOGO_PATH) ? { image: LOGO_PATH, rowspan: 2, image_width: 180 } : { content: '', rowspan: 2 }
     pdf.table([
@@ -70,10 +70,10 @@ class ProjectReportGenerator
       t.cells.border_width = 0
     end
   end
-  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/MethodLength
 
-  # rubocop:disable MethodLength
-  # rubocop:disable BlockLength
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/BlockLength
   def category_tables(pdf)
     header = allowed_categories.map { |content| { content: content.capitalize, text_color: '404040' } }
     project_report.last_body.map do |key, work_times|
@@ -82,10 +82,10 @@ class ProjectReportGenerator
       translated_key = translate_role(key)
 
       content = work_times.group_by { |wt| [wt['owner'], wt['user_id']] }.map do |(owner, user_id), wts|
-        name = if user_id.nil?
+        name = if user_id.nil? || owner != name_hash[user_id][:name]
                  +owner
                else
-                 +name_hash[user_id]
+                 +name_hash[user_id][:anonymized_name]
                end
         if (description = description_hash[user_id]).present?
           name << "- #{description}"
@@ -119,10 +119,10 @@ class ProjectReportGenerator
       [translated_key, sum_duration, sum_cost]
     end.compact
   end
-  # rubocop:enable MethodLength
-  # rubocop:enable BlockLength
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/BlockLength
 
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def summary(pdf, footers)
     sum_duration = footers.sum { |footer| footer[1] }
     sum_cost = footers.sum { |footer| footer[2].to_r }
@@ -150,10 +150,10 @@ class ProjectReportGenerator
     pdf.start_new_page if pdf.cursor < summary_table.height
     summary_table.draw
   end
-  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/MethodLength
 
   def format_task(task)
-    return task unless task =~ URI::DEFAULT_PARSER.make_regexp
+    return task unless task&.match?(URI::DEFAULT_PARSER.make_regexp)
 
     task_name = URI.parse(task).path.split('/').last
     { inline_format: true, content: %(<link href="#{task}">#{task_name}</link>) }
@@ -169,7 +169,7 @@ class ProjectReportGenerator
   def format_duration(duration)
     minutes = (duration / SECONDS_IN_MINUTE) % MINUTES_IN_HOUR
     hours = duration / (SECONDS_IN_MINUTE * MINUTES_IN_HOUR)
-    format('%02d:%02d', hours, minutes)
+    format('%<hours>02d:%<minutes>02d', hours: hours, minutes: minutes)
   end
 
   def format_cost(cost)
@@ -228,5 +228,5 @@ class ProjectReportGenerator
   end
 end
 
-# rubocop:enable ClassLength
+# rubocop:enable Metrics/ClassLength
 # :nocov:

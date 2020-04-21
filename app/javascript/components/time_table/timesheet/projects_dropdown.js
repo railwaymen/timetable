@@ -17,6 +17,13 @@ class ProjectsDropdown extends React.Component {
     this.handleCurrentIndexIncrement = this.handleCurrentIndexIncrement.bind(this);
     this.handleCurrentIndexDecrement = this.handleCurrentIndexDecrement.bind(this);
 
+    this.state = {
+      currentIndex: 0,
+      isExpanded: false,
+      filter: '',
+      filteredProjects: this.filterProjects(''),
+    };
+
     this.searchRef = React.createRef();
   }
 
@@ -24,21 +31,6 @@ class ProjectsDropdown extends React.Component {
     this.setState({
       filteredProjects: this.filterProjects(),
     });
-  }
-
-  static propTypes = {
-    projects: PropTypes.array,
-    selectedProject: PropTypes.object,
-    isExpanded: PropTypes.bool,
-    filter: PropTypes.string,
-    currentIndex: PropTypes.number,
-  }
-
-  state = {
-    currentIndex: 0,
-    isExpanded: false,
-    filter: '',
-    filteredProjects: this.filterProjects(''),
   }
 
   onFilterChange(e) {
@@ -67,7 +59,7 @@ class ProjectsDropdown extends React.Component {
     if ((e.keyCode === 13 || e.keyCode === 9) && filteredProjects.length > 0) {
       e.preventDefault();
       const projects = this.filterProjects();
-      const selectedProject = _.find(projects, p => (
+      const selectedProject = _.find(projects, (p) => (
         p.id === filteredProjects[0]
       )) || projects[currentIndex];
 
@@ -84,7 +76,7 @@ class ProjectsDropdown extends React.Component {
 
   filterProjects(filter = this.state.filter) {
     const lowerFilter = filter.toLowerCase();
-    return _.filter(this.props.projects, p => (
+    return _.filter(this.props.projects, (p) => (
       p.active && p.name.toLowerCase().match(escape(lowerFilter))
     ));
   }
@@ -110,7 +102,7 @@ class ProjectsDropdown extends React.Component {
 
     if (projectId !== this.props.selectedProject) {
       const projects = this.filterProjects('');
-      const selectedProject = _.find(projects, p => (
+      const selectedProject = _.find(projects, (p) => (
         p.id === projectId
       )) || projects[0];
 
@@ -122,7 +114,12 @@ class ProjectsDropdown extends React.Component {
   renderProjectsList() {
     return (
       <div style={{ marginTop: '15px' }}>
-        <ProjectsList projects={this.state.filteredProjects} currentIndex={this.state.currentIndex} currentProject={this.props.selectedProject} onChangeProject={this.onChangeProject} />
+        <ProjectsList
+          projects={this.state.filteredProjects}
+          currentIndex={this.state.currentIndex}
+          currentProject={this.props.selectedProject}
+          onChangeProject={this.onChangeProject}
+        />
       </div>
     );
   }
@@ -134,15 +131,32 @@ class ProjectsDropdown extends React.Component {
     return (
       <div className="dropdown fluid search ui" style={{ minWidth: '90px' }}>
         <input type="hidden" name="project" value="12" />
-        <input placeholder="Project" onFocus={this.expandDropdown} ref={this.searchRef} className="form-control input-search" name="filter" value={filter} autoComplete="off" tabIndex="0" onChange={this.onFilterChange} id="search-input" onKeyDown={this.onKeyDown} />
+        <input
+          placeholder="Project"
+          onFocus={this.expandDropdown}
+          ref={this.searchRef}
+          className="form-control input-search"
+          name="filter"
+          value={filter}
+          autoComplete="off"
+          tabIndex="0"
+          onChange={this.onFilterChange}
+          id="search-input"
+          onKeyDown={this.onKeyDown}
+        />
         <div className={`text active ${(isExpanded ? 'hidden' : '')}`} style={{ background: `#${selectedProject.color}` }} onClick={this.expandDropdown}>
           <div className="circular empty label ui" style={{ background: `#${selectedProject.color}` }} />
           {selectedProject.name}
         </div>
-        { isExpanded ? this.renderProjectsList() : null }
+        {isExpanded && this.renderProjectsList()}
       </div>
     );
   }
 }
+
+ProjectsDropdown.propTypes = {
+  projects: PropTypes.array,
+  selectedProject: PropTypes.object,
+};
 
 export default ProjectsDropdown;

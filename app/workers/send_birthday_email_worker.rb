@@ -5,8 +5,11 @@ class SendBirthdayEmailWorker
 
   def perform(username, email_template_id)
     email_template = BirthdayEmailTemplate.find(email_template_id)
+    email_header = email_template.header.gsub(/{{username}}/, username)
     email_body = email_template.body.gsub(/{{username}}/, username)
     email_title = email_template.title.gsub(/{{username}}/, username)
-    BirthdayMailer.send_birthday_email(email_title, email_body).deliver_later
+    email_bottom = email_template.bottom.gsub(/{{username}}/, username)
+
+    BirthdayMailer.with(title: email_title, header: email_header, body: email_body, bottom: email_bottom).send_birthday_email.deliver_later
   end
 end

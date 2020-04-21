@@ -9,8 +9,24 @@ const DateRangeFilter = ({
   from, to, onFromChange, onToChange, onFilter, className = '', children,
 }) => (
   <div className={`date-range-filter ${className}`}>
-    <DatePicker {...defaultDatePickerProps} className="form-control" dateFormat={dateFormat} selected={moment(from)} onChange={onFromChange} name="from" placeholderText={I18n.t('common.from')} />
-    <DatePicker {...defaultDatePickerProps} className="form-control" dateFormat={dateFormat} selected={moment(to)} onChange={onToChange} name="to" placeholderText={I18n.t('common.to')} />
+    <DatePicker
+      {...defaultDatePickerProps}
+      className="form-control"
+      dateFormat={dateFormat}
+      selected={moment(from)}
+      onChange={onFromChange}
+      name="from"
+      placeholderText={I18n.t('common.from')}
+    />
+    <DatePicker
+      {...defaultDatePickerProps}
+      className="form-control"
+      dateFormat={dateFormat}
+      selected={moment(to)}
+      onChange={onToChange}
+      name="to"
+      placeholderText={I18n.t('common.to')}
+    />
     <button type="button" className="btn btn-default filter" onClick={onFilter}>
       {I18n.t('apps.reports.filter')}
     </button>

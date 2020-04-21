@@ -22,7 +22,7 @@ RSpec.describe WorkTime, type: :model do
     it 'counts duration' do
       work_time = create :work_time, starts_at: Time.current,
                                      ends_at: 2.hours.from_now
-      expect(work_time.duration).to eq 7200
+      expect(work_time.duration).to eq 2.hours
     end
   end
 
@@ -30,6 +30,21 @@ RSpec.describe WorkTime, type: :model do
     before(:each) do
       @work_time = build_stubbed(:work_time)
       allow(@work_time).to receive(:assign_duration)
+    end
+
+    it 'should not allow to create work time for dates older than 3 days for regular user' do
+      @work_time.starts_at = 10.days.ago.beginning_of_day
+      @work_time.ends_at = 10.days.ago.beginning_of_day + 1.hour
+      expect(@work_time.valid?(:user)).to be false
+      expect(@work_time.errors[:starts_at].present?).to eql(true)
+    end
+
+    it 'should not allow to update work time for dates older than 3 days for regular user' do
+      work_time = create(:work_time, starts_at: 10.days.ago.beginning_of_day, ends_at: 10.days.ago.beginning_of_day + 1.hour)
+      work_time.starts_at = Time.zone.now.beginning_of_day
+      work_time.ends_at = Time.zone.now.beginning_of_day + 1.hour
+      expect(work_time.valid?(:user)).to be false
+      expect(work_time.errors[:starts_at].present?).to eql(true)
     end
 
     it 'should not throw exceptions for empty values' do
@@ -70,7 +85,7 @@ RSpec.describe WorkTime, type: :model do
         work_time = build_stubbed :work_time
         work_time.body = ''
         expect(work_time).to_not be_valid
-        expect(work_time.errors[:base].present?).to eql(true)
+        expect(work_time.errors[:body].present?).to eql(true)
       end
 
       it 'should not be required for lunch' do
@@ -85,6 +100,24 @@ RSpec.describe WorkTime, type: :model do
                                   project: (create :project, name: 'Vacation', autofill: true),
                                   body: ''
         expect(work_time).to be_valid
+      end
+    end
+
+    context 'integration_payload' do
+      it 'external_task_id' do
+        external_auth = create(:external_auth, provider: 'Sample')
+        work_time = build_stubbed :work_time,
+                                  user: external_auth.user,
+                                  integration_payload: { Sample: { task_id: 'TIM-18' } }
+        expect(work_time.external_task_id).to eq('TIM-18')
+      end
+
+      it 'external_summary' do
+        external_auth = create(:external_auth, provider: 'Sample')
+        work_time = build_stubbed :work_time,
+                                  user: external_auth.user,
+                                  integration_payload: { Sample: { summary: 'Task title' } }
+        expect(work_time.external_summary).to eq('Task title')
       end
     end
   end

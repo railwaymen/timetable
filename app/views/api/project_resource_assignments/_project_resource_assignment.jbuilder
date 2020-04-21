@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+json.id project_resource_assignment.id
+json.start project_resource_assignment.starts_at
+json.end project_resource_assignment.ends_at
+json.resourceId project_resource_assignment.resource_rid
+json.title project_resource_assignment.title
+json.bgColor project_resource_assignment.color
+json.projectId project_resource_assignment.project_id
+json.resourceRealId project_resource_assignment.project_resource_id
+json.type project_resource_assignment.type
+json.resizable project_resource_assignment.resizable
+json.movable project_resource_assignment.movable

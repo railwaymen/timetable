@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::ProjectReportsController, type: :controller do
   render_views
 
-  let(:admin) { create(:admin) }
+  let(:admin) { create(:user, :admin) }
   let(:project) { create(:project) }
 
   before do
@@ -18,9 +18,9 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         time = Time.zone.now
         user = create(:user, first_name: 'Jan', last_name: 'Nowak')
         worker = create(:user, first_name: 'Tomasz', last_name: 'Kowalski')
-        FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
-        FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
+        FactoryBot.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryBot.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
 
         expect do
           post(:create, params: {
@@ -42,9 +42,9 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         time = Time.zone.now
         user = create(:user, first_name: 'Jan', last_name: 'Nowak')
         worker = create(:user, first_name: 'Tomasz', last_name: 'Kowalski')
-        FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
-        FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
+        FactoryBot.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryBot.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
 
         expect do
           post(:create, params: {
@@ -82,7 +82,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         project_id: project.id,
         id: project_report.id
       }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(ProjectReport.find_by(id: project_report.id)).to be_nil
     end
   end
@@ -93,9 +93,9 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         time = Time.zone.now
         user = create(:user, first_name: 'Jan', last_name: 'Nowak')
         worker = create(:user, first_name: 'Tomasz', last_name: 'Kowalski')
-        FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
-        FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
+        FactoryBot.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryBot.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
         get :roles, params: { format: 'json', project_id: project, starts_at: (time - 2.days).beginning_of_day, ends_at: (time + 2.days).beginning_of_day }
         expect(response).to be_ok
         parsed_body = JSON.parse(response.body)
@@ -127,9 +127,9 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         time = Time.zone.now
         user = create(:user, first_name: 'Jan', last_name: 'Nowak')
         worker = create(:user, first_name: 'Tomasz', last_name: 'Kowalski')
-        FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
-        FactoryGirl.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
+        FactoryBot.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryBot.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
         report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
         report.project_report_roles.create!(user: user, role: 'developer', hourly_wage: 30, description: 'Frontend')
 
@@ -164,9 +164,9 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         user = create(:user, first_name: 'Jan', last_name: 'Nowak')
         user_not_in_recent_report = create(:user, first_name: 'Tomasz', last_name: 'Kowalski')
         new_user = create(:user, first_name: 'Michał', last_name: 'Malinowski')
-        FactoryGirl.create :work_time, user: user_not_in_recent_report, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
-        FactoryGirl.create :work_time, user: new_user, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
+        FactoryBot.create :work_time, user: user_not_in_recent_report, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+        FactoryBot.create :work_time, user: new_user, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
         old_report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
         old_report.project_report_roles.create!(user: user_not_in_recent_report, role: 'developer', hourly_wage: 31, description: 'Frontend')
 
@@ -229,6 +229,34 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
       expect(response).to be_ok
       expect(project_report.reload).to be_done
       expect(GenerateProjectReportWorker).to have_received(:perform_async).with(project_report.id)
+    end
+  end
+
+  describe 'GET #synchronize' do
+    it 'checks if project record and its work times are equal' do
+      time = Time.zone.now
+      user = create(:user)
+      project = create(:project)
+      work_time = create(:work_time, user: user, project: project, starts_at: time - 1.hour, ends_at: time)
+      report = create(
+        :project_report,
+        duration_sum: work_time.duration,
+        last_body: { developer: [cost: 30.0] },
+        cost: 30.0,
+        project: project,
+        starts_at: 1.day.ago,
+        ends_at: Time.zone.now
+      )
+      report.project_report_roles.create!(user: user, role: 'developer', hourly_wage: 30.0, description: 'Frontend')
+      params = { project_id: report.project.id, id: report.id }
+
+      get :synchronize, params: params
+
+      synchronize_response = {
+        synchronized: true
+      }
+      expect(response).to be_ok
+      expect(response.body).to be_json_eql(synchronize_response.to_json)
     end
   end
 

@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-json.call @birthday_email_template, :id, :name, :body, :title
+json.partial! 'birthday_email_template', birthday_email_template: @birthday_email_template

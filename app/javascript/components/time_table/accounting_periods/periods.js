@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import URI from 'urijs';
 import { NavLink } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import _ from 'lodash';
 import * as Api from '../../shared/api';
@@ -22,26 +22,20 @@ class Periods extends React.Component {
 
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onNextUserChange = this.onNextUserChange.bind(this);
-  }
 
-  static propTypes = {
-    periods: PropTypes.array,
-    userId: PropTypes.number,
-    user: PropTypes.object,
-  }
-
-  state = {
-    periods: {
-      accounting_periods: [],
-      total_count: 0,
-    },
-    generatePeriods: {
-      periods_count: undefined,
-      month: moment().format('MM'),
-      year: moment().format('YYYY'),
-    },
-    userId: undefined,
-    user: {},
+    this.state = {
+      periods: {
+        accounting_periods: [],
+        total_pages: 0,
+      },
+      generatePeriods: {
+        periods_count: undefined,
+        month: moment().format('MM'),
+        year: moment().format('YYYY'),
+      },
+      userId: undefined,
+      user: {},
+    };
   }
 
   componentDidMount() {
@@ -143,12 +137,14 @@ class Periods extends React.Component {
   }
 
   onGeneratePeriodsChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       generatePeriods: {
-        ...this.state.generatePeriods,
-        [e.target.name]: e.target.value,
+        ...prevState.generatePeriods,
+        [name]: value,
       },
-    });
+    }));
   }
 
   recountPeriods() {
@@ -216,29 +212,26 @@ class Periods extends React.Component {
   renderPagination() {
     let { page } = this.state;
     const { userId, periods } = this.state;
-    const { total_count } = periods;
-    const pages = Math.ceil(total_count / 25);
+    const { total_pages } = periods;
 
     page = parseInt(page, 10);
 
     const isBackAvailable = (page !== 1);
-    const isForwardAvailable = (pages > 1 && page !== pages);
+    const isForwardAvailable = (total_pages > 1 && page !== total_pages);
 
     return (
       <ul className="pagination pull-right">
-        { isBackAvailable
-          ? (
-            <li id="prevPage">
-              <a className="symbol fa fa-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`} />
-            </li>
-          ) : null }
-        {this.paginationBody(pages, page, userId)}
-        { isForwardAvailable
-          ? (
-            <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
-              <a className="symbol fa fa-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />
-            </li>
-          ) : null }
+        {isBackAvailable && (
+          <li id="prevPage">
+            <a className="symbol fa fa-chevron-left" onClick={this.onPageChange} href={`/accounting_periods?user_id=${userId}&page=${page - 1}`} />
+          </li>
+        )}
+        {this.paginationBody(total_pages, page, userId)}
+        {isForwardAvailable && (
+          <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
+            <a className="symbol fa fa-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />
+          </li>
+        )}
       </ul>
     );
   }
@@ -261,11 +254,11 @@ class Periods extends React.Component {
     Api.makeDeleteRequest({ url: `/api/accounting_periods/${id}` })
       .then((response) => {
         if (parseInt(response.status, 10) === 204) {
-          this.setState({
+          this.setState((prevState) => ({
             periods: {
-              accounting_periods: this.state.periods.accounting_periods.filter(period => (period.id !== id)),
+              accounting_periods: prevState.periods.accounting_periods.filter((period) => (period.id !== id)),
             },
-          });
+          }));
         } else {
           alert('Error while trying to remove accounting period');
         }
@@ -299,13 +292,13 @@ class Periods extends React.Component {
   }
 
   renderUserInfo(user) {
-    if (!_.isEmpty(user)) {
+    if (_.isEmpty(user)) {
       return (
-        <span><NavLink to={`/timesheet?user_id=${user.id}`}>{`${user.first_name} ${user.last_name}`}</NavLink></span>
+        <div style={{ width: '390px', display: 'inline-block' }} className="preloader" />
       );
     }
     return (
-      <div style={{ width: '390px', display: 'inline-block' }} className="preloader" />
+      <span><NavLink to={`/timesheet?user_id=${user.id}`}>{user.name}</NavLink></span>
     );
   }
 
@@ -317,17 +310,20 @@ class Periods extends React.Component {
 
     return (
       <div className="accounting-periods-list">
-        {currentUser.admin ? this.renderButtons() : null}
+        <Helmet>
+          <title>{I18n.t('common.accounting_periods')}</title>
+        </Helmet>
+        {currentUser.admin && this.renderButtons()}
         <div className="col-md-offset-3 col-md-6 vert-offset-bottom clearfix">
-          { currentUser.admin ? (
+          {currentUser.admin && (
             <h3 className="text-center text-muted">
-              { user.prev_id ? <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" /> : null }
+              {user.prev_id && <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" />}
               {this.renderUserInfo(user)}
               <span>
-                { user.next_id ? <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" /> : null }
+                {user.next_id && <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" />}
               </span>
             </h3>
-          ) : null }
+          )}
         </div>
         <table className="table table-striped">
           <thead>
@@ -344,9 +340,13 @@ class Periods extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { periods.accounting_periods.map((period, index) => (
-              // eslint-disable-next-line
-              <Period key={index} period={period} onDelete={this.onDelete} userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`} />
+            { periods.accounting_periods.map((period) => (
+              <Period
+                key={period.id}
+                period={period}
+                onDelete={this.onDelete}
+                userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`}
+              />
             )) }
           </tbody>
         </table>
@@ -363,7 +363,14 @@ class Periods extends React.Component {
                 <div className="fields inline">
                   <div className="field">
                     <label>{I18n.t('apps.accounting_periods.periods_count')}</label>
-                    <input type="number" onChange={this.onGeneratePeriodsChange} max={MONTHS_IN_YEAR * 5} value={generatePeriods.periods_count} name="periods_count" placeholder="periods count" />
+                    <input
+                      type="number"
+                      onChange={this.onGeneratePeriodsChange}
+                      max={MONTHS_IN_YEAR * 5}
+                      value={generatePeriods.periods_count}
+                      name="periods_count"
+                      placeholder="periods count"
+                    />
                   </div>
                   <div className="field">
                     <label>{I18n.t('apps.accounting_periods.starting_from_month')}</label>

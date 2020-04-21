@@ -6,12 +6,12 @@ RSpec.describe BirthdayMailer, type: :mailer do
   describe 'send ticket' do
     let(:user) { create(:user) }
     let(:template) { create :birthday_email_template }
-    let(:mail) { BirthdayMailer.send_birthday_email(template.title, template.body) }
+    let(:mail) { BirthdayMailer.with(title: template.title, header: template.header, body: template.body, bottom: template.bottom).send_birthday_email }
 
     it 'renders the headers' do
       expect(mail.subject).to eql(template.title)
       expect(mail.to).to eql([Rails.application.secrets.birthday_mailer_to])
-      expect(mail.from).to eq([Rails.application.secrets.mailer[:from]])
+      expect(mail.from).to eq([Rails.application.secrets.mailer[:from]].compact)
     end
 
     it 'renders the body' do

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :accounting_period do
     user
-    duration 160.hours
+    duration { 160.hours }
     position { rand(1..100_000) }
   end
 end

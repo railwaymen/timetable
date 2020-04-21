@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :project_report_role do
     project_report
     user
-    role 'dev'
-    description 'Frontent'
+    role { 'developer' }
+    description { 'Frontend' }
   end
 end

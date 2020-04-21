@@ -28,6 +28,7 @@ class WorkTimeForm
     return false unless valid?
 
     work_time.integration_payload = external_payload
+    work_time.body = work_time.external_summary if work_time.body.blank? && work_time.external_summary.present?
     saved = work_time.save(additional_params)
     if saved
       update_external_auth if external_payload
@@ -63,6 +64,7 @@ class WorkTimeForm
   end
 
   def copy_errors(*args)
+    errors.clear
     work_time.valid?(*args)
     work_time.errors.details.each do |key, value|
       errors.add(key, value.first[:error], value.first.except(:error))

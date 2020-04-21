@@ -5,14 +5,14 @@ require 'rails_helper'
 RSpec.describe Api::UsersController do
   render_views
   let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
-  let(:manager) { create(:manager) }
+  let(:admin) { create(:user, :admin) }
+  let(:manager) { create(:user, :manager) }
   let(:first_name) { SecureRandom.hex }
   let(:last_name) { SecureRandom.hex }
   let(:email) { "#{SecureRandom.hex}@example.com" }
 
   def user_response(user)
-    user.attributes.slice('email', 'first_name', 'last_name', 'prev_id', 'next_id', 'active', 'lang')
+    user.attributes.slice('id', 'email', 'first_name', 'last_name', 'lang').merge(active: user.kept?, name: user.name, accounting_name: user.accounting_name)
   end
 
   describe '#index' do
@@ -40,78 +40,48 @@ RSpec.describe Api::UsersController do
       context 'all' do
         it 'return all possible records' do
           sign_in admin
-          FactoryGirl.create :user, active: false
-          FactoryGirl.create :user, active: true
+          FactoryBot.create :user, :discarded
+          FactoryBot.create :user
 
           get :index, params: { filter: 'all' }, format: :json
 
           expected_json = User.all.map do |user|
-            {
-              id: user.id,
-              first_name: user.first_name,
-              last_name: user.last_name,
-              email: user.email,
-              lang: user.lang,
-              active: user.active,
-              phone: user.phone,
-              contract_name: user.contract_name,
-              birthdate: user.birthdate
-            }
-          end.to_json
+            user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
+          end
 
-          expect(response.body).to eq expected_json
+          expect(response.body).to be_json_eql(expected_json.to_json)
         end
       end
 
       context 'active' do
         it 'return all possible records' do
           sign_in admin
-          FactoryGirl.create :user, active: false
-          FactoryGirl.create :user, active: true
+          FactoryBot.create :user, :discarded
+          FactoryBot.create :user
 
           get :index, params: { filter: 'active' }, format: :json
 
-          expected_json = User.where(active: true).map do |user|
-            {
-              id: user.id,
-              first_name: user.first_name,
-              last_name: user.last_name,
-              email: user.email,
-              lang: user.lang,
-              active: user.active,
-              phone: user.phone,
-              contract_name: user.contract_name,
-              birthdate: user.birthdate
-            }
-          end.to_json
+          expected_json = User.kept.map do |user|
+            user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
+          end
 
-          expect(response.body).to eq expected_json
+          expect(response.body).to be_json_eql(expected_json.to_json)
         end
       end
 
       context 'inactive' do
         it 'return all possible records' do
           sign_in admin
-          FactoryGirl.create :user, active: false
-          FactoryGirl.create :user, active: true
+          FactoryBot.create :user, :discarded
+          FactoryBot.create :user
 
           get :index, params: { filter: 'inactive' }, format: :json
 
-          expected_json = User.where(active: false).map do |user|
-            {
-              id: user.id,
-              first_name: user.first_name,
-              last_name: user.last_name,
-              email: user.email,
-              lang: user.lang,
-              active: user.active,
-              phone: user.phone,
-              contract_name: user.contract_name,
-              birthdate: user.birthdate
-            }
-          end.to_json
+          expected_json = User.discarded.map do |user|
+            user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
+          end
 
-          expect(response.body).to eq expected_json
+          expect(response.body).to be_json_eql(expected_json.to_json)
         end
       end
     end
@@ -129,7 +99,7 @@ RSpec.describe Api::UsersController do
       user = User.with_next_and_previous_user_id.find(user.id)
       get :show, params: { id: user.id }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql(user_response(user).to_json)
+      expect(response.body).to be_json_eql(user_response(user).merge(next_id: user.next_id, prev_id: user.prev_id).to_json)
     end
   end
 

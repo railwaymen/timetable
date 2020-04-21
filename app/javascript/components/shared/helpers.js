@@ -1,9 +1,9 @@
 import React from 'react';
 import moment from 'moment';
 import padStart from 'lodash/padStart';
+import URI from 'urijs';
 
-
-export const preserveLines = string => string.split('\n').map((line, idx) => (
+export const preserveLines = (string) => string.split('\n').map((line, idx) => (
   <p key={idx}>{line}</p> // eslint-disable-line
 ));
 
@@ -33,12 +33,12 @@ export const displayDuration = (seconds) => {
   const duration = moment.duration(seconds, 'seconds');
   const hours = Math.floor(duration.asHours());
   const minutes = duration.minutes();
-  const padZeroes = input => padStart(String(input), 2, '0');
+  const padZeroes = (input) => padStart(String(input), 2, '0');
 
   return `${padZeroes(hours)}:${padZeroes(minutes)}`;
 };
 
-export const displayDate = date => moment(date).format('ddd DD, MMMM YYYY');
+export const displayDate = (date) => moment(date).format('ddd DD, MMMM YYYY');
 
 export const displayDayInfo = (day) => {
   const today = moment();
@@ -59,4 +59,16 @@ export const formattedDuration = (value) => {
   return displayDuration(value);
 };
 
-export const countDurationPercentage = (duration, total) => `${Math.floor(duration * 10000 / total) / 100}%`;
+export const countDurationPercentage = (duration, total) => `${Math.floor((duration * 10000) / total) / 100}%`;
+
+export const locationParams = () => {
+  const href = URI(window.location.href);
+  return href.query(true);
+};
+
+export const replaceLocationParams = (params) => {
+  const href = URI(window.location.href);
+  const currentParams = href.query(true);
+  const newParams = { ...currentParams, ...params };
+  window.history.pushState('Timetable', '', href.search(newParams));
+};

@@ -16,7 +16,7 @@ module ExternalValidatable
 
     return unless external_payload.nil?
 
-    errors.add(:task, I18n.t('activerecord.errors.models.work_time.attributes.task.invalid_external'))
+    errors.add(:task, :invalid_external)
   end
 
   def external_payload

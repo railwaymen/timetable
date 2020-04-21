@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable MethodLength
+# rubocop:disable Metrics/MethodLength
 
 require 'net/ldap'
 require 'devise/strategies/authenticatable'
@@ -51,4 +51,4 @@ end
 
 Warden::Strategies.add(:ldap_authenticatable, Devise::Strategies::LdapAuthenticatable)
 
-# rubocop:enable MethodLength
+# rubocop:enable Metrics/MethodLength

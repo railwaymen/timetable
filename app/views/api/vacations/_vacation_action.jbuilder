@@ -13,3 +13,4 @@ json.vacation do
   json.description response[:vacation].description
 end
 json.previous_status response[:previous_status]
+json.user_available_vacation_days response[:user_available_vacation_days]

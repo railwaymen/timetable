@@ -10,7 +10,7 @@ module Api
         @user  = resource
         @token = JwtService.encode(payload: { id: resource.id }).as_json
       else
-        render json: { errors: 'invalid_email_or_password' }, status: :unprocessable_entity
+        render json: { errors: { base: [{ error: :invalid_email_or_password }] } }, status: :unprocessable_entity
       end
     end
   end

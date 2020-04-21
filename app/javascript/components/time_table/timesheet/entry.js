@@ -4,9 +4,10 @@ import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import _ from 'lodash';
 import URI from 'urijs';
+import ErrorTooltip from '@components/shared/error_tooltip';
 import ProjectsDropdown from './projects_dropdown';
 import TagsDropdown from './tags_dropdown';
-import ErrorTooltip from './errors/error_tooltip';
+import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 import * as Validations from '../../shared/validations';
 import { defaultDatePickerProps } from '../../shared/helpers';
@@ -31,30 +32,20 @@ class Entry extends React.Component {
     this.onTimeFocus = this.onTimeFocus.bind(this);
     this.onTimeBlur = this.onTimeBlur.bind(this);
 
+    this.state = {
+      body: undefined,
+      duration: 0,
+      task: '',
+      tag: 'dev',
+      project: {},
+      starts_at: moment().format('HH:mm'),
+      ends_at: moment().format('HH:mm'),
+      durationHours: '00:00',
+      date: moment().format('DD/MM/YYYY'),
+      errors: [],
+    };
+
     this.startInputRef = React.createRef();
-  }
-
-  static propTypes = {
-    body: PropTypes.string,
-    duration: PropTypes.number,
-    task: PropTypes.string,
-    tag: PropTypes.string,
-    project: PropTypes.object,
-    starts_at: PropTypes.string,
-    ends_at: PropTypes.string,
-  }
-
-  state = {
-    body: undefined,
-    duration: 0,
-    task: '',
-    tag: 'dev',
-    project: {},
-    starts_at: moment().format('HH:mm'),
-    ends_at: moment().format('HH:mm'),
-    durationHours: '00:00',
-    date: moment().format('DD/MM/YYYY'),
-    errors: [],
   }
 
   onChange(e) {
@@ -104,9 +95,9 @@ class Entry extends React.Component {
     });
   }
 
-  onDateChange(e) {
+  onDateChange(date) {
     this.setState({
-      date: e.format('DD/MM/YYYY'),
+      date: date.format('DD/MM/YYYY'),
     }, () => { this.removeErrorsFor('date'); });
   }
 
@@ -193,14 +184,7 @@ class Entry extends React.Component {
         if (!this.state.project.lunch) this.lastProject = this.state.project;
         this.setState(newState);
       }).catch((e) => {
-        if (e.errors && (e.errors.starts_at || e.errors.ends_at || e.errors.task)) {
-          const newErrors = {};
-          if (e.errors.starts_at || e.errors.ends_at) newErrors.duration = (e.errors.starts_at || []).concat(e.errors.ends_at || []);
-          if (e.errors.task) newErrors.task = e.errors.task;
-          this.setState({ errors: newErrors });
-        } else {
-          alert(I18n.t('activerecord.errors.models.work_time.basic'));
-        }
+        this.setState({ errors: translateErrors('work_time', e.errors) });
       });
     }
   }
@@ -261,16 +245,17 @@ class Entry extends React.Component {
   }
 
   recountTime(stateCallback) {
-    const formattedStartsAt = this.inclusiveParse(this.state.starts_at);
-    const formattedEndsAt = this.inclusiveParse(this.state.ends_at);
+    this.setState((prevState) => {
+      const formattedStartsAt = this.inclusiveParse(prevState.starts_at);
+      const formattedEndsAt = this.inclusiveParse(prevState.ends_at);
+      const duration = prevState.project.count_duration ? formattedEndsAt.diff(formattedStartsAt) : 0;
 
-    const duration = this.state.project.count_duration ? formattedEndsAt.diff(formattedStartsAt) : 0;
-
-    this.setState({
-      duration,
-      durationHours: moment.utc(duration).format('HH:mm'),
-      starts_at: this.formattedHoursAndMinutes(formattedStartsAt),
-      ends_at: this.formattedHoursAndMinutes(formattedEndsAt),
+      return {
+        duration,
+        durationHours: moment.utc(duration).format('HH:mm'),
+        starts_at: this.formattedHoursAndMinutes(formattedStartsAt),
+        ends_at: this.formattedHoursAndMinutes(formattedEndsAt),
+      };
     }, () => {
       this.removeErrorsFor('duration', stateCallback);
     });
@@ -300,22 +285,37 @@ class Entry extends React.Component {
               <div className="col-sm-8 col-md-6 description">
                 {errors.body ? <ErrorTooltip errors={errors.body} /> : null}
                 <div className="form-group">
-                  {project.lunch
-                    ? <img className="easter" src={this.renderEasterEgg()} alt="" />
-                    : <textarea className="form-control" placeholder={I18n.t('apps.timesheet.what_have_you_done')} name="body" value={body} onChange={this.onChange} onKeyPress={this.onKeyPress} />
-                  }
+                  {project.lunch ? (
+                    <img className="easter" src={this.renderEasterEgg()} alt="" />
+                  ) : (
+                    <textarea
+                      className="form-control"
+                      placeholder={I18n.t('apps.timesheet.what_have_you_done')}
+                      name="body"
+                      value={body}
+                      onChange={this.onChange}
+                      onKeyPress={this.onKeyPress}
+                    />
+                  )}
                 </div>
-                {project.work_times_allows_task
-                  ? (
-                    <div className="form-group">
-                      {errors.task ? <ErrorTooltip errors={errors.task} /> : null}
-                      <input className="form-control task-url" placeholder={I18n.t('apps.timesheet.task_url')} type="text" name="task" value={task} onChange={this.onChange} onKeyPress={this.onKeyPress} />
-                    </div>
-                  ) : null}
+                {project.work_times_allows_task && (
+                  <div className="form-group">
+                    {errors.task && <ErrorTooltip errors={errors.task} />}
+                    <input
+                      className="form-control task-url"
+                      placeholder={I18n.t('apps.timesheet.task_url')}
+                      type="text"
+                      name="task"
+                      value={task}
+                      onChange={this.onChange}
+                      onKeyPress={this.onKeyPress}
+                    />
+                  </div>
+                )}
               </div>
               <div className="col-sm-4 col-md-2 project">
                 <div className="project-dropdown">
-                  {errors.project_id ? <ErrorTooltip errors={errors.project_id} /> : null}
+                  {errors.projectId && <ErrorTooltip errors={errors.projectId} />}
                   <div>
                     <ProjectsDropdown updateProject={this.updateProject} selectedProject={this.state.project} projects={this.props.projects} />
                   </div>
@@ -324,27 +324,61 @@ class Entry extends React.Component {
               <div className="col-sm-12 col-md-4 date">
                 <div className="time">
                   <div className="form-group">
-                    <input className="form-control" id="start" type="text" name="starts_at" placeholder="830 → 8:30" ref={this.startInputRef} onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onFocus={this.onTimeFocus} onClick={this.onFocus} onBlur={this.onTimeBlur} value={starts_at} />
+                    <input
+                      className="form-control"
+                      id="start"
+                      type="text"
+                      name="starts_at"
+                      placeholder="830 → 8:30"
+                      ref={this.startInputRef}
+                      onKeyPress={this.onTimeKeyPress}
+                      onChange={this.onChange}
+                      onFocus={this.onTimeFocus}
+                      onClick={this.onFocus}
+                      onBlur={this.onTimeBlur}
+                      value={starts_at}
+                    />
                   </div>
                   <span className="time-divider">-</span>
                   <div className="form-group">
-                    <input className="form-control" id="end" type="text" name="ends_at" placeholder="1215 → 12:15" onKeyPress={this.onTimeKeyPress} onChange={this.onChange} onFocus={this.onTimeFocus} onClick={this.onFocus} onBlur={this.onTimeBlur} value={ends_at} />
+                    <input
+                      className="form-control"
+                      id="end"
+                      type="text"
+                      name="ends_at"
+                      placeholder="1215 → 12:15"
+                      onKeyPress={this.onTimeKeyPress}
+                      onChange={this.onChange}
+                      onFocus={this.onTimeFocus}
+                      onClick={this.onFocus}
+                      onBlur={this.onTimeBlur}
+                      value={ends_at}
+                    />
                   </div>
                 </div>
                 <div className="duration manual">
-                  {errors.duration ? <ErrorTooltip errors={errors.duration} /> : null}
+                  {errors.startsAt && <ErrorTooltip errors={errors.startsAt} />}
+                  {errors.duration && <ErrorTooltip errors={errors.duration} />}
                   <span id="duration">{durationHours}</span>
                 </div>
-                <DatePicker {...defaultDatePickerProps} className="form-control" selected={moment(date, 'DD/MM/YYYY')} value={moment(date, 'DD/MM/YYYY').format('DD/MM')} format="DD/MM" dateFormat="DD/MM" onChange={this.onDateChange} onSelect={this.onDateChange} />
+                <DatePicker
+                  {...defaultDatePickerProps}
+                  className="form-control"
+                  selected={moment(date, 'DD/MM/YYYY')}
+                  value={moment(date, 'DD/MM/YYYY').format('DD/MM')}
+                  format="DD/MM"
+                  dateFormat="DD/MM"
+                  onChange={this.onDateChange}
+                  onSelect={this.onDateChange}
+                />
               </div>
             </div>
-            { !this.props.tags_disabled && project.taggable && (
+            { project.taggable && (
               <div className="tag-container">
                 {errors.tag && <ErrorTooltip errors={errors.tag} />}
                 <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />
               </div>
-            )
-            }
+            )}
             <div className="form-actions">
               <button type="button" className="bt bt-second" style={{ marginTop: '5px' }} onClick={() => this.onSubmit('/api/work_times/create_filling_gaps')}>
                 <i className="symbol fa fa-calendar-plus-o" />
@@ -361,5 +395,15 @@ class Entry extends React.Component {
     );
   }
 }
+
+Entry.propTypes = {
+  body: PropTypes.string,
+  duration: PropTypes.number,
+  task: PropTypes.string,
+  tag: PropTypes.string,
+  project: PropTypes.object,
+  starts_at: PropTypes.string,
+  ends_at: PropTypes.string,
+};
 
 export default Entry;

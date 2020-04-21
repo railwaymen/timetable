@@ -2,15 +2,12 @@
 
 module Api
   class ProjectsController < Api::BaseController
-    respond_to :json
     wrap_parameters :project
     before_action :authenticate_admin_or_manager_or_leader!, only: %i[show create update]
 
     def index
       range = params[:range].presence_in(valid_days) || 30
-      @projects = ProjectRate.stats(starts_at: range.to_i.days)
-
-      respond_with @projects
+      @project_stats = ProjectRateQuery.new(starts_at: range.to_i.days.ago, ends_at: Time.current).results
     end
 
     def list
@@ -21,8 +18,11 @@ module Api
     def simple
       @projects = Project.order(:internal, :name)
       @projects = @projects.where("name != 'Vacation' AND name != 'ZKS'") unless current_user.admin?
+    end
+
+    def tags
       @tags = WorkTime.tags
-      respond_with @projects
+      respond_with @tags
     end
 
     def show
@@ -34,7 +34,7 @@ module Api
       @project = project_scope
       from, to = resolve_from_to_dates
       report_params = { from: from, to: to, project_ids: params[:id], sort: params[:sort] }
-      work_times_query = @project.work_times.active.where(starts_at: from..to)
+      work_times_query = @project.work_times.kept.where(starts_at: from..to)
 
       if params[:user_id]
         report_params[:user_ids] = [params[:user_id]]
@@ -51,13 +51,14 @@ module Api
     # rubocop:enable Metrics/MethodLength
 
     def create
-      @project = Project.create(project_params)
-      respond_with :api, @project
+      @project = Project.new
+      UpdateProjectForm.new(permitted_attributes(@project).merge(project: @project)).save
+      respond_with @project
     end
 
     def update
       @project = project_scope
-      @project.update(project_params)
+      UpdateProjectForm.new(permitted_attributes(@project).merge(project: @project)).save
       respond_with @project
     end
 
@@ -95,19 +96,6 @@ module Api
 
     def projects_scope
       @projects_scope ||= Project.includes(:leader).order(name: :asc)
-    end
-
-    def project_params
-      current_user.admin? || current_user.manager? ? admin_project_params : leader_project_params
-    end
-
-    def leader_project_params
-      params.require(:project).permit(:color, :work_times_allows_task, :external_integration_enabled)
-    end
-
-    def admin_project_params
-      params.fetch(:project)
-            .permit(:name, :color, :leader_id, :active, :work_times_allows_task, :external_integration_enabled)
     end
   end
 end

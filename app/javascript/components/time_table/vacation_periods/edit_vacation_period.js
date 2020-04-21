@@ -1,5 +1,7 @@
 import React from 'react';
 import { Redirect, NavLink } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
 
 class EditVacationPeriod extends React.Component {
@@ -10,13 +12,13 @@ class EditVacationPeriod extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onCheckboxChange = this.onCheckboxChange.bind(this);
-  }
 
-  state = {
-    period: {},
-    periodId: parseInt(this.props.match.params.id, 10),
-    redirectToReferer: undefined,
-    errors: {},
+    this.state = {
+      period: {},
+      periodId: parseInt(this.props.match.params.id, 10),
+      redirectToReferer: undefined,
+      errors: {},
+    };
   }
 
   componentDidMount() {
@@ -50,41 +52,29 @@ class EditVacationPeriod extends React.Component {
   }
 
   onChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
-        [e.target.name]: e.target.value,
+        ...prevState.period,
+        [name]: value,
       },
-    });
+    }));
   }
 
   onCheckboxChange(e) {
-    this.setState({
+    const { name } = e.target;
+
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
-        [e.target.name]: !this.state.period[e.target.name],
+        ...prevState.period,
+        [name]: !prevState.period[name],
       },
-    });
+    }));
   }
 
   cancelUrl() {
     return `/vacation_periods?user_id=${this.state.period.user_id}`;
-  }
-
-  renderPreloader() {
-    return (
-      <div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-      </div>
-    );
   }
 
   render() {
@@ -97,19 +87,36 @@ class EditVacationPeriod extends React.Component {
     if (!periodId || periodId === period.id) {
       result = (
         <div className="container">
+          <Helmet>
+            <title>{I18n.t('apps.vacation_periods.edit')}</title>
+          </Helmet>
           <div id="content" className="edit-vacation-period col-md-6">
             <form className="row" onSubmit={this.onSubmit}>
-              { errors.vacation_days
-                ? <div className="error-description">{errors.vacation_days.join(', ')}</div>
-                : null }
+              { errors.vacation_days && (
+                <div className="error-description">{errors.vacation_days.join(', ')}</div>
+              )}
               <div className="form-group">
-                <input className={`${errors.vacation_days ? 'error' : ''} form-control`} type="number" name="vacation_days" onChange={this.onChange} value={period.vacation_days} disabled={period.closed} />
+                <input
+                  className={`${errors.vacation_days ? 'error' : ''} form-control`}
+                  type="number"
+                  name="vacation_days"
+                  onChange={this.onChange}
+                  value={period.vacation_days}
+                  disabled={period.closed}
+                />
               </div>
-              { errors.note
-                ? <div className="error-description">{errors.note.join(', ')}</div>
-                : null }
+              { errors.note && (
+                <div className="error-description">{errors.note.join(', ')}</div>
+              )}
               <div className="form-group">
-                <textarea className={`${errors.note ? 'error' : ''} form-control`} name="note" placeholder={I18n.t('apps.vacation_periods.note')} onChange={this.onChange} value={period.note} disabled={period.closed} />
+                <textarea
+                  className={`${errors.note ? 'error' : ''} form-control`}
+                  name="note"
+                  placeholder={I18n.t('apps.vacation_periods.note')}
+                  onChange={this.onChange}
+                  value={period.note}
+                  disabled={period.closed}
+                />
               </div>
               <div className="form-group">
                 <label className="form-check-label">
@@ -136,7 +143,7 @@ class EditVacationPeriod extends React.Component {
         </div>
       );
     } else {
-      result = this.renderPreloader();
+      result = <Preloader rowsNumber={3} />;
     }
 
     return result;

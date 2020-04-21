@@ -1,11 +1,14 @@
-var webpack = require("webpack");
+const webpack = require('webpack');
+const { environment } = require('@rails/webpacker');
+const aliases = require('./aliases');
 
-module.exports = {
-	plugins: [
-		new webpack.DefinePlugin({ ...process })
-	]
-};
+environment.plugins.prepend('Provide',
+  new webpack.ProvidePlugin({
+    $: 'jquery/src/jquery',
+    jQuery: 'jquery/src/jquery',
+  })
+)
 
-const { environment } = require('@rails/webpacker')
+environment.config.merge(aliases);
 
-module.exports = environment
+module.exports = environment;

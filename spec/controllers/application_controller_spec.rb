@@ -6,7 +6,7 @@ RSpec.describe ApplicationController, type: :controller do
   describe 'current user' do
     context 'as token' do
       it 'correctly select current user' do
-        user = FactoryGirl.create :user
+        user = FactoryBot.create :user
         request.headers['token'] = JwtService.encode payload: user.as_json
 
         expect(controller.send(:current_user).id).to eq user.id
@@ -15,7 +15,7 @@ RSpec.describe ApplicationController, type: :controller do
 
     context 'as session' do
       it 'correctly select current user' do
-        user = FactoryGirl.create :user
+        user = FactoryBot.create :user
         sign_in user
 
         expect(controller.send(:current_user).id).to eq user.id

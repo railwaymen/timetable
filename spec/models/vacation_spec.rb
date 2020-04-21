@@ -35,7 +35,7 @@ RSpec.describe Vacation, type: :model do
   it 'validates end_date' do
     vacation = build(:vacation, end_date: Time.current - 10.days)
     expect(vacation.valid?).to be_falsey
-    expect(vacation.errors.messages[:end_date]).to eql([I18n.t('activerecord.errors.models.vacation.attributes.end_date.validates_end_date')])
+    expect(vacation.errors.details[:end_date]).to eql([{ error: :validates_end_date }])
   end
 
   it 'validates entries in Timesheet' do
@@ -43,7 +43,7 @@ RSpec.describe Vacation, type: :model do
     create(:work_time, user: user)
     vacation = build(:vacation, user: user)
     expect(vacation.valid?).to be_falsey
-    expect(vacation.errors.messages[:base]).to eql([I18n.t('activerecord.errors.models.vacation.base.validates_work_time')])
+    expect(vacation.errors.details[:base]).to eql([{ error: :work_time_exists }])
   end
 
   it '#user_full_name returns joined last_name and first_name' do

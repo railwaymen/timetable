@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { Redirect, NavLink } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -9,32 +10,32 @@ import * as Api from '../../shared/api';
 import Report from './report';
 import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
+import Preloader from '../../shared/preloader';
 
 class ByProjects extends Report {
-  static propTypes = {
-    reports: PropTypes.array,
-  }
+  constructor(props) {
+    super(props);
 
-  state = {
-    reports: {},
-    projects: [],
-    from: moment().startOf('month').format(),
-    to: moment().endOf('month').format(),
-    redirectToReferer: undefined,
-    order: 'duration',
+    this.state = {
+      reports: {},
+      projects: [],
+      from: moment().startOf('month').format(),
+      to: moment().endOf('month').format(),
+      redirectToReferer: undefined,
+      order: 'duration',
+      sync: false,
+    };
   }
 
   getReports(params = {}) {
     const original = URI(window.location.href);
     let { from, to, order } = params;
 
-    /* eslint-disable */
     if (!from || !to) {
       from = this.state.from;
       to = this.state.to;
     }
     if (!order) order = this.state.order;
-    /* eslint-enable */
 
     const prepareParams = { from, to, sort: order };
 
@@ -43,6 +44,8 @@ class ByProjects extends Report {
 
     const url = URI(`/api/reports/work_times?${original.query()}`)
       .addSearch(prepareParams);
+
+    this.setState({ sync: true });
 
     Api.makeGetRequest({ url })
       .then((response) => {
@@ -60,22 +63,26 @@ class ByProjects extends Report {
           from,
           to,
         }, () => {
-          this.setState({
-            projects: Object.keys(this.state.reports),
-          });
+          this.setState((prevState) => ({
+            projects: Object.keys(prevState.reports),
+            sync: false,
+          }));
         });
       });
   }
 
   render() {
     const {
-      projects, reports, from, to, redirectToReferer, order,
+      projects, reports, from, to, redirectToReferer, order, sync,
     } = this.state;
 
     if (redirectToReferer) return (<Redirect to={redirectToReferer} />);
 
     return (
       <div id="content">
+        <Helmet>
+          <title>{I18n.t('common.reports')}</title>
+        </Helmet>
         <header className="page-header reports-header row">
           <div className="col-md-3">
             <p style={{ padding: '6px' }}>
@@ -100,18 +107,21 @@ class ByProjects extends Report {
             </div>
           </div>
         </header>
+        {sync && <Preloader rowsNumber={1} />}
         <div className="row row-eq-height">
-          {/* eslint-disable */}
-          { projects.map((project, index) => (
-            <div className="col-md-4">
-              <ReportProjectRecord key={index} reportRows={reports[project]} from={from} to={to} redirectTo={this.redirectTo} />
+          { projects.map((project) => (
+            <div key={project} className="col-md-4">
+              <ReportProjectRecord reportRows={reports[project]} from={from} to={to} redirectTo={this.redirectTo} />
             </div>
           )) }
-          {/* eslint-enable */}
         </div>
       </div>
     );
   }
 }
+
+ByProjects.propTypes = {
+  reports: PropTypes.array,
+};
 
 export default ByProjects;

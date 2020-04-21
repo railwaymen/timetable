@@ -1,20 +1,18 @@
 # frozen_string_literal: true
 
 module Api
-  # rubocop:disable ClassLength
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/ClassLength
+  # rubocop:disable Metrics/MethodLength
   class WorkTimesController < Api::BaseController
-    respond_to :json
-
     def index
-      @work_times = WorkTime.active.includes(:project).order(starts_at: :desc).where(permitted_search_params)
+      @work_times = WorkTime.kept.includes(:project).order(starts_at: :desc).where(permitted_search_params)
 
       respond_with @work_times
     end
 
     def show
       @work_time = find_work_time
-      @work_time_duration = current_user.work_times.active.where(task: @work_time.task).sum(:duration)
+      @work_time_duration = current_user.work_times.kept.where(task: @work_time.task).sum(:duration)
 
       respond_with @work_time
     end
@@ -37,7 +35,7 @@ module Api
       @work_time = find_work_time
       @work_time.assign_attributes(work_time_params)
       duration_was = @work_time.duration
-      if current_user.admin?
+      if current_user.admin? && @work_time.changed?
         @work_time.updated_by_admin = true if @work_time.user_id != current_user.id
       end
       @work_time = WorkTimeForm.new(work_time: @work_time)
@@ -48,9 +46,9 @@ module Api
 
     def destroy
       @work_time = find_work_time
-      @work_time.update(updated_by_admin: true) if @work_time.user_id != current_user.id
-      @work_time.update(active: false)
-      @work_time.valid?(:user) unless current_user.admin? || current_user.manager?
+      @work_time.assign_attributes(updated_by_admin: true) if @work_time.user_id != current_user.id
+      @work_time.assign_attributes(discarded_at: Time.zone.now)
+      @work_time.save(work_hours_save_params)
       UpdateExternalAuthWorker.perform_async(@work_time.project_id, @work_time.external_task_id, @work_time.id) if @work_time.external_task_id
       decrease_work_time(@work_time, @work_time.duration)
       respond_with @work_time
@@ -70,6 +68,7 @@ module Api
       if current_user.admin?
         WorkTime.new(work_time_create_params).tap do |work_time|
           work_time.updated_by_admin = true if work_time.user_id != current_user.id
+          work_time.user_id = work_time_create_params[:user_id] || current_user.id
           work_time.creator = current_user
         end
       else
@@ -122,9 +121,9 @@ module Api
 
     def find_work_time
       if current_user.admin?
-        WorkTime.active.find(params[:id])
+        WorkTime.kept.find(params[:id])
       else
-        current_user.work_times.active.find(params[:id])
+        current_user.work_times.kept.find(params[:id])
       end
     end
 
@@ -157,6 +156,6 @@ module Api
             )
     end
   end
-  # rubocop:enable MethodLength
-  # rubocop:enable ClassLength
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/ClassLength
 end

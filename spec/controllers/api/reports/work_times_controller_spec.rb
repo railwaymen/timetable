@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe Api::Reports::WorkTimesController do
   render_views
   let(:user) { create(:user) }
-  let(:manager) { create(:manager) }
-  let(:admin) { create(:admin) }
+  let(:manager) { create(:user, :manager) }
+  let(:admin) { create(:user, :admin) }
 
   describe '#index' do
     it 'authenticates user' do
@@ -29,7 +29,7 @@ RSpec.describe Api::Reports::WorkTimesController do
 
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql([{ project_id: project.id, project_name: project.name, project_duration: 2.hours,
-                                              user_name: user.to_s, user_id: user.id, duration: 2.hours }].to_json)
+                                              user_name: user.accounting_name, user_id: user.id, duration: 2.hours }].to_json)
     end
 
     it 'returns work times grouped by projects for admin' do
@@ -41,7 +41,7 @@ RSpec.describe Api::Reports::WorkTimesController do
 
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql([{ project_id: project.id, project_name: project.name, project_duration: 2.hours,
-                                              user_name: user.to_s, user_id: user.id, duration: 2.hours }].to_json)
+                                              user_name: user.accounting_name, user_id: user.id, duration: 2.hours }].to_json)
     end
 
     it 'returns work times grouped by projects for leader' do
@@ -68,20 +68,20 @@ RSpec.describe Api::Reports::WorkTimesController do
     describe 'regular user' do
       it 'allow to see own data' do
         sign_in(user)
-        project = FactoryGirl.create :project
-        project2 = FactoryGirl.create :project
+        project = FactoryBot.create :project
+        project2 = FactoryBot.create :project
 
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
-        other_user = FactoryGirl.create :user
+        other_user = FactoryBot.create :user
 
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
         get :by_users, params: { from: Time.current - 30.days, to: Time.current + 1.day }, format: :json
 
@@ -112,20 +112,20 @@ RSpec.describe Api::Reports::WorkTimesController do
 
       it 'reject in case of other data preview' do
         sign_in(user)
-        project = FactoryGirl.create :project
-        project2 = FactoryGirl.create :project
+        project = FactoryBot.create :project
+        project2 = FactoryBot.create :project
 
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
-        other_user = FactoryGirl.create :user
+        other_user = FactoryBot.create :user
 
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
         get :by_users, params: { from: Time.current - 30.days, to: Time.current + 1.day, list: :all }, format: :json
 
@@ -158,20 +158,20 @@ RSpec.describe Api::Reports::WorkTimesController do
     describe 'admin' do
       it 'allow to see own report data' do
         sign_in(admin)
-        project = FactoryGirl.create :project
-        project2 = FactoryGirl.create :project
+        project = FactoryBot.create :project
+        project2 = FactoryBot.create :project
 
-        FactoryGirl.create :work_time, user: admin, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: admin, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: admin, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: admin, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: admin, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: admin, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: admin, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: admin, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
-        other_user = FactoryGirl.create :user
+        other_user = FactoryBot.create :user
 
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
         get :by_users, params: { from: Time.current - 30.days, to: Time.current + 1.day, list: :self }, format: :json
 
@@ -202,20 +202,20 @@ RSpec.describe Api::Reports::WorkTimesController do
 
       it 'allow to see overall report data' do
         sign_in(admin)
-        project = FactoryGirl.create :project
-        project2 = FactoryGirl.create :project
+        project = FactoryBot.create :project
+        project2 = FactoryBot.create :project
 
-        FactoryGirl.create :work_time, user: admin, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: admin, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: admin, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: admin, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: admin, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: admin, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: admin, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: admin, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
-        other_user = FactoryGirl.create :user
+        other_user = FactoryBot.create :user
 
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
         get :by_users, params: { from: Time.current - 30.days, to: Time.current + 1.day, list: :all }, format: :json
 
@@ -262,20 +262,20 @@ RSpec.describe Api::Reports::WorkTimesController do
     describe 'leader' do
       it 'allow to see own report data' do
         sign_in(user)
-        project = FactoryGirl.create :project, leader_id: user.id
-        project2 = FactoryGirl.create :project
+        project = FactoryBot.create :project, leader_id: user.id
+        project2 = FactoryBot.create :project
 
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
-        other_user = FactoryGirl.create :user
+        other_user = FactoryBot.create :user
 
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
         get :by_users, params: { from: Time.current - 30.days, to: Time.current + 1.day, list: :self }, format: :json
 
@@ -306,20 +306,20 @@ RSpec.describe Api::Reports::WorkTimesController do
 
       it 'allow to see overall report data for own project' do
         sign_in(user)
-        project = FactoryGirl.create :project, leader_id: user.id
-        project2 = FactoryGirl.create :project
+        project = FactoryBot.create :project, leader_id: user.id
+        project2 = FactoryBot.create :project
 
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
-        other_user = FactoryGirl.create :user
+        other_user = FactoryBot.create :user
 
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
-        FactoryGirl.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 50.minutes, ends_at: Time.current - 40.minutes
+        FactoryBot.create :work_time, user: other_user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 20.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 20.minutes, ends_at: Time.current - 10.minutes
+        FactoryBot.create :work_time, user: other_user, project: project2, starts_at: Time.current - 10.minutes, ends_at: Time.current - 5.minutes
 
         get :by_users, params: { from: Time.current - 30.days, to: Time.current + 1.day, list: :leader }, format: :json
 

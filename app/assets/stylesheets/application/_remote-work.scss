@@ -1,0 +1,37 @@
+.remote-work-container {
+  .new-remote-work {
+    .react-datepicker-wrapper {
+      width: 100%;
+    }
+  }
+  .edit-entry-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    input, textarea {
+      background: none;
+      line-height: 20px;
+      border-radius: 0px;
+      padding: 9px 14px;
+    }
+    textarea {
+      width: 31%;
+    }
+    input {
+      height: 40px;
+      width: 150px;
+
+      &.datepicker {
+        margin-right: 10px;
+      }
+    }
+  }
+  .switch-edition {
+    cursor: pointer;
+  }
+  .action-item.destroy {
+    cursor: pointer;
+    padding: 5px;
+  }
+}

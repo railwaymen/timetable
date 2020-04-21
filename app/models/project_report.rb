@@ -32,13 +32,13 @@ class ProjectReport < ApplicationRecord
       acc + value.sum { |wt| wt['duration'].to_i }
     end
 
-    errors.add(:last_body, 'Changed duration sum') if sum != duration_sum
+    errors.add(:last_body, :changed_duration) if sum != duration_sum
   end
 
   def body_did_not_change_cost
     sum = last_body.inject(0.to_r) do |acc, (_, value)|
       acc + value.inject(0.to_r) { |mem, wt| mem + wt['cost'].to_f }
     end.to_f.round(2)
-    errors.add(:last_body, 'Changed cost') if (sum - cost).abs > 0.01
+    errors.add(:last_body, :changed_cost) if (sum - cost).abs > 0.01
   end
 end

@@ -7,8 +7,8 @@ RSpec.describe VacationApplicationsQuery do
 
   describe '#accepted_or_declined_vacations' do
     before(:each) do
-      @admin = create(:admin)
-      @staff_manager = create(:staff_manager)
+      @admin = create(:user, :admin)
+      @staff_manager = create(:user, :staff_manager)
       @accepted_vacation = create(:vacation, status: :accepted)
       @declined_vacation = create(:vacation, status: :declined)
       create(:vacation, status: :approved)
@@ -46,8 +46,8 @@ RSpec.describe VacationApplicationsQuery do
 
   describe '#unconfirmed_vacations' do
     before(:each) do
-      @staff_manager = create(:staff_manager)
-      @admin = create(:admin)
+      @staff_manager = create(:user, :staff_manager)
+      @admin = create(:user, :admin)
       @approved_vacation = create(:vacation, status: :approved, start_date: now, end_date: now + 1.day)
       @unconfirmed_vacation = create(:vacation, start_date: now + 1.day, end_date: now + 2.days)
       @other_vacation = create(:vacation, vacation_type: :others, description: 'Other vacation', start_date: now + 2.days, end_date: now + 3.days)
@@ -87,7 +87,7 @@ RSpec.describe VacationApplicationsQuery do
 
   describe 'filters vacations' do
     it 'by user' do
-      admin = create(:admin)
+      admin = create(:user, :admin)
       user = create(:user)
       create(:vacation, user: admin, status: :accepted)
       create(:vacation, user: admin)
@@ -101,7 +101,7 @@ RSpec.describe VacationApplicationsQuery do
 
     context 'by date' do
       before(:each) do
-        @admin = create(:admin)
+        @admin = create(:user, :admin)
         @present_vacation = create(:vacation, start_date: Time.current.to_date, end_date: Time.current.to_date + 7.days)
         @past_vacation = create(:vacation, start_date: Time.current.to_date - 30.days, end_date: Time.current.to_date - 20.days)
         @future_vacation = create(:vacation, start_date: Time.current.to_date + 10.days, end_date: Time.current.to_date + 20.days)
@@ -135,7 +135,7 @@ RSpec.describe VacationApplicationsQuery do
 
     context 'by vacation' do
       it 'returns specific vacation' do
-        admin = create(:admin)
+        admin = create(:user, :admin)
         vacation1 = create(:vacation)
         create(:vacation)
 
@@ -148,7 +148,7 @@ RSpec.describe VacationApplicationsQuery do
 
   describe 'returns correct values' do
     it 'for #accepted_or_declined_vacations' do
-      admin = create(:admin)
+      admin = create(:user, :admin)
       vacation = create(:vacation, user: admin, status: :accepted)
       create(:vacation_interaction, user: admin, vacation: vacation, action: :accepted)
       response = {
@@ -171,7 +171,7 @@ RSpec.describe VacationApplicationsQuery do
     end
 
     it 'for #unconfirmed_vacations' do
-      staff_manager = create(:staff_manager)
+      staff_manager = create(:user, :staff_manager)
       vacation = create(:vacation, user: staff_manager, status: :approved)
       create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :approved)
       response = {

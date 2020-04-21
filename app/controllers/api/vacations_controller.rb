@@ -4,13 +4,19 @@ module Api
   class VacationsController < Api::BaseController
     before_action :authenticate_admin_or_manager_or_leader!, only: %i[vacation_applications show decline approve undone generate_csv generate_yearly_report]
     before_action :find_vacation, only: %i[approve decline undone self_decline]
-    respond_to :json
+    around_action :disable_paper_trail, only: %i[approve decline undone self_decline]
 
     def index
+      user_id =
+        if current_user.staff_manager?
+          params[:user_id] || current_user.id
+        else
+          current_user.id
+        end
       @vacations = Vacation.where('user_id = :user_id AND (extract(year from start_date) = :year OR extract(year from start_date) = :year)',
-                                  user_id: current_user.id, year: params[:year]).order(:start_date)
+                                  user_id: user_id, year: params[:year]).order(:start_date)
       @available_vacation_days = current_user.available_vacation_days(@vacations)
-      @used_vacation_days = current_user.used_vacation_days(@vacations, true)
+      @used_vacation_days = current_user.used_vacation_days(@vacations)
     end
 
     def create

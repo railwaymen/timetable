@@ -21,6 +21,10 @@ TimeTable::Application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
+  config.hosts << Rails.application.secrets[:host]
+
+  config.action_mailer.show_previews = true
+
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
   # For large-scale production use, consider using a caching reverse proxy like nginx, varnish or squid.
@@ -89,11 +93,11 @@ TimeTable::Application.configure do
   if [Rails.application.secrets.ses_address, Rails.application.secrets.ses_username, Rails.application.secrets.ses_password].all?(&:present?)
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
-      address:              Rails.application.secrets.ses_address,
-      port:                 587,
-      user_name:            Rails.application.secrets.ses_username,
-      password:             Rails.application.secrets.ses_password,
-      authentication:       'login',
+      address: Rails.application.secrets.ses_address,
+      port: 587,
+      user_name: Rails.application.secrets.ses_username,
+      password: Rails.application.secrets.ses_password,
+      authentication: 'login',
       enable_starttls_auto: true
     }
   end

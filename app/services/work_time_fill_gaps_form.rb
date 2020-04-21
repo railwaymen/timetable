@@ -32,9 +32,7 @@ class WorkTimeFillGapsForm
       work_time = @saved.first
       UpdateExternalAuthWorker.perform_async(work_time.project_id, work_time.external_task_id, work_time.id)
     end
-    if @saved == []
-      errors.add(:starts_at, I18n.t('activemodel.errors.models.work_time_fill_gaps_form.no_gaps_to_fill'))
-    end
+    errors.add(:starts_at, :no_gaps_to_fill) if @saved == []
     @saved.present?
   end
 
@@ -43,7 +41,7 @@ class WorkTimeFillGapsForm
   private
 
   def work_times_ranges
-    filled = WorkTime.active.where(user_id: user_id, ends_at: (starts_at..ends_at)).order(ends_at: :asc).pluck(:starts_at, :ends_at)
+    filled = WorkTime.kept.where(user_id: user_id, ends_at: (starts_at..ends_at)).order(ends_at: :asc).pluck(:starts_at, :ends_at)
     return [(starts_at..ends_at)] if filled.empty?
 
     ranges = []

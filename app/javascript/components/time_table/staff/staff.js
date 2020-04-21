@@ -1,33 +1,154 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Helmet } from 'react-helmet';
+import moment from 'moment';
+import URI from 'urijs';
 import Filters from './filters';
-import VacationApplications from './vacation_applications';
+import InteractedVacations from './interacted_vacations';
+import UnconfirmedVacations from './unconfirmed_vacations';
+import * as Api from '../../shared/api';
 
-class Staff extends React.Component {
-  constructor(props) {
-    super(props);
+const defaultFilters = {
+  selectedUser: '',
+  startDate: moment().startOf('month').format('DD/MM/YYYY'),
+  endDate: null,
+  sort: 'asc',
+};
 
-    this.onFilterChange = this.onFilterChange.bind(this);
-    this.urlFilters = this.urlFilters.bind(this);
+function Staff() {
+  const [filters, setFilters] = useState(defaultFilters);
+  const [vacations, setVacations] = useState({ interactedVacations: [], unconfirmedVacations: [] });
+  const [showAll, setShowAll] = useState(false);
+  const [showDeclined, setShowDeclined] = useState(false);
+  const {
+    selectedUser,
+    startDate,
+    endDate,
+  } = filters;
+  const sortFilter = filters.sort;
+  const isFirstRun = useRef(true);
+
+  function getVacations() {
+    const prepareParams = {
+      start_date: startDate,
+      end_date: endDate,
+      user_id: selectedUser,
+      sort: sortFilter,
+    };
+    if (!selectedUser) { delete prepareParams.user_id; }
+    if (!startDate) { delete prepareParams.start_date; }
+    if (!endDate) { delete prepareParams.end_date; }
+    if (!sortFilter) { delete prepareParams.sort; }
+    const url = URI('/api/vacations/vacation_applications');
+    if (showAll) { url.addSearch({ show_all: true }); }
+    if (showDeclined) { url.addSearch({ show_declined: true }); }
+    url.addSearch(prepareParams);
+
+    Api.makeGetRequest({ url })
+      .then((response) => {
+        const newPath = URI(window.location.href)
+          .removeSearch('start_date')
+          .removeSearch('end_date')
+          .removeSearch('user_id')
+          .removeSearch('sort')
+          .addSearch(prepareParams);
+
+        window.history.pushState('Timetable', 'Staff', newPath);
+        setVacations({
+          interactedVacations: response.data.accepted_or_declined_vacations,
+          unconfirmedVacations: response.data.unconfirmed_vacations,
+        });
+      });
+  }
+  useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+    getVacations();
+  }, [filters, showDeclined, showAll]);
+
+  useEffect(() => {
+    const urlQuery = URI.parseQuery(URI(window.location.href).query());
+    const {
+      user_id,
+      start_date,
+      end_date,
+      sort,
+    } = urlQuery;
+    const urlFilters = {};
+    if (user_id) { urlFilters.selectedUser = user_id; }
+    if (start_date) { urlFilters.startDate = start_date; }
+    if (end_date) { urlFilters.endDate = end_date; }
+    if (sort) { urlFilters.sort = sort; }
+    setFilters({ ...filters, ...urlFilters });
+  }, []);
+
+  function removeFromInteractedVacations(object, action) {
+    if ((showDeclined && action === 'decline') || (!showDeclined && action === 'accept')) { return; }
+    const index = vacations.interactedVacations.findIndex((vacation) => vacation.id === object.id);
+    if (index !== -1) {
+      vacations.interactedVacations.splice(index, 1);
+      setVacations({ ...vacations, interactedVacations: vacations.interactedVacations });
+    }
   }
 
-  onFilterChange(params) {
-    this.vacationApplications.getVacationApplications(params);
+  function removeFromUnconfirmedVacation(object) {
+    if (window.currentUser.staff_manager) {
+      const undefinedIndex = vacations.unconfirmedVacations.findIndex((vacation) => vacation.id === object.id);
+      vacations.unconfirmedVacations.splice(undefinedIndex, 1);
+      setVacations({ ...vacations, unconfirmedVacations: vacations.unconfirmedVacations });
+    }
   }
 
-  urlFilters(params) {
-    this.filters.setFilters(params);
+  function addToInteractedVacations(object, action) {
+    if ((showDeclined && action === 'accept') || (!showDeclined && action === 'decline')) {
+      removeFromUnconfirmedVacation(object);
+      return;
+    }
+    const { interactedVacations, unconfirmedVacations } = vacations;
+    const interactedIndex = interactedVacations.findIndex((vacation) => vacation.id === object.id);
+    const undefinedIndex = unconfirmedVacations.findIndex((vacation) => vacation.id === object.id);
+    if (interactedIndex === -1 && undefinedIndex !== -1) {
+      unconfirmedVacations.splice(undefinedIndex, 1);
+      setVacations({ interactedVacations: [object].concat(interactedVacations), unconfirmedVacations });
+    }
   }
 
-  render() {
-    return (
-      <div className="staff-container">
-        <Filters ref={(filters) => { this.filters = filters; }} onFilterChange={this.onFilterChange} />
-        { currentUser.canManageStaff()
-            && <VacationApplications ref={(vacationApplications) => { this.vacationApplications = vacationApplications; }} urlFilters={this.urlFilters} />
-          }
-      </div>
-    );
-  }
+  return (
+    <div className="staff-container">
+      <Helmet>
+        <title>{I18n.t('common.staff')}</title>
+      </Helmet>
+      <Filters filters={filters} setFilters={setFilters} defaultFilters={defaultFilters} />
+      { currentUser.canManageStaff() && (
+        <div className="container vacations-container">
+          <div className="row">
+            <div className="col-md-6">
+              <InteractedVacations
+                interactedVacations={vacations.interactedVacations}
+                showDeclined={showDeclined}
+                setShowDeclined={setShowDeclined}
+                filters={filters}
+                setFilters={setFilters}
+                getVacations={getVacations}
+                removeFromInteractedVacations={removeFromInteractedVacations}
+                addToInteractedVacations={addToInteractedVacations}
+              />
+            </div>
+            <div className="col-md-6">
+              <UnconfirmedVacations
+                unconfirmedVacations={vacations.unconfirmedVacations}
+                showAll={showAll}
+                setShowAll={setShowAll}
+                removeFromInteractedVacations={removeFromInteractedVacations}
+                addToInteractedVacations={addToInteractedVacations}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default Staff;

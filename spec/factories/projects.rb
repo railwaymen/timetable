@@ -1,7 +1,19 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :project do
-    name 'Test'
+    sequence(:name) { |n| "Test #{n}" }
+
+    trait :with_leader do
+      association :leader, factory: :user
+    end
+
+    trait :vacation do
+      name { 'Vacation' }
+    end
+
+    trait :discarded do
+      discarded_at { Time.zone.now }
+    end
   end
 end

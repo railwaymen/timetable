@@ -27,6 +27,7 @@ pl:
       filter_active_label: Pokaż tylko
       work_times_allows_task: Zezwalaj na dodawanie urli do zadań
       external_integration_enabled: Integracja z JIRA
+      new: Nowy projekt
     reports:
       new: Nowy Raport
       remove: Usuń Raport
@@ -45,15 +46,18 @@ pl:
       owner: Pracownik
       owners_hourly_wage: Stawka godzinowa pracownika
       hourly_wage: Stawka godzinowa
-      time_spent: Poświecony czas
+      time_spent: Poświęcony czas
       cost: Koszt
       merge: Połącz
       ignore: Ignoruj
       restore_previous: Przywróć poprzednią wersję
       restore_first: Przywróć pierwszą wersję
       collision: Kolizja z następującymi raportami
+      all_users: Wszyscy użytkownicy
     accounting_periods:
       add: Dodaj okres rozliczeniowy
+      new: Nowy okres rozliczeniowy
+      edit: Edycja okresu rozliczeniowego
       note: Notatka
       full_time: Etat
       closed: Zamknięty
@@ -76,6 +80,16 @@ pl:
       add_manually: Dodaj ręcznie
       work_time: Czas pracy
       unsaved_changes: Masz niezapisane zmiany!
+      history:
+        date: Data
+        who: Kto
+        project: Projekt
+        from: Od
+        to: Do
+        task: Zadanie
+        url: Url
+        tag: Tag
+        duration: Czas trwania
     users:
       user_active: Aktywny
       active: Aktywne
@@ -89,10 +103,11 @@ pl:
       button_disabled_tooltip: Tworzenie kont zablokowane. Automatyczne tworzenie poprzez logowanie LDAP.
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
       birthday: Urodziny
+      new: Nowe konto
     external_auths:
       authorized: Zewnętrzne autoryzacje
       generate_link: Wygeneruj link
-      follow_link: Kliknij by autoryzować
+      follow_link: Kliknij, by autoryzować
       new: Nowe uwierzytelnienie
       domain: Domena
       token: Token
@@ -160,15 +175,37 @@ pl:
       note: Notatka
       closed: Zamknięty
       generate_periods: Generuj okresy urlopowe
+      edit: Edycja okresu urlopowego
     birthday_templates:
+      new: Nowy szablon urodzinowy
+      edit: Edycja szablonu urodzinowego
       email_content: Wprowadź treść maila
+      email_header: Wprowadź nagłówek maila
+      email_bottom: Wprowadź stopke maila
       incoming_birthdays: 'Nadchodzące urodziny:'
       last_used: Ostatnio użyte
+      set_as_last_used: Ustaw jako ostatnio użyte
+      save_and_preview: Zapisz i odśwież podgląd
       days:
         few: '%{count} dni'
         many: '%{count} dni'
         one: '%{count} dzień'
         other: '%{count} dni'
+    projects_distribution:
+      add_resource: Dodaj zasoby
+      resource_menu: Menu zasobów
+      delete_resource: Usuń zasób
+      resource_group: Grupa zasobów
+      group_only: Grupa?
+      exit: Wyjdź
+      add_event: Dodaj event
+      edit_event: Edytuj event
+      activity:
+        create_resource: '{{user}} dodał zasób {{resource}}'
+        delete_resource: '{{user}} usunął zasób {{resource}}'
+        create_assignment: '{{user}} przypisał zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
+        update_assignment: '{{user}} zaktualizował zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
+        delete_assignment: '{{user}} usunął zasób {{resource}} przypisany do projektu {{project}} od {{start}} do {{end}}'
   common:
     rank: 'Ranking'
     add: Dodaj
@@ -177,6 +214,7 @@ pl:
     generate: Generuj
     fill_save: Zapisz z wypełnieniem
     cancel: Anuluj
+    close: Zamknij
     edit: Edytuj
     destroy: Usuń
     from: Od
@@ -218,7 +256,7 @@ pl:
     others: Inne
     paternity: Urlop ojcowski
     parental: Urlop macierzyński
-    upbringing: Urlop wychowaczy
+    upbringing: Urlop wychowawczy
     unpaid: Urlop bezpłatny
     rehabilitation: Urlop rehabilitacyjny
     illness: Urlop chorobowy
@@ -239,6 +277,11 @@ pl:
     vacation_periods: Okresy urlopowe
     birthday_templates: Szablony urodzinowe
     title: Tytuł
+    user: Użytkownik
+    projects_distribution: Obłożenie projektów
+    remote_work: Praca zdalna
+    hours: Godziny
+    date: Data
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -289,29 +332,49 @@ pl:
       models:
         work_time: &worktime
           basic: Nie udało się dodać czasu pracy
-          base:
-            validates_date: 'Nie można utworzyć wpisu który kończy się następnego dnia'
-            validates_time: 'Nie można utworzyć lub edytować wpisu'
-            validates_body: 'Musisz wypełnić opis lub url taska'
           attributes:
+            body:
+              body_or_task_blank: 'Musisz wypełnić opis lub url taska'
             task:
               invalid_uri: 'URL Taska nie jest poprawny'
               invalid_external: 'URL nie wskazuje na poprawny zewnętrzny task'
-            ends_at:
-              validates_ends_at: 'Nie można utworzyć wpisu z wyprzedzeniem o miesiąc'
             starts_at:
               overlap: Istnieje inne zadanie o pokrywającym się czasie wykonania
+              too_old: Nie można utworzyć lub edytować wpisu
+              overlap_midnight: Nie można utworzyć wpisu, który kończy się następnego dnia
+              no_gaps_to_fill: Brak luk do uzupełnienia
             duration:
               greater_than: Czas trwania musi być większy od zera
+            project_id:
+              blank: Projekt jest wymagany
         external_auth:
           basic: Błąd uwierzytelnienia
+        birthday_email_template:
+          attributes:
+            name:
+              blank: Nazwa jest wymagana
+            title:
+              blank: Tytuł jest wymagany
         vacation:
           basic: Nie udało się dodać podania o urlop
-          base:
-            validates_work_time: Jest już czas pracy z tą samą datą
           attributes:
+            base:
+              work_time_exists: Jest już czas pracy z tą samą datą
             end_date:
               validates_end_date: Nieprawidłowa data końcowa
+        accounting_period:
+          attributes:
+            starts_at:
+              overlap: Pokrywa się z innym okresem
+              greater_than_ends_at: Data początkowa jest większa niż końcowa
+              blank: Data początkowa jest wymagana
+            ends_at:
+              blank: Data końcowa jest wymagana
+            position:
+              blank: Pozycja jest wymagana
+              taken: Pozycja jest już zajęta
+            duration:
+              greater_than: Czas trwania musi być większy od zera
         vacation_interaction:
           base:
             already_interacted: Ten urlop już został przez ciebie %{action}
@@ -319,6 +382,31 @@ pl:
           attributes:
             user_id:
               validates_uniqueness: Jest już rekord o tym samym user_id, starts_at i ends_at
+        user:
+          attributes:
+            email:
+              blank: Email jest wymagany
+              taken: Email jest już zajęty
+            first_name:
+              blank: Imię jest wymagane
+            last_name:
+              blank: Nazwisko jest wymagane
+            phone:
+              invalid: Numer telefonu jest niepoprawny
+        remote_work:
+          basic: Nie udało się dodać pracy zdalnej
+          base:
+          attributes:
+            starts_at:
+              blank: Data początkowa jest wymagana
+              overlap: Istnieje inny wpis o pokrywającym się czasie
+              too_old: Nie można utworzyć lub edytować wpisu
+              incorrect_range: Nieprawny zakres dat
+              incorrect_hours: Godzina początkowa jest większa niż końcowa
+            ends_at:
+              blank: Data końcowa jest wymagana
+            duration:
+              greater_than: Czas trwania musi być większy od zera
   activemodel:
     errors:
       models:
@@ -326,4 +414,3 @@ pl:
           <<: *worktime
         work_time_fill_gaps_form:
           <<: *worktime
-          no_gaps_to_fill: Brak luk do uzupełnienia

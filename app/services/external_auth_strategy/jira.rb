@@ -44,8 +44,10 @@ module ExternalAuthStrategy
 
     def integration_payload(work_time)
       id = URI.parse(work_time.task).path.split('/').last.upcase
+      issue = client.Issue.find(id)
       {
-        'task_id' => client.Issue.find(id).key
+        task_id: issue.key,
+        summary: issue.summary
       }
     rescue JIRA::HTTPError
       nil
@@ -73,7 +75,7 @@ module ExternalAuthStrategy
 
     def data
       {
-        'domain' =>  domain,
+        'domain' => domain,
         'token' => token,
         'secret' => secret
       }

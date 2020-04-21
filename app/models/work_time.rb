@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class WorkTime < ApplicationRecord
-  has_paper_trail skip: [:contract_name]
+  include Discard::Model
+
+  has_paper_trail skip: %i[contract_name updated_by_admin]
   belongs_to :project
   belongs_to :user
   belongs_to :creator, class_name: 'User'
@@ -18,15 +20,12 @@ class WorkTime < ApplicationRecord
   }
 
   validates :project_id, :starts_at, :ends_at, presence: true
-  validates :project_id, :starts_at, :ends_at, presence: true
   validates :duration, numericality: { greater_than: 0 }, unless: :project_zero?
-  validates :starts_at, :ends_at, overlap: { scope: 'user_id', query_options: { active: nil }, exclude_edges: %i[starts_at ends_at] }
+  validates :starts_at, :ends_at, overlap: { scope: 'user_id', query_options: { kept: nil }, exclude_edges: %i[starts_at ends_at] }
   validate :validates_time, on: :user
   validate :validates_date
   validate :validates_body
   validate :task_url
-
-  scope :active, -> { where(active: true) }
 
   delegate :external_auth, to: :user
 
@@ -43,7 +42,7 @@ class WorkTime < ApplicationRecord
 
     URI.parse(task)
   rescue URI::InvalidURIError
-    errors.add(:task, I18n.t('activerecord.errors.models.work_time.attributes.task.invalid_uri'))
+    errors.add(:task, :invalid_uri)
   end
 
   def assign_duration
@@ -59,18 +58,23 @@ class WorkTime < ApplicationRecord
   end
 
   def validates_date
-    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_date')) if starts_at && ends_at && starts_at.to_date != ends_at.to_date
+    errors.add(:starts_at, :overlap_midnight) if starts_at && ends_at && starts_at.to_date != ends_at.to_date
   end
 
   def validates_time
-    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_time')) if starts_at && ends_at && (starts_at < 3.business_days.ago.beginning_of_day || ends_at < 3.business_days.ago.beginning_of_day)
+    errors.add(:starts_at, :too_old) if (starts_at && ends_at && (starts_at < 3.business_days.ago.beginning_of_day || ends_at < 3.business_days.ago.beginning_of_day)) ||
+                                        (starts_at_was && ends_at_was && (starts_at_was < 3.business_days.ago.beginning_of_day || ends_at_was < 3.business_days.ago.beginning_of_day))
   end
 
   def validates_body
-    errors.add(:base, I18n.t('activerecord.errors.models.work_time.base.validates_body')) if (body.presence.nil? && task.presence.nil?) && !body_optional?
+    errors.add(:body, :body_or_task_blank) if (body.presence.nil? && task.presence.nil?) && !body_optional?
   end
 
   def external_task_id
     integration_payload&.dig(external_auth&.provider, 'task_id')
+  end
+
+  def external_summary
+    integration_payload&.dig(external_auth&.provider, 'summary')
   end
 end

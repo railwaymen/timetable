@@ -12,9 +12,7 @@ SimpleCov.minimum_coverage 100
 
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
-if Rails.env.production?
-  abort('The Rails environment is running in production mode!')
-end
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'spec_helper'
 require 'rspec/rails'
 Rails.application.eager_load!
@@ -46,7 +44,7 @@ end
 
 Capybara.register_driver :headless_chrome do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[headless disable-gpu no-sandbox --window-size=1024,768], 'w3c' => false }
+    chromeOptions: { args: %w[headless disable-gpu no-sandbox --window-size=1440,900], 'w3c' => false }
   )
 
   Capybara::Selenium::Driver.new(
@@ -59,7 +57,7 @@ end
 Capybara.javascript_driver = :headless_chrome
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::ControllerHelpers, type: :controller
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

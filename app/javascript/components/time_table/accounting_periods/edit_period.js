@@ -1,17 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import { Redirect, NavLink } from 'react-router-dom';
 import { defaultDatePickerProps } from '../../shared/helpers';
+import translateErrors from '../../shared/translate_errors';
+import Preloader from '../../shared/preloader';
 import * as Api from '../../shared/api';
 
 class EditPeriod extends React.Component {
-  static propTypes = {
-    period: PropTypes.object,
-  }
-
   constructor(props) {
     super(props);
 
@@ -24,33 +23,37 @@ class EditPeriod extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onStartsAtChange = this.onStartsAtChange.bind(this);
     this.onEndsAtChange = this.onEndsAtChange.bind(this);
+
+    this.state = {
+      period: {
+        ends_at: null,
+        starts_at: null,
+        hours: '168',
+        minutes: '00',
+        note: '',
+        position: '1',
+        full_time: false,
+        closed: false,
+      },
+      errors: {},
+      users: [],
+      redirectToReferer: undefined,
+      periodId: parseInt(this.props.match.params.id, 10),
+    };
   }
 
-  state = {
-    period: {
-      ends_at: null,
-      starts_at: null,
-      hours: '168',
-      minutes: '00',
-      note: '',
-    },
-    errors: {},
-    users: [],
-    redirectToReferer: undefined,
-    periodId: parseInt(this.props.match.params.id, 10),
-  }
 
   componentDidMount() {
     const userId = this.userId();
     const pathId = this.state.periodId;
     const periodId = Number.isNaN(pathId) ? null : pathId;
 
-    this.setState({
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
+        ...prevState.period,
         user_id: userId,
       },
-    });
+    }));
 
     if (periodId) {
       this.getPeriod(periodId, userId);
@@ -64,12 +67,12 @@ class EditPeriod extends React.Component {
   getPeriodPosition(userId) {
     Api.makeGetRequest({ url: `/api/accounting_periods/next_position?user_id=${userId}` })
       .then((response) => {
-        this.setState({
+        this.setState((prevState) => ({
           period: {
-            ...this.state.period,
+            ...prevState.period,
             position: response.data,
           },
-        });
+        }));
       });
   }
 
@@ -105,23 +108,25 @@ class EditPeriod extends React.Component {
   }
 
   onChange(e) {
-    this.setState({
+    const { name, value } = e.target;
+
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
-        [e.target.name]: e.target.value,
+        ...prevState.period,
+        [name]: value,
       },
-    });
+    }));
   }
 
   onCheckboxChange(e) {
     const { name } = e.target;
 
-    this.setState({
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
-        [name]: !this.state.period[name],
+        ...prevState.period,
+        [name]: !prevState.period[name],
       },
-    });
+    }));
   }
 
   request(period) {
@@ -167,27 +172,27 @@ class EditPeriod extends React.Component {
         });
       }).catch((results) => {
         this.setState({
-          errors: results.errors,
+          errors: translateErrors('accounting_period', results.errors),
         });
       });
   }
 
   onStartsAtChange(time) {
-    this.setState({
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
+        ...prevState.period,
         starts_at: time,
       },
-    });
+    }));
   }
 
   onEndsAtChange(time) {
-    this.setState({
+    this.setState((prevState) => ({
       period: {
-        ...this.state.period,
+        ...prevState.period,
         ends_at: time,
       },
-    });
+    }));
   }
 
   userId() {
@@ -200,28 +205,6 @@ class EditPeriod extends React.Component {
     return `/accounting_periods?user_id=${this.userId()}`;
   }
 
-  renderPreloader() {
-    return (
-      <div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-        <div className="form-group">
-          <div className="preloader" />
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const {
       period, users, redirectToReferer, errors, periodId,
@@ -232,12 +215,19 @@ class EditPeriod extends React.Component {
     if (!periodId || periodId === period.id) {
       return (
         <div id="content" className="edit-accounting-period">
+          <Helmet>
+            {period.id ? (
+              <title>{`${I18n.t('apps.accounting_periods.edit')}`}</title>
+            ) : (
+              <title>{I18n.t('apps.accounting_periods.new')}</title>
+            )}
+          </Helmet>
           <div>
             <form className="row" onSubmit={this.onSubmit}>
               <div className="col-12 col-md-6">
                 <div className="form-group">
                   <select className="form-control" name="user_id" value={period.user_id} onChange={this.onChange}>
-                    { users.map(user => (
+                    { users.map((user) => (
                       <option key={user.id} value={user.id}>
                         {currentUser.fullName.apply(user)}
                       </option>
@@ -245,7 +235,13 @@ class EditPeriod extends React.Component {
                   </select>
                 </div>
                 <div className="form-group">
-                  <textarea className="form-control" name="note" placeholder={I18n.t('apps.accounting_periods.note')} onChange={this.onChange} value={period.note} />
+                  <textarea
+                    className="form-control"
+                    name="note"
+                    placeholder={I18n.t('apps.accounting_periods.note')}
+                    onChange={this.onChange}
+                    value={period.note || ''}
+                  />
                 </div>
                 <div className="row form-group">
                   <div className="col-12 col-xs-6">
@@ -276,27 +272,52 @@ class EditPeriod extends React.Component {
               <div className="col-12 col-md-6">
                 <div className="row calendar-row">
                   <div className="col-md-6 form-group">
-                    <DatePicker {...defaultDatePickerProps} onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.starts_at ? moment(period.starts_at, 'YYYY-MM-DD HH:mm') : null} name="starts_at" placeholderText={I18n.t('common.from')} onChange={this.onStartsAtChange} />
+                    { errors.startsAt && (
+                      <div className="error-description">{errors.startsAt.join(', ')}</div>
+                    )}
+                    <DatePicker
+                      {...defaultDatePickerProps}
+                      onChangeRaw={this.onChange}
+                      dateFormat="YYYY-MM-DD HH:mm"
+                      className={`${errors.starts_at ? 'error' : ''} form-control`}
+                      selected={period.starts_at ? moment(period.starts_at, 'YYYY-MM-DD HH:mm') : null}
+                      name="starts_at"
+                      placeholderText={I18n.t('common.from')}
+                      onChange={this.onStartsAtChange}
+                    />
                   </div>
                   <div className="col-md-6 form-group">
-                    <DatePicker {...defaultDatePickerProps} onChangeRaw={this.onChange} dateFormat="YYYY-MM-DD HH:mm" className="form-control" selected={period.ends_at ? moment(period.ends_at, 'YYYY-MM-DD HH:mm') : null} name="ends_at" placeholderText={I18n.t('common.to')} onSelect={this.onEndsAtChange} onChange={this.onEndsAtChange} />
+                    { errors.endsAt && (
+                      <div className="error-description">{errors.endsAt.join(', ')}</div>
+                    ) }
+                    <DatePicker
+                      {...defaultDatePickerProps}
+                      onChangeRaw={this.onChange}
+                      dateFormat="YYYY-MM-DD HH:mm"
+                      className={`${errors.ends_at ? 'error' : ''} form-control`}
+                      selected={period.ends_at ? moment(period.ends_at, 'YYYY-MM-DD HH:mm') : null}
+                      name="ends_at"
+                      placeholderText={I18n.t('common.to')}
+                      onSelect={this.onEndsAtChange}
+                      onChange={this.onEndsAtChange}
+                    />
                   </div>
                 </div>
                 <label>{I18n.t('common.duration')}</label>
                 <div className="row">
                   <div className="col-md-6">
-                    { errors.duration
-                      ? <div className="error-description">{errors.duration.join(', ')}</div>
-                      : null }
+                    { errors.duration && (
+                      <div className="error-description">{errors.duration.join(', ')}</div>
+                    )}
                     <div className="form-group input-group">
                       <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="hours" onChange={this.onChange} value={period.hours} />
                       <div className="input-group-addon">h</div>
                     </div>
                   </div>
                   <div className="col-md-6">
-                    { errors.duration
-                      ? <div className="error-description">{errors.duration.join(', ')}</div>
-                      : null }
+                    { errors.duration && (
+                      <div className="error-description">{errors.duration.join(', ')}</div>
+                    )}
                     <div className="form-group input-group">
                       <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="minutes" onChange={this.onChange} value={period.minutes} />
                       <div className="input-group-addon">m</div>
@@ -306,9 +327,9 @@ class EditPeriod extends React.Component {
                 <div className="form-group">
                   <label>
                     {I18n.t('common.position')}
-                    { errors.position
-                      ? <div className="error-description">{errors.position.join(', ')}</div>
-                      : null }
+                    { errors.position && (
+                      <div className="error-description">{errors.position.join(', ')}</div>
+                    )}
                   </label>
                   <input className={`${errors.position ? 'error' : ''} form-control`} type="number" name="position" value={period.position} onChange={this.onChange} />
                 </div>
@@ -328,8 +349,12 @@ class EditPeriod extends React.Component {
         </div>
       );
     }
-    return this.renderPreloader();
+    return <Preloader rowsNumber={5} />;
   }
 }
+
+EditPeriod.propTypes = {
+  period: PropTypes.object,
+};
 
 export default EditPeriod;

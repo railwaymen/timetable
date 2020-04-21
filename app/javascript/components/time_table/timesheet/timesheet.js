@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
 import _ from 'lodash';
 import Entry from './entry';
 import EntryHistory from './history/entry_history';
@@ -13,22 +13,16 @@ class Timesheet extends React.Component {
     this.onCopy = this.onCopy.bind(this);
     this.getProjects = this.getProjects.bind(this);
     this.setLastProject = this.setLastProject.bind(this);
+
+    this.state = {
+      projects: [],
+      tags: [],
+    };
   }
 
   componentDidMount() {
     this.getProjects();
-  }
-
-  static propTypes = {
-    projects: PropTypes.array,
-    tags: PropTypes.array,
-    tags_disabled: PropTypes.bool,
-  }
-
-  state = {
-    projects: [],
-    tags: [],
-    tags_disabled: false,
+    this.getTags();
   }
 
   pushEntry(object) {
@@ -43,9 +37,16 @@ class Timesheet extends React.Component {
     Api.makeGetRequest({ url: '/api/projects/simple' })
       .then((response) => {
         this.setState({
-          projects: response.data.projects,
-          tags: response.data.tags,
-          tags_disabled: response.data.tags_disabled,
+          projects: response.data,
+        });
+      });
+  }
+
+  getTags() {
+    Api.makeGetRequest({ url: '/api/projects/tags' })
+      .then((response) => {
+        this.setState({
+          tags: response.data,
         });
       });
   }
@@ -55,13 +56,22 @@ class Timesheet extends React.Component {
   }
 
   render() {
-    const { projects, tags_disabled, tags } = this.state;
+    const { projects, tags } = this.state;
 
     if (projects.length > 0) {
       return (
         <div>
-          <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projects} tags={tags} tags_disabled={tags_disabled} />
-          <EntryHistory ref={(entryHistory) => { this.entryHistory = entryHistory; }} onCopy={this.onCopy} projects={projects} setLastProject={this.setLastProject} tags_disabled={tags_disabled} tags={tags} />
+          <Helmet>
+            <title>{I18n.t('common.timesheet')}</title>
+          </Helmet>
+          <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projects} tags={tags} />
+          <EntryHistory
+            ref={(entryHistory) => { this.entryHistory = entryHistory; }}
+            onCopy={this.onCopy}
+            projects={projects}
+            setLastProject={this.setLastProject}
+            tags={tags}
+          />
         </div>
       );
     }

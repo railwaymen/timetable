@@ -17,7 +17,7 @@ class IncreaseWorkTime
     full_time_period&.update(counted_duration: full_time_period.counted_duration + duration)
   end
 
-  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/MethodLength
   def add_duration_to_contract_periods
     remaning_duration = duration
     while remaning_duration.positive?
@@ -37,5 +37,5 @@ class IncreaseWorkTime
       end
     end
   end
-  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/MethodLength
 end

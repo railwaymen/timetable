@@ -1,394 +1,675 @@
-swagger: "2.0"
-info:
-  version: "1.0.0"
-  title: "Api"
-host: <%= request.host_with_port %>
-basePath: "/api"
-securityDefinitions:
-  authentication:
-    type: apiKey
-    name: token
-    in: header
+openapi: 3.0.1
+servers:
+  - url: <%= [request.protocol, request.host_with_port, '/api'].join %>
+tags:
+  - name: Session
 
 paths:
   /users/sign_in:
     post:
       tags:
-       - 'Session'
-      operationId: 'signIn'
-      summary: 'Token'
-      consumes:
-      - 'application/json'
-      produces:
-      - 'application/json'
-      parameters:
-      - in: 'body'
-        name: 'body'
-        description: 'email and password'
-        required: true
-        schema:
-          type: 'object'
-          properties:
-            email:
-              type: 'string'
-              example: admin@example.com
-            password:
-              type: 'string'
-              example: password
+        - Session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  example: admin@example.com
+                password:
+                  type: string
+                  example: password
       responses:
         200:
-          description: 'Success'
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                  - first_name
+                  - last_name
+                  - token
+                  - is_leader
+                  - admin
+                  - manger
+                  - staff_manager
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  first_name:
+                    type: string
+                    example: John
+                  last_name:
+                    type: string
+                    example: Smith
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiJ9.eyJpZCI6NH0.P3BMpG0CHZArdYBrzWHxuu7zQlT4j9WZNY0qkqtxmJ0
+                  is_leader:
+                    type: boolean
+                    example: false
+                  admin:
+                    type: boolean
+                    example: false
+                  manager:
+                    type: boolean
+                    example: false
+                    required: true
+                  staff_manager:
+                    type: boolean
+                    example: false
         422:
-          description: 'Unprocessable'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                example:
+                  errors:
+                    base:
+                      - error: invalid_email_or_password
   /projects:
     get:
       tags:
-      - 'Projects'
-      description: 'Projects stats list'
-      operationId: 'Get projects stats list'
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
+        - Projects
       security:
         - authentication: []
       responses:
         200:
-          description: 'Success'
-        422:
-          description: 'Unprocessable'
-
-    post:
-      tags:
-      - 'Projects'
-      security:
-        - authentication: []
-      parameters:
-      - in: 'body'
-        name: 'body'
-        description: 'Project data'
-        required: true
-        schema:
-          type: 'object'
-          properties:
-            project:
-              type: 'object'
-              properties:
-                name:
-                  type: 'string'
-                leader_id:
-                  type: 'integer'
-                color:
-                  type: 'string'
-                active:
-                  type: 'boolean'
-                work_times_allows_task:
-                  type: 'boolean'
-
-      description: 'Create project'
-      operationId: 'create'
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: 'Success'
-        422:
-          description: 'Unprocessable'
-  /projects/{id}:
-    put:
-      tags:
-      - 'Projects'
-      security:
-        - authentication: []
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "project id"
-      - in: 'body'
-        name: 'body'
-        description: 'Only color and work_times_allows_task for leaders'
-        required: true
-        schema:
-          type: 'object'
-          properties:
-            project:
-              type: 'object'
-              properties:
-                name:
-                  type: 'string'
-                leader_id:
-                  type: 'integer'
-                color:
-                  type: 'string'
-                active:
-                  type: 'boolean'
-                work_times_allows_task:
-                  type: 'boolean'
-      description: 'Update project'
-      operationId: 'update_project'
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: 'Success'
-        422:
-          description: 'Unprocessable'
-
-  /projects/list:
-    get:
-      tags:
-      - 'Projects'
-      description: 'Projects list'
-      operationId: 'Get projects list'
-      security:
-        - authentication: []
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: 'Success'
-        422:
-          description: 'Unprocessable'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - project_id
+                    - name
+                    - color
+                    - users
+                  properties:
+                    project_id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: Project
+                    color:
+                      type: string
+                      example: 08e51a
+                    leader_first_name:
+                      type: string
+                      example: John
+                    leader_last_name:
+                      type: string
+                      example: Smith
+                    users:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - id
+                          - first_name
+                          - last_name
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          first_name:
+                            type: string
+                            example: John
+                          last_name:
+                            type: string
+                            example: Smith
   /projects/simple:
     get:
       tags:
-      - 'Projects'
+        - Projects
       security:
         - authentication: []
-      description: 'Projects list'
-      operationId: 'Get short info projects list'
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
       responses:
         200:
-          description: 'Success'
-        422:
-          description: 'Unprocessable'
-
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - id
+                    - name
+                    - internal
+                    - active
+                    - work_times_allows_task
+                    - color
+                    - lunch
+                    - autofill
+                    - count_duration
+                    - taggable
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: Project 1
+                    internal:
+                      type: boolean
+                      example: false
+                    active:
+                      type: boolean
+                      example: true
+                    work_times_allows_task:
+                      type: boolean
+                      example: true
+                    color:
+                      type: string
+                      example: 0c0c0c
+                    lunch:
+                      type: boolean
+                      example: false
+                    autofill:
+                      type: boolean
+                      example: false
+                    count_duration:
+                      type: boolean
+                      example: false
+                    taggable:
+                      type: boolean
+                      example: false
+  /projects/tags:
+    get:
+      tags:
+        - Projects
+      security:
+        - authentication: []
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                example: ["dev", "im", "cc", "res"]
   /work_times:
     get:
       tags:
-      - 'Work times'
-      description: ''
-      operationId: 'Get work times info'
+        - Work times
       security:
         - authentication: []
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
+      parameters:
+        - name: project_id
+          in: query
+          schema:
+            type: integer
+        - name: from
+          in: query
+          schema:
+            type: string
+            example: "2020-03-01T00:00:00.000Z"
+        - name: to
+          in: query
+          schema:
+            type: string
+            example: "2020-03-31T23:59:59.000Z"
       responses:
         200:
-          description: 'Success'
-        422:
-          description: 'Unprocessable'
-      parameters:
-      - name: "user_id"
-        in: "query"
-        description: "user_id (admin leader or manager)"
-        type: "integer"
-        format: "int64"
-      - name: "project_id"
-        in: "query"
-        description: "project_id (admin leader or manager)"
-        type: "integer"
-        format: "int64"
-      - name: "starts_at"
-        in: "query"
-        description: "starts_at date (admin leader or manager)"
-        type: "string"
-        format: "int64"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkTime'
     post:
       tags:
-      - 'Work times'
-      summary: 'create work time as user(user_id optional for admin)'
-      description: ''
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
+        - Work times
       security:
         - authentication: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - project_id
+                - starts_at
+                - ends_at
+              properties:
+                project_id:
+                  type: integer
+                  example: 2
+                body:
+                  type: string
+                  example: My work
+                task:
+                  type: string
+                  example: https//jira.com/TASK-XXX
+                tag:
+                  type: string
+                  example: dev
+                  default: dev
+                  enum: ['dev', 'im', 'cc', 'res']
+                starts_at:
+                  type: string
+                  example: "2020-03-04T08:00:00.000Z"
+                ends_at:
+                  type: string
+                  example: "2020-03-04T010:00:00.000Z"
       responses:
         200:
-          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkTime'
         422:
-          description: 'Unprocessable'
-        401:
-          description: 'Unauth'
-      parameters:
-      - in: 'body'
-        name: 'body'
-        description: '1'
-        required: true
-        schema:
-          type: 'object'
-          properties:
-            work_time:
-              type: 'object'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkTimeValidation'
+  /work_times/create_filling_gaps:
+    post:
+      tags:
+        - Work times
+      security:
+        - authentication: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - project_id
+                - starts_at
+                - ends_at
               properties:
-                user_id:
-                  type: 'integer'
                 project_id:
-                  type: 'integer'
+                  type: integer
+                  example: 2
                 body:
-                  type: 'string'
+                  type: string
+                  example: My work
                 task:
-                  type: 'string'
+                  type: string
+                  example: https//jira.com/TASK-XXX
+                tag:
+                  type: string
+                  example: dev
+                  default: dev
+                  enum: ['dev', 'im', 'cc', 'res']
                 starts_at:
-                  type: 'string'
+                  type: string
+                  example: "2020-03-04T08:00:00.000Z"
                 ends_at:
-                  type: 'string'
+                  type: string
+                  example: "2020-03-04T010:00:00.000Z"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkTime'
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkTimeValidation'
   /work_times/{id}:
     get:
       tags:
-      - 'Work times'
-      description: ''
-      operationId: 'Show work time'
+        - Work times
       security:
         - authentication: []
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
       responses:
         200:
-          description: 'Success'
-        422:
-          description: 'Unprocessable'
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "work_time id"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/WorkTime'
+                  - type: object
+                    properties:
+                      sum_duration:
+                        type: integer
+                        example: 3600
+                      versions:
+                        type: array
+                        items:
+                          properties:
+                            event:
+                              type: string
+                              enum: ['create', 'update']
+                            updated_by:
+                              type: string
+                              example: John Smith
+                            created_at:
+                              type: string
+                              format: date-time
+                            project_name_was:
+                              type: string
+                            project_name:
+                              type: string
+                            body_was:
+                              type: string
+                            body:
+                              type: string
+                            starts_at_was:
+                              type: string
+                              format: date-time
+                            starts_at:
+                              type: string
+                              format: date-time
+                            tag_was:
+                              type: string
+                            tag:
+                              type: string
+                            task_was:
+                              type: string
+                            task:
+                              type: string
+                            task_preview_was:
+                              type: string
+                            task_preview:
+                              type: string
+                            ends_at_was:
+                              type: string
+                              format: date-time
+                            ends_at:
+                              type: string
+                              format: date-time
+                            duration_was:
+                              type: integer
+                            duration:
+                              type: integer
     put:
       tags:
-      - 'Work times'
-      summary: 'edit work time as user(user_id optional for admin)'
-      description: ''
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
+        - Work times
       security:
         - authentication: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - project_id
+                - starts_at
+                - ends_at
+              properties:
+                project_id:
+                  type: integer
+                  example: 2
+                body:
+                  type: string
+                  example: My work
+                task:
+                  type: string
+                  example: https//jira.com/TASK-XXX
+                tag:
+                  type: string
+                  example: dev
+                  default: dev
+                  enum: ['dev', 'im', 'cc', 'res']
+                starts_at:
+                  type: string
+                  example: "2020-03-04T08:00:00.000Z"
+                ends_at:
+                  type: string
+                  example: "2020-03-04T010:00:00.000Z"
       responses:
         200:
-          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkTime'
         422:
-          description: 'Unprocessable'
-        401:
-          description: 'Unauth'
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "work_time id"
-      - in: 'body'
-        name: 'body'
-        description: '1'
-        required: true
-        schema:
-          type: 'object'
-          properties:
-            work_time:
-              type: 'object'
-              properties:
-                user_id:
-                  type: 'integer'
-                project_id:
-                  type: 'integer'
-                body:
-                  type: 'string'
-                task:
-                  type: 'string'
-                starts_at:
-                  type: 'string'
-                ends_at:
-                  type: 'string'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkTimeValidation'
     delete:
       tags:
-      - 'Work times'
-      description: ''
-      operationId: 'Remove work time'
+        - Work times
       security:
         - authentication: []
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: 'Success'
-        422:
-          description: 'Unprocessable'
       parameters:
-      - name: "id"
-        in: "path"
-        description: "work_time id"
-  /users/{id}:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description:
+  /accounting_periods:
     get:
       tags:
-      - 'User'
-      description: ''
-      operationId: 'User info'
+        - Accounting periods
       security:
         - authentication: []
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
+      parameters:
+        - name: page
+          description: API returns 24 records per page
+          in: query
+          schema:
+            type: integer
       responses:
         200:
-          description: 'Success'
-        422:
-          description: 'Unprocessable'
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "user id"
-
-    put:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - total_pages
+                  - recounting
+                  - accounting_periods
+                properties:
+                  total_pages:
+                    type: integer
+                    example: 20
+                  recounting:
+                    type: boolean
+                    example: false
+                  accounting_periods:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AccountingPeriod'
+  /accounting_periods/matching_fulltime:
+    get:
       tags:
-      - 'User'
-      description: ''
-      operationId: 'User update'
+        - Accounting periods
       security:
         - authentication: []
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
+      parameters:
+        - name: date
+          description: Date for which it should calculate work time statistics based on accounting periods
+          in: query
+          schema:
+            type: string
+            example: "<%= Date.today %>"
       responses:
         200:
-          description: 'Success'
-        422:
-          description: 'Unprocessable'
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "user_id (admin leader or manager)"
-        type: "integer"
-        format: "int64"
-      - in: 'body'
-        name: 'body'
-        description: '1'
-        required: true
-        schema:
-          type: 'object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accounting_period:
+                    $ref: '#/components/schemas/AccountingPeriod'
+                  should_worked:
+                    type: integer
+                    example: 604800
+components:
+  schemas:
+    AccountingPeriod:
+      type: object
+      required:
+        - id
+        - user_id
+        - duration
+        - count_duration
+        - closed
+        - protected
+        - full_time
+        - position
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        starts_at:
+          type: 
+          example: null
+        ends_at:
+          type: 
+          example: null
+        counted_duration:
+          type: integer
+          example: 0
+        duration:
+          type: integer
+          example: 604800
+        closed:
+          type: boolean
+          example: false
+        note:
+          type: string
+          example: Some note
+        position:
+          type: integer
+          example: 3
+        full_time:
+          type: boolean
+          example: false
+        protected:
+          type: boolean
+          example: false
+    WorkTime:
+      type: object
+      required:
+        - id
+        - updated_by_admin
+        - project_id
+        - starts_at
+        - ends_at
+        - duration
+        - tag
+        - user_id
+        - date
+        - project
+      properties:
+        id:
+          type: integer
+          example: 1
+        updated_by_admin:
+          type: boolean
+          example: false
+        project_id:
+          type: integer
+          example: 2
+        starts_at:
+          type: string
+          example: "2020-03-04T08:00:00.000Z"
+        ends_at:
+          type: string
+          example: "2020-03-04T010:00:00.000Z"
+        duration:
+          type: integer
+          example: 7200
+        body:
+          type: string
+          example: My work
+        task:
+          type: string
+          example: https//jira.com/TASK-XXX
+        tag:
+          type: string
+          example: dev
+          default: dev
+          description: dev - default value for development work time. im - internal metting. cc - client communication. res - research.
+          enum: ['dev', 'im', 'cc', 'res']
+        task_preview:
+          type: string
+          example: TASK-XXX
+        user_id:
+          type: integer
+          example: 1
+        date:
+          type: string
+          example: "2020-03-04"
+        project:
+          type: object
+          required:
+            - id
+            - name
+            - color
+            - work_times_allows_task
+            - lunch
+            - count_duration
+            - taggable
           properties:
-            user:
-              type: 'object'
-              properties:
-                first_name:
-                  type: 'string'
-                last_name:
-                  type: 'string'
-                lang:
-                  type: 'string'
+            id:
+              type: integer
+              example: 2
+            name:
+              type: string
+              example: Foo
+            color:
+              type: string
+              example: 08e51a
+            work_times_allows_task:
+              type: boolean
+              example: true
+            lunch:
+              type: boolean
+              example: false
+            count_duration:
+              type: boolean
+              example: true
+            taggable:
+              type: boolean
+              example: true
+    WorkTimeValidation:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: object
+      example:
+        errors:
+          body:
+            - error: body_or_task_blank
+          task:
+            - error: invalid_uri
+            - error: invalid_external
+          starts_at:
+            - error: overlap
+            - error: too_old
+            - error: overlap_midnight
+            - error: no_gaps_to_fill
+          duration:
+            - error: greater_than
+          project_id:
+            - error: blank
+  securitySchemes:
+    authentication:
+      type: apiKey
+      name: token
+      in: header

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :accounting_periods_recount do
-    user nil
-    counting false
+    counting { false }
   end
 end

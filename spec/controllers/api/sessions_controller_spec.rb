@@ -6,7 +6,7 @@ RSpec.describe Api::SessionsController, type: :request do
   describe 'create' do
     context 'correct data' do
       it 'correctly sign in user and will return token' do
-        user = FactoryGirl.create :user, email: 'example@email.com', password: 'password'
+        user = FactoryBot.create :user, email: 'example@email.com', password: 'password'
 
         post '/api/users/sign_in', params: { user: { email: user.email, password: user.password } }
 
@@ -21,10 +21,12 @@ RSpec.describe Api::SessionsController, type: :request do
         post '/api/users/sign_in', params: { user: { email: 'aaaa', password: 'aaa' } }
 
         expected_json = {
-          errors: 'invalid_email_or_password'
+          errors: {
+            base: [error: :invalid_email_or_password]
+          }
         }.to_json
 
-        expect(response.body).to eq expected_json
+        expect(response.body).to be_json_eql(expected_json)
         expect(response.code).to eq '422'
       end
     end

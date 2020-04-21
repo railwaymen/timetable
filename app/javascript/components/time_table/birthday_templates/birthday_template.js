@@ -46,7 +46,7 @@ class BirthdayTemplate extends React.Component {
               <i className="icon pencil" />
             </NavLink>
             <div className={`ui button icon basic blue ${disabled}`} onClick={this.onLastUsedClick}>
-              Set as last used
+              {I18n.t('apps.birthday_templates.set_as_last_used')}
             </div>
             <div className="ui button icon basic red" onClick={this.onTrashClick}>
               <i className="icon trash" />

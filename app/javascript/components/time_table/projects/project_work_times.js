@@ -1,17 +1,16 @@
 import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import moment from 'moment';
 import * as Api from '../../shared/api';
-import { displayDayInfo, displayDuration } from '../../shared/helpers';
-import WorkTimeDuration from '../../shared/work_time_duration';
-import WorkTimeTime from '../../shared/work_time_time';
-import WorkTimeTimeDescription from '../../shared/work_time_description';
 import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
 import ReportProjectRecord from '../reports/report_project_record';
 import ReportProjectTagRecord from '../reports/report_project_tag_record';
+import ProjectWorkTimeEntry from './project_work_time_entry';
+import Preloader from '../../shared/preloader';
 
 export default class ProjectWorkTimes extends React.Component {
   constructor(props) {
@@ -29,7 +28,7 @@ export default class ProjectWorkTimes extends React.Component {
       groupedWorkTimes: {},
       reports: [],
       tag_reports: [],
-      tags_disabled: false,
+      sync: false,
     };
 
     this.filterByUser = this.filterByUser.bind(this);
@@ -98,16 +97,17 @@ export default class ProjectWorkTimes extends React.Component {
 
   getWorkTimes({ from, to, user_id }, stateCallback = this.pushUrl) {
     const url = URI(`/api/projects/${this.state.projectId}/work_times`).addSearch({ from, to, user_id });
+    this.setState({ sync: true });
     Api.makeGetRequest({ url })
       .then((response) => {
         const {
-          project, work_times, reports, tag_reports, tags_disabled,
+          project, work_times, reports, tag_reports,
         } = response.data;
-        const groupedWorkTimes = _.groupBy(work_times, workTime => (
+        const groupedWorkTimes = _.groupBy(work_times, (workTime) => (
           moment(workTime.starts_at).format('YYYYMMDD')
         ));
         this.setState({
-          project, reports, tag_reports, tags_disabled, groupedWorkTimes, from, to, user_id,
+          project, reports, tag_reports, groupedWorkTimes, from, to, user_id, sync: false,
         }, stateCallback);
       });
   }
@@ -126,79 +126,59 @@ export default class ProjectWorkTimes extends React.Component {
 
   render() {
     const {
-      groupedWorkTimes, from, to, project, reports, tag_reports, tags_disabled,
+      groupedWorkTimes, from, to, project, reports, tag_reports, user_id, sync,
     } = this.state;
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
 
     return (
       <div className="content-wrapper box">
+        <Helmet>
+          <title>{project.name}</title>
+        </Helmet>
         <header className="page-header projects-header row text-center">
           <h1 className="project-title">
             {project.name}
-            {
-              (currentUser.isSuperUser()
-              && (
-                <Link to={this.reportsUrl()} className="btn btn-success">
+            {currentUser.isSuperUser() && (
+              <Link to={this.reportsUrl()} className="btn btn-success">
                 Reports
-                </Link>
-              ))
-            }
+              </Link>
+            )}
           </h1>
           <HorizontalArrows className="row" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
-            <DateRangeFilter className="col-md-8 col-md-offset-2" from={from} to={to} onFromChange={this.onFromChange} onToChange={this.onToChange} onFilter={() => this.getWorkTimes(this.state)}>
-              <button type="button" className="btn btn-default" onClick={this.allUsers}>
-                {I18n.t('apps.reports.all')}
-              </button>
+            <DateRangeFilter
+              className="col-md-8 col-md-offset-2"
+              from={from}
+              to={to}
+              onFromChange={this.onFromChange}
+              onToChange={this.onToChange}
+              onFilter={() => this.getWorkTimes(this.state)}
+            >
+              {user_id && (
+                <button type="button" className="btn btn-default" onClick={this.allUsers}>
+                  {I18n.t('apps.reports.all_users')}
+                </button>
+              )}
             </DateRangeFilter>
           </HorizontalArrows>
         </header>
         <div className="row row-eq-height">
+          {sync && <Preloader rowsNumber={1} />}
           <div className="col-md-8">
-            {dayKeys.map(dayKey => (
-              <section key={dayKey} className="time-entries-day">
-                <header>
-                  <div className="date-container">
-                    <span className="title">{displayDayInfo(groupedWorkTimes[dayKey][0].starts_at)}</span>
-                    <span className="super">{displayDuration(_.sumBy(groupedWorkTimes[dayKey], w => w.duration))}</span>
-                    <div className="time-entries-list-container">
-                      <ul className="time-entries-list">
-                        {groupedWorkTimes[dayKey].map(workTime => (
-                          <li className={`entry ${workTime.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workTime.id}`} key={workTime.id}>
-                            <div className="col-md-2 project-container">{`${workTime.user.first_name} ${workTime.user.last_name}`}</div>
-                            <div className="col-md-4 description-container" style={{ cursor: 'inherit' }}>
-                              <span className="description-text">
-                                {WorkTimeTimeDescription(workTime)}
-                              </span>
-                            </div>
-                            { workTime.tag && !tags_disabled && (
-                              <div className="col-md-2 tag-container" style={{ marginTop: '15px' }}>
-                                <input disabled className={`tags selected ${workTime.tag}`} type="button" value={workTime.tag.toUpperCase()} />
-                              </div>
-                            )
-                            }
-                            <div className="col-md-1">
-                              <WorkTimeDuration workTime={workTime} />
-                            </div>
-                            <div className="col-md-2">
-                              <WorkTimeTime workTime={workTime} />
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </header>
-              </section>
+            {dayKeys.map((dayKey) => (
+              <ProjectWorkTimeEntry
+                key={dayKey}
+                dayKey={dayKey}
+                groupedWorkTimes={groupedWorkTimes}
+              />
             ))}
           </div>
           <div className="col-md-4">
             <div className="sticky-record">
-              { !tags_disabled && tag_reports.length > 0 && (
+              { tag_reports.length > 0 && (
                 <div className="row">
                   <ReportProjectTagRecord reportRows={tag_reports} />
                 </div>
-              )
-              }
+              )}
               { reports.length > 0 && (
                 <div className="row">
                   <ReportProjectRecord
@@ -208,8 +188,7 @@ export default class ProjectWorkTimes extends React.Component {
                     redirectTo={this.filterByUser}
                   />
                 </div>
-              )
-              }
+              )}
             </div>
           </div>
         </div>

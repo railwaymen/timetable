@@ -22,7 +22,7 @@ const Modal = ({
 Modal.propTypes = {
   id: PropTypes.string,
   header: PropTypes.node,
-  body: PropTypes.node,
+  content: PropTypes.node,
   actions: PropTypes.node,
 };
 

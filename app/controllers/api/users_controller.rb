@@ -4,13 +4,11 @@ module Api
   class UsersController < Api::BaseController
     before_action :authenticate_notself, only: [:update]
     before_action :authenticate_admin!, except: %i[index show update incoming_birthdays]
-    before_action :authenticate_admin_or_manager_or_leader!, only: %i[index incoming_birthdays]
-    before_action :incoming_birthday_users, only: [:incoming_birthdays]
-    respond_to :json
+    before_action :authenticate_admin_or_manager!, only: %i[index incoming_birthdays]
 
     def index
       action = params[:filter].presence_in(visiblity_list) || 'all'
-      @users = User.order('contract_name::bytea ASC').filter_by(action.to_sym)
+      @users = User.order(Arel.sql('contract_name::bytea ASC')).filter_by(action.to_sym)
       @users = @users.order(:last_name) if params.key?(:staff)
       respond_with @users
     end
@@ -21,17 +19,20 @@ module Api
     end
 
     def create
-      @user = User.create(user_params)
+      @user = User.new
+      UpdateUserForm.new(user_params.merge(user: @user)).save
       respond_with :api, @user
     end
 
     def update
       @user = User.find(params[:id])
-      @user.update(user_params)
+      UpdateUserForm.new(user_params.merge(user: @user)).save
       respond_with @user
     end
 
     def incoming_birthdays
+      @users = incoming_birthday_users
+
       if @users.length < 3
         limit = 3 - @users.length
         missing_users = missing_users(limit)
@@ -57,15 +58,15 @@ module Api
 
     def incoming_birthday_users
       @users = User.where("#{Time.current.year} || TO_CHAR(birthdate, '/mm/dd') > ?", Time.current.to_date)
-                   .order("TO_CHAR(birthdate, 'mm/dd')")
+                   .order(Arel.sql("TO_CHAR(birthdate, 'mm/dd')"))
                    .select("id, TO_CHAR(birthdate, 'dd/mm/') || #{Time.current.year} birthday_date,"\
                            "CONCAT(last_name, ' ', first_name) AS full_name").limit(3)
     end
 
     def missing_users(limit)
-      User.where("#{(Time.current + 1.month).year} || TO_CHAR(birthdate, '/mm/dd') > ?",
-                 Time.current.to_date).order("TO_CHAR(birthdate, 'mm/dd')")
-          .select("id, TO_CHAR(birthdate, 'dd/mm/') || #{(Time.current + 1.month).year} birthday_date,"\
+      User.where("#{(Time.current + 1.year).year} || TO_CHAR(birthdate, '/mm/dd') > ?",
+                 Time.current.to_date).order(Arel.sql("TO_CHAR(birthdate, 'mm/dd')"))
+          .select("id, TO_CHAR(birthdate, 'dd/mm/') || #{(Time.current + 1.year).year} birthday_date,"\
                   "CONCAT(last_name, ' ', first_name) AS full_name").limit(limit)
     end
   end

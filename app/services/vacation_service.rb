@@ -5,7 +5,7 @@ class VacationService
   def initialize(current_user:, vacation:, params: {})
     @current_user = current_user
     @vacation = vacation
-    @vacation_work_times = @vacation.work_times.active
+    @vacation_work_times = @vacation.work_times.kept
     @previous_status = @vacation.status
     @params = params
     @errors = []
@@ -14,7 +14,7 @@ class VacationService
 
   def approve
     work_times = vacation_work_times_service.work_times
-    work_time_warning(work_times.pluck('date(work_times.starts_at)', 'date(work_times.ends_at)').flatten.uniq) if work_times.any?
+    work_time_warning(work_times.pluck(Arel.sql('date(work_times.starts_at)'), Arel.sql('date(work_times.ends_at)')).flatten.uniq) if work_times.any?
 
     approve_transaction
     increase_work_times if @vacation_interaction && @vacation_interaction.action == 'accepted'
@@ -22,17 +22,7 @@ class VacationService
   end
 
   def decline
-    ids = @vacation_work_times.pluck(:id)
-
-    ActiveRecord::Base.transaction do
-      @vacation.update!(status: :declined)
-      deactivate_vacation_work_times if @vacation_work_times.any?
-      @vacation_interaction = create_vacation_interaction(:declined)
-      remove_previous_interaction(%w[approved accepted])
-
-      raise ActiveRecord::Rollback unless @errors.empty?
-    end
-    decrease_work_times(ids) if ids.any?
+    decline_transaction
     response
   end
 
@@ -41,10 +31,11 @@ class VacationService
     previous_status = @vacation.status
     ids = @vacation_work_times.pluck(:id)
     undone_vacation
-    vacation_work_times_service.save if @vacation.status == 'accepted' && @vacation.work_times.active.empty?
+    vacation_work_times_service.save if @vacation.status == 'accepted' && @vacation.work_times.kept.empty?
     increase_work_times if @vacation.status == 'accepted' && previous_status == 'declined'
     decrease_work_times(ids) if ids.any? && previous_status == 'accepted' && @vacation.status != 'accepted'
 
+    @vacation.assignments.destroy_all if @vacation.assignments.any? && @previous_status == 'accepted' && !@vacation.accepted?
     response
   end
 
@@ -52,7 +43,9 @@ class VacationService
 
   def approve_transaction
     ActiveRecord::Base.transaction do
+      PaperTrail.request.disable_model(ProjectResourceAssignment)
       vacation_sub_type_error unless approve_vacation
+      create_vacation_event if @vacation.accepted?
       vacation_work_times_service.save
       @vacation_interaction = create_vacation_interaction(:approved)
       remove_previous_interaction(%w[declined])
@@ -78,6 +71,19 @@ class VacationService
     end
   end
 
+  def create_vacation_event
+    vacation_user = User.find(@vacation.user_id)
+    user_resources_ids = vacation_user.project_resources.pluck(:id, :rid)
+    vacation_project = Project.find_by(name: 'Vacation')
+    starts_at = @vacation.start_date.beginning_of_day
+    ends_at = @vacation.end_date.end_of_day
+    user_resources_ids.each do |id, rid|
+      ProjectResourceAssignment.create!(user_id: vacation_user.id, project_id: vacation_project.id, project_resource_id: id, resource_rid: rid, vacation_id: @vacation.id,
+                                        starts_at: starts_at, ends_at: ends_at, title: vacation_project.name, color: "##{vacation_project.color}", type: 2,
+                                        resizable: false, movable: false)
+    end
+  end
+
   def create_vacation_interaction(action)
     vacation_interaction = VacationInteraction.new(vacation_interaction_params(action))
     vacation_interaction.valid? ? vacation_interaction.save : vacation_interaction_error(vacation_interaction.errors)
@@ -100,7 +106,20 @@ class VacationService
   end
 
   def deactivate_vacation_work_times
-    @vacation.work_times.active.find_each { |wt| wt.update(active: false) }
+    @vacation.work_times.kept.each(&:discard!)
+  end
+
+  def decline_transaction
+    ActiveRecord::Base.transaction do
+      @vacation.update!(status: :declined)
+      PaperTrail.request.disable_model(ProjectResourceAssignment)
+      deactivate_vacation_work_times if @vacation.work_times.any?
+      @vacation.assignments.discard_all if @vacation.assignments.any?
+      @vacation_interaction = create_vacation_interaction(:declined)
+      remove_previous_interaction(%w[approved accepted])
+
+      raise ActiveRecord::Rollback unless @errors.empty?
+    end
   end
 
   def remove_previous_interaction(status)
@@ -156,7 +175,7 @@ class VacationService
   end
 
   def increase_work_times
-    @vacation.work_times.active.each do |wt|
+    @vacation.work_times.kept.each do |wt|
       IncreaseWorkTimeWorker.perform_async(user_id: @vacation.user_id, duration: wt.duration, starts_at: wt.starts_at, ends_at: wt.ends_at, date: wt.starts_at.to_date)
     end
   end
@@ -174,7 +193,8 @@ class VacationService
       vacation_interaction: { user_full_name: @vacation_interaction ? @vacation_interaction.user.to_s : nil },
       previous_status: @previous_status,
       errors: @errors,
-      warnings: @warnings
+      warnings: @warnings,
+      user_available_vacation_days: User.find(@vacation.user_id).available_vacation_days
     }
   end
 

@@ -10,16 +10,16 @@ class ExternalAuth extends React.Component {
     this.onTokenChange = this.onTokenChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onDelete = this.onDelete.bind(this);
-  }
 
-  state = {
-    authorizationUrl: '',
-    domain: '',
-    token: '',
-    userId: parseInt(this.props.match.params.id, 10),
-    requestData: undefined,
-    redirectToReferer: undefined,
-  };
+    this.state = {
+      authorizationUrl: '',
+      domain: '',
+      token: '',
+      userId: parseInt(this.props.match.params.id, 10),
+      requestData: undefined,
+      redirectToReferer: undefined,
+    };
+  }
 
   componentDidMount() {
     this.getUser();
@@ -57,6 +57,7 @@ class ExternalAuth extends React.Component {
     const request_data = this.state.requestData;
     const project_id = this.state.projectId;
     const provider = 'jira';
+
     Api.makePostRequest({
       url: '/api/external_auths',
       body: {
@@ -111,9 +112,12 @@ class ExternalAuth extends React.Component {
             <button className="btn btn-primary btn-outline-secondary" onClick={this.getAuthLink} type="button">{I18n.t('apps.external_auths.generate_link')}</button>
           </div>
         </div>
-        {this.state.authorizationUrl && <p><a className="btn btn-primary" href={this.state.authorizationUrl} target="_blank" rel="noopener noreferrer">{I18n.t('apps.external_auths.follow_link')}</a></p>}
-        {this.state.authorizationUrl
-          && (
+        {this.state.authorizationUrl && (
+          <p>
+            <a className="btn btn-primary" href={this.state.authorizationUrl} target="_blank" rel="noopener noreferrer">{I18n.t('apps.external_auths.follow_link')}</a>
+          </p>
+        )}
+        {this.state.authorizationUrl && (
           <form>
             <div className="form-group">
               <input className="form-control" type="text" value={this.state.token} placeholder={I18n.t('apps.external_auths.token')} onChange={this.onTokenChange} />
@@ -122,8 +126,7 @@ class ExternalAuth extends React.Component {
               <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={this.onSubmit} />
             </div>
           </form>
-          )
-        }
+        )}
       </div>
     );
   }

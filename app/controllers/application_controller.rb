@@ -20,9 +20,20 @@ class ApplicationController < ActionController::Base
     I18n.with_locale(current_user.try(:lang), &block)
   end
 
+  def authenticate_admin_or_manager!
+    authenticate_user!
+    return head(:forbidden) unless current_user.admin? || current_user.manager?
+  end
+
   def authenticate_admin_or_manager_or_leader!
     authenticate_user!
     return head(:forbidden) unless current_user.admin? || current_user.manager? || current_user.leader?
+  end
+
+  def disable_paper_trail
+    PaperTrail.request.enabled = false
+    yield
+    PaperTrail.request.enabled = true
   end
 
   private

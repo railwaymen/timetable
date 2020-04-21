@@ -9,8 +9,8 @@ RSpec.describe WorkTimePolicy, type: :policy do
 
   permissions '.scope' do
     let(:user) { create(:user) }
-    let(:admin) { create(:admin) }
-    let(:manager) { create(:manager) }
+    let(:admin) { create(:user, :admin) }
+    let(:manager) { create(:user, :manager) }
 
     context 'admin or mananger' do
       it 'resolves to all' do

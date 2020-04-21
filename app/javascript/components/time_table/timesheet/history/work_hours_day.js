@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
 import WorkHours from './work_hours';
@@ -12,15 +11,10 @@ class WorkHoursDay extends React.Component {
     this.totalDurationViaProps = this.totalDurationViaProps.bind(this);
     this.increaseWorkHours = this.increaseWorkHours.bind(this);
     this.updateWorkHours = this.updateWorkHours.bind(this);
-  }
 
-  static propTypes = {
-    workHours: PropTypes.array,
-    total: PropTypes.string,
-  }
-
-  state = {
-    total: '00:00',
+    this.state = {
+      total: '00:00',
+    };
   }
 
   componentDidMount() {
@@ -43,7 +37,7 @@ class WorkHoursDay extends React.Component {
   }
 
   totalDurationViaProps() {
-    return displayDuration(_.sumBy(this.props.day, w => w.duration));
+    return displayDuration(_.sumBy(this.props.day, (workHours) => workHours.duration));
   }
 
   updateWorkHours(component, deviation) {
@@ -69,10 +63,9 @@ class WorkHoursDay extends React.Component {
                 {total}
               </span>
             </h3>
-            {/* eslint-disable */}
-            { day.map((workHours, index) => (
+            { day.map((workHours) => (
               <WorkHours
-                key={index}
+                key={workHours.id}
                 updateWorkHours={this.updateWorkHours}
                 workHours={workHours}
                 fingerPrint={this.props.fingerPrint}
@@ -81,10 +74,8 @@ class WorkHoursDay extends React.Component {
                 removeWorkHours={this.props.removeWorkHours}
                 projects={this.props.projects}
                 tags={this.props.tags}
-                tags_disabled={this.props.tags_disabled}
               />
             )) }
-            {/* eslint-enable */}
           </div>
         </header>
       </section>

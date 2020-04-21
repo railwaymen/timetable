@@ -49,7 +49,7 @@ To get it running locally run the following after cloning the repository:
 
 ```
 bundle install
-cp env.yml.example env.yml
+cp .env.example .env
 bundle exec rake db:create
 bundle exec rake db:seed
 bundle exec rails s
@@ -57,10 +57,11 @@ bundle exec rails s
 
 Visit localhost:3000 and login using following credentails :
 
-| email               | password | role    |
-|---------------------|----------|---------|
-| admin@example.com   | password | admin   |
-| manager@example.com | password | manager |
+| email                    | password | role            |
+|--------------------------|----------|-----------------|
+| admin@example.com        | password | admin           |
+| manager@example.com      | password | manager         |
+| staffmanager@example.com | password | staff manager   |
 
 After login on admin account you can create your own projects for the clients and accounts for your employees.
 

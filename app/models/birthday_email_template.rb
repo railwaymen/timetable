@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BirthdayEmailTemplate < ApplicationRecord
-  validates :body, :name, :title, presence: true
+  validates :name, :title, presence: true
 
   def next
     BirthdayEmailTemplate.where('id > ?', id)[0]

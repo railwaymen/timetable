@@ -10,15 +10,10 @@ class TagsDropdown extends React.Component {
     this.onChangeTag = this.onChangeTag.bind(this);
   }
 
-  static propTypes = {
-    tags: PropTypes.array,
-    selectedTag: PropTypes.string,
-  }
-
   onChangeTag(tag_key) {
     const { tags } = this.props;
-    const selectedTagKey = _.find(tags, p => (
-      p === tag_key
+    const selectedTagKey = _.find(tags, (tag) => (
+      tag === tag_key
     )) || tags[0];
 
     this.props.updateTag(selectedTagKey);
@@ -30,5 +25,10 @@ class TagsDropdown extends React.Component {
     );
   }
 }
+
+TagsDropdown.propTypes = {
+  tags: PropTypes.array,
+  selectedTag: PropTypes.string,
+};
 
 export default TagsDropdown;

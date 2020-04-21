@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `rails
+# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200303103236) do
+ActiveRecord::Schema.define(version: 2020_04_06_085027) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,12 +41,14 @@ ActiveRecord::Schema.define(version: 20200303103236) do
   end
 
   create_table "birthday_email_templates", force: :cascade do |t|
-    t.text "body", null: false
+    t.text "body", default: "", null: false
     t.string "name", null: false
     t.string "title", null: false
     t.boolean "last_used", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "bottom", default: "", null: false
+    t.text "header", default: "", null: false
   end
 
   create_table "external_auths", force: :cascade do |t|
@@ -90,20 +92,77 @@ ActiveRecord::Schema.define(version: 20200303103236) do
     t.index ["project_id"], name: "index_project_reports_on_project_id"
   end
 
+  create_table "project_resource_assignments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "project_resource_id", null: false
+    t.bigint "project_id", null: false
+    t.bigint "vacation_id"
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.string "title"
+    t.string "color"
+    t.string "resource_rid", null: false
+    t.integer "type", default: 1, null: false
+    t.boolean "resizable", default: true
+    t.boolean "movable", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_project_resource_assignments_on_discarded_at"
+    t.index ["project_id"], name: "index_project_resource_assignments_on_project_id"
+    t.index ["project_resource_id"], name: "index_project_resource_assignments_on_project_resource_id"
+    t.index ["user_id"], name: "index_project_resource_assignments_on_user_id"
+    t.index ["vacation_id"], name: "index_project_resource_assignments_on_vacation_id"
+  end
+
+  create_table "project_resources", force: :cascade do |t|
+    t.bigint "user_id"
+    t.integer "project_resource_id"
+    t.string "rid", null: false
+    t.string "name", null: false
+    t.boolean "group_only", default: false, null: false
+    t.string "parent_rid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_project_resources_on_discarded_at"
+    t.index ["user_id"], name: "index_project_resources_on_user_id"
+  end
+
   create_table "projects", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "internal", default: false, null: false
     t.string "color", default: "000000", null: false
-    t.boolean "active", default: true, null: false
+    t.boolean "_active", default: true, null: false
     t.boolean "work_times_allows_task", default: false, null: false
     t.bigint "leader_id"
     t.boolean "autofill", default: false, null: false
     t.boolean "lunch", default: false, null: false
     t.boolean "count_duration", default: true, null: false
     t.boolean "external_integration_enabled", default: false, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["leader_id"], name: "index_projects_on_leader_id"
+    t.index ["name"], name: "index_projects_on_name", unique: true
+  end
+
+  create_table "remote_works", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "creator_id", null: false
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.integer "duration", null: false
+    t.text "note"
+    t.boolean "_active", default: true, null: false
+    t.boolean "updated_by_admin", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "discarded_at"
+    t.index ["creator_id"], name: "index_remote_works_on_creator_id"
+    t.index ["discarded_at"], name: "index_remote_works_on_discarded_at"
+    t.index ["user_id"], name: "index_remote_works_on_user_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -124,11 +183,13 @@ ActiveRecord::Schema.define(version: 20200303103236) do
     t.string "last_name", null: false
     t.string "phone"
     t.string "contract_name"
-    t.boolean "active", default: true, null: false
+    t.boolean "_active", default: true, null: false
     t.boolean "manager", default: false, null: false
     t.string "lang", default: "pl", null: false
     t.boolean "staff_manager", default: false, null: false
     t.date "birthdate"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -191,13 +252,15 @@ ActiveRecord::Schema.define(version: 20200303103236) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "contract_name"
-    t.boolean "active", default: true, null: false
+    t.boolean "_active", default: true, null: false
     t.integer "creator_id", null: false
     t.boolean "updated_by_admin", default: false, null: false
     t.string "task"
     t.jsonb "integration_payload"
     t.string "tag", default: "dev", null: false
     t.integer "vacation_id"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_work_times_on_discarded_at"
   end
 
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"
@@ -207,7 +270,14 @@ ActiveRecord::Schema.define(version: 20200303103236) do
   add_foreign_key "project_report_roles", "project_reports"
   add_foreign_key "project_report_roles", "users"
   add_foreign_key "project_reports", "projects"
+  add_foreign_key "project_resource_assignments", "project_resources"
+  add_foreign_key "project_resource_assignments", "projects"
+  add_foreign_key "project_resource_assignments", "users"
+  add_foreign_key "project_resource_assignments", "vacations"
+  add_foreign_key "project_resources", "users"
   add_foreign_key "projects", "users", column: "leader_id"
+  add_foreign_key "remote_works", "users"
+  add_foreign_key "remote_works", "users", column: "creator_id"
   add_foreign_key "vacation_interactions", "users"
   add_foreign_key "vacation_interactions", "vacations"
   add_foreign_key "vacation_periods", "users"

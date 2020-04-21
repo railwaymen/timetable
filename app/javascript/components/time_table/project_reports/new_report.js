@@ -1,28 +1,32 @@
 import React from 'react';
 import moment from 'moment';
 import { Redirect } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import URI from 'urijs';
 import bindAll from 'lodash/bindAll';
 import * as Api from '../../shared/api';
 import DateRangeFilter from '../../shared/date_range_filter';
+import Preloader from '../../shared/preloader';
 
 export default class NewReport extends React.Component {
   static roles = ['developer', 'qa', 'ux', 'pm', 'ignored'];
 
-  state = {
-    projectId: parseInt(this.props.match.params.projectId, 10),
-    startsAt: moment().startOf('month'),
-    endsAt: moment().endOf('month'),
-    userRoles: [],
-    currency: '',
-    name: '',
-    collisions: [],
-    redirectTo: null,
-  }
-
   constructor(props) {
     super(props);
+
     bindAll(this, ['onRangeStartChange', 'onRangeEndChange', 'getRoles', 'onSubmit', 'onFieldChange', 'checkForCollision']);
+
+    this.state = {
+      projectId: parseInt(this.props.match.params.projectId, 10),
+      startsAt: moment().startOf('month'),
+      endsAt: moment().endOf('month'),
+      userRoles: [],
+      currency: '',
+      name: '',
+      collisions: [],
+      redirectTo: null,
+      sync: false,
+    };
   }
 
   componentDidMount() {
@@ -46,15 +50,18 @@ export default class NewReport extends React.Component {
   }
 
   getRoles() {
-    Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}/project_reports/roles?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}` })
+    this.setState({ sync: true });
+    const url = `/api/projects/${this.state.projectId}/project_reports/roles?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}`;
+    Api.makeGetRequest({ url })
       .then(({ data }) => {
-        this.setState(({ currency }) => ({ userRoles: data.user_roles, currency: currency || data.currency }));
+        this.setState(({ currency }) => ({ sync: false, userRoles: data.user_roles, currency: currency || data.currency }));
       });
     this.checkForCollision();
   }
 
   checkForCollision() {
-    Api.makeGetRequest({ url: `/api/projects/${this.state.projectId}/project_reports?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}` })
+    const url = `/api/projects/${this.state.projectId}/project_reports?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}`;
+    Api.makeGetRequest({ url })
       .then(({ data }) => this.setState({ collisions: data }));
   }
 
@@ -113,20 +120,30 @@ export default class NewReport extends React.Component {
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
     return (
       <div className="new-project-report">
+        <Helmet>
+          <title>{I18n.t('apps.reports.new')}</title>
+        </Helmet>
         <div className="row">
           <div className="col-md-6 form-group">
             <label>{I18n.t('common.name')}</label>
-            <input className="form-control" value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
+            <input className="form-control" value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} />
           </div>
           <div className="col-md-6 form-group">
             <label>{I18n.t('apps.reports.currency')}</label>
-            <input className="form-control" value={this.state.currency} onChange={e => this.setState({ currency: e.target.value })} />
+            <input className="form-control" value={this.state.currency} onChange={(e) => this.setState({ currency: e.target.value })} />
           </div>
         </div>
         <h1>{I18n.t('apps.reports.roles')}</h1>
-        <DateRangeFilter from={this.state.startsAt.format()} to={this.state.endsAt.format()} onFromChange={this.onRangeStartChange} onToChange={this.onRangeEndChange} onFilter={this.getRoles} />
+        <DateRangeFilter
+          from={this.state.startsAt.format()}
+          to={this.state.endsAt.format()}
+          onFromChange={this.onRangeStartChange}
+          onToChange={this.onRangeEndChange}
+          onFilter={this.getRoles}
+        />
         {this.collisionAlert()}
         <div className="table-responsive">
+          {this.state.sync && <Preloader rowsNumber={1} />}
           <table className="table table-hover">
             <thead>
               <tr>
@@ -137,26 +154,26 @@ export default class NewReport extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.userRoles.map(user => (
+              {this.state.userRoles.map((user) => (
                 <tr key={user.id}>
                   <td>
                     {user.first_name}
                     {user.last_name}
                   </td>
                   <td>
-                    <select className="form-control" value={user.role || ''} onChange={e => this.onFieldChange(e, 'role', user.id)}>
+                    <select className="form-control" value={user.role || ''} onChange={(e) => this.onFieldChange(e, 'role', user.id)}>
                       <option value="" />
-                      {this.constructor.roles.map(role => (
+                      {this.constructor.roles.map((role) => (
                         <option key={role} value={role}>{role}</option>
                       ))}
                     </select>
                   </td>
                   <td>
-                    <input className="form-control" type="number" min="0" step="0.01" value={user.hourly_wage} onChange={e => this.onFieldChange(e, 'hourly_wage', user.id)} />
+                    <input className="form-control" type="number" min="0" step="0.01" value={user.hourly_wage} onChange={(e) => this.onFieldChange(e, 'hourly_wage', user.id)} />
                     {user.hourly_wage === '' && <span style={{ color: 'red', fontWeight: 'bold' }}>Invalid format</span>}
                   </td>
                   <td>
-                    <input className="form-control" type="text" value={user.description} onChange={e => this.onFieldChange(e, 'description', user.id)} />
+                    <input className="form-control" type="text" value={user.description} onChange={(e) => this.onFieldChange(e, 'description', user.id)} />
                   </td>
                 </tr>
               ))}

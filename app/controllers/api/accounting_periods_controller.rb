@@ -3,8 +3,6 @@
 module Api
   class AccountingPeriodsController < Api::BaseController
     before_action :authenticate_admin!, except: %i[index matching_fulltime]
-    respond_to :json
-
     helper_method :recounting
 
     def index
@@ -48,13 +46,9 @@ module Api
     end
 
     def matching_fulltime
-      period = AccountingPeriod.where(user_id: params[:user_id], full_time: true)
-                               .where('? >= starts_at AND ? <= ends_at', params[:date], params[:date]).first
-      should_worked = nil
-      if period.try(:starts_at) && period.starts_at <= Time.zone.today && period.ends_at >= Time.zone.today
-        should_worked = period.starts_at.to_date.business_days_until(Time.zone.today + 1.day) * 8 * 3600
-      end
-      render status: :ok, json: { period: period, should_worked: should_worked }
+      @accounting_period = AccountingPeriod.where(user_id: filtered_user_id, full_time: true)
+                                           .where('? >= starts_at AND ? <= ends_at', params[:date], params[:date]).first
+      @should_worked = calculate_should_worked(@accounting_period)
     end
 
     def recount
@@ -64,13 +58,20 @@ module Api
 
     private
 
+    def calculate_should_worked(accounting_period)
+      return if accounting_period.nil?
+
+      days_to_date = @accounting_period.starts_at.to_date.business_days_until(Time.zone.today + 1.day)
+      accounting_period_days = @accounting_period.starts_at.to_date.business_days_until(accounting_period.ends_at + 1.day)
+      days_to_date * (accounting_period.duration / accounting_period_days)
+    end
+
+    def filtered_user_id
+      current_user.admin? ? (params[:user_id].presence || current_user.id) : current_user.id
+    end
+
     def accounting_periods
-      @accounting_periods ||= begin
-        periods = current_user.admin? ? AccountingPeriod.order(position: :desc) : current_user.accounting_periods.order(position: :desc)
-        periods = periods.page(params[:page])
-        periods.where!(user_id: params[:user_id]) if params[:user_id].present? && current_user.admin?
-        periods
-      end
+      @accounting_periods ||= AccountingPeriod.order(position: :desc).where(user_id: filtered_user_id).page(params[:page])
     end
 
     def accounting_period_params

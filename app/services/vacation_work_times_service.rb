@@ -23,8 +23,8 @@ class VacationWorkTimesService
 
   def work_times
     @work_times ||= @user.work_times.where('((starts_at::timestamp::date >= :start_date AND starts_at::timestamp::date <= :end_date) OR
-                                            (ends_at::timestamp::date >= :start_date AND ends_at::timestamp::date <= :end_date)) AND work_times.active = :active',
-                                           start_date: @vacation.start_date, end_date: @vacation.end_date, active: true)
+                                            (ends_at::timestamp::date >= :start_date AND ends_at::timestamp::date <= :end_date)) AND work_times.discarded_at IS NULL',
+                                           start_date: @vacation.start_date, end_date: @vacation.end_date)
   end
 
   private

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe ReportsController do
   render_views
   let(:user) { create(:user) }
-  let(:manager) { create(:manager) }
+  let(:manager) { create(:user, :manager) }
 
   describe '#project' do
     it 'authenticates user' do
@@ -75,7 +75,7 @@ RSpec.describe ReportsController do
     it 'returns project report in csv for user' do
       sign_in(manager)
       user = create(:user)
-      project = create(:project, work_times_allows_task: true)
+      project = create(:project, work_times_allows_task: true, name: 'Test project')
       work_time1 = create(:work_time, task: 'http://example.com/task/24', user: user, project: project, starts_at: '2016-01-05 08:00:00', ends_at: '2016-01-05 10:00:00')
       work_time2 = create(:work_time, task: 'http://example.com/task/24', user: user, project: project, starts_at: '2016-01-05 12:00:00', ends_at: '2016-01-05 13:00:00')
       work_time3 = create(:work_time, user: user, project: project, starts_at: '2016-01-05 10:00:00', ends_at: '2016-01-05 12:00:00')
@@ -84,12 +84,12 @@ RSpec.describe ReportsController do
       expect(response.code).to eql('200')
       require 'csv'
       csv = CSV.parse(response.body)
-      expect(csv[0]).to eql(['Date', 'Task URL', 'Description', 'Duration'])
-      expect(csv[1]).to eql(['2016-01-05', 'http://example.com/task/24', work_time1.body, '02:00'])
-      expect(csv[2]).to eql(['2016-01-05', 'http://example.com/task/24', work_time2.body, '01:00'])
-      expect(csv[3]).to eql([nil, nil, nil, '03:00'])
-      expect(csv[4]).to eql(['2016-01-05', nil, work_time3.body, '02:00'])
-      expect(csv[5]).to eql(['Developer Total', nil, nil, '05:00'])
+      expect(csv[0]).to eql(['Project', 'Date', 'Task URL', 'Description', 'Duration'])
+      expect(csv[1]).to eql(['Test project', '2016-01-05', 'http://example.com/task/24', work_time1.body, '02:00'])
+      expect(csv[2]).to eql(['Test project', '2016-01-05', 'http://example.com/task/24', work_time2.body, '01:00'])
+      expect(csv[3]).to eql([nil, nil, nil, nil, '03:00'])
+      expect(csv[4]).to eql(['Test project', '2016-01-05', nil, work_time3.body, '02:00'])
+      expect(csv[5]).to eql(['Developer Total', nil, nil, nil, '05:00'])
     end
   end
 end

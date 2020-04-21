@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe VacationWorkTimesService do
-  let(:staff_manager) { create(:staff_manager) }
+  let(:staff_manager) { create(:user, :staff_manager) }
   let(:user) { create(:user) }
 
   describe '#save' do

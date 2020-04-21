@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import URI from 'urijs';
 import _ from 'lodash';
@@ -29,6 +28,18 @@ class EntryHistory extends React.Component {
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
     this.translateTag = this.translateTag.bind(this);
+
+    this.state = {
+      workHours: [],
+      daysKeys: [],
+      groupedWorkHours: {},
+      months: [],
+      selectedProject: {},
+      filteredUser: undefined,
+      project_id: undefined,
+      from: moment().startOf('month').format(),
+      to: moment().endOf('month').format(),
+    };
   }
 
   componentDidMount() {
@@ -68,22 +79,6 @@ class EntryHistory extends React.Component {
         from, to, project_id,
       });
     }
-  }
-
-  static propTypes = {
-    workHours: PropTypes.array,
-  }
-
-  state = {
-    workHours: [],
-    daysKeys: [],
-    groupedWorkHours: {},
-    months: [],
-    selectedProject: {},
-    filteredUser: undefined,
-    project_id: undefined,
-    from: moment().startOf('month').format(),
-    to: moment().endOf('month').format(),
   }
 
   filterWorkHoursByUser(id, params) {
@@ -130,9 +125,9 @@ class EntryHistory extends React.Component {
 
     if (day.length === 1) {
       groupedWorkHours[fingerPrint] = undefined;
-      daysKeys = daysKeys.filter(daysKey => daysKey !== fingerPrint);
+      daysKeys = daysKeys.filter((daysKey) => daysKey !== fingerPrint);
     } else {
-      groupedWorkHours[fingerPrint] = day.filter(record => record.id !== component.state.workHours.id);
+      groupedWorkHours[fingerPrint] = day.filter((record) => record.id !== component.state.workHours.id);
     }
 
     return this.setState({
@@ -167,10 +162,10 @@ class EntryHistory extends React.Component {
       let { daysKeys } = this.state;
 
       if (groupedIndex) {
-        groupedWorkHours[time] = _.sortBy(groupedWorkHours[time].concat([object]), t => moment(t.starts_at).format('HHmm')).reverse();
+        groupedWorkHours[time] = _.sortBy(groupedWorkHours[time].concat([object]), (t) => moment(t.starts_at).format('HHmm')).reverse();
       } else {
         groupedWorkHours[time] = [object];
-        daysKeys = _.sortBy(this.state.daysKeys.concat([time]), key => key).reverse();
+        daysKeys = _.sortBy(this.state.daysKeys.concat([time]), (key) => key).reverse();
       }
 
       this.setState({
@@ -221,10 +216,10 @@ class EntryHistory extends React.Component {
 
     Api.makeGetRequest({ url: `/api/accounting_periods/matching_fulltime?date=${moment(from).format('YYYY-MM-DD')}&user_id=${userId || currentUser.id}` })
       .then((results) => {
-        const { period } = results.data;
+        const { accounting_period } = results.data;
 
-        if (period) {
-          const { duration } = period;
+        if (accounting_period) {
+          const { duration } = accounting_period;
           const { should_worked } = results.data;
 
           mandatoryHours = this.formattedDuration(duration);
@@ -283,7 +278,6 @@ class EntryHistory extends React.Component {
             pushEntry={this.pushEntry}
             projects={this.props.projects}
             tags={this.props.tags}
-            tags_disabled={this.props.tags_disabled}
             updateWorkHours={this.updateWorkHours}
             assignModalInfo={this.assignModalInfo}
           />
@@ -300,15 +294,15 @@ class EntryHistory extends React.Component {
         groupedWorkHours: {},
       });
     } else {
-      this.setState({
+      this.setState((prevState) => ({
         daysKeys: [],
-        groupedWorkHours: _.groupBy(this.state.workHours, workHours => (
+        groupedWorkHours: _.groupBy(prevState.workHours, (workHours) => (
           moment(workHours.starts_at).format('YYYYMMDD')
         )),
-      }, () => {
-        this.setState({
-          daysKeys: _.sortBy(Object.keys(this.state.groupedWorkHours), date => date).reverse(),
-        });
+      }), () => {
+        this.setState((prevState) => ({
+          daysKeys: _.sortBy(Object.keys(prevState.groupedWorkHours), (date) => date).reverse(),
+        }));
       });
     }
   }
@@ -318,9 +312,9 @@ class EntryHistory extends React.Component {
   }
 
   totalWorkHours() {
-    this.setState({
-      total: displayDuration(_.sumBy(this.state.workHours, w => w.duration)),
-    });
+    this.setState((prevState) => ({
+      total: displayDuration(_.sumBy(prevState.workHours, (w) => w.duration)),
+    }));
   }
 
   onProjectFilter(e) {
@@ -334,7 +328,7 @@ class EntryHistory extends React.Component {
         project_id: projectId, pushHistory: true, from, to,
       });
       this.setState({
-        selectedProject: _.find(this.props.projects, project => project.id === projectId),
+        selectedProject: _.find(this.props.projects, (project) => project.id === projectId),
       });
     } else {
       this.getWorkHours({ pushHistory: true, from, to });
@@ -397,7 +391,7 @@ class EntryHistory extends React.Component {
           <td>{moment(version.created_at).format('YYYY-MM-DD HH:mm')}</td>
           <td>{version.updated_by}</td>
           <td>
-            { version.project_name
+            { version.hasOwnProperty('project_name')
               ? (
                 <span className={(version.event === 'update' ? 'changed' : '')}>
                   {version.project_name}
@@ -406,27 +400,32 @@ class EntryHistory extends React.Component {
               : <span>{version.project_name_was}</span> }
           </td>
           <td>
-            { version.body
+            { version.hasOwnProperty('body')
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{(version.body || '').replace(/\n/g, '<br />')}</span>
               : <span>{(version.body_was || '').replace(/\n/g, '<br />')}</span> }
           </td>
           <td>
-            { version.tag
-              ? <span className={(version.event === 'update' ? 'changed' : '')}>{this.translateTag(version.tag)}</span>
-                : <span>{this.translateTag(version.tag_was)}</span> }
+            { version.hasOwnProperty('task_preview')
+              ? <span className={(version.event === 'update' ? 'changed' : '')}>{version.task_preview}</span>
+              : <span>{version.task_preview_was}</span> }
           </td>
           <td>
-            { version.starts_at
+            { version.hasOwnProperty('tag')
+              ? <span className={(version.event === 'update' ? 'changed' : '')}>{this.translateTag(version.tag)}</span>
+              : <span>{this.translateTag(version.tag_was)}</span> }
+          </td>
+          <td>
+            { version.hasOwnProperty('starts_at')
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{moment(version.starts_at).format('HH:mm')}</span>
               : <span>{moment(version.starts_at_was).format('HH:mm')}</span> }
           </td>
           <td>
-            { version.ends_at
+            { version.hasOwnProperty('ends_at')
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{moment(version.ends_at).format('HH:mm')}</span>
               : <span>{moment(version.ends_at_was).format('HH:mm')}</span> }
           </td>
           <td>
-            { version.duration
+            { version.hasOwnProperty('duration')
               ? <span className={(version.event === 'update' ? 'changed' : '')}>{this.formattedDuration(version.duration)}</span>
               : <span>{this.formattedDuration(version.duration_was)}</span> }
           </td>
@@ -443,12 +442,12 @@ class EntryHistory extends React.Component {
       return (
         <div className="duration">
           <span className="work-time">{total}</span>
-/
+          /
           {shouldWork}
           <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_day')}>
             <i className="circle help icon small" />
           </span>
-/
+          /
           {mandatoryHours}
           <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_month')}>
             <i className="circle help icon small" />
@@ -464,7 +463,6 @@ class EntryHistory extends React.Component {
   }
 
   renderFilters() {
-    /* eslint-disable */
     const { projects } = this.props;
     const { months, from, selectedProject } = this.state;
     return (
@@ -473,8 +471,8 @@ class EntryHistory extends React.Component {
           <div className="text">{moment(from).format('MMMM') || I18n.t('apps.timesheet.select_month')}</div>
           <i className="dropdown icon" />
           <div className="menu" tabIndex="-1">
-            { months.map((month, index) => (
-              <a key={index} className="item" data-month={JSON.stringify(month)} onClick={this.onMonthFilter} href={`/timesheet?project_id=${month.date}`}>
+            { months.map((month) => (
+              <a key={month.name} className="item" data-month={JSON.stringify(month)} onClick={this.onMonthFilter} href={`/timesheet?project_id=${month.date}`}>
                 {month.name}
               </a>
             )) }
@@ -485,14 +483,15 @@ class EntryHistory extends React.Component {
           <i className="dropdown icon" />
           <div className="menu" tabIndex="-1">
             <a className="item" data-project-id="" href="" onClick={this.onProjectFilter}>{I18n.t('common.all')}</a>
-            { projects.map((project, index) => (
-              <a onClick={this.onProjectFilter} data-project-id={project.id} className="item" key={index} href={`/timesheet?project_id=${project.id}`}>{project.name}</a>
+            { projects.map((project) => (
+              <a onClick={this.onProjectFilter} data-project-id={project.id} className="item" key={project.id} href={`/timesheet?project_id=${project.id}`}>
+                {project.name}
+              </a>
             )) }
           </div>
         </div>
       </div>
     );
-    /* eslint-enable */
   }
 
   renderTaskDuration() {
@@ -510,17 +509,17 @@ class EntryHistory extends React.Component {
 
     return (
       <div className="content-wrapper">
-        { currentUser.isSuperUser() && filteredUser
-          ? (
-            <h1 className="active-user-timesheet">
-              { filteredUser.prev_id
-                ? <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" /> : null }
-              {currentUser.fullName.apply(filteredUser)}
-              { filteredUser.next_id
-                ? <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" /> : null }
-            </h1>
-          )
-          : null }
+        { currentUser.isSuperUser() && filteredUser && (
+          <h1 className="active-user-timesheet">
+            { filteredUser.prev_id && (
+              <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" />
+            )}
+            {currentUser.fullName.apply(filteredUser)}
+            { filteredUser.next_id && (
+              <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" />
+            )}
+          </h1>
+        )}
         <div id="time-entry-list">
           <div className="select-month">
             <h3>
@@ -542,6 +541,20 @@ class EntryHistory extends React.Component {
             </div>
             <div className="content">
               <table className="history table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>{I18n.t('apps.timesheet.history.date')}</th>
+                    <th>{I18n.t('apps.timesheet.history.who')}</th>
+                    <th>{I18n.t('apps.timesheet.history.project')}</th>
+                    <th>{I18n.t('apps.timesheet.history.task')}</th>
+                    <th>{I18n.t('apps.timesheet.history.url')}</th>
+                    <th>{I18n.t('apps.timesheet.history.tag')}</th>
+                    <th>{I18n.t('apps.timesheet.history.from')}</th>
+                    <th>{I18n.t('apps.timesheet.history.to')}</th>
+                    <th>{I18n.t('apps.timesheet.history.duration')}</th>
+                  </tr>
+                </thead>
                 <tbody>
                   { this.state.info ? this.renderVersions()
                     : (
@@ -551,8 +564,7 @@ class EntryHistory extends React.Component {
                         <td><div className="preloader" /></td>
                         <td><div className="preloader" /></td>
                       </tr>
-                    )
-                  }
+                    )}
                 </tbody>
               </table>
               {
@@ -561,7 +573,7 @@ class EntryHistory extends React.Component {
             </div>
             <div className="actions">
               <button className="button cancel right ui" type="button">
-                Close
+                {I18n.t('common.close')}
               </button>
             </div>
           </div>

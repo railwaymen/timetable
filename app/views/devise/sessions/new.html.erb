@@ -1,0 +1,37 @@
+<% randomPhoto = image_path "signin/#{rand(1..13)}.jpg" %>
+<div class="sign-in-intro" style="background-image: url( '<%= randomPhoto %>' )">
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'card' }) do %>
+    <h1 class="sign-in-title">
+      <%= t('apps.header.login') %>
+    </h1>
+    <% flash.each do |name, msg| %>
+      <div class="alert alert-warning">
+        <%= content_tag :div, msg %>
+      </div>
+    <% end %>
+    <div class="form-group">
+      <input autofocus="<%= true %>" class="form-control" name="user[email]" placeholder="<%= t('apps.header.username') %>" type="text"></input>
+    </div>
+    <div class="form-group">
+      <input class="form-control" name="user[password]" placeholder="<%= t('apps.header.password') %>" type="password"></input>
+    </div>
+    <div class="actions">
+      <button class="bt bt-big bt-main" id="sign_in" type="<%= :submit %>">
+        <span class="txt">
+          <%= t('common.sign_in') %>
+        </span>
+        <i class="symbol fa fa-paper-plane"></i>
+      </button>
+      <% if Rails.application.secrets.ldap && Rails.application.secrets.ldap[:enabled] == false %>
+        <p>
+          <a class="ln ln-main" href="/users/password/new">
+            <i class="symbol fa fa-unlock-alt"></i>
+            <span class="txt">
+              <%= t('apps.header.forgot_password') %>
+            </span>
+          </a>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+</div>

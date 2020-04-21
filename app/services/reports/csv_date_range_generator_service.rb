@@ -75,7 +75,7 @@ module Reports
     end
 
     def format_duration(duration)
-      (duration.to_f / (3600 * 8)).to_i
+      (duration.to_f / (1.hour * 8)).to_i
     end
 
     def sanitized_sql
@@ -97,7 +97,7 @@ module Reports
           (u.last_name || ' ' || u.first_name) as user_name, project_id,
             duration, starts_at, ends_at, body, u.id as user_id
         FROM work_times w JOIN users u on w.user_id = u.id
-        WHERE w.active = 't' AND w.starts_at >= ? AND w.ends_at <= ?
+        WHERE w.discarded_at IS NULL AND w.starts_at >= ? AND w.ends_at <= ?
         ORDER BY user_name, starts_at
       )
     end

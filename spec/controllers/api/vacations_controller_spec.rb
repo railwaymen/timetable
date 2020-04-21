@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe Api::VacationsController do
   render_views
   let(:user) { create(:user) }
-  let(:staff_manager) { create(:staff_manager) }
-  let(:admin) { create(:admin) }
+  let(:staff_manager) { create(:user, :staff_manager) }
+  let(:admin) { create(:user, :admin) }
   let(:vacation_applications_query) { instance_double(VacationApplicationsQuery) }
   let(:vacation_service) { instance_double(VacationService) }
   let(:csv_staff_generator_service) { instance_double(CsvStaffGeneratorService) }
@@ -33,7 +33,10 @@ RSpec.describe Api::VacationsController do
   end
 
   def used_vacation_days_response
-    { requested: 0, compassionate: 0, paternity: 0, parental: 0, upbringing: 0, unpaid: 0, rehabilitation: 0, illness: 0, care: 0 }
+    {
+      planned: 0, requested: 0, compassionate: 0, paternity: 0, parental: 0, upbringing: 0, unpaid: 0,
+      rehabilitation: 0, illness: 0, care: 0
+    }
   end
 
   describe '#index' do
@@ -57,7 +60,7 @@ RSpec.describe Api::VacationsController do
       get :index, params: { year: Time.current.year }, format: :json
       expect(response.code).to eql('200')
       available_vacation_days = user.available_vacation_days
-      used_vacation_days = user.used_vacation_days(Vacation.all, true)
+      used_vacation_days = user.used_vacation_days(Vacation.all)
       expect(response.body).to be_json_eql({ vacations: vacations_response, available_vacation_days: available_vacation_days, used_vacation_days: used_vacation_days }.to_json)
     end
 
@@ -67,6 +70,18 @@ RSpec.describe Api::VacationsController do
       get :index, params: { year: (Time.current - 1.year).year }, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to eql({ vacations: [], available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
+    end
+
+    it 'filters user vacation applications by user' do
+      sign_in(staff_manager)
+      user2 = create(:user)
+      vacation = create(:vacation, user: user2)
+      vacations_response = [
+        vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count')
+      ]
+      get :index, params: { user_id: user2.id, year: Time.current.year }, format: :json
+      expect(response.code).to eql('200')
+      expect(response.body).to eql({ vacations: vacations_response, available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
     end
   end
 
@@ -188,7 +203,8 @@ RSpec.describe Api::VacationsController do
                                              errors: [],
                                              vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
                                              previous_status: 'unconfirmed',
-                                             warnings: [] }.to_json)
+                                             warnings: [],
+                                             user_available_vacation_days: nil }.to_json)
     end
   end
 
@@ -215,7 +231,8 @@ RSpec.describe Api::VacationsController do
                                              errors: [],
                                              vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
                                              previous_status: 'unconfirmed',
-                                             warnings: [] }.to_json)
+                                             warnings: [],
+                                             user_available_vacation_days: nil }.to_json)
     end
   end
 
@@ -242,7 +259,8 @@ RSpec.describe Api::VacationsController do
                                              errors: [],
                                              vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
                                              previous_status: 'accepted',
-                                             warnings: [] }.to_json)
+                                             warnings: [],
+                                             user_available_vacation_days: nil }.to_json)
     end
   end
 
@@ -267,7 +285,7 @@ RSpec.describe Api::VacationsController do
       get :generate_csv, format: :csv
       expect(response.code).to eql('200')
       expect(response.header['Content-Type']).to eql('text/csv')
-      expect(response.header['Content-Disposition']).to eql('attachment; filename="vacations_report.csv"')
+      expect(response.header['Content-Disposition']).to include('attachment; filename="vacations_report.csv"')
     end
   end
 
@@ -323,7 +341,7 @@ RSpec.describe Api::VacationsController do
       get :generate_yearly_report, format: :csv
       expect(response.code).to eql('200')
       expect(response.header['Content-Type']).to eql('text/csv')
-      expect(response.header['Content-Disposition']).to eql('attachment; filename="vacations_yearly_report.csv"')
+      expect(response.header['Content-Disposition']).to include('attachment; filename="vacations_yearly_report.csv"')
     end
   end
 end

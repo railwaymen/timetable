@@ -9,31 +9,27 @@ import * as Api from '../../shared/api';
 import Report from './report';
 import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
+import Preloader from '../../shared/preloader';
 
 class ByUsers extends Report {
-  static propTypes = {
-    reports: PropTypes.array,
-    users: PropTypes.array,
-    from: PropTypes.string,
-    to: PropTypes.string,
-    redirectToReferer: PropTypes.string,
-    list: PropTypes.string,
-  }
+  constructor(props) {
+    super(props);
 
-  state = {
-    reports: {},
-    users: [],
-    from: moment().startOf('month').format(),
-    to: moment().endOf('month').format(),
-    redirectToReferer: undefined,
-    list: 'self',
+    this.state = {
+      reports: {},
+      users: [],
+      from: moment().startOf('month').format(),
+      to: moment().endOf('month').format(),
+      redirectToReferer: undefined,
+      list: 'self',
+      sync: false,
+    };
   }
 
   getReports(params = {}) {
     const original = URI(window.location.href);
     let { from, to, list } = params;
 
-    /* eslint-disable */
     if (!from || !to) {
       from = this.state.from;
       to = this.state.to;
@@ -42,7 +38,6 @@ class ByUsers extends Report {
     if (!list) {
       list = this.state.list;
     }
-    /* eslint-enable */
 
     const prepareParams = { from, to, list };
 
@@ -52,6 +47,8 @@ class ByUsers extends Report {
 
     const url = URI(`/api/reports/work_times/by_users?${original.query()}`)
       .addSearch(prepareParams);
+
+    this.setState({ sync: true });
 
     Api.makeGetRequest({ url })
       .then((response) => {
@@ -70,16 +67,17 @@ class ByUsers extends Report {
           to,
           list,
         }, () => {
-          this.setState({
-            users: Object.keys(this.state.reports),
-          });
+          this.setState((prevState) => ({
+            users: Object.keys(prevState.reports),
+            sync: false,
+          }));
         });
       });
   }
 
   render() {
     const {
-      users, reports, from, to, redirectToReferer, list,
+      users, reports, from, to, redirectToReferer, list, sync,
     } = this.state;
 
     if (redirectToReferer) return (<Redirect to={redirectToReferer} />);
@@ -88,16 +86,17 @@ class ByUsers extends Report {
       <div id="content">
         <header className="page-header reports-header row">
           <div className="col-md-3">
-            { (currentUser.isSuperUser() || currentUser.is_leader)
-              ? (
-                <select id="filter-list" className="form-control" name="list" onChange={this.onFilterChange} defaultValue={list}>
-                  { currentUser.isSuperUser()
-                    ? <option value="all">{I18n.t('apps.reports.all')}</option> : null }
-                  { currentUser.is_leader
-                    ? <option value="leader">{I18n.t('apps.reports.my_projects')}</option> : null }
-                  <option value="self">{I18n.t('apps.reports.my_work_hours')}</option>
-                </select>
-              ) : null }
+            { (currentUser.isSuperUser() || currentUser.is_leader) && (
+              <select id="filter-list" className="form-control" name="list" onChange={this.onFilterChange} defaultValue={list}>
+                { currentUser.isSuperUser() && (
+                  <option value="all">{I18n.t('apps.reports.all')}</option>
+                )}
+                { currentUser.is_leader && (
+                  <option value="leader">{I18n.t('apps.reports.my_projects')}</option>
+                )}
+                <option value="self">{I18n.t('apps.reports.my_work_hours')}</option>
+              </select>
+            )}
           </div>
           <div className="col-md-6 text-muted text-center">
             <HorizontalArrows onLeftClick={this.prevMonth} onRightClick={this.nextMonth}>
@@ -106,15 +105,15 @@ class ByUsers extends Report {
             <DateRangeFilter from={from} to={to} onFilter={this.onFilter} onFromChange={this.onFromDateChange} onToChange={this.onToDateChange} />
           </div>
           <div className="col-md-3">
-            { (currentUser.isSuperUser() || currentUser.is_leader)
-              ? (
-                <div className="btn-group pull-right">
-                  <NavLink className="btn btn-default" to="/reports/work_times/by_projects">{I18n.t('apps.reports.by_projects')}</NavLink>
-                  <span className="btn btn-default active">{I18n.t('apps.reports.by_people')}</span>
-                </div>
-              ) : null }
+            { (currentUser.isSuperUser() || currentUser.is_leader) && (
+              <div className="btn-group pull-right">
+                <NavLink className="btn btn-default" to="/reports/work_times/by_projects">{I18n.t('apps.reports.by_projects')}</NavLink>
+                <span className="btn btn-default active">{I18n.t('apps.reports.by_people')}</span>
+              </div>
+            )}
           </div>
         </header>
+        {sync && <Preloader rowsNumber={1} />}
         <div className="row row-eq-height">
           {/* eslint-disable */}
           { users.map((user, index) => (
@@ -126,5 +125,14 @@ class ByUsers extends Report {
     );
   }
 }
+
+ByUsers.propTypes = {
+  reports: PropTypes.array,
+  users: PropTypes.array,
+  from: PropTypes.string,
+  to: PropTypes.string,
+  redirectToReferer: PropTypes.string,
+  list: PropTypes.string,
+};
 
 export default ByUsers;

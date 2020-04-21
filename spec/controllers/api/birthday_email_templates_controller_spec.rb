@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::BirthdayEmailTemplatesController do
   render_views
   let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
+  let(:admin) { create(:user, :admin) }
 
   describe 'GET #index' do
     it 'authenticates user' do
@@ -25,7 +25,7 @@ RSpec.describe Api::BirthdayEmailTemplatesController do
       get :index, format: :json
 
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql([template.attributes.slice('body', 'title', 'name', 'last_used')].to_json)
+      expect(response.body).to be_json_eql([template.attributes.slice('header', 'body', 'bottom', 'title', 'name', 'last_used')].to_json)
     end
   end
 
@@ -47,7 +47,7 @@ RSpec.describe Api::BirthdayEmailTemplatesController do
       get :show, params: { id: template.id }, format: :json
 
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql(template.attributes.slice('body', 'title', 'name').to_json)
+      expect(response.body).to be_json_eql(template.attributes.slice('id', 'header', 'body', 'bottom', 'title', 'last_used', 'name').to_json)
     end
   end
 
@@ -69,7 +69,7 @@ RSpec.describe Api::BirthdayEmailTemplatesController do
 
       expect(response.code).to eql('200')
       template = BirthdayEmailTemplate.first
-      expect(response.body).to eql(template.attributes.slice('id', 'name', 'body', 'title').to_json)
+      expect(response.body).to be_json_eql(template.attributes.slice('id', 'header', 'body', 'bottom', 'title', 'last_used', 'name').to_json)
     end
   end
 

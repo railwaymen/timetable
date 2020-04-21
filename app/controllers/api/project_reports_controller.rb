@@ -2,7 +2,6 @@
 
 module Api
   class ProjectReportsController < BaseController
-    respond_to :json
     before_action :load_project
 
     def create
@@ -20,9 +19,7 @@ module Api
 
     def index
       @reports = @project.project_reports.order(id: :desc)
-      if params[:starts_at].present? && params[:ends_at].present?
-        @reports.where!('starts_at < ? AND ? < ends_at', params[:ends_at], params[:starts_at])
-      end
+      @reports.where!('starts_at < ? AND ? < ends_at', params[:ends_at], params[:starts_at]) if params[:starts_at].present? && params[:ends_at].present?
       authorize @reports
     end
 
@@ -42,6 +39,13 @@ module Api
       last_body = params.require(:project_report)[:last_body].permit!
       @report.update(last_body: last_body)
       respond_with @report
+    end
+
+    def synchronize
+      report = @project.project_reports.find(params[:id])
+      authorize report
+      compared_reports = ReportsComparator.new.call(report)
+      render json: { synchronized: compared_reports }
     end
 
     def destroy

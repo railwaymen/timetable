@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import * as Api from '../../shared/api';
 import BirthdayTemplate from './birthday_template';
 import IncomingBirthdays from './incoming_birthdays';
@@ -9,10 +10,10 @@ class BirthdayTemplates extends React.Component {
     super(props);
 
     this.getBirthdayTemplates = this.getBirthdayTemplates.bind(this);
-  }
 
-  state = {
-    birthdayTemplates: [],
+    this.state = {
+      birthdayTemplates: [],
+    };
   }
 
   componentDidMount() {
@@ -33,6 +34,9 @@ class BirthdayTemplates extends React.Component {
     const { birthdayTemplates } = this.state;
     return (
       <div className="birthday-templates">
+        <Helmet>
+          <title>{I18n.t('common.birthday_templates')}</title>
+        </Helmet>
         <IncomingBirthdays />
         <div className="actions pull-left">
           <div className="disabled-button-wrapper" data-toggle="tooltip" data-placement="right" title="button_disabled_tooltip">
@@ -48,7 +52,9 @@ class BirthdayTemplates extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { birthdayTemplates.map(birthdayTemplate => <BirthdayTemplate key={birthdayTemplate.id} birthdayTemplate={birthdayTemplate} getBirthdayTemplates={this.getBirthdayTemplates} />) }
+            { birthdayTemplates.map((birthdayTemplate) => (
+              <BirthdayTemplate key={birthdayTemplate.id} birthdayTemplate={birthdayTemplate} getBirthdayTemplates={this.getBirthdayTemplates} />
+            ))}
           </tbody>
         </table>
       </div>

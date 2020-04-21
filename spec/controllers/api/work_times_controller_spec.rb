@@ -6,8 +6,8 @@ RSpec.describe Api::WorkTimesController, type: :controller do
   include WorkTimeHelper
   render_views
   let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
-  let(:manager) { create(:manager) }
+  let(:admin) { create(:user, :admin) }
+  let(:manager) { create(:user, :manager) }
   let(:project) { create(:project) }
   let(:body) { SecureRandom.hex }
   let(:starts_at) { Time.zone.now.beginning_of_day + 2.hours }
@@ -47,13 +47,13 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'correct filter data for leader' do
       sign_in user
 
-      worker = FactoryGirl.create :user
-      belonged_project = FactoryGirl.create :project, leader_id: user.id
-      project = FactoryGirl.create :project
+      worker = FactoryBot.create :user
+      belonged_project = FactoryBot.create :project, leader_id: user.id
+      project = FactoryBot.create :project
 
-      work_time = FactoryGirl.create :work_time, user: worker, project: belonged_project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes
-      user_work_time = FactoryGirl.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes
-      FactoryGirl.create :work_time, user: worker, project: project, starts_at: Time.current - 25.minutes, ends_at: Time.current - 20.minutes
+      work_time = FactoryBot.create :work_time, user: worker, project: belonged_project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes
+      user_work_time = FactoryBot.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes
+      FactoryBot.create :work_time, user: worker, project: project, starts_at: Time.current - 25.minutes, ends_at: Time.current - 20.minutes
 
       aggregate_failures 'display data for own project' do
         expected_work_times_json = [
@@ -394,7 +394,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       work_time = create(:work_time, user: user)
       delete :destroy, params: { id: work_time.id }, format: :json
       expect(response.code).to eql('204')
-      expect(work_time.reload.active).to be false
+      expect(work_time.reload.discarded?).to be true
       expect(response.body).to eq('')
     end
 
@@ -403,9 +403,18 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       work_time = create(:work_time)
       delete :destroy, params: { id: work_time.id }, format: :json
       expect(response.code).to eql('204')
-      expect(work_time.reload.active).to be false
+      expect(work_time.reload.discarded?).to be true
       expect(work_time.updated_by_admin).to be true
       expect(response.body).to eq('')
+    end
+
+    it 'does not allow to destroy work time older that 3 business days for regular user' do
+      sign_in(user)
+      work_time = create(:work_time, starts_at: 10.days.ago.beginning_of_day + 8.hours, ends_at: 10.days.ago.beginning_of_day + 10.hours, user: user)
+      delete :destroy, params: { id: work_time.id }, format: :json
+      expect(response.code).to eql('422')
+      expect(response.body).to include_json({ error: :too_old }.to_json).at_path('errors/starts_at')
+      expect(work_time.reload.discarded?).to be false
     end
   end
 end
