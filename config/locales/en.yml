@@ -30,7 +30,6 @@ en:
       new: New Project
     reports:
       new: New Report
-      new_combined_report: Combine Reports
       remove: Remove Report
       sort_by: Sort by
       hours: Hours
@@ -372,7 +371,6 @@ en:
             duration:
               greater_than: Duration should be greater than zero
         combined_report:
-          already_used: Already used in another report
           attributes:
             base:
               multiple_currencies: Multiple currencies are not allowed
