@@ -54,7 +54,6 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
   create_table "combined_reports", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.bigint "project_id"
-    t.datetime "discarded_at"
     t.integer "duration_sum", null: false
     t.decimal "cost", precision: 12, scale: 2, null: false
     t.datetime "starts_at", null: false
@@ -63,7 +62,6 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
     t.string "file_path"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["discarded_at"], name: "index_combined_reports_on_discarded_at"
     t.index ["project_id"], name: "index_combined_reports_on_project_id"
   end
 

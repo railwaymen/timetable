@@ -6,7 +6,9 @@ module Api
     respond_to :json
 
     def index
-      @combined_reports = policy_scope(CombinedReport).kept.where(project_id: @project.id).order(created_at: :desc)
+      @combined_reports = policy_scope(CombinedReport).kept
+                                                      .where(project_id: @project.id)
+                                                      .order(created_at: :desc)
     end
 
     def create
@@ -22,8 +24,9 @@ module Api
       @combined_report = CombinedReport.find(params[:id])
       authorize @combined_report
 
+      select_columns = 'project_reports.*, count(combined_reports_project_reports.id) AS combined_reports_count'
       @project_reports = @combined_report.project_reports
-                                         .select('project_reports.*, count(combined_reports_project_reports.id) AS combined_reports_count')
+                                         .select(select_columns)
                                          .left_outer_joins(:combined_reports_project_reports)
                                          .group('project_reports.id')
     end

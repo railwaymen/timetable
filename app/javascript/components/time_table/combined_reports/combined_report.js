@@ -83,18 +83,16 @@ function CombinedReport(props) {
             ))}
             <tr>
               <td>
-                <strong className="font-weight-bold">{I18n.t('common.total')}</strong>
+                <strong>{I18n.t('common.total')}</strong>
               </td>
               <td className="text-center">
-                <strong className="font-weight-bold">
-                  {`${moment(report.starts_at).formatDate()} - ${moment(report.ends_at).formatDate()}`}
-                </strong>
+                <strong>{`${moment(report.starts_at).formatDate()} - ${moment(report.ends_at).formatDate()}`}</strong>
               </td>
               <td className="text-center">
-                {displayDuration(report.duration_sum)}
+                <strong>{displayDuration(report.duration_sum)}</strong>
               </td>
               <td className="text-center">
-                {`${report.currency} ${parseFloat(report.cost, 10).toFixed(2)}`}
+                <strong>{`${report.currency} ${parseFloat(report.cost, 10).toFixed(2)}`}</strong>
               </td>
               <td colSpan={2} />
             </tr>

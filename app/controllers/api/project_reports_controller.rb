@@ -18,8 +18,9 @@ module Api
     end
 
     def index
+      select_columns = 'project_reports.*, count(combined_reports_project_reports.id) AS combined_reports_count'
       @reports = @project.project_reports
-                         .select('project_reports.*, count(combined_reports_project_reports.id) AS combined_reports_count')
+                         .select(select_columns)
                          .left_outer_joins(:combined_reports_project_reports)
                          .group('project_reports.id')
                          .order(id: :desc)

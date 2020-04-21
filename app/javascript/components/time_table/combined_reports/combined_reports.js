@@ -17,11 +17,8 @@ export default function CombinedReports(props) {
 
   function onDelete(reportId) {
     if (window.confirm(I18n.t('common.confirm'))) {
-      Api.makeDeleteRequest({ url: `/api/combined_reports/${reportId}` }).then((data) => {
-        if (parseInt(data.status, 10) === 204) {
-          getReports();
-        }
-      });
+      Api.makeDeleteRequest({ url: `/api/combined_reports/${reportId}` })
+        .then(() => getReports());
     }
   }
 
