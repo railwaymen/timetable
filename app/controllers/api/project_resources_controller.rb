@@ -16,7 +16,7 @@ module Api
     end
 
     def activity
-      @versions = PaperTrail::Version.where(item_type: [ProjectResource.to_s, ProjectResourceAssignment.to_s]).order(created_at: :desc).limit(10)
+      @versions = PaperTrail::Version.where(item_type: [ProjectResource.to_s, ProjectResourceAssignment.to_s]).order(created_at: :desc).includes(:item).limit(10)
       respond_with @versions
     end
 

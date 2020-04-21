@@ -277,14 +277,10 @@ class ProjectsDistribution extends React.Component {
     return this.state.users.find((user) => user.id === id).name;
   }
 
-  renderProjectTitle(id) {
-    return this.state.projects.find((project) => project.id === id).name;
-  }
-
   renderCreateAssignmentActivity(activity) {
     const values = {
       user: this.renderUser(activity.creator_id),
-      project: this.renderProjectTitle(activity.project_id),
+      project: activity.project_name,
       start: moment(activity.starts_at).format('YYYY-MM-DD'),
       end: moment(activity.ends_at).format('YYYY-MM-DD'),
       resource: this.renderUser(activity.user_id),
@@ -295,7 +291,7 @@ class ProjectsDistribution extends React.Component {
   renderUpdateAssignmentActivity(activity) {
     const values = {
       user: this.renderUser(activity.creator_id),
-      project: this.renderProjectTitle(activity.project_id),
+      project: activity.project_name,
       start: moment(activity.starts_at).format('YYYY-MM-DD'),
       end: moment(activity.ends_at).format('YYYY-MM-DD'),
       resource: this.renderUser(activity.user_id),
@@ -306,7 +302,7 @@ class ProjectsDistribution extends React.Component {
   renderDeleteAssignmentActivity(activity) {
     const values = {
       user: this.renderUser(activity.creator_id),
-      project: this.renderProjectTitle(activity.project_id),
+      project: activity.project_name,
       start: moment(activity.starts_at).format('YYYY-MM-DD'),
       end: moment(activity.ends_at).format('YYYY-MM-DD'),
       resource: this.renderUser(activity.user_id),
