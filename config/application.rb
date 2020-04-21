@@ -17,7 +17,7 @@ module TimeTable
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    config.hosts.push *ENV['TRUSTED_HOSTS'].split(',')
+    config.hosts.push *ENV['TRUSTED_HOSTS'].to_s.split(',')
 
     config.autoload_paths += %W[#{config.root}/lib]
     config.eager_load_paths += %W[#{config.root}/lib]
