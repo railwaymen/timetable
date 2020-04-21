@@ -32,7 +32,7 @@ export default function CombinedReports(props) {
   return (
     <div className="list-of-reports">
       <Helmet>
-        <title>{I18n.t('common.reports')}</title>
+        <title>{I18n.t('common.combined_reports')}</title>
       </Helmet>
       <div className="reports-nav">
         <div className="btn-group pull-right">
@@ -46,7 +46,7 @@ export default function CombinedReports(props) {
         <div className="text-right">
           <Link to={`/projects/${projectId}/new_combined_report`} className="bt bt-main">
             <i className="symbol fa fa-plus" />
-            <span className="bt-txt">{I18n.t('apps.reports.new')}</span>
+            <span className="bt-txt">{I18n.t('apps.combined_reports.new')}</span>
           </Link>
         </div>
       </div>

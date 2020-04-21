@@ -56,7 +56,9 @@ en:
       collision: Collision with following reports
       all_users: All users
     combined_reports:
+      combined_report: Combined report
       combine_reports: Combine reports
+      new: New combined report
       already_used: Already used in another report
     accounting_periods:
       add: Add accounting period

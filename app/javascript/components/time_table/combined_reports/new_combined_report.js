@@ -67,7 +67,7 @@ export default function NewCombinedReport(props) {
   return (
     <div className="list-of-reports">
       <Helmet>
-        <title>{I18n.t('common.reports')}</title>
+        <title>{I18n.t('apps.combined_reports.new')}</title>
       </Helmet>
       <form className="row" onSubmit={onSubmit}>
         <div className="form-group">
@@ -120,7 +120,7 @@ export default function NewCombinedReport(props) {
                     <SynchronizeReport url={`/api/projects/${projectId}/project_reports/${report.id}/synchronize`} />
                   </td>
                   <td>
-                    {report.combined_reports_count > 0 &&(
+                    {report.combined_reports_count > 0 && (
                       <span className="text-danger">
                         {`! ${I18n.t('apps.combined_reports.already_used')}`}
                       </span>

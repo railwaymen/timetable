@@ -35,8 +35,7 @@ function CombinedReport(props) {
     <div>
       <h1>{report.name}</h1>
       <Helmet>
-        {/* TODO: poprawić */}
-        <title>{I18n.t('common.reports')}</title>
+        <title>{`${I18n.t('apps.combined_reports.combined_report')} - ${report.name}`}</title>
       </Helmet>
       <div className="table-responsive">
         <table className="table">
