@@ -5,6 +5,7 @@ json.array! @versions do |version|
   if version.item_type == ProjectResourceAssignment.to_s
     item = version.next ? version.next.reify : version.item
     json.project_id item.project_id
+    json.project_name item.project.name
     json.user_id item.user_id
     json.starts_at item.starts_at
     json.ends_at item.ends_at
