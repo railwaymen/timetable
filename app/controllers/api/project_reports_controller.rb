@@ -18,7 +18,11 @@ module Api
     end
 
     def index
-      @reports = @project.project_reports.order(id: :desc)
+      @reports = @project.project_reports
+                         .select('project_reports.*, count(combined_reports_project_reports.id) AS combined_reports_count')
+                         .left_outer_joins(:combined_reports_project_reports)
+                         .group('project_reports.id')
+                         .order(id: :desc)
       @reports.where!('starts_at < ? AND ? < ends_at', params[:ends_at], params[:starts_at]) if params[:starts_at].present? && params[:ends_at].present?
       authorize @reports
     end

@@ -57,6 +57,7 @@ en:
       all_users: All users
     combined_reports:
       combine_reports: Combine reports
+      already_used: Already used in another report
     accounting_periods:
       add: Add accounting period
       new: New accounting period
@@ -369,6 +370,7 @@ en:
             duration:
               greater_than: Duration should be greater than zero
         combined_report:
+          already_used: Already used in another report
           attributes:
             base:
               multiple_currencies: Multiple currencies are not allowed

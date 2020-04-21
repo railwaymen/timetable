@@ -95,7 +95,7 @@ export default function NewCombinedReport(props) {
                 <th className="text-center">{I18n.t('common.range')}</th>
                 <th className="text-center">{I18n.t('common.duration')}</th>
                 <th className="text-center">{I18n.t('common.cost')}</th>
-                <th colSpan={2} />
+                <th colSpan={3} />
               </tr>
             </thead>
             <tbody>
@@ -118,6 +118,13 @@ export default function NewCombinedReport(props) {
                   </td>
                   <td className="text-center">
                     <SynchronizeReport url={`/api/projects/${projectId}/project_reports/${report.id}/synchronize`} />
+                  </td>
+                  <td>
+                    {report.combined_reports_count > 0 &&(
+                      <span className="text-danger">
+                        {`! ${I18n.t('apps.combined_reports.already_used')}`}
+                      </span>
+                    )}
                   </td>
                   <td className="report-actions text-right">
                     <input
