@@ -58,6 +58,7 @@ en:
       combined_report: Combined report
       combine_reports: Combine reports
       new: New combined report
+      combined_report_name: Combined report name
       already_used: Already used in another report
     accounting_periods:
       add: Add accounting period
@@ -242,6 +243,7 @@ en:
     yesterday: Yesterday
     confirm: Are you sure?
     sum: Sum
+    total: Total
     name: Name
     external_auth: External integration
     custom: Custom
@@ -289,6 +291,7 @@ en:
     remote_work: Remote Work
     hours: Hours
     date: Date
+    refresh: Refresh
   activerecord:
     errors:
       models:

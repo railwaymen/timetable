@@ -14,17 +14,8 @@ function CombinedReport(props) {
       .then(({ data }) => setReport(data));
   }
 
-  function renderReportState(state) {
-    const iconClass = ({
-      done: 'fa-check',
-      editing: 'fa-pencil',
-    })[state] || 'fa-info-circle';
-    return (
-      <span className="report-status">
-        <i className={`symbol fa ${iconClass}`} />
-        {state}
-      </span>
-    );
+  function refresh() {
+    getReport();
   }
 
   useEffect(() => {
@@ -32,21 +23,33 @@ function CombinedReport(props) {
   }, []);
 
   return (
-    <div>
-      <h1>{report.name}</h1>
+    <div className="list-of-reports">
       <Helmet>
         <title>{`${I18n.t('apps.combined_reports.combined_report')} - ${report.name}`}</title>
       </Helmet>
+      <div className="reports-nav">
+        <h1>{report.name}</h1>
+        {report.generated ? (
+          <a className="bt bt-second bt-download" href={`/api/combined_reports/${report.id}/file`}>
+            <i className="symbol fa fa-file-pdf-o" />
+            <span className="txt">{I18n.t('common.download')}</span>
+          </a>
+        ) : (
+          <a onClick={refresh} className="bt bt-second">
+            <span className="bt-txt">{I18n.t('common.refresh')}</span>
+            <i className="symbol fa fa-repeat" />
+          </a>
+        )}
+      </div>
       <div className="table-responsive">
         <table className="table">
           <thead>
             <tr>
               <th>{I18n.t('common.name')}</th>
-              <th className="text-center">{I18n.t('common.state')}</th>
               <th className="text-center">{I18n.t('common.range')}</th>
               <th className="text-center">{I18n.t('common.duration')}</th>
               <th className="text-center">{I18n.t('common.cost')}</th>
-              <th />
+              <th colSpan={2} />
             </tr>
           </thead>
           <tbody>
@@ -54,9 +57,6 @@ function CombinedReport(props) {
               <tr key={project_report.id}>
                 <td>
                   {project_report.name}
-                </td>
-                <td className="text-center">
-                  {renderReportState(project_report.state)}
                 </td>
                 <td className="text-center">
                   {`${moment(project_report.starts_at).formatDate()} - ${moment(project_report.ends_at).formatDate()}`}
@@ -72,17 +72,37 @@ function CombinedReport(props) {
                     url={`/api/projects/${project_report.project_id}/project_reports/${project_report.id}/synchronize`}
                   />
                 </td>
+                <td className="text-center">
+                  {project_report.combined_reports_count > 1 && (
+                    <span className="text-danger">
+                      {`! ${I18n.t('apps.combined_reports.already_used')}`}
+                    </span>
+                  )}
+                </td>
               </tr>
             ))}
+            <tr>
+              <td>
+                <strong className="font-weight-bold">{I18n.t('common.total')}</strong>
+              </td>
+              <td className="text-center">
+                <strong className="font-weight-bold">
+                  {`${moment(report.starts_at).formatDate()} - ${moment(report.ends_at).formatDate()}`}
+                </strong>
+              </td>
+              <td className="text-center">
+                {displayDuration(report.duration_sum)}
+              </td>
+              <td className="text-center">
+                {`${report.currency} ${parseFloat(report.cost, 10).toFixed(2)}`}
+              </td>
+              <td colSpan={2} />
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   );
 }
-
-// CombinedReport.propTypes = {
-
-// }
 
 export default CombinedReport;

@@ -21,6 +21,11 @@ module Api
     def show
       @combined_report = CombinedReport.find(params[:id])
       authorize @combined_report
+
+      @project_reports = @combined_report.project_reports
+                                         .select('project_reports.*, count(combined_reports_project_reports.id) AS combined_reports_count')
+                                         .left_outer_joins(:combined_reports_project_reports)
+                                         .group('project_reports.id')
     end
 
     def destroy

@@ -76,7 +76,7 @@ export default function NewCombinedReport(props) {
               {errors.base.join(', ')}
             </div>
           )}
-          <label>{I18n.t('common.name')}</label>
+          <label>{I18n.t('apps.combined_reports.combined_report_name')}</label>
           {errors.name && <div className="error-description">{errors.name.join(', ')}</div>}
           <input
             className={`${errors.name ? 'error' : ''} form-control`}
