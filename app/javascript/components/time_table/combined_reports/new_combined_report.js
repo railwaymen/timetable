@@ -13,7 +13,7 @@ export default function NewCombinedReport(props) {
   const projectId = parseInt(props.match.params.projectId, 10);
 
   const [reports, setReports] = useState([]);
-  const [gropuReport, setGropuReport, onChange] = useFormHandler({ name: '', report_ids: [] });
+  const [combinedReport, setCombinedReport, onChange] = useFormHandler({ name: '', report_ids: [] });
   const [errors, setErrors] = useState({});
   const history = useHistory();
 
@@ -23,8 +23,8 @@ export default function NewCombinedReport(props) {
   }
 
   function selectReport(reportId) {
-    const newrReportIds = _.xor(gropuReport.report_ids, [reportId]);
-    setGropuReport({ ...gropuReport, report_ids: newrReportIds });
+    const newrReportIds = _.xor(combinedReport.report_ids, [reportId]);
+    setCombinedReport({ ...combinedReport, report_ids: newrReportIds });
   }
 
   function renderReportState(state) {
@@ -46,7 +46,7 @@ export default function NewCombinedReport(props) {
 
     Api.makePostRequest({
       url: `/api/projects/${projectId}/combined_reports`,
-      body: { combined_report: gropuReport },
+      body: { combined_report: combinedReport },
     }).then(({ data: report }) => {
       history.push(`/projects/${projectId}/combined_reports/${report.id}`);
     }).catch((results) => {
@@ -62,7 +62,7 @@ export default function NewCombinedReport(props) {
     getReports();
   }, []);
 
-  const saveDisabled = gropuReport.report_ids.length === 0;
+  const saveDisabled = combinedReport.report_ids.length === 0;
 
   return (
     <div className="list-of-reports">
@@ -71,13 +71,18 @@ export default function NewCombinedReport(props) {
       </Helmet>
       <form className="row" onSubmit={onSubmit}>
         <div className="form-group">
+          {errors.base && (
+            <div className="alert alert-danger">
+              {errors.base.join(', ')}
+            </div>
+          )}
           <label>{I18n.t('common.name')}</label>
           {errors.name && <div className="error-description">{errors.name.join(', ')}</div>}
           <input
             className={`${errors.name ? 'error' : ''} form-control`}
             name="name"
             onChange={onChange}
-            value={gropuReport.name || ''}
+            value={combinedReport.name || ''}
           />
         </div>
 
@@ -117,7 +122,7 @@ export default function NewCombinedReport(props) {
                   <td className="report-actions text-right">
                     <input
                       type="checkbox"
-                      checked={gropuReport.report_ids.includes(report.id)}
+                      checked={combinedReport.report_ids.includes(report.id)}
                       onChange={() => selectReport(report.id)}
                       disabled={report.state !== 'done'}
                     />

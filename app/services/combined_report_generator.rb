@@ -62,9 +62,9 @@ class CombinedReportGenerator
 
   def report_table(pdf)
     records = @combined_report.project_reports.map do |pr|
-      range = format_time_range([pr.starts_at, pr.ends_at])
-      row = [pr.name, range, format_duration(pr.duration_without_ignored)]
+      row = [pr.name, format_time_range([pr.starts_at, pr.ends_at]), format_duration(pr.duration_without_ignored)]
       row << format_cost(pr.cost_without_ignored) if @combined_report.currency.present?
+      row
     end
 
     pdf.table([table_header, *records, report_summary], width: pdf.bounds.width) do |t|
@@ -82,7 +82,8 @@ class CombinedReportGenerator
   end
 
   def report_summary
-    footer = ['Total:', '', format_duration(@combined_report.duration_sum), format_cost(@combined_report.cost)]
+    footer = ['Total:', '', format_duration(@combined_report.duration_sum)]
+    footer << format_cost(@combined_report.cost) if @combined_report.currency.present?
     footer.map do |str|
       { content: str, background_color: STRONG_GRAY, font_style: :bold }
     end

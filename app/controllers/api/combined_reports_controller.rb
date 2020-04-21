@@ -13,11 +13,9 @@ module Api
       @combined_report = @project.combined_reports.build(combined_reports_prams)
       authorize @combined_report
 
-      if @combined_report.valid?
-        CombinedReportCreator.new(@combined_report, params[:combined_report][:report_ids]).call
-      else
-        respond_with @combined_report
-      end
+      combined_report_form = CombinedReportForm.new(@combined_report, params[:combined_report][:report_ids])
+      combined_report_form.save
+      respond_with combined_report_form
     end
 
     def show

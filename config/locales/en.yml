@@ -370,6 +370,9 @@ en:
               greater_than: Duration should be greater than zero
         combined_report:
           attributes:
+            base:
+              multiple_currencies: Multiple currencies are not allowed
+              only_done_allowed: Only done reports are allowed
             name:
               blank: Name is required
   activemodel:
