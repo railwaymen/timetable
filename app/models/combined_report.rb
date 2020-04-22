@@ -5,8 +5,6 @@ class CombinedReport < ApplicationRecord
   has_many :project_reports, through: :combined_reports_project_reports
   belongs_to :project
 
-  accepts_nested_attributes_for :combined_reports_project_reports
-
   validates :name, presence: true
 
   def generated?
