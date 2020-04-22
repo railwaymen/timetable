@@ -5,6 +5,7 @@ require 'prawn/table'
 require 'tempfile'
 require 'uri'
 
+# :nocov:
 class CombinedReportGenerator
   STRONG_GRAY = 'B6B6B6'
   BORDER_COLOR = '808080'
@@ -108,3 +109,4 @@ class CombinedReportGenerator
     File.join(FONT_PATH, font)
   end
 end
+# :nocov:

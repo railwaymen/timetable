@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :combined_reports_project_report do
-    project_report { nil }
-    combined_report { nil }
+    project_report
+    combined_report
   end
 end

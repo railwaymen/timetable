@@ -6,9 +6,7 @@ module Api
     respond_to :json
 
     def index
-      @combined_reports = policy_scope(CombinedReport).kept
-                                                      .where(project_id: @project.id)
-                                                      .order(created_at: :desc)
+      @combined_reports = policy_scope(CombinedReport).where(project_id: @project.id).order(created_at: :desc)
     end
 
     def create
