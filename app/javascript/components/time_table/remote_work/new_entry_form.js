@@ -13,8 +13,8 @@ const NewEntryForm = (props) => {
 
   const defaultRemoteWork = {
     user_id: userId,
-    starts_at: moment().set({ hour: 9, minute: 0 }),
-    ends_at: moment().set({ hour: 17, minute: 0 }),
+    starts_at: moment().set({ hour: 9, minute: 0, second: 0 }),
+    ends_at: moment().set({ hour: 17, minute: 0, second: 0 }),
   };
 
   const [remoteWork, setRemoteWork, onChange] = useFormHandler(defaultRemoteWork);
