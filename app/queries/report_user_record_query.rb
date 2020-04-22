@@ -26,7 +26,7 @@ class ReportUserRecordQuery
   end
 
   def assign_to_class(row)
-    ReportUserRecord.new(row.symbolize_keys)
+    ReportUserRecord.new(**row.symbolize_keys)
   end
 
   def sanitized_sql

@@ -41,8 +41,8 @@ module Api
         work_times_query = work_times_query.joins(:user).where('users.id = ?', params[:user_id])
       end
 
-      @report = ReportProjectRecordQuery.new(report_params).results
-      @tag_report = ReportProjectTagRecordQuery.new(report_params).results
+      @report = ReportProjectRecordQuery.new(**report_params).results
+      @tag_report = ReportProjectTagRecordQuery.new(**report_params).results
 
       @work_times = WorkTimePolicy::Scope.new(current_user, work_times_query)
                                          .resolve
