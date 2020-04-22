@@ -18,6 +18,9 @@ import Timesheet from './time_table/timesheet/timesheet';
 import NewReport from './time_table/project_reports/new_report';
 import EditReport from './time_table/project_reports/edit_report';
 import ProjectReports from './time_table/project_reports/project_reports';
+import CombinedReports from './time_table/combined_reports/combined_reports';
+import CombinedReport from './time_table/combined_reports/combined_report';
+import NewCombinedReport from './time_table/combined_reports/new_combined_report';
 import Vacations from './time_table/vacations/vacations';
 import Staff from './time_table/staff/staff';
 import VacationPeriods from './time_table/vacation_periods/vacation_periods';
@@ -53,6 +56,9 @@ class TimeTable extends React.Component {
             <Route path="/projects/:projectId/reports" component={ProjectReports} />
             <Route path="/projects/:projectId/new_report" component={NewReport} />
             <Route path="/projects/:projectId/edit_report/:reportId" component={EditReport} />
+            <Route path="/projects/:projectId/combined_reports" exact component={CombinedReports} />
+            <Route path="/projects/:projectId/combined_reports/:id" component={CombinedReport} />
+            <Route path="/projects/:projectId/new_combined_report" component={NewCombinedReport} />
             <Route path="/projects/new" component={EditProject} />
             <Route path="/reports/work_times/by_projects" component={ByProjects} />
             <Route path="/reports/work_times/by_users" component={ByUsers} />

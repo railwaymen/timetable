@@ -1,26 +1,21 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { makeGetRequest } from '../../shared/api';
 
-export default class SynchronizeReport extends Component {
-  constructor(props) {
-    super(props);
-    this.synchronizedIcon = this.synchronizedIcon.bind(this);
-    this.onSynchronize = this.onSynchronize.bind(this);
-    this.state = { synchronize: null };
-  }
+function SynchronizeReport(props) {
+  const { url } = props;
+  const [synchronize, setSynchronize] = useState(null);
 
-  onSynchronize(e) {
+  function onSynchronize(e) {
     e.preventDefault();
 
-    makeGetRequest({
-      url: e.currentTarget.href,
-    }).then((response) => {
-      this.setState({ synchronize: response.data.synchronized });
+    makeGetRequest({ url }).then((response) => {
+      setSynchronize(response.data.synchronized);
     });
   }
 
-  synchronizedIcon() {
-    if (this.state.synchronize) {
+  function synchronizedIcon() {
+    if (synchronize) {
       return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="12" cy="12" r="12" fill="#27AE60" />
@@ -39,9 +34,9 @@ export default class SynchronizeReport extends Component {
     );
   }
 
-  checkSychrnonization() {
+  function checkSychrnonization() {
     return (
-      <a onClick={this.onSynchronize} href={`/api/projects/${this.props.projectId}/project_reports/${this.props.id}/synchronize`}>
+      <a onClick={onSynchronize}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="12" cy="12" r="12" fill="#333333" />
           {/* eslint-disable-next-line max-len */}
@@ -51,11 +46,15 @@ export default class SynchronizeReport extends Component {
     );
   }
 
-  render() {
-    return (
-      <div>
-        { this.state.synchronize === null ? this.checkSychrnonization() : this.synchronizedIcon() }
-      </div>
-    );
-  }
+  return (
+    <div>
+      {synchronize === null ? checkSychrnonization() : synchronizedIcon()}
+    </div>
+  );
 }
+
+SynchronizeReport.propTypes = {
+  url: PropTypes.string.isRequired,
+};
+
+export default SynchronizeReport;

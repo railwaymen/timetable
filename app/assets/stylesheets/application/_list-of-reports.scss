@@ -11,4 +11,12 @@
       vertical-align: middle;
     }
   }
+  .reports-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .text-muted {
+    opacity: 0.5;
+  }
 }

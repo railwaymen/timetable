@@ -51,6 +51,29 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
     t.text "header", default: "", null: false
   end
 
+  create_table "combined_reports", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.bigint "project_id"
+    t.integer "duration_sum", null: false
+    t.decimal "cost", precision: 12, scale: 2, null: false
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.string "currency", null: false
+    t.string "file_path"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["project_id"], name: "index_combined_reports_on_project_id"
+  end
+
+  create_table "combined_reports_project_reports", force: :cascade do |t|
+    t.bigint "combined_report_id", null: false
+    t.bigint "project_report_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["combined_report_id"], name: "index_combined_reports_project_reports_on_combined_report_id"
+    t.index ["project_report_id"], name: "index_combined_reports_project_reports_on_project_report_id"
+  end
+
   create_table "external_auths", force: :cascade do |t|
     t.bigint "project_id"
     t.jsonb "data", null: false
@@ -265,6 +288,9 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
 
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"
   add_foreign_key "accounting_periods_recounts", "users"
+  add_foreign_key "combined_reports", "projects"
+  add_foreign_key "combined_reports_project_reports", "combined_reports"
+  add_foreign_key "combined_reports_project_reports", "project_reports"
   add_foreign_key "external_auths", "projects"
   add_foreign_key "external_auths", "users"
   add_foreign_key "project_report_roles", "project_reports"

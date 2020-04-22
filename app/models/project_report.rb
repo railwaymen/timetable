@@ -4,6 +4,8 @@ class ProjectReport < ApplicationRecord
   enum state: { editing: 'editing', done: 'done' }
 
   belongs_to :project
+  has_many :combined_reports_project_reports, dependent: :restrict_with_error
+  has_many :combined_reports, through: :combined_reports_project_reports, dependent: :restrict_with_error
   has_many :project_report_roles, dependent: :destroy
   accepts_nested_attributes_for :project_report_roles
 

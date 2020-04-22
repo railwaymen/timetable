@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+// TODO: this modal should be replaced with '@components/shared/modal'
 const Modal = ({
   id, header, content, actions,
 }) => (
-  <div id={id}>
+  <div id={id} className="unique-modal-class" style={{ display: 'none' }}>
     <div className="ui centered-modal modal transition visible active">
       <i className="close icon" />
-      <div className="header">
-        {header}
-      </div>
+      <div className="header">{header}</div>
       <div className="content">
         {content}
       </div>

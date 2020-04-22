@@ -54,6 +54,12 @@ pl:
       restore_first: Przywróć pierwszą wersję
       collision: Kolizja z następującymi raportami
       all_users: Wszyscy użytkownicy
+    combined_reports:
+      combined_report: Raport łączony
+      combine_reports: Połącz raporty
+      new: Nowy raport łączony
+      combined_report_name: Nazwa raportu łączonego
+      already_used: Jest już w innym raporcie
     accounting_periods:
       add: Dodaj okres rozliczeniowy
       new: Nowy okres rozliczeniowy
@@ -228,6 +234,7 @@ pl:
     projects: Projekty
     people: Osoby
     reports: Raporty
+    combined_reports: Raporty łączone
     accounting_periods: Okresy rozliczeniowe
     timesheet: Czas pracy
     all: Wszystkie
@@ -235,6 +242,7 @@ pl:
     yesterday: Wczoraj
     confirm: Jesteś pewien?
     sum: Suma
+    total: Suma
     name: Nazwa
     external_auth: Integracja z serwisami zewnętrznymi
     custom: Własny
@@ -282,6 +290,7 @@ pl:
     remote_work: Praca zdalna
     hours: Godziny
     date: Data
+    refresh: Odśwież
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -407,6 +416,13 @@ pl:
               blank: Data końcowa jest wymagana
             duration:
               greater_than: Czas trwania musi być większy od zera
+        combined_report:
+          attributes:
+            base:
+              multiple_currencies: Raport zawiera różne waluty
+              only_done_allowed: Można użyć tylko zakończonych raportów
+            name:
+              blank: Nazwa jest wymagana
   activemodel:
     errors:
       models:
