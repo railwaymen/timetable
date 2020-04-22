@@ -63,10 +63,10 @@ end
 group :test do
   gem 'capybara'
   gem 'capybara-selenium'
-  gem 'chromedriver-helper'
   gem 'json_spec'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
+  gem 'webdrivers'
 end
 
 group :development, :test do

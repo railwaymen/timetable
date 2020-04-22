@@ -7,9 +7,9 @@ module Reports
       service_params = { params: params, user: user, project: project }
 
       if project&.vacation? || project&.zks?
-        CsvDateRangeGeneratorService.new(service_params)
+        CsvDateRangeGeneratorService.new(**service_params)
       else
-        CsvGeneratorService.new(service_params)
+        CsvGeneratorService.new(**service_params)
       end
     end
   end

@@ -10,7 +10,7 @@ class ReportProjectTagRecordQuery < RecordQuery
   private
 
   def assign_to_class(row)
-    ReportProjectTagRecord.new(row.symbolize_keys)
+    ReportProjectTagRecord.new(**row.symbolize_keys)
   end
 
   # rubocop:disable Metrics/MethodLength
