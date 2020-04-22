@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import _ from 'lodash';
 import URI from 'urijs';
+import ErrorTooltip from '@components/shared/error_tooltip';
 import { defaultDatePickerProps } from '../../shared/helpers';
 import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
@@ -47,23 +48,11 @@ function Entry(props) {
     });
   }
 
-  function ErrorTooltip({ specificErrors }) {
-    return (
-      <div className="error-tooltip vacation-errors">
-        <ul>
-          {specificErrors.map((error) => (
-            <li key={error}>{error}</li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-
   function DateRange() {
     return (
       <>
         <div className="date">
-          {errors.startDate && <ErrorTooltip specificErrors={errors.startDate} />}
+          {errors.startDate && <ErrorTooltip errors={errors.startDate} className="vacation-errors" />}
           <DatePicker
             {...defaultDatePickerProps}
             name="start_date"
@@ -77,7 +66,7 @@ function Entry(props) {
           />
         </div>
         <div className="date">
-          {errors.endDate && <ErrorTooltip specificErrors={errors.endDate} />}
+          {errors.endDate && <ErrorTooltip errors={errors.endDate} className="vacation-errors" />}
           <DatePicker
             {...defaultDatePickerProps}
             name="end_date"
@@ -97,7 +86,7 @@ function Entry(props) {
   function VacationTypes() {
     return (
       <div className="vacation-type">
-        {errors.vacationType && <ErrorTooltip specificErrors={errors.vacationType} />}
+        {errors.vacationType && <ErrorTooltip errors={errors.vacationType} className="vacation-errors" />}
         <select className="form-control" value={vacationType} onChange={(e) => onVacationChange('vacationType', e.target.value)}>
           <option value="planned">{I18n.t('common.planned')}</option>
           <option value="requested">{I18n.t('common.requested')}</option>
@@ -208,13 +197,12 @@ function Entry(props) {
           description={description}
           onVacationChange={onVacationChange}
           onKeyPress={onKeyPress}
-          ErrorTooltip={ErrorTooltip}
           errors={errors}
         />
       </div>
       <div className="row">
         <div className="base-error">
-          {errors.base && <ErrorTooltip specificErrors={errors.base} />}
+          {errors.base && <ErrorTooltip errors={errors.base} className="vacation-errors" />}
         </div>
       </div>
       <div className="row footer">

@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ErrorTooltip from '@components/shared/error_tooltip';
 
 function Description(props) {
   const {
-    description, onVacationChange, onKeyPress, errors, ErrorTooltip,
+    description, onVacationChange, onKeyPress, errors,
   } = props;
 
   return (
     <div className="description">
-      {errors.description && <ErrorTooltip specificErrors={errors.description} />}
+      {errors.description && <ErrorTooltip errors={errors.description} className="vacation-errors" />}
       <textarea
         className="form-control"
         placeholder={I18n.t('apps.vacations.vacation_description')}
@@ -26,7 +27,6 @@ Description.propTypes = {
   onVacationChange: PropTypes.func.isRequired,
   onKeyPress: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  ErrorTooltip: PropTypes.func.isRequired,
 };
 
 export default Description;
