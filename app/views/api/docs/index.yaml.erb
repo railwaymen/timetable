@@ -513,6 +513,126 @@ paths:
                   should_worked:
                     type: integer
                     example: 604800
+  /vacations:
+    get:
+      tags:
+        - Vacations
+      security:
+        - authentication: []
+      parameters:
+        - name: year
+          in: query
+          schema:
+            type: integer
+            example: "<%= Date.current.year %>"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - available_vacation_days
+                  - used_vacation_days
+                  - vacations
+                properties:
+                  available_vacation_days:
+                    type: integer
+                    example: 0
+                  used_vacation_days:
+                    type: object
+                    properties:
+                      care:
+                        type: integer
+                        example: 0
+                      compassionate:
+                        type: integer
+                        example: 0
+                      illness:
+                        type: integer
+                        example: 0
+                      parental:
+                        type: integer
+                        example: 0
+                      paternity:
+                        type: integer
+                        example: 0
+                      planned:
+                        type: integer
+                        example: 0
+                      rehabilitation:
+                        type: integer
+                        example: 0
+                      requested:
+                        type: integer
+                        example: 0
+                      unpaid:
+                        type: integer
+                        example: 0
+                      upbringing:
+                        type: integer
+                        example: 0
+                  vacations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Vacation'
+    post:
+      tags:
+        - Vacations
+      security:
+        - authentication: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - vacation_type
+                - start_date
+                - end_date
+              properties:
+                vacation_type:
+                  type: string
+                  enum: ['planned', 'requested', 'compassionate', 'others']
+                description:
+                  type: string
+                  example:
+                  description: Required when vacation_type equals 'others'
+                start_date:
+                  type: string
+                  example: "2020/04/22"
+                end_date:
+                  type: string
+                  example: "2020/04/24"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vacation'
+        422:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - errors
+                properties:
+                  errors:
+                    type: object
+                example:
+                  errors:
+                    base:
+                      - error: work_time_exists
+                    description:
+                      - error: blank
+                    start_date:
+                      - error: greater_than_end_date
+                      - error: blank
+                    end_date:
+                      - error: blank
+                    vacation_type:
+                      - error: blank
+                      - error: inclusion
 components:
   schemas:
     AccountingPeriod:
@@ -668,6 +788,36 @@ components:
             - error: greater_than
           project_id:
             - error: blank
+    Vacation:
+      type: object
+      required:
+        - id
+        - start_date
+        - end_date
+        - vacation_type
+        - status
+        - full_name
+      properties:
+        id:
+          type: integer
+          example: 1
+        start_date:
+          type: string
+          example: "2020-04-22"
+        end_date:
+          type: string
+          example: "2020-04-24"
+        vacation_type:
+          type: string
+          example: planned
+          enum: ['planned', 'requested', 'compassionate', 'others']
+        status:
+          type: string
+          example: unconfirmed
+          enum: ['unconfirmed', 'declined', 'approved', 'accepted']
+        full_name:
+          type: string
+          example: Harber Vanda
   securitySchemes:
     authentication:
       type: apiKey

@@ -8,7 +8,7 @@ class Vacation < ApplicationRecord
 
   validates :description, presence: true, if: :others?
   validates :vacation_sub_type, presence: true, if: :accepting_other_vacation, on: :update
-  validates :start_date, :end_date, :vacation_type, :status, :user_id, :business_days_count, presence: true
+  validates :start_date, :end_date, :vacation_type, :status, :user_id, presence: true
   validates :status, inclusion: { in: %w[unconfirmed declined approved accepted] }
   validates :vacation_type, inclusion: { in: %w[planned requested compassionate others] }
   validates :vacation_sub_type, inclusion: { in: %w[paternity parental upbringing unpaid rehabilitation illness care] }, allow_nil: true
@@ -23,7 +23,7 @@ class Vacation < ApplicationRecord
   scope :current_year, -> { where("date_part('year', start_date) = ?", Time.current.year) }
 
   def validates_start_date_less_than_end_date
-    errors.add(:end_date, :validates_end_date) if start_date && end_date && start_date > end_date
+    errors.add(:start_date, :greater_than_end_date) if start_date && end_date && start_date > end_date
   end
 
   def validates_work_time

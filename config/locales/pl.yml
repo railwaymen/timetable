@@ -369,8 +369,8 @@ pl:
           attributes:
             base:
               work_time_exists: Jest już czas pracy z tą samą datą
-            end_date:
-              validates_end_date: Nieprawidłowa data końcowa
+            start_date:
+              greater_than_end_date: Nieprawidłowa data końcowa
         accounting_period:
           attributes:
             starts_at:

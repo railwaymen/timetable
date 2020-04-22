@@ -326,8 +326,8 @@ en:
           attributes:
             base:
               work_time_exists: There is work time with same date
-            end_date:
-              validates_end_date: Invalid end date
+            start_date:
+              greater_than_end_date: Invalid end date
         vacation_interaction:
           base:
             already_interacted: This vacation is already %{action} by you

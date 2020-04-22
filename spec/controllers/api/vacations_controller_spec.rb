@@ -91,9 +91,31 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('401')
     end
 
-    context 'creates vacation' do
+    context 'regular user' do
       it 'with valid params' do
         sign_in(user)
+        create_params = {
+          start_date: Time.current.to_date,
+          end_date: Time.current.to_date + 4.days,
+          vacation_type: 'requested',
+          description: 'Description'
+        }
+        post :create, params: { vacation: create_params }, format: :json
+        expect(response.code).to eql('200')
+        vacation = Vacation.last
+        expect(vacation.reload.user_id).to eql(user.id)
+        expect(vacation.start_date).to eql(create_params[:start_date])
+        expect(vacation.end_date).to eql(create_params[:end_date])
+        expect(vacation.vacation_type).to eql(create_params[:vacation_type])
+        expect(vacation.description).to eql(create_params[:description])
+      end
+    end
+
+    context 'staff manager' do
+      it 'creates vacation for given user with valid params' do
+        sign_in(staff_manager)
+        user = create(:user)
+
         create_params = {
           user_id: user.id,
           start_date: Time.current.to_date,

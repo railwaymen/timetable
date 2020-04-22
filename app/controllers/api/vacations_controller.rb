@@ -20,8 +20,9 @@ module Api
     end
 
     def create
-      @vacation = Vacation.new(vacations_params)
-      @vacation.business_days_count = @vacation.start_date.business_days_until(@vacation.end_date + 1.day)
+      @vacation = current_user.vacations.build
+      @vacation.assign_attributes(permitted_attributes(@vacation))
+      @vacation.business_days_count = @vacation.start_date.business_days_until(@vacation.end_date + 1.day) if @vacation.valid?
       VacationMailer.send_information_to_accountancy(@vacation).deliver_later if @vacation.save
       respond_with @vacation
     end
@@ -101,19 +102,6 @@ module Api
 
     def find_vacation
       @vacation = Vacation.find(params[:vacation_id])
-    end
-
-    def vacations_params
-      params.require(:vacation)
-            .permit(
-              %i[
-                start_date
-                end_date
-                vacation_type
-                description
-                user_id
-              ]
-            )
     end
   end
 end
