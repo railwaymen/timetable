@@ -333,13 +333,26 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('401')
     end
 
-    it 'declines vacation and set self_declined attribute to true' do
-      sign_in(admin)
-      vacation = create(:vacation)
+    context 'regular user' do
+      it 'declines vacation and set self_declined attribute to true' do
+        sign_in(user)
+        vacation = create(:vacation, user: user)
 
-      put :self_decline, params: { vacation_id: vacation.id }, format: :json
-      expect(vacation.reload.status).to eql('declined')
-      expect(vacation.self_declined).to eql(true)
+        put :self_decline, params: { vacation_id: vacation.id }, format: :json
+        expect(vacation.reload.status).to eql('declined')
+        expect(vacation.self_declined).to eql(true)
+      end
+    end
+
+    context 'staff manager' do
+      it 'declines vacation and set self_declined attribute to true' do
+        sign_in(staff_manager)
+        vacation = create(:vacation)
+
+        put :self_decline, params: { vacation_id: vacation.id }, format: :json
+        expect(vacation.reload.status).to eql('declined')
+        expect(vacation.self_declined).to eql(true)
+      end
     end
   end
 

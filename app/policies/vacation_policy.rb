@@ -14,4 +14,14 @@ class VacationPolicy < ApplicationPolicy
   def staff_manager_params
     user_params.concat(%i[user_id])
   end
+
+  class Scope < Scope
+    def resolve
+      if user.admin? || user.staff_manager?
+        scope.all
+      else
+        scope.where(user_id: user.id)
+      end
+    end
+  end
 end

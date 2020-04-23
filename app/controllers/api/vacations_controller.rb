@@ -101,7 +101,7 @@ module Api
     private
 
     def find_vacation
-      @vacation = Vacation.find(params[:vacation_id])
+      @vacation = policy_scope(Vacation).find(params[:vacation_id])
     end
   end
 end

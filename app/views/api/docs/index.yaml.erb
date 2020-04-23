@@ -633,6 +633,23 @@ paths:
                     vacation_type:
                       - error: blank
                       - error: inclusion
+  /vacations/{id}/self_decline:
+    put:
+      tags:
+        - Vacations
+      security:
+        - authentication: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description:
+        404:
+          description:
 components:
   schemas:
     AccountingPeriod:
