@@ -130,7 +130,7 @@ export default class ProjectWorkTimes extends React.Component {
         <Helmet>
           <title>{project.name}</title>
         </Helmet>
-        <header className="page-header projects-header row text-center">
+        <header className="page-header projects-header text-center">
           <h1 className="project-title">
             {project.name}
             {currentUser.isSuperUser() && (
@@ -141,7 +141,7 @@ export default class ProjectWorkTimes extends React.Component {
           </h1>
           <HorizontalArrows className="row" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
             <DateRangeFilter
-              className="col-md-8 col-md-offset-2"
+              className="col-auto mx-auto"
               from={from}
               to={to}
               onFromChange={this.onFromChange}
@@ -149,7 +149,7 @@ export default class ProjectWorkTimes extends React.Component {
               onFilter={() => this.getWorkTimes(this.state)}
             >
               {user_id && (
-                <button type="button" className="btn btn-default" onClick={this.allUsers}>
+                <button type="button" className="btn btn-secondary" onClick={this.allUsers}>
                   {I18n.t('apps.reports.all_users')}
                 </button>
               )}
