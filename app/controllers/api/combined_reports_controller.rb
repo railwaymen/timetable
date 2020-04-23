@@ -10,7 +10,7 @@ module Api
     end
 
     def create
-      @combined_report = @project.combined_reports.build(combined_reports_prams)
+      @combined_report = @project.combined_reports.build(combined_report_prams)
       authorize @combined_report
 
       combined_report_form = CombinedReportForm.new(@combined_report, params[:combined_report][:report_ids])
@@ -53,7 +53,7 @@ module Api
 
     private
 
-    def combined_reports_prams
+    def combined_report_prams
       params.require(:combined_report).permit(%i[name])
     end
 

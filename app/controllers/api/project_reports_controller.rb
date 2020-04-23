@@ -5,16 +5,15 @@ module Api
     before_action :load_project
 
     def create
-      @report = @project.project_reports.new(
-        initial_body: {},
-        last_body: {},
-        starts_at: params[:starts_at],
-        ends_at: params[:ends_at],
-        currency: params[:currency],
-        name: params[:name]
-      )
+      @report = @project.project_reports.new(project_report_prams.merge(initial_body: {}, last_body: {}))
       authorize @report
-      @report = ProjectReportCreator.new.call(@report, params[:project_report_roles])
+
+      # TODO: Refactor
+      if @report.valid? || @report.errors[:name].empty?
+        @report = ProjectReportCreator.new.call(@report, params[:project_report_roles])
+      else
+        respond_with @report
+      end
     end
 
     def index
@@ -92,6 +91,10 @@ module Api
 
     def load_project
       @project = Project.find(params[:project_id])
+    end
+
+    def project_report_prams
+      params.permit(%i[starts_at ends_at currency name])
     end
   end
 end

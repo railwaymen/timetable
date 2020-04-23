@@ -381,6 +381,10 @@ en:
               only_done_allowed: Only done reports are allowed
             name:
               blank: Name is required
+        project_report:
+          attributes:
+            name:
+              blank: Name is required
   activemodel:
     errors:
       models:

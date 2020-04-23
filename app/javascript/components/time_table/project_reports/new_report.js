@@ -3,6 +3,8 @@ import moment from 'moment';
 import { Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import bindAll from 'lodash/bindAll';
+import translateErrors from '@components/shared/translate_errors';
+import ErrorTooltip from '@components/shared/error_tooltip';
 import * as Api from '../../shared/api';
 import DateRangeFilter from '../../shared/date_range_filter';
 import Preloader from '../../shared/preloader';
@@ -25,6 +27,7 @@ export default class NewReport extends React.Component {
       collisions: [],
       redirectTo: null,
       sync: false,
+      errors: {},
     };
   }
 
@@ -89,8 +92,13 @@ export default class NewReport extends React.Component {
           state: { report: data },
         },
       });
-    }).catch(() => {
-      alert('Failed to create report');
+    }).catch((results) => {
+      if (results.errors) {
+        const errors = translateErrors('project_report', results.errors);
+        this.setState({ errors });
+      } else {
+        alert('Failed to create report');
+      }
     });
   }
 
@@ -118,6 +126,7 @@ export default class NewReport extends React.Component {
         </Helmet>
         <div className="row">
           <div className="col-md-6 form-group">
+            {this.state.errors.name && <ErrorTooltip errors={this.state.errors.name} />}
             <label>{I18n.t('common.name')}</label>
             <input className="form-control" value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} />
           </div>
