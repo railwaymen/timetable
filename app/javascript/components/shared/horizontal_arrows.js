@@ -9,14 +9,14 @@ const HorizontalArrows = ({
     <button
       type="button"
       key={0}
-      className="btn btn-link glyphicon glyphicon-chevron-left previous"
+      className="btn btn-link fa fa-chevron-left previous"
       onClick={onLeftClick}
     />
     {children}
     <button
       type="button"
       key={1}
-      className="btn btn-link glyphicon glyphicon-chevron-right next"
+      className="btn btn-link fa fa-chevron-right next"
       onClick={onRightClick}
     />
   </div>

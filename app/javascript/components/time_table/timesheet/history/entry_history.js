@@ -512,11 +512,11 @@ class EntryHistory extends React.Component {
         { currentUser.isSuperUser() && filteredUser && (
           <h1 className="active-user-timesheet">
             { filteredUser.prev_id && (
-              <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" />
+              <a onClick={this.onPreviousUserChange} className="fa fa-chevron-left pull-left" />
             )}
             {currentUser.fullName.apply(filteredUser)}
             { filteredUser.next_id && (
-              <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" />
+              <a onClick={this.onNextUserChange} className="fa fa-chevron-right pull-right" />
             )}
           </h1>
         )}
