@@ -396,6 +396,7 @@ pl:
             email:
               blank: Email jest wymagany
               taken: Email jest już zajęty
+              invalid: Email jest niepoprawny
             first_name:
               blank: Imię jest wymagane
             last_name:

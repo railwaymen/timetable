@@ -353,6 +353,7 @@ en:
             email:
               blank: Email is required
               taken: Email is already taken
+              invalid: Email is invalid
             first_name:
               blank: First name is required
             last_name:

@@ -12,6 +12,8 @@ class UpdateUserForm
 
   def save
     user.update(@attributes.slice(:email, :first_name, :last_name, :phone, :contract_name, :lang, :birthdate))
+    return if user.invalid?
+
     active ? user.undiscard : user.discard
   end
 end
