@@ -27,7 +27,7 @@ const DateRangeFilter = ({
       name="to"
       placeholderText={I18n.t('common.to')}
     />
-    <button type="button" className="btn btn-default filter" onClick={onFilter}>
+    <button type="button" className="btn btn-secondary filter" onClick={onFilter}>
       {I18n.t('apps.reports.filter')}
     </button>
     {children}

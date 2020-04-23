@@ -196,7 +196,7 @@ class EditBirthdayTemplate extends React.Component {
               value={birthdayTemplate.bottom || ''}
             />
           </div>
-          <NavLink activeClassName="" className="btn btn-default" to="/birthday_templates">{I18n.t('common.cancel')}</NavLink>
+          <NavLink activeClassName="" className="btn btn-secondary" to="/birthday_templates">{I18n.t('common.cancel')}</NavLink>
           <div className="btn btn-primary" onClick={this.onSubmitAndPreview}>{I18n.t('apps.birthday_templates.save_and_preview')}</div>
           <div className="btn btn-primary" value={I18n.t('common.save')} onClick={this.onSubmit}>{I18n.t('common.save')}</div>
         </div>
