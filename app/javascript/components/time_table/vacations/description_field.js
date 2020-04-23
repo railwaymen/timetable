@@ -8,10 +8,10 @@ function Description(props) {
   } = props;
 
   return (
-    <div className="description">
+    <div className="description w-100">
       {errors.description && <ErrorTooltip errors={errors.description} className="vacation-errors" />}
       <textarea
-        className="form-control"
+        className="form-control w-100"
         placeholder={I18n.t('apps.vacations.vacation_description')}
         name="description"
         value={description}

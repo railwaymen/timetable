@@ -34,10 +34,8 @@ function Vacations() {
         <title>{I18n.t('common.vacations')}</title>
       </Helmet>
       <div className="row">
-        <div className="vacations-container">
-          <Entry selectedUser={selectedUser} setSelectedUser={setSelectedUser} getVacations={getVacations} />
-          <EntryHistory vacationsInfo={vacationsInfo} selectedYear={selectedYear} setSelectedYear={setSelectedYear} getVacations={getVacations} />
-        </div>
+        <Entry selectedUser={selectedUser} setSelectedUser={setSelectedUser} getVacations={getVacations} />
+        <EntryHistory vacationsInfo={vacationsInfo} selectedYear={selectedYear} setSelectedYear={setSelectedYear} getVacations={getVacations} />
       </div>
     </div>
   );
