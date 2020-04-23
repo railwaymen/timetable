@@ -4,3 +4,4 @@ User.where(email: 'staffmanager@example.com').first_or_create! first_name: 'Staf
 
 Project.where(name: 'Lunch').first_or_create! internal: true, lunch: true
 Project.where(name: 'Vacation').first_or_create! internal: true, autofill: true
+Project.where(name: 'ZKS').first_or_create! internal: true, autofill: true
