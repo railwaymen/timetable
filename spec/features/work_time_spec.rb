@@ -23,7 +23,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   def create_task(message, from, to)
     within('#content') do
       fill_in 'What have you done ?', with: message
-      find('.project-dropdown').click
+      find('.project-dropdown #search-input').click
       find('.project-dropdown .item:nth-child(1)').click
       find('#start').click
       fill_in 'start', with: from

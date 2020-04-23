@@ -1,0 +1,36 @@
+.nav-link {
+  color: rgba(0,0,0,0.87);
+}
+
+.sign_out,
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: #E0E1E2;
+  color: rgba(0,0,0,0.87);
+}
+
+.user-nav {
+  white-space: nowrap;
+  flex-direction: row;
+}
+
+
+.navbar-nav:not(.user-nav) {
+  flex-wrap: wrap;
+}
+
+.navbar-collapse {
+  @media (max-width: 991px) {
+    position: absolute;
+    z-index: 200;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #E0E1E2;
+    .nav-pills {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+}
