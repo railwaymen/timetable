@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_06_085027) do
+ActiveRecord::Schema.define(version: 2020_04_23_111722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,7 +108,7 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
     t.datetime "starts_at", null: false
     t.datetime "ends_at", null: false
     t.string "currency", default: "", null: false
-    t.string "name", default: "", null: false
+    t.string "name", null: false
     t.string "file_path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

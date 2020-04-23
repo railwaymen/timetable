@@ -9,7 +9,7 @@ class ProjectReport < ApplicationRecord
   has_many :project_report_roles, dependent: :destroy
   accepts_nested_attributes_for :project_report_roles
 
-  validates :project, presence: true
+  validates :project, :name, presence: true
   validates :initial_body, presence: true
   validates :last_body, presence: true
   validate :body_did_not_lost_duration, on: :update

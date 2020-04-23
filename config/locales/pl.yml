@@ -424,6 +424,10 @@ pl:
               only_done_allowed: Można użyć tylko zakończonych raportów
             name:
               blank: Nazwa jest wymagana
+        project_report:
+          attributes:
+            name:
+              blank: Nazwa jest wymagana
   activemodel:
     errors:
       models:
