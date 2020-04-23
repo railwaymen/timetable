@@ -83,9 +83,9 @@ class ByProjects extends Report {
         <Helmet>
           <title>{I18n.t('common.reports')}</title>
         </Helmet>
-        <header className="page-header reports-header row">
+        <header className="page-header reports-header row align-items-end">
           <div className="col-md-3">
-            <p style={{ padding: '6px' }}>
+            <p className="mb-0" style={{ padding: '6px' }}>
               {I18n.t('apps.reports.sort_by')}
               :
             </p>
@@ -102,8 +102,8 @@ class ByProjects extends Report {
           </div>
           <div className="col-md-3">
             <div className="btn-group pull-right">
-              <span className="btn btn-default active">{I18n.t('apps.reports.by_projects')}</span>
-              <NavLink className="btn btn-default" to="/reports/work_times/by_users">{I18n.t('apps.reports.by_people')}</NavLink>
+              <span className="btn btn-secondary active">{I18n.t('apps.reports.by_projects')}</span>
+              <NavLink className="btn btn-secondary" to="/reports/work_times/by_users">{I18n.t('apps.reports.by_people')}</NavLink>
             </div>
           </div>
         </header>

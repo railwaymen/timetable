@@ -9,7 +9,7 @@ const ReportProjectTagRecord = ({ reportRows }) => {
       <div className="panel-heading">
         <h4>
           <span className="badge">{formattedDuration(overallData.project_duration)}</span>
-          <i className="glyphicon glyphicon-tags" />
+          <i className="fa fa-tags" />
           {overallData.project_name}
         </h4>
       </div>
@@ -18,7 +18,7 @@ const ReportProjectTagRecord = ({ reportRows }) => {
           <li className="list-group-item record" key={index}> {/* eslint-disable-line */}
             <input type="button" disabled className={`tags selected ${row.tag}`} value={I18n.t(`apps.tag.${row.tag}`).toUpperCase()} />
             {countDurationPercentage(row.duration, row.project_duration)}
-            <span className="badge">{formattedDuration(row.duration)}</span>
+            <span className="badge badge-dark ml-auto">{formattedDuration(row.duration)}</span>
           </li>
         )) }
       </ul>
