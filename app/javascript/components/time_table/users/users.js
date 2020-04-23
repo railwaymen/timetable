@@ -24,12 +24,12 @@ function Users() {
       <Helmet>
         <title>{I18n.t('common.people')}</title>
       </Helmet>
-      <div className="actions pull-left">
+      <div className="actions pull-left mb-3">
         <div className="disabled-button-wrapper" data-toggle="tooltip" data-placement="right" title="button_disabled_tooltip">
-          <NavLink className="btn btn-default" to="/users/new">{I18n.t('common.add')}</NavLink>
+          <NavLink className="btn btn-secondary" to="/users/new">{I18n.t('common.add')}</NavLink>
         </div>
       </div>
-      <div className="pull-left">
+      <div className="pull-left mb-3">
         <select
           name="visibility"
           id="filter"
@@ -51,6 +51,7 @@ function Users() {
             <th>Email</th>
             <th>{I18n.t('apps.users.contract_id')}</th>
             <th>{I18n.t('apps.users.phone')}</th>
+            <th />
           </tr>
         </thead>
         <tbody>
