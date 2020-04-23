@@ -6,10 +6,10 @@ function UserSlider(props) {
   const { user, setUserId } = props;
 
   return (
-    <div className="col-md-offset-3 col-md-6 vert-offset-bottom clearfix">
+    <div className="offset-md-3 col-md-6 vert-offset-bottom clearfix">
       <h3 className="text-center text-muted">
         {user.prev_id && (
-          <a onClick={() => setUserId(user.prev_id)} className="glyphicon glyphicon-chevron-left pull-left" />
+          <a onClick={() => setUserId(user.prev_id)} className="fa fa-chevron-left pull-left" />
         )}
 
         {user.email ? (
@@ -22,7 +22,7 @@ function UserSlider(props) {
 
         <span>
           {user.next_id && (
-            <a onClick={() => setUserId(user.next_id)} className="glyphicon glyphicon-chevron-right pull-right" />
+            <a onClick={() => setUserId(user.next_id)} className="fa fa-chevron-right pull-right" />
           )}
         </span>
       </h3>

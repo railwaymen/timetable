@@ -110,16 +110,16 @@ class VacationPeriods extends React.Component {
             </div>
           </div>
         )}
-        <div className="col-md-offset-3 col-md-6 vert-offset-bottom clearfix">
+        <div className="offset-md-3 col-md-6 vert-offset-bottom clearfix">
           { currentUser.admin && (
             <h3 className="text-center text-muted">
               {user.prev_id && (
-                <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" />
+                <a onClick={this.onPreviousUserChange} className="fa fa-chevron-left pull-left" />
               )}
               {this.renderUserInfo(user)}
               <span>
                 {user.next_id && (
-                  <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" />
+                  <a onClick={this.onNextUserChange} className="fa fa-chevron-right pull-right" />
                 )}
               </span>
             </h3>
