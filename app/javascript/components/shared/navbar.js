@@ -12,7 +12,7 @@ const onLogout = () => {
 const Navbar = () => (
   <div className="navbar">
     <div className="ui secondary menu">
-      { currentUser.admin && (
+      { currentUser.isAdminOrManager() && (
         <NavLink className="item" to="/users">{I18n.t('common.people')}</NavLink>
       )}
       { currentUser.canManageStaff() && (
