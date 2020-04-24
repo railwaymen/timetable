@@ -8,7 +8,7 @@ function EntryHistory(props) {
     vacationsInfo, selectedYear, setSelectedYear, getVacations,
   } = props;
   const { vacations, availableVacationDays, usedVacationDays } = vacationsInfo;
-  const [usedVacationsExpanded, setUsedVacationsExpanded] = useState(false);
+  const [usedVacationsExpanded] = useState(false);
   const [collapsibleProperties, setCollapsibleProperties] = useState({});
   const [years, setYears] = useState([]);
 
@@ -53,7 +53,7 @@ function EntryHistory(props) {
         <td>{I18n.t('apps.birthday_templates.days', { count: vacation.business_days_count })}</td>
         <td className={statusClass}>{status}</td>
         <td className="trash text-right">
-          <button className="btn btn-outline-danger" onClick={() => onTrashClick(vacation.id)}>
+          <button type="button" className="btn btn-outline-danger" onClick={() => onTrashClick(vacation.id)}>
             {vacation.status === 'unconfirmed' ? (
               <i className="symbol fa fa-trash" />
             ) : '' }
