@@ -48,7 +48,7 @@ module Api
     def matching_fulltime
       @accounting_period = AccountingPeriod.where(user_id: filtered_user_id, full_time: true)
                                            .where('? >= starts_at AND ? <= ends_at', params[:date], params[:date]).first
-      @should_worked = calculate_should_worked(@accounting_period)
+      @should_worked = calculate_should_worked(@accounting_period, params[:date])
     end
 
     def recount
@@ -58,8 +58,8 @@ module Api
 
     private
 
-    def calculate_should_worked(accounting_period)
-      return if accounting_period.nil?
+    def calculate_should_worked(accounting_period, date)
+      return if accounting_period.nil? || date.to_date.beginning_of_month != Time.zone.now.beginning_of_month.to_date
 
       days_to_date = @accounting_period.starts_at.to_date.business_days_until(Time.zone.today + 1.day)
       accounting_period_days = @accounting_period.starts_at.to_date.business_days_until(accounting_period.ends_at + 1.day)

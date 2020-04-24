@@ -24,7 +24,7 @@ const Navbar = () => (
     </button>
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav">
-        { currentUser.admin && (
+        { currentUser.isAdminOrManager() && (
           <li className="nav-pills">
             <NavLink className="nav-link" to="/users">{I18n.t('common.people')}</NavLink>
           </li>
