@@ -496,10 +496,10 @@ class EntryHistory extends React.Component {
         </div>
         <button type="button" className="btn btn-outline-info fa fa-chevron-left" onClick={() => this.switchMonth(-1)} />
         <div className="dropdown">
-          <button className="btn btn-info dropdown-toggle" type="button" id="monthsFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button className="btn btn-info dropdown-toggle" type="button" id="months" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {moment(from).format('MMMM') || I18n.t('apps.timesheet.select_month')}
           </button>
-          <div className="dropdown-menu" aria-labelledby="monthsFilters">
+          <div className="dropdown-menu" aria-labelledby="months">
             {months.map((month) => (
               <a key={month.name} className="dropdown-item" data-month={JSON.stringify(month)} onClick={this.onMonthFilter} href={`/timesheet?project_id=${month.date}`}>
                 {month.name}
