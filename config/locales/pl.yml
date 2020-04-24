@@ -206,6 +206,7 @@ pl:
       exit: Wyjdź
       add_event: Dodaj event
       edit_event: Edytuj event
+      confirm_delete: 'Czy na pewno chcesz usunąć zasób {{resource_name}} ?'
       activity:
         create_resource: '{{user}} dodał zasób {{resource}}'
         delete_resource: '{{user}} usunął zasób {{resource}}'
