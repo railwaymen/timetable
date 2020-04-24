@@ -121,7 +121,7 @@ RSpec.describe Api::CombinedReportsController do
       delete :destroy, params: { id: combined_report.id }, format: :json
 
       expect(response.code).to eql('204')
-      expect(CombinedReport.find_by(id: combined_report.id)).to be_nil
+      expect(combined_report.reload.discarded_at).to_not be_nil
     end
   end
 

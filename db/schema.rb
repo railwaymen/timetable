@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_23_111722) do
+ActiveRecord::Schema.define(version: 2020_04_23_125511) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +62,8 @@ ActiveRecord::Schema.define(version: 2020_04_23_111722) do
     t.string "file_path"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_combined_reports_on_discarded_at"
     t.index ["project_id"], name: "index_combined_reports_on_project_id"
   end
 
@@ -70,7 +72,9 @@ ActiveRecord::Schema.define(version: 2020_04_23_111722) do
     t.bigint "project_report_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "discarded_at"
     t.index ["combined_report_id"], name: "index_combined_reports_project_reports_on_combined_report_id"
+    t.index ["discarded_at"], name: "index_combined_reports_project_reports_on_discarded_at"
     t.index ["project_report_id"], name: "index_combined_reports_project_reports_on_project_report_id"
   end
 
@@ -93,6 +97,8 @@ ActiveRecord::Schema.define(version: 2020_04_23_111722) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_project_report_roles_on_discarded_at"
     t.index ["project_report_id", "user_id"], name: "index_project_report_roles_on_project_report_id_and_user_id", unique: true
     t.index ["project_report_id"], name: "index_project_report_roles_on_project_report_id"
     t.index ["user_id"], name: "index_project_report_roles_on_user_id"
@@ -112,6 +118,8 @@ ActiveRecord::Schema.define(version: 2020_04_23_111722) do
     t.string "file_path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_project_reports_on_discarded_at"
     t.index ["project_id"], name: "index_project_reports_on_project_id"
   end
 

@@ -383,6 +383,8 @@ en:
               blank: Name is required
         project_report:
           attributes:
+            base:
+              combined_reports_exist: Report cannot be deleted because is used in a combined report
             name:
               blank: Name is required
   activemodel:

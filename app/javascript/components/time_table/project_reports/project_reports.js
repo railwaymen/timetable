@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
 import SynchronizeReport from './synchronize_report';
@@ -36,8 +37,9 @@ export default function ProjectReports(props) {
         if (data.status === 204) {
           getReports();
         } else if (data.status === 422) {
-          data.json().then(() => {
-            alert('You cannot remove this report');
+          data.json().then((results) => {
+            const errors = translateErrors('project_report', results.errors);
+            alert(errors.base.join(', '));
           });
         }
       });

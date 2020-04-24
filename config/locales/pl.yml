@@ -427,6 +427,8 @@ pl:
               blank: Nazwa jest wymagana
         project_report:
           attributes:
+            base:
+              combined_reports_exist: Nie można usunąć raportu, ponieważ jest użyty w raporcie łączonym
             name:
               blank: Nazwa jest wymagana
   activemodel:

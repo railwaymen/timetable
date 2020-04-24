@@ -6,7 +6,7 @@ class GenerateCombinedReportWorker
   include Sidekiq::Worker
 
   def perform(id)
-    combined_report = CombinedReport.find(id)
+    combined_report = CombinedReport.kept.find(id)
     file = File.new(file_path(combined_report), 'w').tap(&:close)
     CombinedReportGenerator.new(combined_report).call(file)
     combined_report.update!(file_path: file.path)
