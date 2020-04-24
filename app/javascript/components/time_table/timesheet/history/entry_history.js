@@ -28,6 +28,7 @@ class EntryHistory extends React.Component {
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
     this.translateTag = this.translateTag.bind(this);
+    this.switchMonth = this.switchMonth.bind(this);
 
     this.state = {
       workHours: [],
@@ -354,6 +355,18 @@ class EntryHistory extends React.Component {
     }
   }
 
+  switchMonth(value) {
+    const from = moment(this.state.from).add(value, 'months');
+    const to = from.clone().endOf('month');
+
+    this.getWorkHours({
+      from: from.format('YYYY-MM-DDTHH:mm:ssZ'),
+      to: to.format('YYYY-MM-DDTHH:mm:ssZ'),
+      project_id: this.state.project_id,
+      pushHistory: true,
+    });
+  }
+
   formattedDuration(value) {
     if (!value || parseInt(value, 10) === 0) {
       return '00:00';
@@ -465,31 +478,36 @@ class EntryHistory extends React.Component {
   renderFilters() {
     const { projects } = this.props;
     const { months, from, selectedProject } = this.state;
+
     return (
-      <div>
-        <div id="months" className="button dropdown right floated scrolling teal ui" tabIndex="0">
-          <div className="text">{moment(from).format('MMMM') || I18n.t('apps.timesheet.select_month')}</div>
-          <i className="dropdown icon" />
-          <div className="menu" tabIndex="-1">
-            { months.map((month) => (
-              <a key={month.name} className="item" data-month={JSON.stringify(month)} onClick={this.onMonthFilter} href={`/timesheet?project_id=${month.date}`}>
-                {month.name}
-              </a>
-            )) }
-          </div>
-        </div>
-        <div className="button dropdown right floated scrolling teal ui" tabIndex="0">
-          <div className="text">{selectedProject.name ? selectedProject.name : I18n.t('apps.timesheet.select_project')}</div>
-          <i className="dropdown icon" />
-          <div className="menu" tabIndex="-1">
-            <a className="item" data-project-id="" href="" onClick={this.onProjectFilter}>{I18n.t('common.all')}</a>
-            { projects.map((project) => (
-              <a onClick={this.onProjectFilter} data-project-id={project.id} className="item" key={project.id} href={`/timesheet?project_id=${project.id}`}>
+      <div className="float-right row mx-0">
+        <div className="dropdown">
+          <button className="btn btn-info dropdown-toggle" type="button" id="projectFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {selectedProject.name ? selectedProject.name : I18n.t('apps.timesheet.select_project')}
+          </button>
+          <div className="dropdown-menu" aria-labelledby="projectFilters">
+            <a className="dropdown-item" data-project-id="" href="" onClick={this.onProjectFilter}>{I18n.t('common.all')}</a>
+            {projects.map((project) => (
+              <a onClick={this.onProjectFilter} data-project-id={project.id} className="dropdown-item" key={project.id} href={`/timesheet?project_id=${project.id}`}>
                 {project.name}
               </a>
-            )) }
+            ))}
           </div>
         </div>
+        <button type="button" className="btn btn-outline-info fa fa-chevron-left" onClick={() => this.switchMonth(-1)} />
+        <div className="dropdown">
+          <button className="btn btn-info dropdown-toggle" type="button" id="months" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {moment(from).format('MMMM') || I18n.t('apps.timesheet.select_month')}
+          </button>
+          <div className="dropdown-menu" aria-labelledby="months">
+            {months.map((month) => (
+              <a key={month.name} className="dropdown-item" data-month={JSON.stringify(month)} onClick={this.onMonthFilter} href={`/timesheet?project_id=${month.date}`}>
+                {month.name}
+              </a>
+            ))}
+          </div>
+        </div>
+        <button type="button" className="btn btn-outline-info fa fa-chevron-right" onClick={() => this.switchMonth(1)} />
       </div>
     );
   }

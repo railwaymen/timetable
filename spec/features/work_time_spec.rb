@@ -82,7 +82,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
   def select_2_months_ago_tasks(work_time)
     find('#months').click
-    find('a.item', text: "#{work_time.starts_at.strftime('%b')} #{work_time.starts_at.strftime('%y')}").click
+    find('a.dropdown-item', text: "#{work_time.starts_at.strftime('%b')} #{work_time.starts_at.strftime('%y')}").click
   end
 
   it 'Timesheet' do
