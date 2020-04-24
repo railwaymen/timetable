@@ -105,7 +105,27 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         id: project_report.id
       }
       expect(response).to be_successful
-      expect(ProjectReport.find_by(id: project_report.id)).to be_nil
+      expect(project_report.reload.discarded_at).to_not be_nil
+    end
+
+    it 'checks if related combined report exists' do
+      project_report = create(:project_report, project: project)
+      combined_reports_project_report = create(:combined_reports_project_report, project_report: project_report)
+
+      aggregate_failures 'returns error' do
+        delete :destroy, params: { format: 'json', project_id: project.id, id: project_report.id }
+
+        expect(response.code).to eql('422')
+        expect(response.body).to include_json({ error: :combined_reports_exist }.to_json).at_path('errors/base')
+      end
+
+      aggregate_failures 'deletes project report if combined report is discarded' do
+        combined_reports_project_report.combined_report.discard
+        delete :destroy, params: { format: 'json', project_id: project.id, id: project_report.id }
+
+        expect(response).to be_successful
+        expect(project_report.reload.discarded_at).to_not be_nil
+      end
     end
   end
 

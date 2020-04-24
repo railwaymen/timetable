@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ProjectReportRole < ApplicationRecord
+  include Discard::Model
+
   enum role: { developer: 'developer', qa: 'qa', ux: 'ux', pm: 'pm', ignored: 'ignored' }
 
   belongs_to :project_report

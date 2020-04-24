@@ -13,7 +13,7 @@ class CombinedReportForm
   def initialize(combined_report, project_report_ids)
     @combined_report = combined_report
     @project_report_ids = project_report_ids
-    @project_reports = ProjectReport.where(id: @project_report_ids)
+    @project_reports = ProjectReport.kept.where(id: @project_report_ids)
 
     raise 'Incorrect values for project_report_ids' if @project_report_ids.length != @project_reports.length
   end
