@@ -137,7 +137,7 @@ function EditProject(props) {
               />
             </label>
           </div>
-          <NavLink className="btn btn-default" to="/projects/list">{I18n.t('common.cancel')}</NavLink>
+          <NavLink className="btn btn-secondary" to="/projects/list">{I18n.t('common.cancel')}</NavLink>
           <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={onSubmit} />
         </form>
       </>

@@ -135,7 +135,7 @@ class ProjectsDistribution extends React.Component {
         </div>
         <div style={{ width: firstMonthPercentageWidth }}>
           <div className="chevron-left">
-            <i className="glyphicon glyphicon-chevron-left" onClick={this.prevClick} />
+            <i className="fa fa-chevron-left" onClick={this.prevClick} />
           </div>
           {firstMonth}
         </div>
@@ -145,7 +145,7 @@ class ProjectsDistribution extends React.Component {
         <div style={{ width: thirdMonthPercentageWidth }}>
           {thirdMonth}
           <div className="chevron-right">
-            <i className="glyphicon glyphicon-chevron-right" onClick={this.nextClick} />
+            <i className="fa fa-chevron-right" onClick={this.nextClick} />
           </div>
         </div>
       </div>

@@ -27,11 +27,11 @@ function ProjectsList() {
       <div className="ui grid">
         <div className="sixteen wide column">
           <div className="btn-group pull-right">
-            <NavLink className="btn btn-default" exact to="/projects">{I18n.t('common.rank')}</NavLink>
-            <NavLink className="btn btn-default active" to="/projects/list">{I18n.t('common.all')}</NavLink>
+            <NavLink className="btn btn-secondary" exact to="/projects">{I18n.t('common.rank')}</NavLink>
+            <NavLink className="btn btn-secondary active" to="/projects/list">{I18n.t('common.all')}</NavLink>
           </div>
           { currentUser.isSuperUser() && (
-            <NavLink to="/projects/new" className="btn btn-default pull-left">{I18n.t('common.add')}</NavLink>
+            <NavLink to="/projects/new" className="btn btn-secondary pull-left">{I18n.t('common.add')}</NavLink>
           )}
           <div className="btn-group pull-left">
             <select

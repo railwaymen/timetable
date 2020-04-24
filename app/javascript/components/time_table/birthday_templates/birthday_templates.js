@@ -40,7 +40,7 @@ class BirthdayTemplates extends React.Component {
         <IncomingBirthdays />
         <div className="actions pull-left">
           <div className="disabled-button-wrapper" data-toggle="tooltip" data-placement="right" title="button_disabled_tooltip">
-            <NavLink className="btn btn-default" to="/birthday_templates/new">{I18n.t('common.add')}</NavLink>
+            <NavLink className="btn btn-secondary" to="/birthday_templates/new">{I18n.t('common.add')}</NavLink>
           </div>
         </div>
         <table className="table table-striped">

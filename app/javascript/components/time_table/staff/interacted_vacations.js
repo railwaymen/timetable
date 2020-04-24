@@ -26,8 +26,8 @@ function InteractedVacations(props) {
   const sortIcon = sort === 'asc' ? 'up' : 'down';
 
   return (
-    <div className="row accepted-or-declined-vacations">
-      <div className="vacations-title">
+    <div className="accepted-or-declined-vacations">
+      <div className="vacations-title row justify-content-start mx-0 my-2 position-relative">
         { window.currentUser.staff_manager && (
           <div className="left-title" onClick={() => setShowDeclined(!showDeclined)}>
             {I18n.t(`apps.staff.${title.leftTitle}`)}
@@ -38,7 +38,7 @@ function InteractedVacations(props) {
         </div>
         <div className="right-title" onClick={onSortChange}>
           {I18n.t('apps.staff.sort_direction')}
-          <i className={`glyphicon glyphicon-chevron-${sortIcon}`} />
+          <i className={`fa fa-chevron-${sortIcon}`} />
         </div>
       </div>
       {interactedVacations.map((vacation) => (

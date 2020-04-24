@@ -35,7 +35,7 @@ function ReportProjectRecord(props) {
             (
             {countDurationPercentage(row.duration, row.project_duration)}
             )
-            <span className="badge">{formattedDuration(row.duration)}</span>
+            <span className="badge badge-dark ml-auto">{formattedDuration(row.duration)}</span>
           </li>
         ))}
       </ul>

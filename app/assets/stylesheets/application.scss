@@ -106,12 +106,17 @@ div.react-datepicker__input-container {
   margin-bottom: 20px;
 }
 
+.panel {
+  width: 100%;
+}
 .panel-heading {
   .badge {
     float: right;
   }
 }
 .list-group-item {
+  display: flex;
+  align-items: flex-end;
   &.record {
     padding: 5px 15px;
   }

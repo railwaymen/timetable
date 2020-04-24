@@ -8,7 +8,7 @@ function EntryHistory(props) {
     vacationsInfo, selectedYear, setSelectedYear, getVacations,
   } = props;
   const { vacations, availableVacationDays, usedVacationDays } = vacationsInfo;
-  const [usedVacationsExpanded, setUsedVacationsExpanded] = useState(false);
+  const [usedVacationsExpanded] = useState(false);
   const [collapsibleProperties, setCollapsibleProperties] = useState({});
   const [years, setYears] = useState([]);
 
@@ -43,8 +43,8 @@ function EntryHistory(props) {
       [I18n.t(`apps.vacations.status.${vacation.status}`), vacation.status]
     );
     return (
-      <tr className="row vacation">
-        <td>{I18n.t(`common.${vacation.vacation_type}`)}</td>
+      <tr className="vacation">
+        <td className="text-left">{I18n.t(`common.${vacation.vacation_type}`)}</td>
         <td>
           {moment(vacation.start_date).format('DD.MM.YYYY')}
           <span>-</span>
@@ -52,12 +52,12 @@ function EntryHistory(props) {
         </td>
         <td>{I18n.t('apps.birthday_templates.days', { count: vacation.business_days_count })}</td>
         <td className={statusClass}>{status}</td>
-        <td className="trash">
-          <div onClick={() => onTrashClick(vacation.id)}>
+        <td className="trash text-right">
+          <button type="button" className="btn btn-outline-danger" onClick={() => onTrashClick(vacation.id)}>
             {vacation.status === 'unconfirmed' ? (
               <i className="symbol fa fa-trash" />
             ) : '' }
-          </div>
+          </button>
         </td>
       </tr>
     );
@@ -88,11 +88,18 @@ function EntryHistory(props) {
     const { chevron, translation, className } = collapsibleProperties;
     return (
       <div className="used-vacations">
-        <div onClick={() => setUsedVacationsExpanded(!usedVacationsExpanded)}>
-          <i className={`glyphicon glyphicon-chevron-${chevron}`} />
+        <button
+          className="btn btn-link px-0"
+          type="button"
+          data-toggle="collapse"
+          data-target="#used-vacations-collapse"
+          aria-expanded="false"
+          aria-controls="used-vacations-collapse"
+        >
+          <i className={`mr-2 fa fa-chevron-${chevron}`} />
           {I18n.t(`apps.vacations.${translation}`)}
-        </div>
-        <div className={className} id="used-vacations-collapse">
+        </button>
+        <div className={`collapse ${className}`} id="used-vacations-collapse">
           {usedVacationDaysList}
         </div>
       </div>
@@ -105,19 +112,21 @@ function EntryHistory(props) {
   }, [usedVacationsExpanded]);
 
   return (
-    <div>
-      <div className="row">
-        <div className="available-vacation-days">
+    <div className="w-100">
+      <div className="row mx-0 align-items-center">
+        <div className="available-vacation-days mb-0">
           {I18n.t('apps.vacations.remaining_vacation')}
           <span>{I18n.t('apps.vacations.days', { count: availableVacationDays })}</span>
-          <UsedVacationDays />
         </div>
-        <div className="year-filter">
+        <div className="ml-auto year-filter">
           <YearFilter />
         </div>
       </div>
-      <div className="row">
-        <div className="vacations">
+      <div className="row mx-0 my-3">
+        <UsedVacationDays />
+      </div>
+      <div className="row mx-0">
+        <div className="vacations w-100">
           <table>
             <tbody>
               {vacations.map((vacation) => <Vacation key={vacation.id} vacation={vacation} />)}

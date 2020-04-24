@@ -187,12 +187,12 @@ function Entry(props) {
   }
 
   return (
-    <div>
-      <div className="row vacation-date-range">
+    <div className="pb-3 mb-3 border-bottom w-100">
+      <div className="row mx-0 vacation-date-range">
         <DateRange />
         <VacationTypes />
       </div>
-      <div className="row description-containter">
+      <div className="row mx-0 description-containter">
         <Description
           description={description}
           onVacationChange={onVacationChange}
@@ -200,12 +200,12 @@ function Entry(props) {
           errors={errors}
         />
       </div>
-      <div className="row">
+      <div className="row mx-0">
         <div className="base-error">
           {errors.base && <ErrorTooltip errors={errors.base} className="vacation-errors" />}
         </div>
       </div>
-      <div className="row footer">
+      <div className="row mx-0">
         { window.currentUser.staff_manager && users && (
           <UserFilter />
         )}

@@ -33,10 +33,10 @@ export default function CombinedReports(props) {
       </Helmet>
       <div className="reports-nav">
         <div className="btn-group pull-right">
-          <Link className="btn btn-default" to={`/projects/${projectId}/reports`}>
+          <Link className="btn btn-secondary" to={`/projects/${projectId}/reports`}>
             {I18n.t('common.reports')}
           </Link>
-          <Link className="btn btn-default active" to={`/projects/${projectId}/combined_reports`}>
+          <Link className="btn btn-secondary active" to={`/projects/${projectId}/combined_reports`}>
             {I18n.t('common.combined_reports')}
           </Link>
         </div>

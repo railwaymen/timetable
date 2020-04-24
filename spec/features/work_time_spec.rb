@@ -167,7 +167,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     end
 
     aggregate_failures 'projects listing - active' do
-      find('a.btn.btn-default', text: 'All').click
+      find('a.btn.btn-secondary', text: 'All').click
       expect(page).to have_selector('tbody > tr', count: 3)
     end
 

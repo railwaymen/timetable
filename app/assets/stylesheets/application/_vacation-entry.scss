@@ -53,10 +53,6 @@
     font-weight: 500;
     td.trash {
       width: 8rem;
-      i {
-        cursor: pointer;
-        color: $vacations-declined-color;
-      }
     }
     tr {
       border-bottom: 1px solid $vacations-dark-gray;
