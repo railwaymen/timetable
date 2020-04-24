@@ -53,11 +53,11 @@ function EntryHistory(props) {
         <td>{I18n.t('apps.birthday_templates.days', { count: vacation.business_days_count })}</td>
         <td className={statusClass}>{status}</td>
         <td className="trash text-right">
-          <button type="button" className="btn btn-outline-danger" onClick={() => onTrashClick(vacation.id)}>
-            {vacation.status === 'unconfirmed' ? (
+          {vacation.status === 'unconfirmed' ? (
+            <button type="button" className="btn btn-outline-danger" onClick={() => onTrashClick(vacation.id)}>
               <i className="symbol fa fa-trash" />
-            ) : '' }
-          </button>
+            </button>
+          ) : '' }
         </td>
       </tr>
     );
