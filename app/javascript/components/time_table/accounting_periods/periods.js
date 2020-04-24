@@ -25,7 +25,7 @@ class Periods extends React.Component {
 
     this.state = {
       periods: {
-        accounting_periods: [],
+        records: [],
         total_pages: 0,
       },
       generatePeriods: {
@@ -340,7 +340,7 @@ class Periods extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { periods.accounting_periods.map((period) => (
+            { periods.records.map((period) => (
               <Period
                 key={period.id}
                 period={period}

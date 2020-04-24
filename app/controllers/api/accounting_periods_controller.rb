@@ -71,7 +71,7 @@ module Api
     end
 
     def accounting_periods
-      @accounting_periods ||= AccountingPeriod.order(position: :desc).where(user_id: filtered_user_id).page(params[:page])
+      @accounting_periods ||= AccountingPeriod.order(position: :desc).where(user_id: filtered_user_id).page(params[:page]).per(params[:per_page] || 24)
     end
 
     def accounting_period_params

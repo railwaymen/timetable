@@ -28,7 +28,7 @@ RSpec.describe Api::AccountingPeriodsController do
       expect(accounting_periods_manager).to receive(:job_exist?).and_return(false)
       get :index, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ accounting_periods: [accounting_period_response(accounting_period)], total_pages: 1, recounting: false }.to_json)
+      expect(response.body).to be_json_eql({ records: [accounting_period_response(accounting_period)], total_pages: 1, recounting: false }.to_json)
     end
 
     it 'filters by user_id as admin' do
@@ -38,7 +38,7 @@ RSpec.describe Api::AccountingPeriodsController do
       expect(accounting_periods_manager).to receive(:job_exist?).and_return(false)
       get :index, params: { user_id: user.id }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ accounting_periods: [accounting_period_response(accounting_period)], total_pages: 1, recounting: false }.to_json)
+      expect(response.body).to be_json_eql({ records: [accounting_period_response(accounting_period)], total_pages: 1, recounting: false }.to_json)
     end
   end
 

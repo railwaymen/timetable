@@ -7,7 +7,7 @@ module Api
     def index
       @remote_works = policy_scope(RemoteWork).kept.order(starts_at: :desc)
       @remote_works.where!(user_id: params.require(:user_id))
-      @remote_works = @remote_works.page(params[:page])
+      @remote_works = @remote_works.page(params[:page]).per(params[:per_page] || 24)
 
       respond_with @remote_works
     end

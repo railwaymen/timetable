@@ -463,7 +463,11 @@ paths:
         - authentication: []
       parameters:
         - name: page
-          description: API returns 24 records per page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          description: Records per page. By default it is 24
           in: query
           schema:
             type: integer
@@ -484,7 +488,7 @@ paths:
                   recounting:
                     type: boolean
                     example: false
-                  accounting_periods:
+                  records:
                     type: array
                     items:
                       $ref: '#/components/schemas/AccountingPeriod'
