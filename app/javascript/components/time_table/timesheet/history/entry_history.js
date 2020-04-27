@@ -481,8 +481,8 @@ class EntryHistory extends React.Component {
 
     return (
       <div className="float-right row mx-0">
-        <div className="dropdown">
-          <button className="btn btn-info dropdown-toggle" type="button" id="projectFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div className="dropdown project-filters">
+          <button className="btn btn-info btn-block dropdown-toggle" type="button" id="projectFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {selectedProject.name ? selectedProject.name : I18n.t('apps.timesheet.select_project')}
           </button>
           <div className="dropdown-menu" aria-labelledby="projectFilters">
@@ -495,8 +495,8 @@ class EntryHistory extends React.Component {
           </div>
         </div>
         <button type="button" className="btn btn-outline-info fa fa-chevron-left" onClick={() => this.switchMonth(-1)} />
-        <div className="dropdown">
-          <button className="btn btn-info dropdown-toggle" type="button" id="months" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div className="dropdown months-filters">
+          <button className="btn btn-info btn-block dropdown-toggle" type="button" id="months" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {moment(from).format('MMMM') || I18n.t('apps.timesheet.select_month')}
           </button>
           <div className="dropdown-menu" aria-labelledby="months">
