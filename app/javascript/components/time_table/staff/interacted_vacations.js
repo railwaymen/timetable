@@ -27,7 +27,7 @@ function InteractedVacations(props) {
 
   return (
     <div className="accepted-or-declined-vacations">
-      <div className="vacations-title row justify-content-start mx-0 my-2 position-relative">
+      <div className="vacations-title row mx-0 my-2 position-relative">
         { window.currentUser.staff_manager && (
           <div className="left-title" onClick={() => setShowDeclined(!showDeclined)}>
             {I18n.t(`apps.staff.${title.leftTitle}`)}
