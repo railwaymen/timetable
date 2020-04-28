@@ -44,7 +44,7 @@ module.exports = {
     'react/destructuring-assignment': 'off',
     'react/sort-comp': 'off',
     'class-methods-use-this': 'off',
-    'max-len': ["error", { "code": 180 }]
+    'max-len': ["error", { "code": 160 }]
   },
   globals: {
     I18n: 'readonly',

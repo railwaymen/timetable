@@ -38,7 +38,10 @@ const Navbar = () => (
           <NavLink className="nav-link" to="/projects">{I18n.t('common.projects')}</NavLink>
         </li>
         <li className="nav-pills">
-          <NavLink className="nav-link" to={(currentUser.isSuperUser() || currentUser.is_leader) ? '/reports/work_times/by_projects' : '/reports/work_times/by_users'}>
+          <NavLink
+            className="nav-link"
+            to={(currentUser.isSuperUser() || currentUser.is_leader) ? '/reports/work_times/by_projects' : '/reports/work_times/by_users'}
+          >
             {I18n.t('common.reports')}
           </NavLink>
         </li>

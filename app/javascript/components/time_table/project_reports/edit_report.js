@@ -212,7 +212,13 @@ export default class EditReport extends React.Component {
 
   renderMergeButton(category) {
     return (
-      <button key="merge" type="button" className="action-item" onClick={(e) => this.onShowMerge(e, category)} data-tooltip-bottom={I18n.t('apps.reports.merge')}>
+      <button
+        key="merge"
+        type="button"
+        className="action-item"
+        onClick={(e) => this.onShowMerge(e, category)}
+        data-tooltip-bottom={I18n.t('apps.reports.merge')}
+      >
         <i className="symbol fa fa-compress" />
       </button>
     );
@@ -243,7 +249,13 @@ export default class EditReport extends React.Component {
     const willBeAddedToMerge = !toMerge && toMergeTasks.length > 0;
     if (touched) {
       result.push(
-        <button key="details" type="button" className="action-item info" onClick={(e) => this.onShowWorkTimeModal(e, category, id)} data-tooltip-bottom={I18n.t('common.history')}>
+        <button
+          key="details"
+          type="button"
+          className="action-item info"
+          onClick={(e) => this.onShowWorkTimeModal(e, category, id)}
+          data-tooltip-bottom={I18n.t('common.history')}
+        >
           <i className="symbol fa fa-clock-o" />
         </button>,
       );
@@ -261,7 +273,13 @@ export default class EditReport extends React.Component {
             this.renderEditOrMergeButton(category, id, willBeAddedToMerge)
           )}
         </React.Fragment>,
-        <button key="ignore" type="button" className="action-item destroy" onClick={(e) => this.onIgnore(e, category, id)} data-tooltip-bottom={I18n.t('apps.reports.ignore')}>
+        <button
+          key="ignore"
+          type="button"
+          className="action-item destroy"
+          onClick={(e) => this.onIgnore(e, category, id)}
+          data-tooltip-bottom={I18n.t('apps.reports.ignore')}
+        >
           <i className="symbol fa fa-trash-o" />
         </button>,
       );

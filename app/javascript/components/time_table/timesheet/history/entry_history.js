@@ -482,13 +482,26 @@ class EntryHistory extends React.Component {
     return (
       <div className="float-right row mx-0">
         <div className="dropdown project-filters">
-          <button className="btn btn-info btn-block dropdown-toggle" type="button" id="projectFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button
+            className="btn btn-info btn-block dropdown-toggle"
+            type="button"
+            id="projectFilters"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
             {selectedProject.name ? selectedProject.name : I18n.t('apps.timesheet.select_project')}
           </button>
           <div className="dropdown-menu" aria-labelledby="projectFilters">
             <a className="dropdown-item" data-project-id="" href="" onClick={this.onProjectFilter}>{I18n.t('common.all')}</a>
             {projects.map((project) => (
-              <a onClick={this.onProjectFilter} data-project-id={project.id} className="dropdown-item" key={project.id} href={`/timesheet?project_id=${project.id}`}>
+              <a
+                onClick={this.onProjectFilter}
+                data-project-id={project.id}
+                className="dropdown-item"
+                key={project.id}
+                href={`/timesheet?project_id=${project.id}`}
+              >
                 {project.name}
               </a>
             ))}
@@ -496,12 +509,25 @@ class EntryHistory extends React.Component {
         </div>
         <button type="button" className="btn btn-outline-info fa fa-chevron-left" onClick={() => this.switchMonth(-1)} />
         <div className="dropdown months-filters">
-          <button className="btn btn-info btn-block dropdown-toggle" type="button" id="months" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button
+            className="btn btn-info btn-block dropdown-toggle"
+            type="button"
+            id="months"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
             {moment(from).format('MMMM') || I18n.t('apps.timesheet.select_month')}
           </button>
           <div className="dropdown-menu" aria-labelledby="months">
             {months.map((month) => (
-              <a key={month.name} className="dropdown-item" data-month={JSON.stringify(month)} onClick={this.onMonthFilter} href={`/timesheet?project_id=${month.date}`}>
+              <a
+                key={month.name}
+                className="dropdown-item"
+                data-month={JSON.stringify(month)}
+                onClick={this.onMonthFilter}
+                href={`/timesheet?project_id=${month.date}`}
+              >
                 {month.name}
               </a>
             ))}

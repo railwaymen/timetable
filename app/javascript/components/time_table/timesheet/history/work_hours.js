@@ -201,7 +201,13 @@ class WorkHours extends React.Component {
         <textarea autoFocus className="form-control" name="body" type="text" placeholder={I18n.t('apps.timesheet.what_have_you_done')} value={_.unescape(this.state.workHours.body)} onChange={this.onChange} />
         { this.props.workHours.project.work_times_allows_task && (
           <div className="task-edit">
-            <input className="form-control task-input" name="task" placeholder={I18n.t('apps.timesheet.task_url')} value={this.state.workHours.task} onChange={this.onChange} />
+            <input
+              className="form-control task-input"
+              name="task"
+              placeholder={I18n.t('apps.timesheet.task_url')}
+              value={this.state.workHours.task}
+              onChange={this.onChange}
+            />
           </div>
         )}
       </div>
@@ -423,7 +429,10 @@ class WorkHours extends React.Component {
       <div className={`time-entries-list-container ${!_.isEmpty(errors) ? 'has-error' : ''}`}>
         { Object.values(errors).map((error) => (<ErrorTooltip key={error} errors={error} />)) }
         <ul className="time-entries-list">
-          <li className={`time-entry time-entry-main entry ${editing ? 'card edit-mode' : ''} ${workHours.updated_by_admin ? 'updated' : ''}`} id={`work-time-${workHours.id}`}>
+          <li
+            className={`time-entry time-entry-main entry ${editing ? 'card edit-mode' : ''} ${workHours.updated_by_admin ? 'updated' : ''}`}
+            id={`work-time-${workHours.id}`}
+          >
             {!_.isEmpty(errors) && <div className="error-info-container"><i className="fa fa-exclamation-circle" /></div>}
             <WorkTimeTask workTime={workHours} />
             <div className="task-content">
