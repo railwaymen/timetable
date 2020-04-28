@@ -18,7 +18,7 @@ module Api
     end
 
     def create
-      @resource = ProjectResource.find_by(rid: events_params[:resource_rid])
+      @resource = ProjectResource.kept.find_by(rid: events_params[:resource_rid])
       @user = @resource.user
       @project_resource_assignment = ProjectResourceAssignment.create(events_params.merge(user_id: @user.id, project_resource_id: @resource.id))
       respond_with @project_resource_assignment
@@ -26,7 +26,7 @@ module Api
 
     def update
       update_params = events_params
-      @project_resource_assignment = ProjectResourceAssignment.find(params[:id])
+      @project_resource_assignment = ProjectResourceAssignment.kept.find(params[:id])
       if events_params[:resource_rid].present? && @project_resource_assignment.resource_rid != events_params[:resource_rid]
         resource = ProjectResource.find_by(rid: events_params[:resource_rid])
         user_id = resource.user.id
@@ -37,7 +37,7 @@ module Api
     end
 
     def destroy
-      @project_resource_assignment = ProjectResourceAssignment.find(params[:id])
+      @project_resource_assignment = ProjectResourceAssignment.kept.find(params[:id])
       @project_resource_assignment.discard!
       respond_with @project_resource_assignment
     end
