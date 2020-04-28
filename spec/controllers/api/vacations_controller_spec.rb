@@ -61,7 +61,7 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('200')
       available_vacation_days = user.available_vacation_days
       used_vacation_days = user.used_vacation_days(Vacation.all)
-      expect(response.body).to be_json_eql({ vacations: vacations_response, available_vacation_days: available_vacation_days, used_vacation_days: used_vacation_days }.to_json)
+      expect(response.body).to be_json_eql({ records: vacations_response, available_vacation_days: available_vacation_days, used_vacation_days: used_vacation_days }.to_json)
     end
 
     it 'filters user vacation applications by year' do
@@ -69,7 +69,7 @@ RSpec.describe Api::VacationsController do
       create(:vacation, user: user)
       get :index, params: { year: (Time.current - 1.year).year }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to eql({ vacations: [], available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
+      expect(response.body).to eql({ records: [], available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
     end
 
     it 'filters user vacation applications by user' do
@@ -81,7 +81,7 @@ RSpec.describe Api::VacationsController do
       ]
       get :index, params: { user_id: user2.id, year: Time.current.year }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to eql({ vacations: vacations_response, available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
+      expect(response.body).to eql({ records: vacations_response, available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
     end
   end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-json.vacations do |vacation_element|
+json.records do |vacation_element|
   vacation_element.array! @vacations do |vacation|
     json.partial! vacation
   end
