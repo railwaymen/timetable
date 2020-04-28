@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Modal = ({
   id, header, content, actions,
 }) => (
-  <div id={id}>
+  <div id={id} style={{ display: 'none' }}>
     <div className="ui centered-modal modal transition visible active">
       <i className="close icon" />
       <div className="header">
