@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 ruby '2.7.0'
 
+gem 'acts-as-taggable-on', '~> 6.0'
 gem 'awesome_print'
 gem 'bootstrap', '~> 4.4.1'
 gem 'business_time'

@@ -125,6 +125,7 @@ en:
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
       birthday: Birthday
       new: New account
+      position: Position
     external_auths:
       authorized: External authorizations
       generate_link: Generate link

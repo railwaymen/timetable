@@ -11,6 +11,8 @@ class User < ApplicationRecord
 
   devise :recoverable unless Rails.application.secrets.ldap[:enabled]
 
+  acts_as_taggable_on :positions
+
   has_many :work_times, dependent: :destroy
   has_many :accounting_periods, dependent: :destroy
   has_many :accounting_periods_recounts, dependent: :destroy
@@ -26,6 +28,7 @@ class User < ApplicationRecord
   has_many :hardwares, dependent: :destroy
   validates :first_name, :last_name, presence: true
   validates :phone, format: { with: PHONE_REGEX }
+  validates :position_list, length: { maximum: 1 }
 
   def self.with_next_and_previous_user_id
     from(%(

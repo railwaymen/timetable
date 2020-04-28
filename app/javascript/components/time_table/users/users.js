@@ -49,6 +49,7 @@ function Users() {
             <th>Email</th>
             <th>{I18n.t('apps.users.contract_id')}</th>
             <th>{I18n.t('apps.users.phone')}</th>
+            <th>{I18n.t('apps.users.position')}</th>
             <th />
           </tr>
         </thead>

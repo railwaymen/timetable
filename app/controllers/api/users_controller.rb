@@ -20,13 +20,13 @@ module Api
 
     def create
       @user = User.new
-      UpdateUserForm.new(user_params.merge(user: @user)).save
+      UpdateUserForm.new(permitted_attributes(@user).merge(user: @user)).save
       respond_with :api, @user
     end
 
     def update
       @user = User.find(params[:id])
-      UpdateUserForm.new(user_params.merge(user: @user)).save
+      UpdateUserForm.new(permitted_attributes(@user).merge(user: @user)).save
       respond_with @user
     end
 
@@ -42,6 +42,11 @@ module Api
       respond_with @users
     end
 
+    def positions
+      positions = ActsAsTaggableOn::Tag.for_context(:positions).distinct(:name).order(:name).pluck(:name)
+      render json: positions
+    end
+
     private
 
     def visiblity_list
@@ -50,10 +55,6 @@ module Api
 
     def authenticate_notself
       authenticate_admin! unless current_user.id == params[:id].to_i
-    end
-
-    def user_params
-      params.fetch(:user).permit(:email, :first_name, :last_name, :phone, :contract_name, :lang, :active, :birthdate)
     end
 
     def incoming_birthday_users

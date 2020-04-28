@@ -12,25 +12,31 @@ RSpec.describe Api::UsersController do
   let(:email) { "#{SecureRandom.hex}@example.com" }
 
   def user_response(user)
-    user.attributes.slice('id', 'email', 'first_name', 'last_name', 'lang').merge(active: user.kept?, name: user.name, accounting_name: user.accounting_name)
+    user.attributes.slice('id', 'email', 'first_name', 'last_name', 'lang')
+        .merge(active: user.kept?, name: user.name, accounting_name: user.accounting_name)
+  end
+
+  def user_response_for_admin(user)
+    user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate,
+                              position_list: user.position_list)
   end
 
   describe '#index' do
     it 'authenticates user' do
-      get :index, format: :json
+      get :index, as: :json
       expect(response.code).to eql('401')
     end
 
     it 'authenticates user' do
       sign_in(user)
-      get :index, format: :json
+      get :index, as: :json
       expect(response.code).to eql('403')
     end
 
     it 'returns users' do
       sign_in(manager)
       user = create(:user)
-      get :index, format: :json
+      get :index, as: :json
 
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql([user_response(manager), user_response(user)].to_json)
@@ -43,10 +49,10 @@ RSpec.describe Api::UsersController do
           FactoryBot.create :user, :discarded
           FactoryBot.create :user
 
-          get :index, params: { filter: 'all' }, format: :json
+          get :index, params: { filter: 'all' }, as: :json
 
           expected_json = User.all.map do |user|
-            user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
+            user_response_for_admin(user)
           end
 
           expect(response.body).to be_json_eql(expected_json.to_json)
@@ -59,10 +65,10 @@ RSpec.describe Api::UsersController do
           FactoryBot.create :user, :discarded
           FactoryBot.create :user
 
-          get :index, params: { filter: 'active' }, format: :json
+          get :index, params: { filter: 'active' }, as: :json
 
           expected_json = User.kept.map do |user|
-            user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
+            user_response_for_admin(user)
           end
 
           expect(response.body).to be_json_eql(expected_json.to_json)
@@ -75,10 +81,10 @@ RSpec.describe Api::UsersController do
           FactoryBot.create :user, :discarded
           FactoryBot.create :user
 
-          get :index, params: { filter: 'inactive' }, format: :json
+          get :index, params: { filter: 'inactive' }, as: :json
 
           expected_json = User.discarded.map do |user|
-            user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
+            user_response_for_admin(user)
           end
 
           expect(response.body).to be_json_eql(expected_json.to_json)
@@ -89,7 +95,7 @@ RSpec.describe Api::UsersController do
 
   describe '#show' do
     it 'authenticates user' do
-      get :show, params: { id: 1 }, format: :json
+      get :show, params: { id: 1 }, as: :json
       expect(response.code).to eql('401')
     end
 
@@ -97,7 +103,7 @@ RSpec.describe Api::UsersController do
       sign_in(user)
       user = create(:user)
       user = User.with_next_and_previous_user_id.find(user.id)
-      get :show, params: { id: user.id }, format: :json
+      get :show, params: { id: user.id }, as: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql(user_response(user).merge(next_id: user.next_id, prev_id: user.prev_id).to_json)
     end
@@ -105,25 +111,25 @@ RSpec.describe Api::UsersController do
 
   describe '#create' do
     it 'authenticates user' do
-      post :create, format: :json
+      post :create, as: :json
       expect(response.code).to eql('401')
     end
 
     it 'authorizes admin' do
       sign_in(user)
-      post :create, format: :json
+      post :create, as: :json
       expect(response.code).to eql('403')
     end
 
     it 'authorizes admin' do
       sign_in(manager)
-      post :create, format: :json
+      post :create, as: :json
       expect(response.code).to eql('403')
     end
 
     it 'creates project as admin' do
       sign_in(admin)
-      post :create, params: { user: { first_name: first_name, last_name: last_name, email: email } }, format: :json
+      post :create, params: { user: { first_name: first_name, last_name: last_name, email: email } }, as: :json
       expect(response.code).to eql('201')
       user = User.find_by email: email
       expect(response.body).to be_json_eql(user.to_json)
@@ -132,31 +138,51 @@ RSpec.describe Api::UsersController do
 
   describe '#update' do
     it 'authenticates user' do
-      put :update, params: { id: 1 }, format: :json
+      put :update, params: { id: 1 }, as: :json
       expect(response.code).to eql('401')
     end
 
     it 'authorizes admin' do
       sign_in(user)
-      put :update, params: { id: 1 }, format: :json
+      put :update, params: { id: 1 }, as: :json
       expect(response.code).to eql('403')
     end
 
     it 'authorizes admin' do
       sign_in(manager)
-      put :update, params: { id: 1 }, format: :json
+      put :update, params: { id: 1 }, as: :json
       expect(response.code).to eql('403')
     end
 
     it 'updates user as admin' do
       sign_in(admin)
       user = create(:user)
-      put :update, params: { id: user.id, user: { first_name: first_name, last_name: last_name, email: email } }, format: :json
+      put :update, params: { id: user.id, user: { first_name: first_name, last_name: last_name, email: email } }, as: :json
       expect(response.code).to eql('204')
       expect(user.reload.first_name).to eql(first_name)
       expect(user.last_name).to eql(last_name)
       expect(user.email).to eql(email)
       expect(response.body).to eq('')
+    end
+
+    it 'user updates themselves' do
+      user = create(:user)
+      sign_in(user)
+      put :update, params: { id: user.id, user: { first_name: first_name, last_name: last_name, email: email } }, as: :json
+      expect(response.code).to eql('204')
+      expect(user.reload.first_name).to eql(first_name)
+      expect(user.last_name).to eql(last_name)
+      expect(user.email).to_not eql(email)
+      expect(response.body).to eq('')
+    end
+
+    it 'changes active as admin' do
+      sign_in(admin)
+      user = create(:user)
+      put :update, params: { id: user.id, user: { active: false } }, as: :json
+      expect(response.code).to eql('204')
+
+      expect(user.reload.discarded?).to eql(true)
     end
   end
 
@@ -171,7 +197,7 @@ RSpec.describe Api::UsersController do
       user2 = create(:user, birthdate: '1988-05-10'.to_date)
       user3 = create(:user, birthdate: '1993-07-23'.to_date)
 
-      get :incoming_birthdays, format: :json
+      get :incoming_birthdays, as: :json
       expect(response.status).to eql(200)
       expected_response = {
         incoming_birthdays: [
@@ -190,7 +216,7 @@ RSpec.describe Api::UsersController do
       user2 = create(:user, birthdate: '1988-12-25'.to_date)
       user3 = create(:user, birthdate: '1993-01-10'.to_date)
 
-      get :incoming_birthdays, format: :json
+      get :incoming_birthdays, as: :json
       expect(response.status).to eql(200)
       expected_response = {
         incoming_birthdays: [
@@ -200,6 +226,31 @@ RSpec.describe Api::UsersController do
         ]
       }.to_json
       expect(response.body).to eql(expected_response)
+    end
+  end
+
+  describe '#positions' do
+    it 'authenticates user' do
+      get :positions, as: :json
+      expect(response.code).to eql('401')
+    end
+
+    it 'checks permissions' do
+      sign_in(user)
+      get :positions, as: :json
+      expect(response.code).to eql('403')
+    end
+
+    it 'returns correct values' do
+      sign_in(admin)
+
+      create(:user, position_list: %w[Senior])
+      create(:user, position_list: %w[Mid])
+      create(:user, position_list: %w[Junior])
+
+      get :positions, as: :json
+      expect(response.status).to eql(200)
+      expect(response.body).to be_json_eql(%w[Junior Mid Senior])
     end
   end
 end
