@@ -229,7 +229,11 @@ class Periods extends React.Component {
         {this.paginationBody(total_pages, page, userId)}
         {isForwardAvailable && (
           <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
-            <a className="symbol fa fa-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />
+            <a
+              className="symbol fa fa-chevron-right"
+              onClick={this.onPageChange}
+              href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'}
+            />
           </li>
         )}
       </ul>
@@ -374,12 +378,26 @@ class Periods extends React.Component {
                   </div>
                   <div className="field">
                     <label>{I18n.t('apps.accounting_periods.starting_from_month')}</label>
-                    <select onChange={this.onGeneratePeriodsChange} value={parseInt(generatePeriods.month, 10)} className="dropdown ui" id="month" type="text" name="month">
+                    <select
+                      onChange={this.onGeneratePeriodsChange}
+                      value={parseInt(generatePeriods.month, 10)}
+                      className="dropdown ui"
+                      id="month"
+                      type="text"
+                      name="month"
+                    >
                       {this.generateMonths()}
                     </select>
                   </div>
                   <div className="field">
-                    <select onChange={this.onGeneratePeriodsChange} value={parseInt(generatePeriods.year, 10)} className="dropdown ui" id="year" type="text" name="year">
+                    <select
+                      onChange={this.onGeneratePeriodsChange}
+                      value={parseInt(generatePeriods.year, 10)}
+                      className="dropdown ui"
+                      id="year"
+                      type="text"
+                      name="year"
+                    >
                       {this.generateYears()}
                     </select>
                   </div>

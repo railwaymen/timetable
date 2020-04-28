@@ -323,7 +323,9 @@ class ProjectsDistribution extends React.Component {
     if (activity.item_type === 'ProjectResource' && activity.event === 'create') return this.renderCreateResourceActivity(activity);
     if (activity.item_type === 'ProjectResource' && activity.event === 'update') return this.renderUpdateResourceActivity(activity);
     if (activity.item_type === 'ProjectResourceAssignment' && activity.event === 'create') return this.renderCreateAssignmentActivity(activity);
-    if (activity.item_type === 'ProjectResourceAssignment' && activity.event === 'update' && activity.deleted === true) return this.renderDeleteAssignmentActivity(activity);
+    if (activity.item_type === 'ProjectResourceAssignment' && activity.event === 'update' && activity.deleted === true) {
+      return this.renderDeleteAssignmentActivity(activity);
+    }
     if (activity.item_type === 'ProjectResourceAssignment' && activity.event === 'update') return this.renderUpdateAssignmentActivity(activity);
   }
 

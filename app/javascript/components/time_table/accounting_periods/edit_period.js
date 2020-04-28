@@ -310,7 +310,13 @@ class EditPeriod extends React.Component {
                       <div className="error-description">{errors.duration.join(', ')}</div>
                     )}
                     <div className="form-group input-group">
-                      <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="hours" onChange={this.onChange} value={period.hours} />
+                      <input
+                        className={`${errors.duration ? 'error' : ''} form-control`}
+                        type="text"
+                        name="hours"
+                        onChange={this.onChange}
+                        value={period.hours}
+                      />
                       <div className="input-group-addon">h</div>
                     </div>
                   </div>
@@ -319,7 +325,13 @@ class EditPeriod extends React.Component {
                       <div className="error-description">{errors.duration.join(', ')}</div>
                     )}
                     <div className="form-group input-group">
-                      <input className={`${errors.duration ? 'error' : ''} form-control`} type="text" name="minutes" onChange={this.onChange} value={period.minutes} />
+                      <input
+                        className={`${errors.duration ? 'error' : ''} form-control`}
+                        type="text"
+                        name="minutes"
+                        onChange={this.onChange}
+                        value={period.minutes}
+                      />
                       <div className="input-group-addon">m</div>
                     </div>
                   </div>
@@ -331,7 +343,13 @@ class EditPeriod extends React.Component {
                       <div className="error-description">{errors.position.join(', ')}</div>
                     )}
                   </label>
-                  <input className={`${errors.position ? 'error' : ''} form-control`} type="number" name="position" value={period.position} onChange={this.onChange} />
+                  <input
+                    className={`${errors.position ? 'error' : ''} form-control`}
+                    type="number"
+                    name="position"
+                    value={period.position}
+                    onChange={this.onChange}
+                  />
                 </div>
               </div>
             </form>
