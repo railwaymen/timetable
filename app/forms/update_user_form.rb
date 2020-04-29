@@ -3,7 +3,7 @@
 class UpdateUserForm
   include ActiveModel::Model
 
-  attr_accessor :user, :email, :first_name, :last_name, :phone, :contract_name, :lang, :active, :birthdate, :position_list
+  attr_accessor :user, :email, :first_name, :last_name, :phone, :contract_name, :lang, :active, :birthdate
 
   def initialize(attributes = {})
     super
@@ -11,7 +11,7 @@ class UpdateUserForm
   end
 
   def save
-    user.update(@attributes.slice(:email, :first_name, :last_name, :phone, :contract_name, :lang, :birthdate, :position_list))
+    user.update(@attributes.slice(:email, :first_name, :last_name, :phone, :contract_name, :lang, :birthdate))
     return if user.invalid?
     return if active.nil?
 

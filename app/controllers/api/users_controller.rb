@@ -8,7 +8,7 @@ module Api
 
     def index
       action = params[:filter].presence_in(visiblity_list) || 'all'
-      @users = User.order(Arel.sql('contract_name::bytea ASC')).filter_by(action.to_sym)
+      @users = User.includes(:tags).order(Arel.sql('contract_name::bytea ASC')).filter_by(action.to_sym)
       @users = @users.order(:last_name) if params.key?(:staff)
       respond_with @users
     end
@@ -21,12 +21,14 @@ module Api
     def create
       @user = User.new
       UpdateUserForm.new(permitted_attributes(@user).merge(user: @user)).save
+      CreateUserPosition.new(@user, params[:user][:position_list]).call if create_positon?(@user)
       respond_with :api, @user
     end
 
     def update
       @user = User.find(params[:id])
       UpdateUserForm.new(permitted_attributes(@user).merge(user: @user)).save
+      CreateUserPosition.new(@user, params[:user][:position_list]).call if create_positon?(@user)
       respond_with @user
     end
 
@@ -43,8 +45,8 @@ module Api
     end
 
     def positions
-      positions = ActsAsTaggableOn::Tag.for_context(:positions).distinct(:name).order(:name).pluck(:name)
-      render json: positions
+      tags = Tag.order(:name).pluck(:name)
+      render json: tags
     end
 
     private
@@ -69,6 +71,10 @@ module Api
                  Time.current.to_date).order(Arel.sql("TO_CHAR(birthdate, 'mm/dd')"))
           .select("id, TO_CHAR(birthdate, 'dd/mm/') || #{(Time.current + 1.year).year} birthday_date,"\
                   "CONCAT(last_name, ' ', first_name) AS full_name").limit(limit)
+    end
+
+    def create_positon?(user)
+      params[:user][:position_list].present? && current_user.admin? && user.valid?
     end
   end
 end

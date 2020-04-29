@@ -18,7 +18,7 @@ RSpec.describe Api::UsersController do
 
   def user_response_for_admin(user)
     user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate,
-                              position_list: user.position_list)
+                              position_list: user.tags.pluck(:name))
   end
 
   describe '#index' do
@@ -244,9 +244,9 @@ RSpec.describe Api::UsersController do
     it 'returns correct values' do
       sign_in(admin)
 
-      create(:user, position_list: %w[Senior])
-      create(:user, position_list: %w[Mid])
-      create(:user, position_list: %w[Junior])
+      create(:tag, name: 'Senior')
+      create(:tag, name: 'Mid')
+      create(:tag, name: 'Junior')
 
       get :positions, as: :json
       expect(response.status).to eql(200)
