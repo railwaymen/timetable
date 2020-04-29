@@ -13,7 +13,7 @@ function UnconfirmedVacations(props) {
 
   return (
     <div className="">
-      <div className="vacations-title  row justify-content-start mx-0 my-2">
+      <div className="vacations-title row mx-0 my-2 position-relative">
         <div className="mid-title">{I18n.t(`apps.staff.${title.main_title}`)}</div>
         { window.currentUser.staff_manager && (
           <div className="right-title" onClick={() => setShowAll(!showAll)}>

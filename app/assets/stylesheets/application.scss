@@ -338,9 +338,10 @@ table {
 }
 
 #modal .centered-modal {
-  height: 55%;
+  height: auto;
+  max-height: 55%;
   .content {
-    height: 75%;
+    max-height: 75%;
   }
   .event-info {
     .project {

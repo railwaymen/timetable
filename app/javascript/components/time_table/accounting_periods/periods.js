@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import _ from 'lodash';
+import Modal from '@components/shared/modal';
 import * as Api from '../../shared/api';
 import Period from './period';
 
@@ -355,64 +356,61 @@ class Periods extends React.Component {
           </tbody>
         </table>
         {this.renderPagination()}
-        <div id="modal" style={{ display: 'none' }}>
-          <div className="ui centered-modal modal transition visible active">
-            <i className="close icon" />
-            <div className="header">{I18n.t('apps.accounting_periods.generate_accounting_periods')}</div>
-            <div className="content">
-              <form className="form ui">
-                <div className="error hidden message ui">
-                  <p />
+        <Modal
+          id="modal"
+          header={I18n.t('apps.accounting_periods.generate_accounting_periods')}
+          content={(
+            <form className="form ui">
+              <div className="error hidden message ui">
+                <p />
+              </div>
+              <div className="fields inline">
+                <div className="field">
+                  <label>{I18n.t('apps.accounting_periods.periods_count')}</label>
+                  <input
+                    type="number"
+                    onChange={this.onGeneratePeriodsChange}
+                    max={MONTHS_IN_YEAR * 5}
+                    value={generatePeriods.periods_count}
+                    name="periods_count"
+                    placeholder="periods count"
+                  />
                 </div>
-                <div className="fields inline">
-                  <div className="field">
-                    <label>{I18n.t('apps.accounting_periods.periods_count')}</label>
-                    <input
-                      type="number"
-                      onChange={this.onGeneratePeriodsChange}
-                      max={MONTHS_IN_YEAR * 5}
-                      value={generatePeriods.periods_count}
-                      name="periods_count"
-                      placeholder="periods count"
-                    />
-                  </div>
-                  <div className="field">
-                    <label>{I18n.t('apps.accounting_periods.starting_from_month')}</label>
-                    <select
-                      onChange={this.onGeneratePeriodsChange}
-                      value={parseInt(generatePeriods.month, 10)}
-                      className="dropdown ui"
-                      id="month"
-                      type="text"
-                      name="month"
-                    >
-                      {this.generateMonths()}
-                    </select>
-                  </div>
-                  <div className="field">
-                    <select
-                      onChange={this.onGeneratePeriodsChange}
-                      value={parseInt(generatePeriods.year, 10)}
-                      className="dropdown ui"
-                      id="year"
-                      type="text"
-                      name="year"
-                    >
-                      {this.generateYears()}
-                    </select>
-                  </div>
+                <div className="field">
+                  <label>{I18n.t('apps.accounting_periods.starting_from_month')}</label>
+                  <select
+                    onChange={this.onGeneratePeriodsChange}
+                    value={parseInt(generatePeriods.month, 10)}
+                    className="dropdown ui"
+                    id="month"
+                    type="text"
+                    name="month"
+                  >
+                    {this.generateMonths()}
+                  </select>
                 </div>
-              </form>
-            </div>
-            <div className="actions">
-              <button onClick={this.onGenerateSubmit} className="button green icon labeled right ui" id="generate" type="button">
-                {I18n.t('apps.accounting_periods.generate')}
-                <i className="angle double icon right" />
-              </button>
-            </div>
-          </div>
-          <div className="ui dimmer modals modal-backdrop page transition visible active" style={{ display: 'flex !important' }} />
-        </div>
+                <div className="field">
+                  <select
+                    onChange={this.onGeneratePeriodsChange}
+                    value={parseInt(generatePeriods.year, 10)}
+                    className="dropdown ui"
+                    id="year"
+                    type="text"
+                    name="year"
+                  >
+                    {this.generateYears()}
+                  </select>
+                </div>
+              </div>
+            </form>
+          )}
+          actions={(
+            <button onClick={this.onGenerateSubmit} className="button green icon labeled right ui" id="generate" type="button">
+              {I18n.t('apps.accounting_periods.generate')}
+              <i className="angle double icon right" />
+            </button>
+          )}
+        />
       </div>
     );
   }
