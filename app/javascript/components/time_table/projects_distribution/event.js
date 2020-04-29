@@ -19,8 +19,7 @@ class Event extends React.Component {
       selectedProject: undefined,
       startsAt: undefined,
       endsAt: undefined,
-      editStartsAt: false,
-      editEndsAt: false,
+      resizable: false,
     };
   }
 
@@ -39,6 +38,7 @@ class Event extends React.Component {
       selectedProject: projects.filter((p) => p.id === event.projectId)[0],
       startsAt: event.start,
       endsAt: event.end,
+      resizable: event.resizable,
     });
   }
 
@@ -159,7 +159,7 @@ class Event extends React.Component {
 
   render() {
     const { slotName, projects, eventInstance } = this.props;
-    const { selectedProject, editStartsAt, editEndsAt } = this.state;
+    const { selectedProject, resizable } = this.state;
     const projectColor = selectedProject ? `#${selectedProject.color}` : 'black';
     return (
       <div className="ui centered-modal modal transition visible active">
@@ -192,9 +192,9 @@ class Event extends React.Component {
                 {slotName}
               </div>
               <div className="date-range">
-                { editStartsAt ? this.renderEditableDate('startsAt') : this.renderDate('startsAt')}
+                { resizable ? this.renderEditableDate('startsAt') : this.renderDate('startsAt')}
                 {' - '}
-                { editEndsAt ? this.renderEditableDate('endsAt') : this.renderDate('endsAt')}
+                { resizable ? this.renderEditableDate('endsAt') : this.renderDate('endsAt')}
               </div>
               <div className="project" style={{ borderColor: projectColor, backgroundColor: projectColor }}>
                 {selectedProject ? selectedProject.name : null}
