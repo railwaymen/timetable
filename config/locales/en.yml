@@ -1,5 +1,20 @@
 en:
   apps:
+    hardware:
+      locked: "This hardware is locked, you can't edit it"
+      add_new: Add hardware
+      type: Type
+      manufacturer: Manufacturer
+      model: Model
+      serial_number: Serial Number
+      field:
+        add_new: Add field
+        name: Name
+        value: Value
+      types:
+        screen: Screen
+        pc: PC
+        laptop: Laptop
     header:
       login: Login
       username: Username
@@ -214,6 +229,10 @@ en:
         update_assignment: '{{user}} updated assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
         delete_assignment: '{{user}} deleted assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
   common:
+    expand: Expand
+    lock: "Lock"
+    unlock: "Unlock"
+    fold: Fold
     rank: 'Rank'
     add: Add
     save: Save
@@ -292,6 +311,7 @@ en:
     hours: Hours
     date: Date
     refresh: Refresh
+    hardware: My hardware
   activerecord:
     errors:
       models:
@@ -315,6 +335,17 @@ en:
               blank: Project is required
         external_auth:
           basic: Error during authorization
+        hardware:
+          attributes:
+            type:
+              blank: Type is required
+            manufacturer:
+              blank: Manufacturer is required
+            model:
+              blank: Model is required
+            serial_number:
+              blank: Serial Number can't be blank
+              taken: Serial Number is already in use
         birthday_email_template:
           attributes:
             name:

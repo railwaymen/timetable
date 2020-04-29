@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_23_125511) do
+ActiveRecord::Schema.define(version: 2020_04_28_224608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,25 @@ ActiveRecord::Schema.define(version: 2020_04_23_125511) do
     t.bigint "user_id"
     t.index ["project_id"], name: "index_external_auths_on_project_id"
     t.index ["user_id"], name: "index_external_auths_on_user_id"
+  end
+
+  create_table "hardware_fields", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "value", null: false
+    t.bigint "hardware_id"
+    t.index ["hardware_id"], name: "index_hardware_fields_on_hardware_id"
+    t.index ["name", "hardware_id"], name: "index_hardware_fields_on_name_and_hardware_id", unique: true
+  end
+
+  create_table "hardwares", force: :cascade do |t|
+    t.string "type", default: "laptop", null: false
+    t.string "manufacturer", null: false
+    t.string "model", null: false
+    t.string "serial_number", null: false
+    t.bigint "user_id"
+    t.boolean "locked", default: false, null: false
+    t.index ["serial_number"], name: "index_hardwares_on_serial_number", unique: true
+    t.index ["user_id"], name: "index_hardwares_on_user_id"
   end
 
   create_table "project_report_roles", force: :cascade do |t|
@@ -220,6 +239,7 @@ ActiveRecord::Schema.define(version: 2020_04_23_125511) do
     t.boolean "staff_manager", default: false, null: false
     t.date "birthdate"
     t.datetime "discarded_at"
+    t.boolean "hardware_manager", default: false, null: false
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -301,6 +321,8 @@ ActiveRecord::Schema.define(version: 2020_04_23_125511) do
   add_foreign_key "combined_reports_project_reports", "project_reports"
   add_foreign_key "external_auths", "projects"
   add_foreign_key "external_auths", "users"
+  add_foreign_key "hardware_fields", "hardwares"
+  add_foreign_key "hardwares", "users"
   add_foreign_key "project_report_roles", "project_reports"
   add_foreign_key "project_report_roles", "users"
   add_foreign_key "project_reports", "projects"

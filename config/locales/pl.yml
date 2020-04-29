@@ -1,5 +1,20 @@
 pl:
   apps:
+    hardware:
+      locked: "Ten sprzęt jest zablokowany, nie możesz go edytować"
+      add_new: Dodaj sprzęt
+      type: Typ
+      manufacturer: Producent
+      model: Model
+      serial_number: Numer seryjny
+      field:
+        add_new: Dodaj pole
+        name: Nazwa
+        value: Wartość
+      types:
+        screen: Monitor
+        pc: Komputer
+        laptop: Laptop
     header:
       login: Logowanie
       username: Użytkownik
@@ -214,6 +229,10 @@ pl:
         update_assignment: '{{user}} zaktualizował zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
         delete_assignment: '{{user}} usunął zasób {{resource}} przypisany do projektu {{project}} od {{start}} do {{end}}'
   common:
+    expand: "Rozwiń"
+    lock: "Zablokuj"
+    unlock: "Odblokuj"
+    fold: "Zwiń"
     rank: 'Ranking'
     add: Dodaj
     save: Zapisz
@@ -292,6 +311,7 @@ pl:
     hours: Godziny
     date: Data
     refresh: Odśwież
+    hardware: Mój sprzęt
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -359,6 +379,24 @@ pl:
               blank: Projekt jest wymagany
         external_auth:
           basic: Błąd uwierzytelnienia
+        hardware_field:
+          attributes:
+            name:
+              taken: Nazwa jest zajeta
+              blank: Nazwa jest wymagana
+            value:
+              blank: Wartość jest wymagana
+        hardware:
+          attributes:
+            type:
+              blank: Typ jest wymagany
+            manufacturer:
+              blank: Producent jest wymagany
+            model:
+              blank: Model jest wymagany
+            serial_number:
+              blank: Numer seryjny jest wymagany
+              taken: Numer seryjny jest zajety
         birthday_email_template:
           attributes:
             name:
