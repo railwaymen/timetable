@@ -126,29 +126,33 @@ class AddResource extends React.Component {
     );
   }
 
+  onCloseClick() {
+    $('#modal').hide();
+  }
+
   render() {
     const {
       selectedUser, selectedResourceGroup, groupOnly, name,
     } = this.state;
 
     return (
-      <div className="ui centered-modal modal transition visible active">
-        <i className="close icon" />
+      <div className="ui centered-modal modal transition visible active overflow-visible">
+        <i className="close icon" onClick={this.onCloseClick} />
         <div className="header">{I18n.t('apps.projects_distribution.resource_menu')}</div>
         <div className="content">
-          <form className="form ui">
+          <form className="form">
             <div className="error hidden message ui">
               <p />
             </div>
-            <div className="fields inline">
+            <div className="fields row w-100">
               {groupOnly ? (
-                <div className="name-field field">
-                  <label>{I18n.t('common.name')}</label>
-                  <input type="text" name="name" onChange={this.onNameChange} value={name} />
+                <div className="name-field field col-4">
+                  <label className="label">{I18n.t('common.name')}</label>
+                  <input type="text" name="name" className="form-control" onChange={this.onNameChange} value={name} />
                 </div>
               ) : (
-                <div className="users-field field">
-                  <label>{I18n.t('common.user')}</label>
+                <div className="users-field field col-4">
+                  <label className="label">{I18n.t('common.user')}</label>
                   { selectedUser ? (
                     <Dropdown
                       objects={this.props.users}
@@ -161,14 +165,14 @@ class AddResource extends React.Component {
                   ) : null }
                 </div>
               )}
-              <div className="resource-group-field field">
-                <label>{I18n.t('apps.projects_distribution.resource_group')}</label>
-                <select className="dropdown ui" id="resource_group" type="text" name="resource_group" value={selectedResourceGroup} onChange={this.onChange}>
+              <div className="resource-group-field field col-4">
+                <label className="label">{I18n.t('apps.projects_distribution.resource_group')}</label>
+                <select className="form-control" id="resource_group" type="text" name="resource_group" value={selectedResourceGroup} onChange={this.onChange}>
                   <option value={undefined} />
                   {this.generateResourceGroups()}
                 </select>
               </div>
-              <div className="group-only-field field form-check">
+              <div className="group-only-field field form-check col-4">
                 <input type="checkbox" className="form-check-input" id="group_only_check" checked={groupOnly} onChange={this.onCheckboxChange} />
                 <label htmlFor="group_only_check">{I18n.t('apps.projects_distribution.group_only')}</label>
               </div>
