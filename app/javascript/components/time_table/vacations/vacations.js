@@ -16,7 +16,7 @@ function Vacations() {
     Api.makeGetRequest({ url })
       .then((response) => {
         const vacationsInfoResponse = {
-          vacations: response.data.vacations,
+          vacations: response.data.records,
           availableVacationDays: response.data.available_vacation_days,
           usedVacationDays: response.data.used_vacation_days,
         };
