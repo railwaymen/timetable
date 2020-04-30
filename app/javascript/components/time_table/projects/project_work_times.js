@@ -139,7 +139,7 @@ export default class ProjectWorkTimes extends React.Component {
               </Link>
             )}
           </h1>
-          <HorizontalArrows className="row" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
+          <HorizontalArrows className="row mx-0" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
             <DateRangeFilter
               className="col-auto mx-auto"
               from={from}

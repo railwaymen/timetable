@@ -308,17 +308,7 @@ table {
   }
 }
 
-.scheduler-header,
-.scheduler,
-.footer,
-.scheduler-activity {
-  position: absolute;
-  left: 3vw;
-  width: 94vw;
-}
-
 .scheduler-header {
-  padding-right: 6%;
   display: flex;
   text-align: center;
   margin-bottom: 25px;
@@ -331,10 +321,6 @@ table {
   .chevron-left i, .chevron-right i {
     cursor: pointer;
   }
-}
-
-.scheduler {
-  margin-top: 70px;
 }
 
 #modal .centered-modal {
@@ -384,12 +370,11 @@ table {
 .footer {
   position: relative;
   z-index: 1;
-  left: 50%;
-  transform: translateX(-50%);
   display: inline-flex;
   align-items: flex-start;
   padding: 60px 0 10px 0;
   border-top: 1px solid;
+  width: 100%;
   .menu.transition.visible {
     transform: translateY(-15px);
   }

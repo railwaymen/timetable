@@ -41,7 +41,7 @@ class TimeTable extends React.Component {
   render() {
     return (
       <BrowserRouter>
-        <div className="app container">
+        <div className="app container-fluid">
           { window.location.pathname === '/' ? <Redirect to="/timesheet" /> : null }
           <Navbar />
           <div className="content">
