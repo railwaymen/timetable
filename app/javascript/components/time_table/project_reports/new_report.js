@@ -10,6 +10,7 @@ import DateRangeFilter from '../../shared/date_range_filter';
 import Preloader from '../../shared/preloader';
 
 export default class NewReport extends React.Component {
+  // eslint-disable-next-line react/sort-comp
   static roles = ['developer', 'qa', 'ux', 'pm', 'ignored'];
 
   constructor(props) {

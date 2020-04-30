@@ -42,7 +42,6 @@ class EditPeriod extends React.Component {
     };
   }
 
-
   componentDidMount() {
     const userId = this.userId();
     const pathId = this.state.periodId;
@@ -62,49 +61,6 @@ class EditPeriod extends React.Component {
     }
 
     this.getUsers();
-  }
-
-  getPeriodPosition(userId) {
-    Api.makeGetRequest({ url: `/api/accounting_periods/next_position?user_id=${userId}` })
-      .then((response) => {
-        this.setState((prevState) => ({
-          period: {
-            ...prevState.period,
-            position: response.data,
-          },
-        }));
-      });
-  }
-
-  getPeriod(id) {
-    Api.makeGetRequest({ url: `/api/accounting_periods/${id}` })
-      .then((response) => {
-        const { data } = response;
-        const hours = this.formatTimeHours(data.duration);
-        const minutes = this.formatTimeMinutes(data.duration);
-
-        if (data.starts_at) data.starts_at = moment(data.starts_at).format('YYYY-MM-DD HH:mm');
-        if (data.ends_at) data.ends_at = moment(moment(data.ends_at).format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm');
-
-        this.setState({
-          period: {
-            ...response.data,
-            hours,
-            minutes,
-          },
-        });
-      });
-  }
-
-  getUsers() {
-    Api.makeGetRequest({ url: '/api/users' })
-      .then((response) => {
-        if (response.status === 200) {
-          this.setState({
-            users: response.data,
-          });
-        }
-      });
   }
 
   onChange(e) {
@@ -127,39 +83,6 @@ class EditPeriod extends React.Component {
         [name]: !prevState.period[name],
       },
     }));
-  }
-
-  request(period) {
-    const duration = moment.duration(`${period.hours}:${period.minutes}`, 'HH:mm').asSeconds();
-
-    if (period.id) {
-      return Api.makePutRequest({
-        url: `/api/accounting_periods/${period.id}?user_id=${period.user_id}`,
-        body: { accounting_period: { ...period, duration } },
-      });
-    }
-    return Api.makePostRequest({
-      url: `/api/accounting_periods?user_id=${period.user_id}`,
-      body: { accounting_period: { ...period, duration } },
-    });
-  }
-
-  formatTimeMinutes(duration) {
-    const d = moment.duration(duration, 'seconds').asMinutes();
-    let minutes = Math.floor(d % 60);
-
-    if (minutes < 10) minutes = `0${minutes}`;
-
-    return minutes;
-  }
-
-  formatTimeHours(duration) {
-    const d = moment.duration(duration, 'seconds').asMinutes();
-    let hours = Math.floor(d / 60);
-
-    if (hours < 10) hours = `0${hours}`;
-
-    return hours;
   }
 
   onSubmit() {
@@ -193,6 +116,82 @@ class EditPeriod extends React.Component {
         ends_at: time,
       },
     }));
+  }
+
+  getPeriod(id) {
+    Api.makeGetRequest({ url: `/api/accounting_periods/${id}` })
+      .then((response) => {
+        const { data } = response;
+        const hours = this.formatTimeHours(data.duration);
+        const minutes = this.formatTimeMinutes(data.duration);
+
+        if (data.starts_at) data.starts_at = moment(data.starts_at).format('YYYY-MM-DD HH:mm');
+        if (data.ends_at) data.ends_at = moment(moment(data.ends_at).format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm');
+
+        this.setState({
+          period: {
+            ...response.data,
+            hours,
+            minutes,
+          },
+        });
+      });
+  }
+
+  getPeriodPosition(userId) {
+    Api.makeGetRequest({ url: `/api/accounting_periods/next_position?user_id=${userId}` })
+      .then((response) => {
+        this.setState((prevState) => ({
+          period: {
+            ...prevState.period,
+            position: response.data,
+          },
+        }));
+      });
+  }
+
+  getUsers() {
+    Api.makeGetRequest({ url: '/api/users' })
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            users: response.data,
+          });
+        }
+      });
+  }
+
+  request(period) {
+    const duration = moment.duration(`${period.hours}:${period.minutes}`, 'HH:mm').asSeconds();
+
+    if (period.id) {
+      return Api.makePutRequest({
+        url: `/api/accounting_periods/${period.id}?user_id=${period.user_id}`,
+        body: { accounting_period: { ...period, duration } },
+      });
+    }
+    return Api.makePostRequest({
+      url: `/api/accounting_periods?user_id=${period.user_id}`,
+      body: { accounting_period: { ...period, duration } },
+    });
+  }
+
+  formatTimeMinutes(duration) {
+    const d = moment.duration(duration, 'seconds').asMinutes();
+    let minutes = Math.floor(d % 60);
+
+    if (minutes < 10) minutes = `0${minutes}`;
+
+    return minutes;
+  }
+
+  formatTimeHours(duration) {
+    const d = moment.duration(duration, 'seconds').asMinutes();
+    let hours = Math.floor(d / 60);
+
+    if (hours < 10) hours = `0${hours}`;
+
+    return hours;
   }
 
   userId() {

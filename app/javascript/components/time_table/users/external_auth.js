@@ -25,21 +25,6 @@ class ExternalAuth extends React.Component {
     this.getUser();
   }
 
-  getUser() {
-    Api.makeGetRequest({ url: `/api/users/${this.state.userId}` })
-      .then((response) => {
-        this.setState({ externalAuth: response.data.external_auth });
-      });
-  }
-
-  getAuthLink() {
-    Api.makeGetRequest({ url: `/api/external_auths/new?domain=${encodeURI(this.state.domain)}&provider=jira` })
-      .then((response) => {
-        const { authorization_url, request_data } = response.data;
-        this.setState({ authorizationUrl: authorization_url, requestData: request_data });
-      });
-  }
-
   onDomainChange(e) {
     const domain = e.target.value;
     this.setState({ domain });
@@ -81,16 +66,19 @@ class ExternalAuth extends React.Component {
       });
   }
 
-  render() {
-    const { redirectToReferer, userId } = this.state;
+  getAuthLink() {
+    Api.makeGetRequest({ url: `/api/external_auths/new?domain=${encodeURI(this.state.domain)}&provider=jira` })
+      .then((response) => {
+        const { authorization_url, request_data } = response.data;
+        this.setState({ authorizationUrl: authorization_url, requestData: request_data });
+      });
+  }
 
-    if (redirectToReferer) return <Redirect to={redirectToReferer} />;
-    return (
-      <div>
-        {this.renderAuth()}
-        <NavLink className="btn btn-primary" to={`/users/edit/${userId}`}>{I18n.t('common.cancel')}</NavLink>
-      </div>
-    );
+  getUser() {
+    Api.makeGetRequest({ url: `/api/users/${this.state.userId}` })
+      .then((response) => {
+        this.setState({ externalAuth: response.data.external_auth });
+      });
   }
 
   renderAuth() {
@@ -143,6 +131,18 @@ class ExternalAuth extends React.Component {
             </div>
           </form>
         )}
+      </div>
+    );
+  }
+
+  render() {
+    const { redirectToReferer, userId } = this.state;
+
+    if (redirectToReferer) return <Redirect to={redirectToReferer} />;
+    return (
+      <div>
+        {this.renderAuth()}
+        <NavLink className="btn btn-primary" to={`/users/edit/${userId}`}>{I18n.t('common.cancel')}</NavLink>
       </div>
     );
   }

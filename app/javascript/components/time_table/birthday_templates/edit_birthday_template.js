@@ -31,20 +31,6 @@ class EditBirthdayTemplate extends React.Component {
     if (this.state.birthdayTemplateId) this.fetchPreview();
   }
 
-  getBirthdayTemplate() {
-    const { birthdayTemplateId } = this.state;
-    if (birthdayTemplateId) {
-      Api.makeGetRequest({
-        url: `/api/birthday_email_templates/${birthdayTemplateId}`,
-      }).then((response) => {
-        const birthdayTemplate = unnullifyFields(response.data);
-        this.setState({
-          birthdayTemplate,
-        });
-      });
-    }
-  }
-
   onChange(e) {
     const { name, value } = e.target;
     this.setState((prevState) => ({
@@ -83,17 +69,6 @@ class EditBirthdayTemplate extends React.Component {
     }
   }
 
-  fetchPreview() {
-    const { birthdayTemplateId } = this.state;
-    const url = `/rails/mailers/birthday_mailer/send_birthday_email.html?birthday_email_template_id=${birthdayTemplateId}&part=text%2Fhtml`;
-    fetch(url)
-      .then((response) => response.text()).then((html) => {
-        this.setState({
-          birthdayTemplatePreview: html,
-        });
-      });
-  }
-
   onSubmit() {
     const { birthdayTemplate, birthdayTemplateId } = this.state;
     if (birthdayTemplateId) {
@@ -119,6 +94,31 @@ class EditBirthdayTemplate extends React.Component {
         this.catchErrors(e);
       });
     }
+  }
+
+  getBirthdayTemplate() {
+    const { birthdayTemplateId } = this.state;
+    if (birthdayTemplateId) {
+      Api.makeGetRequest({
+        url: `/api/birthday_email_templates/${birthdayTemplateId}`,
+      }).then((response) => {
+        const birthdayTemplate = unnullifyFields(response.data);
+        this.setState({
+          birthdayTemplate,
+        });
+      });
+    }
+  }
+
+  fetchPreview() {
+    const { birthdayTemplateId } = this.state;
+    const url = `/rails/mailers/birthday_mailer/send_birthday_email.html?birthday_email_template_id=${birthdayTemplateId}&part=text%2Fhtml`;
+    fetch(url)
+      .then((response) => response.text()).then((html) => {
+        this.setState({
+          birthdayTemplatePreview: html,
+        });
+      });
   }
 
   catchErrors(e) {

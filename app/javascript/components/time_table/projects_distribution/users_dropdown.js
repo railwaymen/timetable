@@ -49,6 +49,24 @@ class UsersDropdown extends React.Component {
     }
   }
 
+  onBlur() {
+    this.setState({ isExpanded: false });
+  }
+
+  onChangeUser(e) {
+    const userId = parseInt(e.target.attributes.getNamedItem('data-value').value, 10);
+
+    if (userId !== this.props.selectedUser) {
+      const users = this.filterUsers('');
+      const selectedUser = _.find(users, (p) => (
+        p.id === userId
+      )) || users[0];
+
+      this.hideDropdown();
+      this.props.updateUser(selectedUser);
+    }
+  }
+
   filterUsers(filter = this.state.filter) {
     const lowerFilter = filter.toLowerCase();
     return _.filter(this.props.users, (p) => (
@@ -66,24 +84,6 @@ class UsersDropdown extends React.Component {
     this.setState({ isExpanded: true, filter: '', filteredUsers: this.filterUsers('') }, () => {
       document.addEventListener('click', this.hideDropdown);
     });
-  }
-
-  onBlur() {
-    this.setState({ isExpanded: false });
-  }
-
-  onChangeUser(e) {
-    const userId = parseInt(e.target.attributes.getNamedItem('data-value').value, 10);
-
-    if (userId !== this.props.selectedUser) {
-      const users = this.filterUsers('');
-      const selectedUser = _.find(users, (p) => (
-        p.id === userId
-      )) || users[0];
-
-      this.hideDropdown();
-      this.props.updateUser(selectedUser);
-    }
   }
 
   renderUsersList() {

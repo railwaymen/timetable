@@ -22,32 +22,6 @@ class AddResource extends React.Component {
     };
   }
 
-  updateUser(selectedUser) {
-    this.setState({
-      selectedUser,
-    });
-  }
-
-  updateAddResourceModal(selectedUser) {
-    this.setState({
-      selectedUser,
-      groupOnly: false,
-      name: '',
-      selectedResourceGroup: '',
-    });
-  }
-
-  generateResourceGroups() {
-    const options = [];
-    _.filter(this.props.resources, (r) => (r.groupOnly))
-      .map((resourceGroup) => (options.push(
-        <option value={resourceGroup.realId} key={resourceGroup.id}>
-          {resourceGroup.name}
-        </option>,
-      )));
-    return options;
-  }
-
   onChange(e) {
     this.setState({
       selectedResourceGroup: e.target.value,
@@ -97,11 +71,41 @@ class AddResource extends React.Component {
     });
   }
 
+  onCloseClick() {
+    $('#modal').hide();
+  }
+
   filterUsers = (filter) => {
     const lowerFilter = filter.toLowerCase();
     return _.filter(this.props.users, (p) => (
       p.active && (`${p.first_name} ${p.last_name}`.toLowerCase().match(lowerFilter) || `${p.last_name} ${p.first_name}`.toLowerCase().match(lowerFilter))
     ));
+  }
+
+  updateUser(selectedUser) {
+    this.setState({
+      selectedUser,
+    });
+  }
+
+  updateAddResourceModal(selectedUser) {
+    this.setState({
+      selectedUser,
+      groupOnly: false,
+      name: '',
+      selectedResourceGroup: '',
+    });
+  }
+
+  generateResourceGroups() {
+    const options = [];
+    _.filter(this.props.resources, (r) => (r.groupOnly))
+      .map((resourceGroup) => (options.push(
+        <option value={resourceGroup.realId} key={resourceGroup.id}>
+          {resourceGroup.name}
+        </option>,
+      )));
+    return options;
   }
 
   renderSelectedUser(selectedObject) {
@@ -124,10 +128,6 @@ class AddResource extends React.Component {
         ) : `${object.first_name} ${object.last_name}`}
       </div>
     );
-  }
-
-  onCloseClick() {
-    $('#modal').hide();
   }
 
   render() {

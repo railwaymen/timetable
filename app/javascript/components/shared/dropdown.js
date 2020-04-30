@@ -29,7 +29,6 @@ class Dropdown extends React.Component {
     });
   }
 
-
   onFilterChange(e) {
     this.setState({
       filter: e.target.value,
@@ -50,22 +49,6 @@ class Dropdown extends React.Component {
     }
   }
 
-  filterObjects(filter = this.state.filter) {
-    return this.props.filterObjects(filter);
-  }
-
-  hideDropdown(e) {
-    if (e && e.target === this.searchRef.current) return; // Do not hide when click is on search input
-    document.removeEventListener('click', this.hideDropdown);
-    this.setState({ isExpanded: false, filter: '', filteredObjects: this.filterObjects('') });
-  }
-
-  expandDropdown() {
-    this.setState({ isExpanded: true, filter: '', filteredObjects: this.filterObjects('') }, () => {
-      document.addEventListener('click', this.hideDropdown);
-    });
-  }
-
   onBlur() {
     this.setState({ isExpanded: false });
   }
@@ -82,6 +65,22 @@ class Dropdown extends React.Component {
       this.hideDropdown();
       this.props.updateObject(selectedObject);
     }
+  }
+
+  expandDropdown() {
+    this.setState({ isExpanded: true, filter: '', filteredObjects: this.filterObjects('') }, () => {
+      document.addEventListener('click', this.hideDropdown);
+    });
+  }
+
+  hideDropdown(e) {
+    if (e && e.target === this.searchRef.current) return; // Do not hide when click is on search input
+    document.removeEventListener('click', this.hideDropdown);
+    this.setState({ isExpanded: false, filter: '', filteredObjects: this.filterObjects('') });
+  }
+
+  filterObjects(filter = this.state.filter) {
+    return this.props.filterObjects(filter);
   }
 
   renderDropdownList() {

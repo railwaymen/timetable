@@ -42,7 +42,6 @@ module.exports = {
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
     'react/destructuring-assignment': 'off',
-    'react/sort-comp': 'off',
     'class-methods-use-this': 'off',
     'max-len': ["error", { "code": 160 }]
   },

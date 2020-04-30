@@ -69,17 +69,6 @@ class WorkHours extends React.Component {
     }
   }
 
-  formattedHoursAndMinutesDuration(duration) {
-    const time = moment.duration(duration, 'seconds');
-    let hours = time.hours();
-    let minutes = time.minutes();
-
-    if (hours < 10) hours = `0${hours}`;
-    if (minutes < 10) minutes = `0${minutes}`;
-
-    return `${hours}:${minutes}`;
-  }
-
   onCopy() {
     this.props.onCopy({
       ...this.state.workHours,
@@ -120,30 +109,10 @@ class WorkHours extends React.Component {
     this.changeProject(_.find(this.props.projects, (p) => p.id === projectId));
   }
 
-  changeProject(project) {
-    this.toggleProjectEdit();
-    if (project.id !== this.state.selectedProject) {
-      this.setState((prevState) => ({
-        workHours: {
-          ...prevState.workHours,
-          project,
-          project_id: project.id,
-        },
-      }), () => {
-        this.saveWorkHours();
-      });
-    }
-  }
-
   onHoursEdit(e) {
     this.setState({
       [e.target.name]: e.target.value,
     });
-  }
-
-  preventScroll(e) {
-    e = e || window.event;
-    e.returnValue = false;
   }
 
   onTimeFocus = (e) => {
@@ -164,17 +133,18 @@ class WorkHours extends React.Component {
     });
   }
 
-  recountTime() {
-    const { starts_at_hours, ends_at_hours } = this.state;
+  onFilterChange({ target }) {
+    this.setState({ filter: target.value });
+  }
 
-    // parse and reformat as starts_at_hours are input from user
-    const formattedStartsAtTime = moment(starts_at_hours, 'HH:mm').format('HH:mm');
-    const formattedEndsAtTime = moment(ends_at_hours, 'HH:mm').format('HH:mm');
+  onFilterKeyPress({ key }) {
+    if (key !== 'Enter') return;
 
-    this.setState({
-      starts_at_hours: formattedStartsAtTime,
-      ends_at_hours: formattedEndsAtTime,
-    });
+    const project = this.filteredProjects()[0];
+
+    if (project) {
+      this.changeProject(project);
+    }
   }
 
   onDateChange(date) {
@@ -192,6 +162,203 @@ class WorkHours extends React.Component {
     }), () => {
       this.saveWorkHours();
     });
+  }
+
+  getInfo() {
+    this.props.assignModalInfo(undefined);
+
+    return Api.makeGetRequest({ url: `/api/work_times/${this.state.workHours.id}` })
+      .then((response) => this.props.assignModalInfo(response.data));
+  }
+
+  preventScroll(e) {
+    e = e || window.event;
+    e.returnValue = false;
+  }
+
+  changeProject(project) {
+    this.toggleProjectEdit();
+    if (project.id !== this.state.selectedProject) {
+      this.setState((prevState) => ({
+        workHours: {
+          ...prevState.workHours,
+          project,
+          project_id: project.id,
+        },
+      }), () => {
+        this.saveWorkHours();
+      });
+    }
+  }
+
+  formattedHoursAndMinutesDuration(duration) {
+    const time = moment.duration(duration, 'seconds');
+    let hours = time.hours();
+    let minutes = time.minutes();
+
+    if (hours < 10) hours = `0${hours}`;
+    if (minutes < 10) minutes = `0${minutes}`;
+
+    return `${hours}:${minutes}`;
+  }
+
+  recountTime() {
+    const { starts_at_hours, ends_at_hours } = this.state;
+
+    // parse and reformat as starts_at_hours are input from user
+    const formattedStartsAtTime = moment(starts_at_hours, 'HH:mm').format('HH:mm');
+    const formattedEndsAtTime = moment(ends_at_hours, 'HH:mm').format('HH:mm');
+
+    this.setState({
+      starts_at_hours: formattedStartsAtTime,
+      ends_at_hours: formattedEndsAtTime,
+    });
+  }
+
+  descriptionText() {
+    const { workHours, editing } = this.state;
+    if (editing) {
+      return null;
+    }
+    return (
+      <span className="description-text">
+        {
+          workHours.project.lunch
+            ? 'Omnonmonmonmnomnonmonmn'
+            : WorkTimeDescription(workHours)
+        }
+      </span>
+    );
+  }
+
+  filteredProjects(filter = this.state.filter) {
+    const lowerFilter = filter.toLowerCase();
+    return this.props.projects.filter((p) => p.name.toLowerCase().match(escape(lowerFilter)));
+  }
+
+  saveWorkHours() {
+    const {
+      workHours, ends_at_hours, starts_at_hours, date,
+    } = this.state;
+
+    const formattedStartsAtTime = moment(workHours.starts_at).format('HH:mm');
+    const formattedEndsAtTime = moment(workHours.ends_at).format('HH:mm');
+    const starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
+    const ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
+    const oldDuration = workHours.duration;
+
+    Api.makePutRequest({
+      url: `/api/work_times/${this.state.workHours.id}`,
+      body: {
+        work_time: {
+          ...this.workHoursJsonApi(), starts_at, ends_at,
+        },
+      },
+    }).then((response) => {
+      const { data } = response;
+      const durationDeviation = data.duration - oldDuration;
+
+      this.setState({
+        workHours: data,
+        date: moment(data.starts_at).format('DD/MM/YYYY'),
+        errors: [],
+      }, () => {
+        this.props.updateWorkHours(this, durationDeviation);
+        const event = new CustomEvent(
+          'edit-entry',
+          { detail: { id: workHours.id, success: true } },
+        );
+
+        document.dispatchEvent(event);
+      });
+    }).catch((e) => {
+      this.setState({
+        starts_at_hours: formattedStartsAtTime,
+        ends_at_hours: formattedEndsAtTime,
+        errors: translateErrors('work_time', e.errors),
+      }, () => {
+        const event = new CustomEvent(
+          'edit-entry',
+          { detail: { id: workHours.id, success: false } },
+        );
+
+        document.dispatchEvent(event);
+      });
+    });
+  }
+
+  toggleEdit() {
+    this.setState({
+      editing: true,
+      tagEditable: true,
+      errors: [],
+    }, () => {
+      document.addEventListener('click', this.disableEdit);
+    });
+  }
+
+  toggleProjectEdit() {
+    const { projectEditable } = this.state;
+
+    if (projectEditable) {
+      document.removeEventListener('click', this.toggleProjectEdit);
+    } else {
+      document.addEventListener('click', this.toggleProjectEdit);
+    }
+
+    this.setState({
+      projectEditable: !projectEditable,
+      filter: '',
+    }, () => {
+      if (this.state.projectEditable && this.searchRef.current) this.searchRef.current.focus();
+    });
+  }
+
+  toggleTagEdit() {
+    const { tagEditable } = this.state;
+
+    if (tagEditable) {
+      document.removeEventListener('click', this.toggleTagEdit);
+    } else {
+      document.addEventListener('click', this.toggleTagEdit);
+    }
+
+    this.setState({
+      editing: false,
+      tagEditable: !tagEditable,
+    });
+  }
+
+  disableEdit(e) {
+    const { localName } = e.target;
+    const properly = ['textarea', 'input'];
+
+    if (!properly.includes(localName) && !(localName === 'button' && $(e.target).closest('.react-datepicker').length !== 0)) {
+      document.removeEventListener('click', this.disableEdit);
+
+      this.setState({
+        editing: false,
+        tagEditable: false,
+      }, () => {
+        if (!this.state.editing) {
+          this.saveWorkHours();
+        }
+      });
+    }
+  }
+
+  workHoursJsonApi() {
+    const { workHours } = this.state;
+
+    return {
+      id: workHours.id,
+      project_id: workHours.project_id,
+      body: workHours.body,
+      task: workHours.task,
+      tag: workHours.tag,
+      starts_at: workHours.starts_at,
+      ends_at: workHours.ends_at,
+    };
   }
 
   renderBodyEditable() {
@@ -250,173 +417,6 @@ class WorkHours extends React.Component {
           onBlur={this.onTimeBlur}
         />
       </div>
-    );
-  }
-
-  workHoursJsonApi() {
-    const { workHours } = this.state;
-
-    return {
-      id: workHours.id,
-      project_id: workHours.project_id,
-      body: workHours.body,
-      task: workHours.task,
-      tag: workHours.tag,
-      starts_at: workHours.starts_at,
-      ends_at: workHours.ends_at,
-    };
-  }
-
-  disableEdit(e) {
-    const { localName } = e.target;
-    const properly = ['textarea', 'input'];
-
-    if (!properly.includes(localName) && !(localName === 'button' && $(e.target).closest('.react-datepicker').length !== 0)) {
-      document.removeEventListener('click', this.disableEdit);
-
-      this.setState({
-        editing: false,
-        tagEditable: false,
-      }, () => {
-        if (!this.state.editing) {
-          this.saveWorkHours();
-        }
-      });
-    }
-  }
-
-  toggleEdit() {
-    this.setState({
-      editing: true,
-      tagEditable: true,
-      errors: [],
-    }, () => {
-      document.addEventListener('click', this.disableEdit);
-    });
-  }
-
-  toggleProjectEdit() {
-    const { projectEditable } = this.state;
-
-    if (projectEditable) {
-      document.removeEventListener('click', this.toggleProjectEdit);
-    } else {
-      document.addEventListener('click', this.toggleProjectEdit);
-    }
-
-    this.setState({
-      projectEditable: !projectEditable,
-      filter: '',
-    }, () => {
-      if (this.state.projectEditable && this.searchRef.current) this.searchRef.current.focus();
-    });
-  }
-
-  toggleTagEdit() {
-    const { tagEditable } = this.state;
-
-    if (tagEditable) {
-      document.removeEventListener('click', this.toggleTagEdit);
-    } else {
-      document.addEventListener('click', this.toggleTagEdit);
-    }
-
-    this.setState({
-      editing: false,
-      tagEditable: !tagEditable,
-    });
-  }
-
-  saveWorkHours() {
-    const {
-      workHours, ends_at_hours, starts_at_hours, date,
-    } = this.state;
-
-    const formattedStartsAtTime = moment(workHours.starts_at).format('HH:mm');
-    const formattedEndsAtTime = moment(workHours.ends_at).format('HH:mm');
-    const starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
-    const ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
-    const oldDuration = workHours.duration;
-
-    Api.makePutRequest({
-      url: `/api/work_times/${this.state.workHours.id}`,
-      body: {
-        work_time: {
-          ...this.workHoursJsonApi(), starts_at, ends_at,
-        },
-      },
-    }).then((response) => {
-      const { data } = response;
-      const durationDeviation = data.duration - oldDuration;
-
-      this.setState({
-        workHours: data,
-        date: moment(data.starts_at).format('DD/MM/YYYY'),
-        errors: [],
-      }, () => {
-        this.props.updateWorkHours(this, durationDeviation);
-        const event = new CustomEvent(
-          'edit-entry',
-          { detail: { id: workHours.id, success: true } },
-        );
-
-        document.dispatchEvent(event);
-      });
-    }).catch((e) => {
-      this.setState({
-        starts_at_hours: formattedStartsAtTime,
-        ends_at_hours: formattedEndsAtTime,
-        errors: translateErrors('work_time', e.errors),
-      }, () => {
-        const event = new CustomEvent(
-          'edit-entry',
-          { detail: { id: workHours.id, success: false } },
-        );
-
-        document.dispatchEvent(event);
-      });
-    });
-  }
-
-  getInfo() {
-    this.props.assignModalInfo(undefined);
-
-    return Api.makeGetRequest({ url: `/api/work_times/${this.state.workHours.id}` })
-      .then((response) => this.props.assignModalInfo(response.data));
-  }
-
-  onFilterChange({ target }) {
-    this.setState({ filter: target.value });
-  }
-
-  onFilterKeyPress({ key }) {
-    if (key !== 'Enter') return;
-
-    const project = this.filteredProjects()[0];
-
-    if (project) {
-      this.changeProject(project);
-    }
-  }
-
-  filteredProjects(filter = this.state.filter) {
-    const lowerFilter = filter.toLowerCase();
-    return this.props.projects.filter((p) => p.name.toLowerCase().match(escape(lowerFilter)));
-  }
-
-  descriptionText() {
-    const { workHours, editing } = this.state;
-    if (editing) {
-      return null;
-    }
-    return (
-      <span className="description-text">
-        {
-          workHours.project.lunch
-            ? 'Omnonmonmonmnomnonmonmn'
-            : WorkTimeDescription(workHours)
-        }
-      </span>
     );
   }
 

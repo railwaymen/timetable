@@ -11,6 +11,10 @@ class Period extends React.Component {
     this.onDelete = this.onDelete.bind(this);
   }
 
+  onDelete() {
+    if (window.confirm(I18n.t('common.confirm'))) this.props.onDelete(this.props.period.id);
+  }
+
   formatDate(date) {
     return moment(date).format('YYYY-MM-DD HH:mm');
   }
@@ -24,10 +28,6 @@ class Period extends React.Component {
     if (minutes < 10) minutes = `0${minutes}`;
 
     return `${hours}:${minutes}`;
-  }
-
-  onDelete() {
-    if (window.confirm(I18n.t('common.confirm'))) this.props.onDelete(this.props.period.id);
   }
 
   render() {
