@@ -21,8 +21,8 @@ module.exports = {
     'react',
   ],
   rules: {
-    'react/jsx-filename-extension': 'off',
-    'react/jsx-props-no-spreading': 'off',
+    "react/jsx-filename-extension": [1, { 'extensions': ['.js'] }],
+    'react/jsx-props-no-spreading': ['error', { 'html': 'ignore', 'exceptions': ['DatePicker'] }] ,
     'react/forbid-prop-types': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
@@ -36,14 +36,13 @@ module.exports = {
     'no-param-reassign': 'off',
     'no-alert': 'off',
     'camelcase': 'off',
+    'max-len': ['error', { 'code': 160 }],
 
     // TODO: enable these rules:
-
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
     'react/destructuring-assignment': 'off',
-    'class-methods-use-this': 'off',
-    'max-len': ["error", { "code": 160 }]
+    'class-methods-use-this': 'off'
   },
   globals: {
     I18n: 'readonly',
