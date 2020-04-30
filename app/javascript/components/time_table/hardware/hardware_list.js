@@ -22,7 +22,7 @@ const HardwareList = () => {
     });
   };
   return (
-    <div className="container">
+    <>
       <CreateHardware updateHardwareList={updateHardwareList} />
       <div className="row">
         {hardwareList.map((hardware) => (
@@ -35,7 +35,7 @@ const HardwareList = () => {
           />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
