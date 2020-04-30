@@ -72,7 +72,9 @@ function AdminFields(props) {
         {errors.birthdate && <div className="error-description">{errors.birthdate.join(', ')}</div>}
         <input
           className={`${errors.birthdate ? 'error' : ''} form-control`}
-          value={moment(user.birthdate).format('YYYY-MM-DD')}
+          value={user.birthdate ? moment(user.birthdate).format('YYYY-MM-DD') : ''}
+          type="date"
+          name="birthdate"
           onChange={onChange}
         />
       </div>
