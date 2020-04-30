@@ -253,14 +253,11 @@ class Periods extends React.Component {
   }
 
   onDelete(id) {
+    const { userId, page } = this.state;
     Api.makeDeleteRequest({ url: `/api/accounting_periods/${id}` })
       .then((response) => {
         if (parseInt(response.status, 10) === 204) {
-          this.setState((prevState) => ({
-            periods: {
-              accounting_periods: prevState.periods.accounting_periods.filter((period) => (period.id !== id)),
-            },
-          }));
+          this.getPeriods({ userId, page });
         } else {
           alert('Error while trying to remove accounting period');
         }
