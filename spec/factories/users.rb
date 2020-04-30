@@ -10,6 +10,10 @@ FactoryBot.define do
       admin { true }
     end
 
+    trait :hardware_manager do
+      hardware_manager { true }
+    end
+
     trait :manager do
       manager { true }
     end

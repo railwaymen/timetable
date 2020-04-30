@@ -23,6 +23,7 @@ class User < ApplicationRecord
   has_one :external_auth, dependent: :destroy
   has_many :project_resources, dependent: :destroy
   has_many :project_resource_assignments, dependent: :destroy
+  has_many :hardwares, dependent: :destroy
   validates :first_name, :last_name, presence: true
   validates :phone, format: { with: PHONE_REGEX }
 
@@ -88,6 +89,7 @@ class User < ApplicationRecord
       projects: project_ids,
       is_leader: leader?,
       admin: admin?,
+      hardware_manager: hardware_manager?,
       manager: manager,
       lang: lang,
       staff_manager: staff_manager

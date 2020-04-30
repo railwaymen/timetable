@@ -33,3 +33,4 @@ vendor/bundle
 system
 public/images/reports_logo.jpg
 public/javascripts
+.vscode

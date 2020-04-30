@@ -29,6 +29,7 @@ import BirthdayTemplates from './time_table/birthday_templates/birthday_template
 import EditBirthdayTemplate from './time_table/birthday_templates/edit_birthday_template';
 import ProjectsDistribution from './time_table/projects_distribution/projects_distribution';
 import RemoteWork from './time_table/remote_work/remote_work';
+import HardwareList from './time_table/hardware/hardware_list';
 
 class TimeTable extends React.Component {
   constructor(props) {
@@ -74,6 +75,7 @@ class TimeTable extends React.Component {
             <Route path="/birthday_templates/new" component={EditBirthdayTemplate} />
             <Route path="/birthday_templates/edit/:id" component={EditBirthdayTemplate} />
             <Route path="/projects_distribution" component={ProjectsDistribution} />
+            <Route path="/hardware" component={HardwareList} />
           </div>
         </div>
       </BrowserRouter>

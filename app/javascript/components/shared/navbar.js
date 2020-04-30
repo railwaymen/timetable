@@ -75,6 +75,14 @@ const Navbar = () => (
     </div>
     <ul className="navbar-nav user-nav ml-auto">
       <li className="nav-item">
+        <NavLink
+          className="nav-link"
+          to="/hardware"
+        >
+          {I18n.t('common.hardware')}
+        </NavLink>
+      </li>
+      <li className="nav-item">
         <NavLink className="nav-link" to={`/users/edit/${currentUser.id}`}>
           {currentUser.fullName()}
         </NavLink>
@@ -89,7 +97,7 @@ const Navbar = () => (
       { currentUser.admin && (
         <NavLink className="item" to="/users">{I18n.t('common.people')}</NavLink>
       )}
-      { currentUser.canManageStaff() && (
+      {currentUser.canManageStaff() && (
         <NavLink className="item" to="/staff">{I18n.t('common.staff')}</NavLink>
       )}
       <NavLink className="item" to="/projects">{I18n.t('common.projects')}</NavLink>
@@ -102,6 +110,7 @@ const Navbar = () => (
       <NavLink className="item" to="/vacation_periods">{I18n.t('common.vacation_periods')}</NavLink>
       <NavLink className="item" to="/timesheet">{I18n.t('common.timesheet')}</NavLink>
       <NavLink className="item" to="/vacations">{I18n.t('common.vacations')}</NavLink>
+
       <NavLink className="item" to="/remote_work">{I18n.t('common.remote_work')}</NavLink>
       { currentUser.admin && (
         <NavLink className="item" to="/birthday_templates">{I18n.t('common.birthday_templates')}</NavLink>
