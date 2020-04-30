@@ -28,7 +28,7 @@ module Api
       update_params = events_params
       @project_resource_assignment = ProjectResourceAssignment.kept.find(params[:id])
       if events_params[:resource_rid].present? && @project_resource_assignment.resource_rid != events_params[:resource_rid]
-        resource = ProjectResource.find_by(rid: events_params[:resource_rid])
+        resource = ProjectResource.kept.find_by(rid: events_params[:resource_rid])
         user_id = resource.user.id
         update_params = update_params.merge(user_id: user_id, project_resource_id: resource.id)
       end
