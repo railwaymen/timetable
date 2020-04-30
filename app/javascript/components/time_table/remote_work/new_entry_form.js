@@ -53,64 +53,58 @@ const NewEntryForm = (props) => {
 
   return (
     <div id="content" className="new-remote-work">
-      <form className="row" onSubmit={onSubmit}>
-        <div className="col-12 col-md-8">
-          <div className="row calendar-row">
-            <div className="col-md-6 form-group">
-              {errors.startsAt && <ErrorTooltip errors={errors.startsAt} />}
-              <DatePicker
-                {...defaultDatePickerProps}
-                dateFormat="YYYY-MM-DD HH:mm"
-                timeFormat="HH:mm"
-                showTimeSelect
-                timeIntervals={15}
-                className={`${errors.startsAt ? 'error' : ''} form-control`}
-                selected={remoteWork.starts_at}
-                name="starts_at"
-                placeholderText={I18n.t('common.from')}
-                onChange={(date) => onDateChange(date, 'starts_at')}
-              />
-            </div>
-            <div className="col-md-6 form-group">
-              {errors.endsAt && <ErrorTooltip errors={errors.endsAt} />}
-              <DatePicker
-                {...defaultDatePickerProps}
-                dateFormat="YYYY-MM-DD HH:mm"
-                timeFormat="HH:mm"
-                showTimeSelect
-                timeIntervals={15}
-                className={`${errors.endsAt ? 'error' : ''} form-control`}
-                selected={remoteWork.ends_at}
-                name="ends_at"
-                placeholderText={I18n.t('common.to')}
-                onChange={(date) => onDateChange(date, 'ends_at')}
-              />
-            </div>
+      <form onSubmit={onSubmit}>
+        <div className="row calendar-row">
+          <div className="col form-group">
+            {errors.startsAt && <ErrorTooltip errors={errors.startsAt} />}
+            <DatePicker
+              {...defaultDatePickerProps}
+              dateFormat="YYYY-MM-DD HH:mm"
+              timeFormat="HH:mm"
+              showTimeSelect
+              timeIntervals={15}
+              className={`${errors.startsAt ? 'error' : ''} form-control`}
+              selected={remoteWork.starts_at}
+              name="starts_at"
+              placeholderText={I18n.t('common.from')}
+              onChange={(date) => onDateChange(date, 'starts_at')}
+            />
+          </div>
+          <div className="col form-group">
+            {errors.endsAt && <ErrorTooltip errors={errors.endsAt} />}
+            <DatePicker
+              {...defaultDatePickerProps}
+              dateFormat="YYYY-MM-DD HH:mm"
+              timeFormat="HH:mm"
+              showTimeSelect
+              timeIntervals={15}
+              className={`${errors.endsAt ? 'error' : ''} form-control`}
+              selected={remoteWork.ends_at}
+              name="ends_at"
+              placeholderText={I18n.t('common.to')}
+              onChange={(date) => onDateChange(date, 'ends_at')}
+            />
           </div>
           {currentUser.admin && (
-            <div className="row calendar-row">
-              <div className="col-md-6 form-group">
-                <select className="form-control" name="user_id" value={remoteWork.user_id} onChange={onChange}>
-                  {users.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {currentUser.fullName.apply(user)}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div className="col form-group">
+              <select className="form-control" name="user_id" value={remoteWork.user_id} onChange={onChange}>
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {currentUser.fullName.apply(user)}
+                  </option>
+                ))}
+              </select>
             </div>
           )}
         </div>
-        <div className="col-12 col-md-4">
-          <div className="form-group">
-            <textarea
-              className="form-control"
-              name="note"
-              placeholder={I18n.t('apps.accounting_periods.note')}
-              onChange={onChange}
-              value={remoteWork.note || ''}
-            />
-          </div>
+        <div className="form-group">
+          <textarea
+            className="form-control"
+            name="note"
+            placeholder={I18n.t('apps.accounting_periods.note')}
+            onChange={onChange}
+            value={remoteWork.note || ''}
+          />
         </div>
         <div className="form-actions text-right">
           <button className="bt bt-big bt-main bt-submit" type="submit">

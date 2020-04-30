@@ -29,7 +29,7 @@ function Vacations() {
   }, [selectedYear, selectedUser]);
 
   return (
-    <div className="container vacation-entry">
+    <div className="container-fluid vacation-entry">
       <Helmet>
         <title>{I18n.t('common.vacations')}</title>
       </Helmet>

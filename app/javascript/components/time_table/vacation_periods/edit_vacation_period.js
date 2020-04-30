@@ -86,7 +86,7 @@ class EditVacationPeriod extends React.Component {
     if (redirectToReferer) return (<Redirect to={redirectToReferer} />);
     if (!periodId || periodId === period.id) {
       result = (
-        <div className="container">
+        <div className="container-fluid">
           <Helmet>
             <title>{I18n.t('apps.vacation_periods.edit')}</title>
           </Helmet>

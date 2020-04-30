@@ -166,10 +166,9 @@ class Footer extends React.Component {
 
   render() {
     const { userFilter } = this.state;
-    const schedulerHeight = $('#RBS-Scheduler-root').first().outerHeight(true);
 
     return (
-      <div className="footer" style={{ marginTop: `${schedulerHeight}px` }}>
+      <div className="footer">
         {userFilter}
         <div className="footer-legend">
           {this.renderLegend()}

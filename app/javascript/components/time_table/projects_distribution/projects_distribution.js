@@ -48,7 +48,7 @@ class ProjectsDistribution extends React.Component {
       {
         displayWeekend: false,
         customCellWidth: '1.3%',
-        schedulerWidth: '95%',
+        besidesWidth: '30',
         schedulerMaxHeight: '0',
         tableHeaderHeight: '55px',
         headerEnabled: false,

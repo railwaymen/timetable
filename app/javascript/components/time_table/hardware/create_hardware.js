@@ -35,7 +35,7 @@ const CreateHardware = ({ updateHardwareList }) => {
 
   return (
     <div className="card">
-      <form className="container" onSubmit={onSubmit}>
+      <form onSubmit={onSubmit}>
         <div className="row">
           <div className="form-group col-md-3">
             <label htmlFor="type">
