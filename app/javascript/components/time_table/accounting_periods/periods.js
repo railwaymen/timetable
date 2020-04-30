@@ -113,12 +113,13 @@ class Periods extends React.Component {
 
   onGenerateSubmit() {
     const { periods_count, year, month } = this.state.generatePeriods;
+    const { userId } = this.state;
 
     const date = moment(`${year}-${month}`, 'YYYY-MM');
     const day = moment(moment(date).startOf('month')).format('YYYY-MM-DD');
 
     const params = {
-      user_id: this.state.userId,
+      user_id: userId,
       periods_count,
       start_on: moment(`${date.format('YYYY-MM')}-${day}`, 'YYYY-MM-DD'),
     };
@@ -126,12 +127,8 @@ class Periods extends React.Component {
     Api.makePostRequest({
       url: '/api/accounting_periods/generate',
       body: params,
-    }).then((response) => {
-      this.setState({
-        periods: {
-          accounting_periods: response.data,
-        },
-      });
+    }).then(() => {
+      this.getPeriods({ userId, page: 1 });
     }).catch(() => {
       alert('There was an error with generate');
     });
@@ -371,7 +368,8 @@ class Periods extends React.Component {
                     type="number"
                     onChange={this.onGeneratePeriodsChange}
                     max={MONTHS_IN_YEAR * 5}
-                    value={generatePeriods.periods_count}
+                    min={1}
+                    value={generatePeriods.periods_count || 1}
                     name="periods_count"
                     placeholder="periods count"
                   />
