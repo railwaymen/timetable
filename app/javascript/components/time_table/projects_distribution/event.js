@@ -162,7 +162,7 @@ class Event extends React.Component {
     const { selectedProject, resizable } = this.state;
     const projectColor = selectedProject ? `#${selectedProject.color}` : 'black';
     return (
-      <div className="ui centered-modal modal transition visible active">
+      <div className="ui centered-modal modal transition visible active overflow-visible">
         <i className="close icon" onClick={this.onCloseClick} />
         <div className="header">{I18n.t(`apps.projects_distribution.${eventInstance ? 'edit_event' : 'add_event'}`)}</div>
         <div className="content">
