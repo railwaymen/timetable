@@ -25,6 +25,10 @@ Rails.application.routes.draw do
     resources :users, only: %i[index show create update] do
       get :incoming_birthdays, on: :collection
     end
+    resources :hardwares, only: %i[index create destroy update] do
+      get :types, on: :collection
+      resources :fields, controller: :hardware_fields, only: %i[create destroy update]
+    end
     resources :accounting_periods do
       collection do
         get :next_position
@@ -43,6 +47,10 @@ Rails.application.routes.draw do
         put :generate, on: :member
         get :file, on: :member
         get :synchronize, on: :member
+      end
+      resources :combined_reports, shallow: true, only: %i[index show create destroy] do
+        get :synchronize, on: :member
+        get :file, on: :member
       end
       get :list, on: :collection
       get :simple, on: :collection
@@ -76,6 +84,6 @@ Rails.application.routes.draw do
     get :project, on: :collection
   end
 
-  get '/'         => 'home#index', constraints: { format: :html }
-  get '*url'      => 'home#index', constraints: { format: :html }
+  get '/' => 'home#index', :constraints => { format: :html }
+  get '*url' => 'home#index', :constraints => { format: :html }
 end

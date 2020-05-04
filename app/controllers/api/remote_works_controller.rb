@@ -5,15 +5,14 @@ module Api
     respond_to :json
 
     def index
-      @remote_works = policy_scope(RemoteWork).kept.order(starts_at: :desc)
-      @remote_works.where!(user_id: params.require(:user_id))
-      @remote_works = @remote_works.page(params[:page])
-
+      @remote_works = policy_scope(RemoteWork.where(user_id: params[:user_id]).kept.order(starts_at: :desc).page(params[:page]).per(params[:per_page] || 24))
       respond_with @remote_works
     end
 
     def create
-      @remote_work_form = RemoteWorkForm.new(remote_work_params.merge(creator_id: current_user.id))
+      @remote_work = current_user.remote_works.build
+      @remote_work.assign_attributes(permitted_attributes(@remote_work).merge(creator_id: current_user.id))
+      @remote_work_form = RemoteWorkForm.new(@remote_work)
       authorize @remote_work_form.remote_work
 
       @remote_work_form.save(save_params)
@@ -24,7 +23,7 @@ module Api
       @remote_work = RemoteWork.kept.find(params[:id])
       authorize @remote_work
 
-      @remote_work.assign_attributes(remote_work_params)
+      @remote_work.assign_attributes(permitted_attributes(@remote_work))
       @remote_work.updated_by_admin = true if @remote_work.user_id != current_user.id
       @remote_work.save(save_params)
 
@@ -46,10 +45,6 @@ module Api
 
     def save_params
       current_user.admin? ? {} : { context: :user }
-    end
-
-    def remote_work_params
-      params.require(:remote_work).permit(%i[user_id note starts_at ends_at])
     end
   end
 end

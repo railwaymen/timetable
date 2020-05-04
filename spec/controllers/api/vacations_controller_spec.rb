@@ -53,15 +53,15 @@ RSpec.describe Api::VacationsController do
                                     vacation_type: :others, vacation_sub_type: :parental, description: 'Parental', status: :accepted)
       vacation3 = create(:vacation, user: user, vacation_type: :requested, status: :accepted)
       vacations_response = [
-        vacation1.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count'),
-        vacation3.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count'),
-        vacation2.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count')
+        vacation1.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count').merge(full_name: user.to_s),
+        vacation3.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count').merge(full_name: user.to_s),
+        vacation2.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count').merge(full_name: user.to_s)
       ]
       get :index, params: { year: Time.current.year }, format: :json
       expect(response.code).to eql('200')
       available_vacation_days = user.available_vacation_days
       used_vacation_days = user.used_vacation_days(Vacation.all)
-      expect(response.body).to be_json_eql({ vacations: vacations_response, available_vacation_days: available_vacation_days, used_vacation_days: used_vacation_days }.to_json)
+      expect(response.body).to be_json_eql({ records: vacations_response, available_vacation_days: available_vacation_days, used_vacation_days: used_vacation_days }.to_json)
     end
 
     it 'filters user vacation applications by year' do
@@ -69,7 +69,7 @@ RSpec.describe Api::VacationsController do
       create(:vacation, user: user)
       get :index, params: { year: (Time.current - 1.year).year }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to eql({ vacations: [], available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
+      expect(response.body).to eql({ records: [], available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
     end
 
     it 'filters user vacation applications by user' do
@@ -77,11 +77,11 @@ RSpec.describe Api::VacationsController do
       user2 = create(:user)
       vacation = create(:vacation, user: user2)
       vacations_response = [
-        vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count')
+        vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count').merge(full_name: user2.to_s)
       ]
       get :index, params: { user_id: user2.id, year: Time.current.year }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to eql({ vacations: vacations_response, available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
+      expect(response.body).to eql({ records: vacations_response, available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
     end
   end
 
@@ -91,9 +91,31 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('401')
     end
 
-    context 'creates vacation' do
+    context 'regular user' do
       it 'with valid params' do
         sign_in(user)
+        create_params = {
+          start_date: Time.current.to_date,
+          end_date: Time.current.to_date + 4.days,
+          vacation_type: 'requested',
+          description: 'Description'
+        }
+        post :create, params: { vacation: create_params }, format: :json
+        expect(response.code).to eql('200')
+        vacation = Vacation.last
+        expect(vacation.reload.user_id).to eql(user.id)
+        expect(vacation.start_date).to eql(create_params[:start_date])
+        expect(vacation.end_date).to eql(create_params[:end_date])
+        expect(vacation.vacation_type).to eql(create_params[:vacation_type])
+        expect(vacation.description).to eql(create_params[:description])
+      end
+    end
+
+    context 'staff manager' do
+      it 'creates vacation for given user with valid params' do
+        sign_in(staff_manager)
+        user = create(:user)
+
         create_params = {
           user_id: user.id,
           start_date: Time.current.to_date,
@@ -311,13 +333,26 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('401')
     end
 
-    it 'declines vacation and set self_declined attribute to true' do
-      sign_in(admin)
-      vacation = create(:vacation)
+    context 'regular user' do
+      it 'declines vacation and set self_declined attribute to true' do
+        sign_in(user)
+        vacation = create(:vacation, user: user)
 
-      put :self_decline, params: { vacation_id: vacation.id }, format: :json
-      expect(vacation.reload.status).to eql('declined')
-      expect(vacation.self_declined).to eql(true)
+        put :self_decline, params: { vacation_id: vacation.id }, format: :json
+        expect(vacation.reload.status).to eql('declined')
+        expect(vacation.self_declined).to eql(true)
+      end
+    end
+
+    context 'staff manager' do
+      it 'declines vacation and set self_declined attribute to true' do
+        sign_in(staff_manager)
+        vacation = create(:vacation)
+
+        put :self_decline, params: { vacation_id: vacation.id }, format: :json
+        expect(vacation.reload.status).to eql('declined')
+        expect(vacation.self_declined).to eql(true)
+      end
     end
   end
 

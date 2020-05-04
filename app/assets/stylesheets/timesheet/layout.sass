@@ -24,7 +24,17 @@
   bottom: auto !important
 
 .ui.modal
+  height: auto
   position: fixed
+  left: 50%
+  transform: translateX(-50%)
   .content
     max-height: 70vh
     overflow: auto
+  &.active
+    display: flex !important
+    flex-direction: column
+  &.overflow-visible
+    overflow: visible
+    .content
+      overflow: visible

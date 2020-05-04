@@ -85,11 +85,11 @@ class CsvStaffGeneratorService
 
   def date_filter
     if @start_date && @end_date
-      sanitize_array(['AND ((v.start_date >= :start_date AND v.start_date <= :end_date) OR (v.end_date >= :start_date AND v.end_date <= :end_date) OR ((v.start_date::timestamp::date, v.end_date) OVERLAPS (:start_date, :end_date)))', start_date: @start_date.to_date.strftime('%Y/%m/%d'), end_date: @end_date.to_date.strftime('%Y/%m/%d')])
+      sanitize_array(['AND ((v.start_date >= :start_date AND v.start_date <= :end_date) OR (v.end_date >= :start_date AND v.end_date <= :end_date) OR ((v.start_date::timestamp::date, v.end_date) OVERLAPS (:start_date, :end_date)))', start_date: @start_date.to_date.iso8601, end_date: @end_date.to_date.iso8601])
     elsif @start_date
-      sanitize_array(['AND (v.start_date >= :start_date OR v.end_date >= :start_date OR ((v.start_date::timestamp::date, v.end_date) OVERLAPS (:start_date, :start_date)))', start_date: @start_date])
+      sanitize_array(['AND (v.start_date >= :start_date OR v.end_date >= :start_date OR ((v.start_date::timestamp::date, v.end_date) OVERLAPS (:start_date, :start_date)))', start_date: @start_date.to_date.iso8601])
     elsif @end_date
-      sanitize_array(['AND (v.start_date <= :end_date OR v.end_date <= :end_date OR ((v.start_date::timestamp::date, v.end_date) OVERLAPS (:end_date, :end_date)))', end_date: @end_date])
+      sanitize_array(['AND (v.start_date <= :end_date OR v.end_date <= :end_date OR ((v.start_date::timestamp::date, v.end_date) OVERLAPS (:end_date, :end_date)))', end_date: @end_date.to_date.iso8601])
     end
   end
 

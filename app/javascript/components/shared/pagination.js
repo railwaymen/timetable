@@ -4,11 +4,10 @@ import _ from 'lodash';
 
 function Pagination(props) {
   const {
-    page, setPage, totalCount, perPage = 25,
+    page, setPage, totalPages,
   } = props;
-  const pages = Math.ceil(totalCount / perPage);
   const isBackAvailable = (page !== 1);
-  const isForwardAvailable = (pages > 1 && page !== pages);
+  const isForwardAvailable = (totalPages > 1 && page !== totalPages);
 
   return (
     <ul className="pagination pull-right">
@@ -18,7 +17,7 @@ function Pagination(props) {
         </li>
       )}
 
-      {_.times(pages, (i) => {
+      {_.times(totalPages, (i) => {
         const index = i + 1;
 
         return (
@@ -40,8 +39,7 @@ function Pagination(props) {
 Pagination.propTypes = {
   page: PropTypes.number.isRequired,
   setPage: PropTypes.func.isRequired,
-  totalCount: PropTypes.number.isRequired,
-  perPage: PropTypes.number,
+  totalPages: PropTypes.number.isRequired,
 };
 
 export default Pagination;

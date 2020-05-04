@@ -115,7 +115,7 @@ function Filters(props) {
   }
 
   return (
-    <div className="container filters">
+    <div className="container-fluid filters">
       <div className="row">
         <GeneralButton />
 

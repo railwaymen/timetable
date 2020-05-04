@@ -35,7 +35,7 @@ RSpec.describe Vacation, type: :model do
   it 'validates end_date' do
     vacation = build(:vacation, end_date: Time.current - 10.days)
     expect(vacation.valid?).to be_falsey
-    expect(vacation.errors.details[:end_date]).to eql([{ error: :validates_end_date }])
+    expect(vacation.errors.details[:start_date]).to eql([{ error: :greater_than_end_date }])
   end
 
   it 'validates entries in Timesheet' do

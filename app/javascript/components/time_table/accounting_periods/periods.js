@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import _ from 'lodash';
+import Modal from '@components/shared/modal';
 import * as Api from '../../shared/api';
 import Period from './period';
 
@@ -25,7 +26,7 @@ class Periods extends React.Component {
 
     this.state = {
       periods: {
-        accounting_periods: [],
+        records: [],
         total_pages: 0,
       },
       generatePeriods: {
@@ -112,12 +113,13 @@ class Periods extends React.Component {
 
   onGenerateSubmit() {
     const { periods_count, year, month } = this.state.generatePeriods;
+    const { userId } = this.state;
 
     const date = moment(`${year}-${month}`, 'YYYY-MM');
     const day = moment(moment(date).startOf('month')).format('YYYY-MM-DD');
 
     const params = {
-      user_id: this.state.userId,
+      user_id: userId,
       periods_count,
       start_on: moment(`${date.format('YYYY-MM')}-${day}`, 'YYYY-MM-DD'),
     };
@@ -125,12 +127,8 @@ class Periods extends React.Component {
     Api.makePostRequest({
       url: '/api/accounting_periods/generate',
       body: params,
-    }).then((response) => {
-      this.setState({
-        periods: {
-          accounting_periods: response.data,
-        },
-      });
+    }).then(() => {
+      this.getPeriods({ userId, page: 1 });
     }).catch(() => {
       alert('There was an error with generate');
     });
@@ -229,7 +227,11 @@ class Periods extends React.Component {
         {this.paginationBody(total_pages, page, userId)}
         {isForwardAvailable && (
           <li className={!isForwardAvailable ? 'disabled' : ''} id="nextPage">
-            <a className="symbol fa fa-chevron-right" onClick={this.onPageChange} href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'} />
+            <a
+              className="symbol fa fa-chevron-right"
+              onClick={this.onPageChange}
+              href={isForwardAvailable ? `/accounting_periods?user_id=${userId}&page=${page + 1}` : '#'}
+            />
           </li>
         )}
       </ul>
@@ -251,14 +253,11 @@ class Periods extends React.Component {
   }
 
   onDelete(id) {
+    const { userId, page } = this.state;
     Api.makeDeleteRequest({ url: `/api/accounting_periods/${id}` })
       .then((response) => {
         if (parseInt(response.status, 10) === 204) {
-          this.setState((prevState) => ({
-            periods: {
-              accounting_periods: prevState.periods.accounting_periods.filter((period) => (period.id !== id)),
-            },
-          }));
+          this.getPeriods({ userId, page });
         } else {
           alert('Error while trying to remove accounting period');
         }
@@ -314,13 +313,13 @@ class Periods extends React.Component {
           <title>{I18n.t('common.accounting_periods')}</title>
         </Helmet>
         {currentUser.admin && this.renderButtons()}
-        <div className="col-md-offset-3 col-md-6 vert-offset-bottom clearfix">
+        <div className="offset-md-3 col-md-6 vert-offset-bottom clearfix">
           {currentUser.admin && (
             <h3 className="text-center text-muted">
-              {user.prev_id && <a onClick={this.onPreviousUserChange} className="glyphicon glyphicon-chevron-left pull-left" />}
+              {user.prev_id && <a onClick={this.onPreviousUserChange} className="fa fa-chevron-left pull-left" />}
               {this.renderUserInfo(user)}
               <span>
-                {user.next_id && <a onClick={this.onNextUserChange} className="glyphicon glyphicon-chevron-right pull-right" />}
+                {user.next_id && <a onClick={this.onNextUserChange} className="fa fa-chevron-right pull-right" />}
               </span>
             </h3>
           )}
@@ -340,7 +339,7 @@ class Periods extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { periods.accounting_periods.map((period) => (
+            { periods.records.map((period) => (
               <Period
                 key={period.id}
                 period={period}
@@ -351,50 +350,62 @@ class Periods extends React.Component {
           </tbody>
         </table>
         {this.renderPagination()}
-        <div id="modal" style={{ display: 'none' }}>
-          <div className="ui centered-modal modal transition visible active">
-            <i className="close icon" />
-            <div className="header">{I18n.t('apps.accounting_periods.generate_accounting_periods')}</div>
-            <div className="content">
-              <form className="form ui">
-                <div className="error hidden message ui">
-                  <p />
+        <Modal
+          id="modal"
+          header={I18n.t('apps.accounting_periods.generate_accounting_periods')}
+          content={(
+            <form className="form ui">
+              <div className="error hidden message ui">
+                <p />
+              </div>
+              <div className="fields inline">
+                <div className="field">
+                  <label>{I18n.t('apps.accounting_periods.periods_count')}</label>
+                  <input
+                    type="number"
+                    onChange={this.onGeneratePeriodsChange}
+                    max={MONTHS_IN_YEAR * 5}
+                    min={1}
+                    value={generatePeriods.periods_count || 1}
+                    name="periods_count"
+                    placeholder="periods count"
+                  />
                 </div>
-                <div className="fields inline">
-                  <div className="field">
-                    <label>{I18n.t('apps.accounting_periods.periods_count')}</label>
-                    <input
-                      type="number"
-                      onChange={this.onGeneratePeriodsChange}
-                      max={MONTHS_IN_YEAR * 5}
-                      value={generatePeriods.periods_count}
-                      name="periods_count"
-                      placeholder="periods count"
-                    />
-                  </div>
-                  <div className="field">
-                    <label>{I18n.t('apps.accounting_periods.starting_from_month')}</label>
-                    <select onChange={this.onGeneratePeriodsChange} value={parseInt(generatePeriods.month, 10)} className="dropdown ui" id="month" type="text" name="month">
-                      {this.generateMonths()}
-                    </select>
-                  </div>
-                  <div className="field">
-                    <select onChange={this.onGeneratePeriodsChange} value={parseInt(generatePeriods.year, 10)} className="dropdown ui" id="year" type="text" name="year">
-                      {this.generateYears()}
-                    </select>
-                  </div>
+                <div className="field">
+                  <label>{I18n.t('apps.accounting_periods.starting_from_month')}</label>
+                  <select
+                    onChange={this.onGeneratePeriodsChange}
+                    value={parseInt(generatePeriods.month, 10)}
+                    className="dropdown ui"
+                    id="month"
+                    type="text"
+                    name="month"
+                  >
+                    {this.generateMonths()}
+                  </select>
                 </div>
-              </form>
-            </div>
-            <div className="actions">
-              <button onClick={this.onGenerateSubmit} className="button green icon labeled right ui" id="generate" type="button">
-                {I18n.t('apps.accounting_periods.generate')}
-                <i className="angle double icon right" />
-              </button>
-            </div>
-          </div>
-          <div className="ui dimmer modals modal-backdrop page transition visible active" style={{ display: 'flex !important' }} />
-        </div>
+                <div className="field">
+                  <select
+                    onChange={this.onGeneratePeriodsChange}
+                    value={parseInt(generatePeriods.year, 10)}
+                    className="dropdown ui"
+                    id="year"
+                    type="text"
+                    name="year"
+                  >
+                    {this.generateYears()}
+                  </select>
+                </div>
+              </div>
+            </form>
+          )}
+          actions={(
+            <button onClick={this.onGenerateSubmit} className="button green icon labeled right ui" id="generate" type="button">
+              {I18n.t('apps.accounting_periods.generate')}
+              <i className="angle double icon right" />
+            </button>
+          )}
+        />
       </div>
     );
   }

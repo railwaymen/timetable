@@ -41,8 +41,8 @@ function Projects() {
         <div className="ui grid">
           <div className="sixteen wide column">
             <div className="btn-group pull-right">
-              <NavLink className="btn btn-default active" exact to="/projects">{I18n.t('common.rank')}</NavLink>
-              <NavLink className="btn btn-default" to="/projects/list">{I18n.t('common.all')}</NavLink>
+              <NavLink className="btn btn-secondary active" exact to="/projects">{I18n.t('common.rank')}</NavLink>
+              <NavLink className="btn btn-secondary" to="/projects/list">{I18n.t('common.all')}</NavLink>
             </div>
             <div className="btn-group pull-left">
               <select id="range" value={range} className="form-control" onChange={(e) => setRange(e.target.value)}>

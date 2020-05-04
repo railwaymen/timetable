@@ -15,7 +15,7 @@ function RemoteWork() {
   const currentPage = parseInt(params.page, 10) || 1;
   const userId = parseInt(params.user_id, 10) || currentUser.id;
 
-  const [remoteWorkList, setRemoteWorkList] = useState({ total_count: 0, remote_works: [] });
+  const [remoteWorkList, setRemoteWorkList] = useState({ total_pages: 0, records: [] });
   const [user, setUser] = useState({ id: userId });
   const [page, setPage] = useState(currentPage);
   const [editedWorkTimeId, setEditedWorkTimeId] = useState();
@@ -35,9 +35,9 @@ function RemoteWork() {
   }
 
   function setErrors(remoteWorkId, errors) {
-    const currentRemoteWork = remoteWorkList.remote_works.find((rw) => remoteWorkId === rw.id);
+    const currentRemoteWork = remoteWorkList.records.find((rw) => remoteWorkId === rw.id);
     currentRemoteWork.errors = translateErrors('remote_work', errors);
-    setRemoteWorkList({ ...remoteWorkList, remote_works: remoteWorkList.remote_works });
+    setRemoteWorkList({ ...remoteWorkList, records: remoteWorkList.records });
   }
 
   function updateRemoteWork(updatedRemoteWork) {
@@ -113,7 +113,7 @@ function RemoteWork() {
           </tr>
         </thead>
         <tbody>
-          {remoteWorkList.remote_works.map((work) => (
+          {remoteWorkList.records.map((work) => (
             <React.Fragment key={work.id}>
               {work.id === editedWorkTimeId ? (
                 <EditEntry
@@ -131,7 +131,7 @@ function RemoteWork() {
           ))}
         </tbody>
       </table>
-      <Pagination page={page} setPage={setPage} totalCount={remoteWorkList.total_count} />
+      <Pagination page={page} setPage={setPage} totalPages={remoteWorkList.total_pages} />
     </div>
   );
 }

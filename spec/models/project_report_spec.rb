@@ -19,4 +19,13 @@ RSpec.describe ProjectReport, type: :model do
       expect(project_report).to be_valid
     end
   end
+
+  describe '#after_discard' do
+    it 'discards project_report_roles' do
+      project_report_role = create(:project_report_role)
+      project_report_role.project_report.discard
+
+      expect(project_report_role.reload.discarded?).to eql(true)
+    end
+  end
 end

@@ -18,6 +18,9 @@ import Timesheet from './time_table/timesheet/timesheet';
 import NewReport from './time_table/project_reports/new_report';
 import EditReport from './time_table/project_reports/edit_report';
 import ProjectReports from './time_table/project_reports/project_reports';
+import CombinedReports from './time_table/combined_reports/combined_reports';
+import CombinedReport from './time_table/combined_reports/combined_report';
+import NewCombinedReport from './time_table/combined_reports/new_combined_report';
 import Vacations from './time_table/vacations/vacations';
 import Staff from './time_table/staff/staff';
 import VacationPeriods from './time_table/vacation_periods/vacation_periods';
@@ -26,6 +29,7 @@ import BirthdayTemplates from './time_table/birthday_templates/birthday_template
 import EditBirthdayTemplate from './time_table/birthday_templates/edit_birthday_template';
 import ProjectsDistribution from './time_table/projects_distribution/projects_distribution';
 import RemoteWork from './time_table/remote_work/remote_work';
+import HardwareList from './time_table/hardware/hardware_list';
 
 class TimeTable extends React.Component {
   constructor(props) {
@@ -37,7 +41,7 @@ class TimeTable extends React.Component {
   render() {
     return (
       <BrowserRouter>
-        <div className="app container">
+        <div className="app container-fluid">
           { window.location.pathname === '/' ? <Redirect to="/timesheet" /> : null }
           <Navbar />
           <div className="content">
@@ -53,6 +57,9 @@ class TimeTable extends React.Component {
             <Route path="/projects/:projectId/reports" component={ProjectReports} />
             <Route path="/projects/:projectId/new_report" component={NewReport} />
             <Route path="/projects/:projectId/edit_report/:reportId" component={EditReport} />
+            <Route path="/projects/:projectId/combined_reports" exact component={CombinedReports} />
+            <Route path="/projects/:projectId/combined_reports/:id" component={CombinedReport} />
+            <Route path="/projects/:projectId/new_combined_report" component={NewCombinedReport} />
             <Route path="/projects/new" component={EditProject} />
             <Route path="/reports/work_times/by_projects" component={ByProjects} />
             <Route path="/reports/work_times/by_users" component={ByUsers} />
@@ -68,6 +75,7 @@ class TimeTable extends React.Component {
             <Route path="/birthday_templates/new" component={EditBirthdayTemplate} />
             <Route path="/birthday_templates/edit/:id" component={EditBirthdayTemplate} />
             <Route path="/projects_distribution" component={ProjectsDistribution} />
+            <Route path="/hardware" component={HardwareList} />
           </div>
         </div>
       </BrowserRouter>

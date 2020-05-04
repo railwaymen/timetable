@@ -12,8 +12,8 @@ class RemoteWorkForm
   validate :validates_hours
   validates :starts_at, :ends_at, presence: true
 
-  def initialize(params)
-    @remote_work = RemoteWork.new(params)
+  def initialize(remote_work)
+    @remote_work = remote_work
     @saved = []
   end
 

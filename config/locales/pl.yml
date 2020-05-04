@@ -1,5 +1,20 @@
 pl:
   apps:
+    hardware:
+      locked: "Ten sprzęt jest zablokowany, nie możesz go edytować"
+      add_new: Dodaj sprzęt
+      type: Typ
+      manufacturer: Producent
+      model: Model
+      serial_number: Numer seryjny
+      field:
+        add_new: Dodaj pole
+        name: Nazwa
+        value: Wartość
+      types:
+        screen: Monitor
+        pc: Komputer
+        laptop: Laptop
     header:
       login: Logowanie
       username: Użytkownik
@@ -54,6 +69,12 @@ pl:
       restore_first: Przywróć pierwszą wersję
       collision: Kolizja z następującymi raportami
       all_users: Wszyscy użytkownicy
+    combined_reports:
+      combined_report: Raport łączony
+      combine_reports: Połącz raporty
+      new: Nowy raport łączony
+      combined_report_name: Nazwa raportu łączonego
+      already_used: Jest już w innym raporcie
     accounting_periods:
       add: Dodaj okres rozliczeniowy
       new: Nowy okres rozliczeniowy
@@ -200,6 +221,7 @@ pl:
       exit: Wyjdź
       add_event: Dodaj event
       edit_event: Edytuj event
+      confirm_delete: 'Czy na pewno chcesz usunąć zasób {{resource_name}} ?'
       activity:
         create_resource: '{{user}} dodał zasób {{resource}}'
         delete_resource: '{{user}} usunął zasób {{resource}}'
@@ -207,6 +229,10 @@ pl:
         update_assignment: '{{user}} zaktualizował zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
         delete_assignment: '{{user}} usunął zasób {{resource}} przypisany do projektu {{project}} od {{start}} do {{end}}'
   common:
+    expand: "Rozwiń"
+    lock: "Zablokuj"
+    unlock: "Odblokuj"
+    fold: "Zwiń"
     rank: 'Ranking'
     add: Dodaj
     save: Zapisz
@@ -228,6 +254,7 @@ pl:
     projects: Projekty
     people: Osoby
     reports: Raporty
+    combined_reports: Raporty łączone
     accounting_periods: Okresy rozliczeniowe
     timesheet: Czas pracy
     all: Wszystkie
@@ -235,6 +262,7 @@ pl:
     yesterday: Wczoraj
     confirm: Jesteś pewien?
     sum: Suma
+    total: Suma
     name: Nazwa
     external_auth: Integracja z serwisami zewnętrznymi
     custom: Własny
@@ -282,6 +310,8 @@ pl:
     remote_work: Praca zdalna
     hours: Godziny
     date: Data
+    refresh: Odśwież
+    hardware: Mój sprzęt
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -349,6 +379,24 @@ pl:
               blank: Projekt jest wymagany
         external_auth:
           basic: Błąd uwierzytelnienia
+        hardware_field:
+          attributes:
+            name:
+              taken: Nazwa jest zajeta
+              blank: Nazwa jest wymagana
+            value:
+              blank: Wartość jest wymagana
+        hardware:
+          attributes:
+            type:
+              blank: Typ jest wymagany
+            manufacturer:
+              blank: Producent jest wymagany
+            model:
+              blank: Model jest wymagany
+            serial_number:
+              blank: Numer seryjny jest wymagany
+              taken: Numer seryjny jest zajety
         birthday_email_template:
           attributes:
             name:
@@ -360,8 +408,8 @@ pl:
           attributes:
             base:
               work_time_exists: Jest już czas pracy z tą samą datą
-            end_date:
-              validates_end_date: Nieprawidłowa data końcowa
+            start_date:
+              greater_than_end_date: Nieprawidłowa data końcowa
         accounting_period:
           attributes:
             starts_at:
@@ -387,6 +435,7 @@ pl:
             email:
               blank: Email jest wymagany
               taken: Email jest już zajęty
+              invalid: Email jest niepoprawny
             first_name:
               blank: Imię jest wymagane
             last_name:
@@ -407,6 +456,19 @@ pl:
               blank: Data końcowa jest wymagana
             duration:
               greater_than: Czas trwania musi być większy od zera
+        combined_report:
+          attributes:
+            base:
+              multiple_currencies: Raport zawiera różne waluty
+              only_done_allowed: Można użyć tylko zakończonych raportów
+            name:
+              blank: Nazwa jest wymagana
+        project_report:
+          attributes:
+            base:
+              combined_reports_exist: Nie można usunąć raportu, ponieważ jest użyty w raporcie łączonym
+            name:
+              blank: Nazwa jest wymagana
   activemodel:
     errors:
       models:

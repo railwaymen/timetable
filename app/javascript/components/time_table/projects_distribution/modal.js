@@ -23,7 +23,7 @@ class Modal extends React.Component {
 
   showAddEvent(slotId, slotName, start, end) {
     this.setState({
-      modal: this.renderEvent(slotId, slotName, start, end),
+      modal: this.renderEvent(slotId, slotName, start, end, true),
     }, () => {
       this.event.updateAddModal(start, end);
       $('#modal').show();
@@ -32,7 +32,7 @@ class Modal extends React.Component {
 
   showEditEvent(event) {
     this.setState({
-      modal: this.renderEvent(event.resourceId, '', event.start, event.end, event),
+      modal: this.renderEvent(event.resourceId, '', event.start, event.end, event.resizable, event),
     }, () => {
       this.event.updateEditModal(event);
       $('.ant-popover').not('.ant-popover-hidden').addClass('ant-popover-hidden');
@@ -51,7 +51,7 @@ class Modal extends React.Component {
     );
   }
 
-  renderEvent(slotId, slotName, start, end, eventInstance = null) {
+  renderEvent(slotId, slotName, start, end, resizable, eventInstance = null) {
     return (
       <Event
         ref={(event) => { this.event = event; }}
@@ -61,6 +61,7 @@ class Modal extends React.Component {
         slotName={slotName}
         start={start}
         end={end}
+        resizable={resizable}
         eventInstance={eventInstance}
         addEvent={this.props.addEvent}
         showUpdatedEvent={this.props.showUpdatedEvent}

@@ -48,7 +48,7 @@ class ProjectsDistribution extends React.Component {
       {
         displayWeekend: false,
         customCellWidth: '1.3%',
-        schedulerWidth: '95%',
+        besidesWidth: '30',
         schedulerMaxHeight: '0',
         tableHeaderHeight: '55px',
         headerEnabled: false,
@@ -135,7 +135,7 @@ class ProjectsDistribution extends React.Component {
         </div>
         <div style={{ width: firstMonthPercentageWidth }}>
           <div className="chevron-left">
-            <i className="glyphicon glyphicon-chevron-left" onClick={this.prevClick} />
+            <i className="fa fa-chevron-left" onClick={this.prevClick} />
           </div>
           {firstMonth}
         </div>
@@ -145,7 +145,7 @@ class ProjectsDistribution extends React.Component {
         <div style={{ width: thirdMonthPercentageWidth }}>
           {thirdMonth}
           <div className="chevron-right">
-            <i className="glyphicon glyphicon-chevron-right" onClick={this.nextClick} />
+            <i className="fa fa-chevron-right" onClick={this.nextClick} />
           </div>
         </div>
       </div>
@@ -323,7 +323,9 @@ class ProjectsDistribution extends React.Component {
     if (activity.item_type === 'ProjectResource' && activity.event === 'create') return this.renderCreateResourceActivity(activity);
     if (activity.item_type === 'ProjectResource' && activity.event === 'update') return this.renderUpdateResourceActivity(activity);
     if (activity.item_type === 'ProjectResourceAssignment' && activity.event === 'create') return this.renderCreateAssignmentActivity(activity);
-    if (activity.item_type === 'ProjectResourceAssignment' && activity.event === 'update' && activity.deleted === true) return this.renderDeleteAssignmentActivity(activity);
+    if (activity.item_type === 'ProjectResourceAssignment' && activity.event === 'update' && activity.deleted === true) {
+      return this.renderDeleteAssignmentActivity(activity);
+    }
     if (activity.item_type === 'ProjectResourceAssignment' && activity.event === 'update') return this.renderUpdateAssignmentActivity(activity);
   }
 

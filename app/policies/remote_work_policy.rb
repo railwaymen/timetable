@@ -13,12 +13,26 @@ class RemoteWorkPolicy < ApplicationPolicy
     create?
   end
 
+  def permitted_attributes
+    user.admin? ? admin_params : user_params
+  end
+
+  private
+
+  def user_params
+    %i[note starts_at ends_at]
+  end
+
+  def admin_params
+    user_params.concat(%i[user_id])
+  end
+
   class Scope < Scope
     def resolve
       if user.admin?
         scope.all
       else
-        scope.where(user_id: user.id)
+        scope.rewhere(user_id: user.id)
       end
     end
   end

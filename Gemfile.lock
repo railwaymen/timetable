@@ -7,7 +7,6 @@ GIT
 
 GEM
   remote: https://rubygems.org/
-  remote: https://rails-assets.org/
   specs:
     actioncable (6.0.2.1)
       actionpack (= 6.0.2.1)
@@ -68,10 +67,8 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     airbrussh (1.3.0)
       sshkit (>= 1.6.1, != 1.7.0)
-    archive-zip (0.12.0)
-      io-like (~> 0.3.0)
     ast (2.4.0)
-    autoprefixer-rails (9.1.4)
+    autoprefixer-rails (9.7.6)
       execjs
     awesome_print (1.8.0)
     babel-source (5.8.35)
@@ -85,9 +82,10 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
-    bootstrap-sass (3.3.7)
-      autoprefixer-rails (>= 5.2.1)
-      sass (>= 3.3.4)
+    bootstrap (4.4.1)
+      autoprefixer-rails (>= 9.1.0)
+      popper_js (>= 1.14.3, < 2)
+      sassc-rails (>= 2.0.0)
     builder (3.2.4)
     business_time (0.9.3)
       activesupport (>= 3.2.0)
@@ -122,9 +120,6 @@ GEM
       capybara
       selenium-webdriver
     childprocess (3.0.0)
-    chromedriver-helper (2.1.1)
-      archive-zip (~> 0.10)
-      nokogiri (~> 1.8)
     chronic (0.10.2)
     chronic_duration (0.10.6)
       numerizer (~> 0.1.1)
@@ -170,7 +165,6 @@ GEM
     immigrant (0.3.6)
       activerecord (>= 3.0)
     interactor (3.1.1)
-    io-like (0.3.1)
     jaro_winkler (1.5.4)
     jbuilder (2.10.0)
       activesupport (>= 5.0.0)
@@ -231,6 +225,7 @@ GEM
       ast (~> 2.4.0)
     pdf-core (0.7.0)
     pg (0.18.4)
+    popper_js (1.16.0)
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
       ttfunk (~> 1.5)
@@ -267,9 +262,6 @@ GEM
       bundler (>= 1.3.0)
       railties (= 6.0.2.1)
       sprockets-rails (>= 2.0.0)
-    rails-assets-bootstrap (3.3.6)
-      rails-assets-jquery (>= 1.9.1, < 3)
-    rails-assets-jquery (2.2.4)
     rails-controller-testing (1.0.4)
       actionpack (>= 5.0.1.x)
       actionview (>= 5.0.1.x)
@@ -406,6 +398,10 @@ GEM
       rails (>= 3.0.0)
     warden (1.2.8)
       rack (>= 2.0.6)
+    webdrivers (4.3.0)
+      nokogiri (~> 1.6)
+      rubyzip (>= 1.3.0)
+      selenium-webdriver (>= 3.0, < 4.0)
     webpacker (3.5.5)
       activesupport (>= 4.2)
       rack-proxy (>= 0.6.1)
@@ -426,7 +422,7 @@ DEPENDENCIES
   awesome_print
   better_errors
   binding_of_caller
-  bootstrap-sass
+  bootstrap (~> 4.4.1)
   business_time
   capistrano
   capistrano-bundler
@@ -436,7 +432,6 @@ DEPENDENCIES
   capistrano-yarn
   capybara
   capybara-selenium
-  chromedriver-helper
   devise
   devise-i18n
   discard
@@ -463,7 +458,6 @@ DEPENDENCIES
   pundit
   rack
   rails (= 6.0.2.1)
-  rails-assets-bootstrap (= 3.3.6)!
   rails-controller-testing
   rails-ujs
   react-rails
@@ -483,6 +477,7 @@ DEPENDENCIES
   sinatra
   uglifier
   validates_overlap
+  webdrivers
   webpacker
   whenever
 

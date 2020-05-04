@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import ErrorTooltip from '@components/shared/error_tooltip';
 import * as Api from '../../shared/api';
 import translateErrors from '../../shared/translate_errors';
 import { unnullifyFields } from '../../shared/helpers';
@@ -128,18 +129,6 @@ class EditBirthdayTemplate extends React.Component {
     return { __html: this.state.birthdayTemplatePreview };
   }
 
-  renderErrorTooltip(errors) {
-    return (
-      <div className="error-tooltip birthday-error">
-        <ul>
-          {errors.map((error) => (
-            <li key={error}>{error}</li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-
   render() {
     const {
       birthdayTemplate, birthdayTemplatePreview, redirectToReferer, errors,
@@ -156,7 +145,7 @@ class EditBirthdayTemplate extends React.Component {
         </Helmet>
         <div className="birthday-template-form">
           <div className="form-group">
-            {errors.name && this.renderErrorTooltip(errors.name)}
+            {errors.name && <ErrorTooltip errors={errors.name} className="birthday-error" />}
             <input
               className="form-control"
               type="text"
@@ -167,7 +156,7 @@ class EditBirthdayTemplate extends React.Component {
             />
           </div>
           <div className="form-group">
-            {errors.title && this.renderErrorTooltip(errors.title)}
+            {errors.title && <ErrorTooltip errors={errors.title} className="birthday-error" />}
             <input
               className="form-control"
               type="text"
@@ -207,7 +196,7 @@ class EditBirthdayTemplate extends React.Component {
               value={birthdayTemplate.bottom || ''}
             />
           </div>
-          <NavLink activeClassName="" className="btn btn-default" to="/birthday_templates">{I18n.t('common.cancel')}</NavLink>
+          <NavLink activeClassName="" className="btn btn-secondary" to="/birthday_templates">{I18n.t('common.cancel')}</NavLink>
           <div className="btn btn-primary" onClick={this.onSubmitAndPreview}>{I18n.t('apps.birthday_templates.save_and_preview')}</div>
           <div className="btn btn-primary" value={I18n.t('common.save')} onClick={this.onSubmit}>{I18n.t('common.save')}</div>
         </div>

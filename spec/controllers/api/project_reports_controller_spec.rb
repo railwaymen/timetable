@@ -35,6 +35,27 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         end.to change(ProjectReport, :count).by(1)
         expect(response).to be_ok
       end
+
+      it 'does not create project report when params are invalid' do
+        time = Time.zone.now
+        worker = create(:user, first_name: 'Tomasz', last_name: 'Kowalski')
+        FactoryBot.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
+
+        expect do
+          post(:create, params: {
+                 format: 'json',
+                 project_id: project,
+                 currency: 'd',
+                 name: '',
+                 starts_at: (time - 2.days).beginning_of_day,
+                 ends_at: (time + 2.days).beginning_of_day,
+                 project_report_roles: [worker].map { |u| { id: u.id, first_name: u.first_name, last_name: u.last_name, role: 'developer', hourly_wage: 30.5 } }
+               })
+        end.to_not change(ProjectReport, :count)
+
+        expect(response.code).to eql('422')
+        expect(response.body).to include_json({ error: :blank }.to_json).at_path('errors/name')
+      end
     end
 
     context 'not all users have a role' do
@@ -50,6 +71,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
           post(:create, params: {
                  format: 'json',
                  project_id: project,
+                 name: 'Report',
                  currency: 'd',
                  starts_at: (time - 2.days).beginning_of_day,
                  ends_at: (time + 2.days).beginning_of_day,
@@ -83,7 +105,27 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         id: project_report.id
       }
       expect(response).to be_successful
-      expect(ProjectReport.find_by(id: project_report.id)).to be_nil
+      expect(project_report.reload.discarded_at).to_not be_nil
+    end
+
+    it 'checks if related combined report exists' do
+      project_report = create(:project_report, project: project)
+      combined_reports_project_report = create(:combined_reports_project_report, project_report: project_report)
+
+      aggregate_failures 'returns error' do
+        delete :destroy, params: { format: 'json', project_id: project.id, id: project_report.id }
+
+        expect(response.code).to eql('422')
+        expect(response.body).to include_json({ error: :combined_reports_exist }.to_json).at_path('errors/base')
+      end
+
+      aggregate_failures 'deletes project report if combined report is discarded' do
+        combined_reports_project_report.combined_report.discard
+        delete :destroy, params: { format: 'json', project_id: project.id, id: project_report.id }
+
+        expect(response).to be_successful
+        expect(project_report.reload.discarded_at).to_not be_nil
+      end
     end
   end
 
@@ -130,7 +172,7 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         FactoryBot.create :work_time, user: worker, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryBot.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryBot.create :work_time, user: worker, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
-        report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
+        report = project.project_reports.create!(state: :done, name: 'Report', initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
         report.project_report_roles.create!(user: user, role: 'developer', hourly_wage: 30, description: 'Frontend')
 
         get :roles, params: { format: 'json', project_id: project, starts_at: (time - 2.days).beginning_of_day, ends_at: (time + 2.days).beginning_of_day }
@@ -167,10 +209,10 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
         FactoryBot.create :work_time, user: user_not_in_recent_report, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryBot.create :work_time, user: user, project: project, starts_at: time - 30.minutes, ends_at: time - 25.minutes
         FactoryBot.create :work_time, user: new_user, project: project, starts_at: time - 25.minutes, ends_at: time - 20.minutes
-        old_report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
+        old_report = project.project_reports.create!(state: :done, name: 'Report', initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
         old_report.project_report_roles.create!(user: user_not_in_recent_report, role: 'developer', hourly_wage: 31, description: 'Frontend')
 
-        report = project.project_reports.create!(state: :done, initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
+        report = project.project_reports.create!(state: :done, name: 'Report', initial_body: { qa: [] }, last_body: { qa: [] }, starts_at: (time - 40.days), ends_at: (time - 20.days), duration_sum: 0, currency: 'd')
         report.project_report_roles.create!(user: user, role: 'developer', hourly_wage: 30, description: 'Backend')
 
         get :roles, params: { format: 'json', project_id: project, starts_at: (time - 2.days).beginning_of_day, ends_at: (time + 2.days).beginning_of_day }

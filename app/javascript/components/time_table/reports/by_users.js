@@ -84,7 +84,7 @@ class ByUsers extends Report {
 
     return (
       <div id="content">
-        <header className="page-header reports-header row">
+        <header className="page-header reports-header row align-items-end">
           <div className="col-md-3">
             { (currentUser.isSuperUser() || currentUser.is_leader) && (
               <select id="filter-list" className="form-control" name="list" onChange={this.onFilterChange} defaultValue={list}>
@@ -107,8 +107,8 @@ class ByUsers extends Report {
           <div className="col-md-3">
             { (currentUser.isSuperUser() || currentUser.is_leader) && (
               <div className="btn-group pull-right">
-                <NavLink className="btn btn-default" to="/reports/work_times/by_projects">{I18n.t('apps.reports.by_projects')}</NavLink>
-                <span className="btn btn-default active">{I18n.t('apps.reports.by_people')}</span>
+                <NavLink className="btn btn-secondary" to="/reports/work_times/by_projects">{I18n.t('apps.reports.by_projects')}</NavLink>
+                <span className="btn btn-secondary active">{I18n.t('apps.reports.by_people')}</span>
               </div>
             )}
           </div>

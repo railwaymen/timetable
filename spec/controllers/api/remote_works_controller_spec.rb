@@ -28,7 +28,7 @@ RSpec.describe Api::RemoteWorksController do
       remote_work = create(:remote_work, user: user)
       get :index, params: { user_id: user.id }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ remote_works: [remote_work_response(remote_work)], total_count: 1 }.to_json)
+      expect(response.body).to be_json_eql({ records: [remote_work_response(remote_work)], total_pages: 1 }.to_json)
     end
 
     it 'checks permissions' do
@@ -37,7 +37,7 @@ RSpec.describe Api::RemoteWorksController do
       create(:remote_work, user: admin)
       get :index, params: { user_id: admin.id }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ remote_works: [], total_count: 0 }.to_json)
+      expect(response.body).to be_json_eql({ records: [], total_pages: 0 }.to_json)
     end
 
     it 'filters by user_id as admin' do
@@ -46,7 +46,7 @@ RSpec.describe Api::RemoteWorksController do
       remote_work = create(:remote_work, user: user)
       get :index, params: { user_id: user.id }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ remote_works: [remote_work_response(remote_work)], total_count: 1 }.to_json)
+      expect(response.body).to be_json_eql({ records: [remote_work_response(remote_work)], total_pages: 1 }.to_json)
     end
   end
 

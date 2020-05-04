@@ -12,8 +12,8 @@ function UnconfirmedVacations(props) {
   const title = showAll ? { main_title: 'all', right_tittle: 'show_acceptable' } : { main_title: 'acceptable', right_tittle: 'show_all' };
 
   return (
-    <div className="row">
-      <div className="vacations-title" style={{ textAlign: 'center' }}>
+    <div className="">
+      <div className="vacations-title row mx-0 my-2 position-relative">
         <div className="mid-title">{I18n.t(`apps.staff.${title.main_title}`)}</div>
         { window.currentUser.staff_manager && (
           <div className="right-title" onClick={() => setShowAll(!showAll)}>

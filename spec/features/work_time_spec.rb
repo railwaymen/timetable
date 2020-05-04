@@ -23,7 +23,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   def create_task(message, from, to)
     within('#content') do
       fill_in 'What have you done ?', with: message
-      find('.project-dropdown').click
+      find('.project-dropdown #search-input').click
       find('.project-dropdown .item:nth-child(1)').click
       find('#start').click
       fill_in 'start', with: from
@@ -82,7 +82,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
   def select_2_months_ago_tasks(work_time)
     find('#months').click
-    find('a.item', text: "#{work_time.starts_at.strftime('%b')} #{work_time.starts_at.strftime('%y')}").click
+    find('a.dropdown-item', text: "#{work_time.starts_at.strftime('%b')} #{work_time.starts_at.strftime('%y')}").click
   end
 
   it 'Timesheet' do
@@ -167,7 +167,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     end
 
     aggregate_failures 'projects listing - active' do
-      find('a.btn.btn-default', text: 'All').click
+      find('a.btn.btn-secondary', text: 'All').click
       expect(page).to have_selector('tbody > tr', count: 3)
     end
 

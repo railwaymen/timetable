@@ -2,8 +2,9 @@ import React from 'react';
 import moment from 'moment';
 import { Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import URI from 'urijs';
 import bindAll from 'lodash/bindAll';
+import translateErrors from '@components/shared/translate_errors';
+import ErrorTooltip from '@components/shared/error_tooltip';
 import * as Api from '../../shared/api';
 import DateRangeFilter from '../../shared/date_range_filter';
 import Preloader from '../../shared/preloader';
@@ -26,17 +27,12 @@ export default class NewReport extends React.Component {
       collisions: [],
       redirectTo: null,
       sync: false,
+      errors: {},
     };
   }
 
   componentDidMount() {
-    const base = URI(window.location.href);
-    const { from, to } = base.query(true);
-    if (from && to) {
-      this.setState({ startsAt: moment(from), endsAt: moment(to) }, this.getRoles);
-    } else {
-      this.getRoles();
-    }
+    this.getRoles();
   }
 
   onRangeStartChange(time) {
@@ -51,7 +47,8 @@ export default class NewReport extends React.Component {
 
   getRoles() {
     this.setState({ sync: true });
-    const url = `/api/projects/${this.state.projectId}/project_reports/roles?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}`;
+    const { projectId, startsAt, endsAt } = this.state;
+    const url = `/api/projects/${projectId}/project_reports/roles?starts_at=${startsAt.toISOString()}&ends_at=${endsAt.toISOString()}`;
     Api.makeGetRequest({ url })
       .then(({ data }) => {
         this.setState(({ currency }) => ({ sync: false, userRoles: data.user_roles, currency: currency || data.currency }));
@@ -60,7 +57,8 @@ export default class NewReport extends React.Component {
   }
 
   checkForCollision() {
-    const url = `/api/projects/${this.state.projectId}/project_reports?starts_at=${this.state.startsAt.toISOString()}&ends_at=${this.state.endsAt.toISOString()}`;
+    const { projectId, startsAt, endsAt } = this.state;
+    const url = `/api/projects/${projectId}/project_reports?starts_at=${startsAt.toISOString()}&ends_at=${endsAt.toISOString()}`;
     Api.makeGetRequest({ url })
       .then(({ data }) => this.setState({ collisions: data }));
   }
@@ -96,8 +94,13 @@ export default class NewReport extends React.Component {
           state: { report: data },
         },
       });
-    }).catch(() => {
-      alert('Failed to create report');
+    }).catch((results) => {
+      if (results.errors) {
+        const errors = translateErrors('project_report', results.errors);
+        this.setState({ errors });
+      } else {
+        alert('Failed to create report');
+      }
     });
   }
 
@@ -125,6 +128,7 @@ export default class NewReport extends React.Component {
         </Helmet>
         <div className="row">
           <div className="col-md-6 form-group">
+            {this.state.errors.name && <ErrorTooltip errors={this.state.errors.name} />}
             <label>{I18n.t('common.name')}</label>
             <input className="form-control" value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} />
           </div>
@@ -169,7 +173,14 @@ export default class NewReport extends React.Component {
                     </select>
                   </td>
                   <td>
-                    <input className="form-control" type="number" min="0" step="0.01" value={user.hourly_wage} onChange={(e) => this.onFieldChange(e, 'hourly_wage', user.id)} />
+                    <input
+                      className="form-control"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={user.hourly_wage}
+                      onChange={(e) => this.onFieldChange(e, 'hourly_wage', user.id)}
+                    />
                     {user.hourly_wage === '' && <span style={{ color: 'red', fontWeight: 'bold' }}>Invalid format</span>}
                   </td>
                   <td>

@@ -86,12 +86,12 @@ class EditVacationPeriod extends React.Component {
     if (redirectToReferer) return (<Redirect to={redirectToReferer} />);
     if (!periodId || periodId === period.id) {
       result = (
-        <div className="container">
+        <div className="container-fluid">
           <Helmet>
             <title>{I18n.t('apps.vacation_periods.edit')}</title>
           </Helmet>
           <div id="content" className="edit-vacation-period col-md-6">
-            <form className="row" onSubmit={this.onSubmit}>
+            <form onSubmit={this.onSubmit}>
               { errors.vacation_days && (
                 <div className="error-description">{errors.vacation_days.join(', ')}</div>
               )}

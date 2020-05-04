@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_06_085027) do
+ActiveRecord::Schema.define(version: 2020_04_28_224608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,33 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
     t.text "header", default: "", null: false
   end
 
+  create_table "combined_reports", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.bigint "project_id"
+    t.integer "duration_sum", null: false
+    t.decimal "cost", precision: 12, scale: 2, null: false
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.string "currency", null: false
+    t.string "file_path"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_combined_reports_on_discarded_at"
+    t.index ["project_id"], name: "index_combined_reports_on_project_id"
+  end
+
+  create_table "combined_reports_project_reports", force: :cascade do |t|
+    t.bigint "combined_report_id", null: false
+    t.bigint "project_report_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "discarded_at"
+    t.index ["combined_report_id"], name: "index_combined_reports_project_reports_on_combined_report_id"
+    t.index ["discarded_at"], name: "index_combined_reports_project_reports_on_discarded_at"
+    t.index ["project_report_id"], name: "index_combined_reports_project_reports_on_project_report_id"
+  end
+
   create_table "external_auths", force: :cascade do |t|
     t.bigint "project_id"
     t.jsonb "data", null: false
@@ -62,6 +89,25 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
     t.index ["user_id"], name: "index_external_auths_on_user_id"
   end
 
+  create_table "hardware_fields", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "value", null: false
+    t.bigint "hardware_id"
+    t.index ["hardware_id"], name: "index_hardware_fields_on_hardware_id"
+    t.index ["name", "hardware_id"], name: "index_hardware_fields_on_name_and_hardware_id", unique: true
+  end
+
+  create_table "hardwares", force: :cascade do |t|
+    t.string "type", default: "laptop", null: false
+    t.string "manufacturer", null: false
+    t.string "model", null: false
+    t.string "serial_number", null: false
+    t.bigint "user_id"
+    t.boolean "locked", default: false, null: false
+    t.index ["serial_number"], name: "index_hardwares_on_serial_number", unique: true
+    t.index ["user_id"], name: "index_hardwares_on_user_id"
+  end
+
   create_table "project_report_roles", force: :cascade do |t|
     t.bigint "project_report_id", null: false
     t.bigint "user_id", null: false
@@ -70,6 +116,8 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_project_report_roles_on_discarded_at"
     t.index ["project_report_id", "user_id"], name: "index_project_report_roles_on_project_report_id_and_user_id", unique: true
     t.index ["project_report_id"], name: "index_project_report_roles_on_project_report_id"
     t.index ["user_id"], name: "index_project_report_roles_on_user_id"
@@ -85,10 +133,12 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
     t.datetime "starts_at", null: false
     t.datetime "ends_at", null: false
     t.string "currency", default: "", null: false
-    t.string "name", default: "", null: false
+    t.string "name", null: false
     t.string "file_path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_project_reports_on_discarded_at"
     t.index ["project_id"], name: "index_project_reports_on_project_id"
   end
 
@@ -189,6 +239,7 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
     t.boolean "staff_manager", default: false, null: false
     t.date "birthdate"
     t.datetime "discarded_at"
+    t.boolean "hardware_manager", default: false, null: false
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -265,8 +316,13 @@ ActiveRecord::Schema.define(version: 2020_04_06_085027) do
 
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"
   add_foreign_key "accounting_periods_recounts", "users"
+  add_foreign_key "combined_reports", "projects"
+  add_foreign_key "combined_reports_project_reports", "combined_reports"
+  add_foreign_key "combined_reports_project_reports", "project_reports"
   add_foreign_key "external_auths", "projects"
   add_foreign_key "external_auths", "users"
+  add_foreign_key "hardware_fields", "hardwares"
+  add_foreign_key "hardwares", "users"
   add_foreign_key "project_report_roles", "project_reports"
   add_foreign_key "project_report_roles", "users"
   add_foreign_key "project_reports", "projects"

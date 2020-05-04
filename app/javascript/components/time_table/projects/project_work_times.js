@@ -74,11 +74,6 @@ export default class ProjectWorkTimes extends React.Component {
     return ['TimeTable', 'TimeTable', newUrl];
   }
 
-  reportsUrl() {
-    const { from, to, projectId } = this.state;
-    return `/projects/${projectId}/reports?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
-  }
-
   arrowsLabel() {
     return moment(this.state.from).format('MMMM YYYY');
   }
@@ -126,7 +121,7 @@ export default class ProjectWorkTimes extends React.Component {
 
   render() {
     const {
-      groupedWorkTimes, from, to, project, reports, tag_reports, user_id, sync,
+      groupedWorkTimes, from, to, project, reports, tag_reports, user_id, sync, projectId,
     } = this.state;
     const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
 
@@ -135,18 +130,18 @@ export default class ProjectWorkTimes extends React.Component {
         <Helmet>
           <title>{project.name}</title>
         </Helmet>
-        <header className="page-header projects-header row text-center">
+        <header className="page-header projects-header text-center">
           <h1 className="project-title">
             {project.name}
             {currentUser.isSuperUser() && (
-              <Link to={this.reportsUrl()} className="btn btn-success">
+              <Link to={`/projects/${projectId}/reports`} className="btn btn-success">
                 Reports
               </Link>
             )}
           </h1>
-          <HorizontalArrows className="row" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
+          <HorizontalArrows className="row mx-0" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
             <DateRangeFilter
-              className="col-md-8 col-md-offset-2"
+              className="col-auto mx-auto"
               from={from}
               to={to}
               onFromChange={this.onFromChange}
@@ -154,7 +149,7 @@ export default class ProjectWorkTimes extends React.Component {
               onFilter={() => this.getWorkTimes(this.state)}
             >
               {user_id && (
-                <button type="button" className="btn btn-default" onClick={this.allUsers}>
+                <button type="button" className="btn btn-secondary" onClick={this.allUsers}>
                   {I18n.t('apps.reports.all_users')}
                 </button>
               )}

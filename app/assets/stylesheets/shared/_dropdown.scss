@@ -1,0 +1,9 @@
+.dropdown-menu.show {
+  max-height: 30vh;
+  overflow: auto;
+}
+
+.project-filters,
+.months-filters {
+  min-width: 140px;
+}

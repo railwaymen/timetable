@@ -16,7 +16,7 @@ function Vacations() {
     Api.makeGetRequest({ url })
       .then((response) => {
         const vacationsInfoResponse = {
-          vacations: response.data.vacations,
+          vacations: response.data.records,
           availableVacationDays: response.data.available_vacation_days,
           usedVacationDays: response.data.used_vacation_days,
         };
@@ -29,15 +29,13 @@ function Vacations() {
   }, [selectedYear, selectedUser]);
 
   return (
-    <div className="container vacation-entry">
+    <div className="container-fluid vacation-entry">
       <Helmet>
         <title>{I18n.t('common.vacations')}</title>
       </Helmet>
       <div className="row">
-        <div className="vacations-container">
-          <Entry selectedUser={selectedUser} setSelectedUser={setSelectedUser} getVacations={getVacations} />
-          <EntryHistory vacationsInfo={vacationsInfo} selectedYear={selectedYear} setSelectedYear={setSelectedYear} getVacations={getVacations} />
-        </div>
+        <Entry selectedUser={selectedUser} setSelectedUser={setSelectedUser} getVacations={getVacations} />
+        <EntryHistory vacationsInfo={vacationsInfo} selectedYear={selectedYear} setSelectedYear={setSelectedYear} getVacations={getVacations} />
       </div>
     </div>
   );

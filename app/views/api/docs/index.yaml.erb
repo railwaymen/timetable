@@ -463,7 +463,11 @@ paths:
         - authentication: []
       parameters:
         - name: page
-          description: API returns 24 records per page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          description: Records per page. By default it is 24
           in: query
           schema:
             type: integer
@@ -484,7 +488,7 @@ paths:
                   recounting:
                     type: boolean
                     example: false
-                  accounting_periods:
+                  records:
                     type: array
                     items:
                       $ref: '#/components/schemas/AccountingPeriod'
@@ -513,6 +517,221 @@ paths:
                   should_worked:
                     type: integer
                     example: 604800
+  /vacations:
+    get:
+      tags:
+        - Vacations
+      security:
+        - authentication: []
+      parameters:
+        - name: year
+          in: query
+          schema:
+            type: integer
+            example: "<%= Date.current.year %>"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - available_vacation_days
+                  - used_vacation_days
+                  - vacations
+                properties:
+                  available_vacation_days:
+                    type: integer
+                    example: 0
+                  used_vacation_days:
+                    type: object
+                    properties:
+                      care:
+                        type: integer
+                        example: 0
+                      compassionate:
+                        type: integer
+                        example: 0
+                      illness:
+                        type: integer
+                        example: 0
+                      parental:
+                        type: integer
+                        example: 0
+                      paternity:
+                        type: integer
+                        example: 0
+                      planned:
+                        type: integer
+                        example: 0
+                      rehabilitation:
+                        type: integer
+                        example: 0
+                      requested:
+                        type: integer
+                        example: 0
+                      unpaid:
+                        type: integer
+                        example: 0
+                      upbringing:
+                        type: integer
+                        example: 0
+                  records:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Vacation'
+    post:
+      tags:
+        - Vacations
+      security:
+        - authentication: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - vacation_type
+                - start_date
+                - end_date
+              properties:
+                vacation_type:
+                  type: string
+                  enum: ['planned', 'requested', 'compassionate', 'others']
+                description:
+                  type: string
+                  example:
+                  description: Required when vacation_type equals 'others'
+                start_date:
+                  type: string
+                  example: "2020-04-22"
+                end_date:
+                  type: string
+                  example: "2020-04-24"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vacation'
+        422:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - errors
+                properties:
+                  errors:
+                    type: object
+                example:
+                  errors:
+                    base:
+                      - error: work_time_exists
+                    description:
+                      - error: blank
+                    start_date:
+                      - error: greater_than_end_date
+                      - error: blank
+                    end_date:
+                      - error: blank
+                    vacation_type:
+                      - error: blank
+                      - error: inclusion
+  /vacations/{id}/self_decline:
+    put:
+      tags:
+        - Vacations
+      security:
+        - authentication: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description:
+        404:
+          description:
+  /remote_works:
+    get:
+      tags:
+        - Remote work
+      security:
+        - authentication: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          description: Records per page. By default it is 24
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                required:
+                  - total_pages
+                  - records
+                properties:
+                  total_pages:
+                    type: integer
+                    example: 20
+                  records:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RemoteWork'
+    post:
+      tags:
+        - Remote work
+      security:
+        - authentication: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - starts_at
+                - ends_at
+              properties:
+                note:
+                  type: string
+                starts_at:
+                  type: string
+                  example: "2020-03-04T08:00:00.000Z"
+                ends_at:
+                  type: string
+                  example: "2020-03-04T010:00:00.000Z"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RemoteWork'
+        422:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                example:
+                  errors:
+                    starts_at:
+                      - error: overlap
+                      - error: too_old
+                      - error: blank
+                      - error: incorrect_hours
+                    ends_at:
+                      - error: blank
 components:
   schemas:
     AccountingPeriod:
@@ -560,6 +779,40 @@ components:
         protected:
           type: boolean
           example: false
+    RemoteWork:
+      type: object
+      required:
+        - id
+        - user_id
+        - creator_id
+        - duration
+        - starts_at
+        - ends_at
+        - updated_by_admin
+      properties:
+        id:
+          type: integer
+          example: 1
+        creator_id:
+          type: integer
+          example: 1
+        starts_at:
+          type: string
+          example: "2020-03-04T08:00:00.000Z"
+        ends_at:
+          type: string
+          example: "2020-03-04T010:00:00.000Z"
+        duration:
+          type: integer
+          example: 604800
+        note:
+          type: string
+        updated_by_admin:
+          type: boolean
+          example: false
+        user_id:
+          type: integer
+          example: 3
     WorkTime:
       type: object
       required:
@@ -668,6 +921,40 @@ components:
             - error: greater_than
           project_id:
             - error: blank
+    Vacation:
+      type: object
+      required:
+        - id
+        - start_date
+        - end_date
+        - vacation_type
+        - status
+        - full_name
+        - business_days_count
+      properties:
+        id:
+          type: integer
+          example: 1
+        start_date:
+          type: string
+          example: "2020-04-22"
+        end_date:
+          type: string
+          example: "2020-04-24"
+        vacation_type:
+          type: string
+          example: planned
+          enum: ['planned', 'requested', 'compassionate', 'others']
+        status:
+          type: string
+          example: unconfirmed
+          enum: ['unconfirmed', 'declined', 'approved', 'accepted']
+        full_name:
+          type: string
+          example: Harber Vanda
+        business_days_count:
+          type: integer
+          example: 2
   securitySchemes:
     authentication:
       type: apiKey

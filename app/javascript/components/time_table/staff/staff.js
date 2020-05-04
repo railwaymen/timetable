@@ -121,9 +121,9 @@ function Staff() {
       </Helmet>
       <Filters filters={filters} setFilters={setFilters} defaultFilters={defaultFilters} />
       { currentUser.canManageStaff() && (
-        <div className="container vacations-container">
+        <div className="container-fluid vacations-container">
           <div className="row">
-            <div className="col-md-6">
+            <div className="col-md-6 pl-0">
               <InteractedVacations
                 interactedVacations={vacations.interactedVacations}
                 showDeclined={showDeclined}
@@ -135,7 +135,7 @@ function Staff() {
                 addToInteractedVacations={addToInteractedVacations}
               />
             </div>
-            <div className="col-md-6">
+            <div className="col-md-6 pr-0">
               <UnconfirmedVacations
                 unconfirmedVacations={vacations.unconfirmedVacations}
                 showAll={showAll}
