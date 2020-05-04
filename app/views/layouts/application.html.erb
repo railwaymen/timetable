@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<%= !current_user ? 'en' : current_user.lang %>">
+<html lang="<%= !current_user ? locale : current_user.lang %>">
 <head>
   <title>TimeTable</title>
   <%= csrf_meta_tags %>
