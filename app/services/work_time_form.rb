@@ -28,7 +28,7 @@ class WorkTimeForm
     return false unless valid?
 
     work_time.integration_payload = external_payload
-    work_time.body = work_time.external_summary if work_time.body.blank? && work_time.external_summary.present?
+    work_time.body = work_time.external(:summary) if work_time.body.blank? && work_time.external(:summary).present?
     saved = work_time.save(additional_params)
     if saved
       update_external_auth if external_payload
@@ -51,7 +51,7 @@ class WorkTimeForm
   private
 
   def update_external_auth
-    UpdateExternalAuthWorker.perform_async(work_time.project_id, work_time.external_task_id, work_time.id) if work_time.external_task_id
+    UpdateExternalAuthWorker.perform_async(work_time.project_id, work_time.external(:task_id), work_time.id) if work_time.external(:task_id)
   end
 
   def update_old_task

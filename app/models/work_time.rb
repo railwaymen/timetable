@@ -70,11 +70,7 @@ class WorkTime < ApplicationRecord
     errors.add(:body, :body_or_task_blank) if (body.presence.nil? && task.presence.nil?) && !body_optional?
   end
 
-  def external_task_id
-    integration_payload&.dig(external_auth&.provider, 'task_id')
-  end
-
-  def external_summary
-    integration_payload&.dig(external_auth&.provider, 'summary')
+  def external(name)
+    integration_payload&.dig(external_auth&.provider, name.to_s)
   end
 end

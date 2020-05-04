@@ -313,6 +313,8 @@ pl:
     date: Data
     refresh: Odśwież
     hardware: Mój sprzęt
+    type: Typ
+    labels: Etykiety
   errors:
     format: "%{attribute} %{message}"
     messages:

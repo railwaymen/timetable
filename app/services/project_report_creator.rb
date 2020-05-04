@@ -47,8 +47,10 @@ class ProjectReportCreator
     SUM(duration) AS duration,
     tag,
     task,
-    body
+    body,
+    (array_agg(integration_payload))[1] as integration_payload
   SQL
+
   def get_work_times(project_report)
     project_report.project.work_times.kept
                   .joins(:user)
@@ -64,7 +66,7 @@ class ProjectReportCreator
         wts.map do |wt|
           { owner: wt.owner, task: wt.task, duration: wt.duration,
             id: wt.composed_id, description: wt.body, cost: work_time_cost(wt, user_role_map),
-            user_id: wt.user_id, tag: wt.tag }
+            user_id: wt.user_id, tag: wt.tag, integration_payload: wt.integration_payload }
         end
       end
     end

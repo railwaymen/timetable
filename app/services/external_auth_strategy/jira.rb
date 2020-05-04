@@ -47,7 +47,9 @@ module ExternalAuthStrategy
       issue = client.Issue.find(id)
       {
         task_id: issue.key,
-        summary: issue.summary
+        summary: issue.summary,
+        labels: issue.fields['labels'],
+        issue_type: issue.fields['issuetype']['name']
       }
     rescue JIRA::HTTPError
       nil

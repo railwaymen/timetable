@@ -49,7 +49,7 @@ module Api
       @work_time.assign_attributes(updated_by_admin: true) if @work_time.user_id != current_user.id
       @work_time.assign_attributes(discarded_at: Time.zone.now)
       @work_time.save(work_hours_save_params)
-      UpdateExternalAuthWorker.perform_async(@work_time.project_id, @work_time.external_task_id, @work_time.id) if @work_time.external_task_id
+      UpdateExternalAuthWorker.perform_async(@work_time.project_id, @work_time.external(:task_id), @work_time.id) if @work_time.external(:task_id)
       decrease_work_time(@work_time, @work_time.duration)
       respond_with @work_time
     end

@@ -313,6 +313,8 @@ en:
     date: Date
     refresh: Refresh
     hardware: My hardware
+    type: Type
+    labels: Labels
   activerecord:
     errors:
       models:

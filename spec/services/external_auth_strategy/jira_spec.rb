@@ -68,13 +68,17 @@ RSpec.describe ExternalAuthStrategy::Jira do
     context 'valid task' do
       it 'returns payload' do
         url = "#{domain}/asd?a=3"
-        issue_double = double('issue', key: 'ASD', summary: 'Body')
+        jira_fields = { 'labels' => %w[bug critical], 'issuetype' => { 'name' => 'Bug' } }
+        issue_double = double('issue', key: 'ASD', summary: 'Body', fields: jira_fields)
         issues_double = double('Issue')
         allow(issues_double).to receive(:find).with(issue_double.key) { issue_double }
         allow(jira_double).to receive(:Issue) { issues_double }
         strategy = described_class.new('domain' => domain)
+
         expect(strategy.integration_payload(WorkTime.new(task: url))).to eq(task_id: issue_double.key,
-                                                                            summary: issue_double.summary)
+                                                                            summary: issue_double.summary,
+                                                                            labels: jira_fields['labels'],
+                                                                            issue_type: jira_fields['issuetype']['name'])
       end
     end
 

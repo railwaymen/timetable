@@ -5,7 +5,7 @@ import {
   bindAll, get, sumBy, uniq, partition, without, isEmpty, cloneDeep,
 } from 'lodash';
 import * as Api from '../../shared/api';
-import { displayDuration } from '../../shared/helpers';
+import { displayDuration, extractIntegrationPayload } from '../../shared/helpers';
 // TODO: this modal should be replaced with '@components/shared/modal'
 import Modal from './modal';
 import TagPill from '../timesheet/tag_pill';
@@ -414,6 +414,12 @@ export default class EditReport extends React.Component {
                   {I18n.t('common.task')}
                 </th>
                 <th>
+                  {I18n.t('common.type')}
+                </th>
+                <th>
+                  {I18n.t('common.labels')}
+                </th>
+                <th>
                   {I18n.t('common.description')}
                 </th>
                 <th>
@@ -430,12 +436,20 @@ export default class EditReport extends React.Component {
             </thead>
             <tbody>
               {times.map(({
-                id, task, duration, owner, toMerge, description, cost, touched, tag,
+                id, task, duration, owner, toMerge, description, cost, touched, tag, integration_payload,
               }) => (
                 <tr key={id}>
                   <td><TagPill tag={tag} onClick={() => this.handleTagPillClick(category, tag)} bold={false} /></td>
                   <td>
                     {task && <a href={task} target="_blank" rel="noopener noreferrer">{task}</a>}
+                  </td>
+                  <td>
+                    {extractIntegrationPayload(integration_payload).type}
+                  </td>
+                  <td>
+                    {extractIntegrationPayload(integration_payload).labels.map((label) => (
+                      <span className="badge badge-pill badge-primary">{label}</span>
+                    ))}
                   </td>
                   <td>{description}</td>
                   <td>{owner}</td>
