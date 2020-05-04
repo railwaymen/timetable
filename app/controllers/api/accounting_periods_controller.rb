@@ -62,7 +62,7 @@ module Api
       return if accounting_period.nil? || date.to_date.beginning_of_month != Time.zone.now.beginning_of_month.to_date
 
       days_to_date = @accounting_period.starts_at.to_date.business_days_until(Time.zone.today + 1.day)
-      accounting_period_days = @accounting_period.starts_at.to_date.business_days_until(accounting_period.ends_at + 1.day)
+      accounting_period_days = @accounting_period.starts_at.to_date.business_days_until(accounting_period.ends_at.end_of_day)
       days_to_date * (accounting_period.duration / accounting_period_days)
     end
 
