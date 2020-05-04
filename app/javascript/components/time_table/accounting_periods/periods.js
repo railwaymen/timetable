@@ -180,26 +180,27 @@ class Periods extends React.Component {
     if (currentUser.admin) {
       return (
         <div className="row periods-actions">
-          <div className="col-md-8">
-            <NavLink className="bt bt-main" to={`/accounting_periods/new?user_id=${this.state.userId}`}>
-              <span className="bt-txt">{I18n.t('apps.accounting_periods.add')}</span>
-              <i className="symbol fa fa-calendar-plus-o" />
+          <div className="col-auto btn-group mr-auto">
+            <NavLink className="btn btn-success" to={`/accounting_periods/new?user_id=${this.state.userId}`}>
+              {I18n.t('apps.accounting_periods.add')}
+              <i className="ml-2 fa fa-calendar-plus-o" />
             </NavLink>
-            <a id="generate" className="bt bt-second">
-              <span className="bt-txt">{I18n.t('apps.accounting_periods.generate_periods')}</span>
-              <i className="symbol fa fa-calendar-plus-o" />
-            </a>
+            <button id="generate" className="btn btn-outline-success" type="button">
+              {I18n.t('apps.accounting_periods.generate_periods')}
+              <i className="ml-2 fa fa-calendar-plus-o" />
+            </button>
           </div>
           <div className="col-md-4 text-right">
-            <a
+            <button
               id="recount"
               onClick={this.recountPeriods}
               disabled={!!recounting}
-              className={`bt bt-second ${recounting ? 'disabled-button-wrapper' : ''}`}
+              type="button"
+              className={`btn btn-outline-secondary ${recounting ? 'disabled-button-wrapper' : ''}`}
             >
-              <span className="bt-txt">{I18n.t('apps.accounting_periods.recount_periods')}</span>
-              <i className="symbol fa fa-repeat" />
-            </a>
+              {I18n.t('apps.accounting_periods.recount_periods')}
+              <i className="ml-2 fa fa-repeat" />
+            </button>
           </div>
         </div>
       );
@@ -400,9 +401,9 @@ class Periods extends React.Component {
             </form>
           )}
           actions={(
-            <button onClick={this.onGenerateSubmit} className="button green icon labeled right ui" id="generate" type="button">
+            <button onClick={this.onGenerateSubmit} className="btn btn-success" id="generate" type="button">
+              <i className="fa fa-angle-double-right mr-2" />
               {I18n.t('apps.accounting_periods.generate')}
-              <i className="angle double icon right" />
             </button>
           )}
         />

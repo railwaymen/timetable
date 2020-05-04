@@ -24,16 +24,14 @@ function Users() {
       <Helmet>
         <title>{I18n.t('common.people')}</title>
       </Helmet>
-      <div className="actions pull-left mb-3">
-        <div className="disabled-button-wrapper" data-toggle="tooltip" data-placement="right" title="button_disabled_tooltip">
+      <div className="input-group mb-3 w-25">
+        <div className="input-group-prepend">
           <NavLink className="btn btn-secondary" to="/users/new">{I18n.t('common.add')}</NavLink>
         </div>
-      </div>
-      <div className="pull-left mb-3">
         <select
           name="visibility"
           id="filter"
-          className="form-control"
+          className="custom-select"
           onChange={(e) => setVisibility(e.target.value)}
           value={visibility}
         >

@@ -33,13 +33,14 @@ function Entry(props) {
       <td role="gridcell" className="switch-edition" onClick={setAsActive}>{work.ends_at ? hourFormat(work.ends_at) : ''}</td>
       <td>
         <div className="actions-container">
-          <span
-            className="action-item destroy"
+          <button
+            className="btn btn-outline-danger btn-sm"
+            type="button"
             onClick={() => onDelete(work.id)}
             data-tooltip-bottom={I18n.t('common.remove')}
           >
-            <i className="symbol fa fa-trash-o" />
-          </span>
+            <i className="fa fa-trash-o" />
+          </button>
         </div>
       </td>
     </tr>

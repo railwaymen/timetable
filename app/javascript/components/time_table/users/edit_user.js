@@ -78,8 +78,10 @@ function EditUser(props) {
         )}
       </Helmet>
       {renderFields()}
-      <NavLink activeClassName="" className="btn btn-secondary" to="/users">{I18n.t('common.cancel')}</NavLink>
-      <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={onSubmit} />
+      <div className="btn-group">
+        <NavLink activeClassName="" className="btn btn-secondary" to="/users">{I18n.t('common.cancel')}</NavLink>
+        <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={onSubmit} />
+      </div>
     </form>
   );
 }

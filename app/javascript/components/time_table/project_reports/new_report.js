@@ -144,6 +144,7 @@ export default class NewReport extends React.Component {
           onFromChange={this.onRangeStartChange}
           onToChange={this.onRangeEndChange}
           onFilter={this.getRoles}
+          className="mb-3"
         />
         {this.collisionAlert()}
         <div className="table-responsive">
@@ -192,9 +193,9 @@ export default class NewReport extends React.Component {
           </table>
         </div>
         <div className="form-actions text-right">
-          <button className="bt bt-main bt-big" type="button" onClick={this.onSubmit}>
-            <span className="bt-txt">{I18n.t('common.submit')}</span>
-            <i className="symbol fa fa-paper-plane" />
+          <button className="btn btn-success btn-lg" type="button" onClick={this.onSubmit}>
+            {I18n.t('common.submit')}
+            <i className="ml-2 fa fa-paper-plane" />
           </button>
         </div>
       </div>

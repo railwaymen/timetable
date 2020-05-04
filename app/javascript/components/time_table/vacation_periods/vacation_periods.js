@@ -102,10 +102,10 @@ class VacationPeriods extends React.Component {
         </Helmet>
         { currentUser.admin && (
           <div className="row periods-actions">
-            <div className="col-md-8">
-              <div id="generate" className="bt bt-second" onClick={this.onGenerateClick}>
-                <span className="bt-txt">{I18n.t('apps.vacation_periods.generate_periods')}</span>
-                <i className="symbol fa fa-calendar-plus-o" />
+            <div className="col-auto mr-auto">
+              <div id="generate" className="btn btn-outline-secondary" onClick={this.onGenerateClick}>
+                {I18n.t('apps.vacation_periods.generate_periods')}
+                <i className="ml-2 fa fa-calendar-plus-o" />
               </div>
             </div>
           </div>

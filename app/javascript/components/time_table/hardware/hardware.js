@@ -85,12 +85,12 @@ const Hardware = ({ hardware, onDelete, fields }) => {
       return null;
     }
     return (
-      <div className="col-md-5 btn-group">
+      <div className="col-auto btn-group">
         <button
           type="button"
           onClick={() => onEdit()}
           data-tooltip-bottom={I18n.t('common.edit')}
-          className="btn btn-primary"
+          className="btn btn-outline-primary"
         >
           <i className="fa fa-pencil" />
         </button>
@@ -98,7 +98,7 @@ const Hardware = ({ hardware, onDelete, fields }) => {
           type="button"
           onClick={() => onDelete(stateHardware.id)}
           data-tooltip-bottom={I18n.t('common.destroy')}
-          className="btn btn-danger"
+          className="btn btn-outline-danger"
         >
           <i className="fa fa-trash" />
         </button>
@@ -129,7 +129,7 @@ const Hardware = ({ hardware, onDelete, fields }) => {
               <hr />
             </div>
             )}
-          <nav className="row mb-3">
+          <nav className="row align-items-start mb-3">
             <div className="col">
               <h3 className="font-weight-bold">
                 {stateHardware.manufacturer}

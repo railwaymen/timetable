@@ -107,8 +107,8 @@ const NewEntryForm = (props) => {
           />
         </div>
         <div className="form-actions text-right">
-          <button className="bt bt-big bt-main bt-submit" type="submit">
-            <span className="bt-txt">{I18n.t('common.save')}</span>
+          <button className="btn btn-success btn-lg" type="submit">
+            {I18n.t('common.save')}
           </button>
         </div>
       </form>

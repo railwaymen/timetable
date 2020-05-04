@@ -379,14 +379,14 @@ class Entry extends React.Component {
                 <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />
               </div>
             )}
-            <div className="form-actions">
-              <button type="button" className="bt bt-second" style={{ marginTop: '5px' }} onClick={() => this.onSubmit('/api/work_times/create_filling_gaps')}>
-                <i className="symbol fa fa-calendar-plus-o" />
-                <span className="bt-txt">{I18n.t('common.fill_save')}</span>
+            <div className="form-actions bg-white btn-group">
+              <button type="button" className="btn btn-outline-success btn-lg" onClick={() => this.onSubmit('/api/work_times/create_filling_gaps')}>
+                <i className="fa fa-calendar-plus-o mr-2" />
+                {I18n.t('common.fill_save')}
               </button>
-              <button type="button" className="bt bt-big bt-main bt-submit" onClick={() => this.onSubmit('/api/work_times')}>
-                <i className="symbol fa fa-calendar-plus-o" />
-                <span className="bt-txt">{I18n.t('common.save')}</span>
+              <button type="button" className="btn btn-success btn-lg" onClick={() => this.onSubmit('/api/work_times')}>
+                <i className="fa fa-calendar-plus-o mr-2" />
+                {I18n.t('common.save')}
               </button>
             </div>
           </div>
