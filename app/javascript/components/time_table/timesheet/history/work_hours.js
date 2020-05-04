@@ -502,7 +502,7 @@ class WorkHours extends React.Component {
               <button
                 className="btn btn-danger btn-sm"
                 type="button"
-                nClick={this.onDelete}
+                onClick={this.onDelete}
                 data-tooltip-bottom={I18n.t('common.remove')}
               >
                 <i className="fa fa-trash-o" />

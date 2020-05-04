@@ -35,7 +35,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
     find(:css, '.fluid div.text').click
     find(:css, '.menu.visible > .item:last-child').click
-    page.find('#content button.bt-submit', text: 'Save').click
+    page.find('#content button.btn-success', text: 'Save').click
 
     expect(page).to have_content message
   end
@@ -76,7 +76,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   def delete_task
     find('.time-entries-list-container .entry:first-child').hover
     accept_alert do
-      page.execute_script('$(".actions-container .destroy i").first().click()')
+      page.execute_script('$(".actions-container .btn-danger i").first().click()')
     end
   end
 
