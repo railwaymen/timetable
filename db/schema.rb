@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_28_224608) do
+ActiveRecord::Schema.define(version: 2020_05_05_095052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -185,7 +185,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_224608) do
     t.datetime "updated_at", null: false
     t.boolean "internal", default: false, null: false
     t.string "color", default: "000000", null: false
-    t.boolean "_active", default: true, null: false
     t.boolean "work_times_allows_task", default: false, null: false
     t.bigint "leader_id"
     t.boolean "autofill", default: false, null: false
@@ -205,7 +204,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_224608) do
     t.datetime "ends_at", null: false
     t.integer "duration", null: false
     t.text "note"
-    t.boolean "_active", default: true, null: false
     t.boolean "updated_by_admin", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -233,7 +231,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_224608) do
     t.string "last_name", null: false
     t.string "phone"
     t.string "contract_name"
-    t.boolean "_active", default: true, null: false
     t.boolean "manager", default: false, null: false
     t.string "lang", default: "pl", null: false
     t.boolean "staff_manager", default: false, null: false
@@ -303,7 +300,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_224608) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "contract_name"
-    t.boolean "_active", default: true, null: false
     t.integer "creator_id", null: false
     t.boolean "updated_by_admin", default: false, null: false
     t.string "task"
