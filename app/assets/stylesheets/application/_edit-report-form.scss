@@ -8,13 +8,18 @@
     text-align: right;
     white-space: nowrap;
   }
+  @media only screen and (min-width : 1600px) {
+    & > div:not(.edit-report-summary) {
+      max-width: calc(100% - 365px);
+    }
+  }
 }
 .edit-report-summary {
   text-align: center;
   width: 400px;
   max-width: 100%; 
   margin: 20px auto;
-  @media only screen and (min-width : 1900px) {
+  @media only screen and (min-width : 1600px) {
     width: 350px; 
     position: fixed;
     top: 50%;
