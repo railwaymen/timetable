@@ -21,14 +21,12 @@ module Api
     def create
       @user = User.new
       UpdateUserForm.new(permitted_attributes(@user).merge(user: @user)).save
-      CreateUserPosition.new(@user, params[:user][:position_list]).call if create_positon?(@user)
       respond_with :api, @user
     end
 
     def update
       @user = User.find(params[:id])
       UpdateUserForm.new(permitted_attributes(@user).merge(user: @user)).save
-      CreateUserPosition.new(@user, params[:user][:position_list]).call if create_positon?(@user)
       respond_with @user
     end
 
@@ -71,10 +69,6 @@ module Api
                  Time.current.to_date).order(Arel.sql("TO_CHAR(birthdate, 'mm/dd')"))
           .select("id, TO_CHAR(birthdate, 'dd/mm/') || #{(Time.current + 1.year).year} birthday_date,"\
                   "CONCAT(last_name, ' ', first_name) AS full_name").limit(limit)
-    end
-
-    def create_positon?(user)
-      params[:user][:position_list].present? && current_user.admin? && user.valid?
     end
   end
 end

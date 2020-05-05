@@ -13,12 +13,12 @@ RSpec.describe Api::UsersController do
 
   def user_response(user)
     user.attributes.slice('id', 'email', 'first_name', 'last_name', 'lang')
-        .merge(active: user.kept?, name: user.name, accounting_name: user.accounting_name)
+        .merge(active: user.kept?, name: user.name, accounting_name: user.accounting_name,
+               position_list: user.tags.pluck(:name))
   end
 
   def user_response_for_admin(user)
-    user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate,
-                              position_list: user.tags.pluck(:name))
+    user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
   end
 
   describe '#index' do
@@ -127,9 +127,10 @@ RSpec.describe Api::UsersController do
       expect(response.code).to eql('403')
     end
 
-    it 'creates project as admin' do
+    it 'creates user as admin' do
       sign_in(admin)
-      post :create, params: { user: { first_name: first_name, last_name: last_name, email: email } }, as: :json
+      user_params = { first_name: first_name, last_name: last_name, email: email, position_list: ['Junior'] }
+      post :create, params: { user: user_params }, as: :json
       expect(response.code).to eql('201')
       user = User.find_by email: email
       expect(response.body).to be_json_eql(user.to_json)
@@ -157,7 +158,8 @@ RSpec.describe Api::UsersController do
     it 'updates user as admin' do
       sign_in(admin)
       user = create(:user)
-      put :update, params: { id: user.id, user: { first_name: first_name, last_name: last_name, email: email } }, as: :json
+      user_params = { first_name: first_name, last_name: last_name, email: email, position_list: ['Mid'] }
+      put :update, params: { id: user.id, user: user_params }, as: :json
       expect(response.code).to eql('204')
       expect(user.reload.first_name).to eql(first_name)
       expect(user.last_name).to eql(last_name)

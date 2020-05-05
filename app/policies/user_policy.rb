@@ -8,10 +8,10 @@ class UserPolicy < ApplicationPolicy
   private
 
   def params
-    %i[first_name last_name lang]
+    %i[first_name last_name lang position_list]
   end
 
   def admin_params
-    params + %i[email phone contract_name active birthdate]
+    params + [:email, :phone, :contract_name, :active, :birthdate, position_list: []]
   end
 end
