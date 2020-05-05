@@ -16,6 +16,7 @@ function User(props) {
       <td>{user.email}</td>
       <td>{user.contract_name}</td>
       <td>{user.phone}</td>
+      <td>{user.position_list[0]}</td>
       <td>
         <div className="btn-group">
           <NavLink className="btn btn-outline-secondary" to={`/timesheet?user_id=${user.id}`}>

@@ -213,6 +213,24 @@ ActiveRecord::Schema.define(version: 2020_05_05_095052) do
     t.index ["user_id"], name: "index_remote_works_on_user_id"
   end
 
+  create_table "taggings", force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.string "taggable_type"
+    t.bigint "taggable_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tag_id", "taggable_id", "taggable_type"], name: "index_taggings_on_tag_id_and_taggable_id_and_taggable_type", unique: true
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+    t.index ["taggable_type", "taggable_id"], name: "index_taggings_on_taggable_type_and_taggable_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_tags_on_name", unique: true
+  end
+
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -330,6 +348,7 @@ ActiveRecord::Schema.define(version: 2020_05_05_095052) do
   add_foreign_key "projects", "users", column: "leader_id"
   add_foreign_key "remote_works", "users"
   add_foreign_key "remote_works", "users", column: "creator_id"
+  add_foreign_key "taggings", "tags"
   add_foreign_key "vacation_interactions", "users"
   add_foreign_key "vacation_interactions", "vacations"
   add_foreign_key "vacation_periods", "users"

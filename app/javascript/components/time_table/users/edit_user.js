@@ -12,7 +12,7 @@ import UserFields from './user_fields';
 function EditUser(props) {
   const userId = parseInt(props.match.params.id, 10);
 
-  const [user, setUser, onChange] = useFormHandler({});
+  const [user, setUser, onChange] = useFormHandler({ position_list: [] });
   const [errors, setErrors] = useState({});
   const [redirectToReferer, setRedirectToReferer] = useState();
 
@@ -55,7 +55,7 @@ function EditUser(props) {
   function renderFields() {
     if (user.id === userId || !userId) {
       return currentUser.admin
-        ? <AdminFields user={user} errors={errors} onChange={onChange} />
+        ? <AdminFields user={user} errors={errors} onChange={onChange} setUser={setUser} />
         : <UserFields user={user} errors={errors} onChange={onChange} />;
     }
 

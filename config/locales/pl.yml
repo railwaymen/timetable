@@ -117,7 +117,7 @@ pl:
       all: Wszystkie
       inactive: Nieaktywne
       add: Dodaj nowe konto
-      first_name: Imie
+      first_name: Imię
       last_name: Nazwisko
       contract_id: ID pracownika
       phone: Telefon
@@ -125,6 +125,7 @@ pl:
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
       birthday: Urodziny
       new: Nowe konto
+      position: Pozycja
     external_auths:
       authorized: Zewnętrzne autoryzacje
       generate_link: Wygeneruj link

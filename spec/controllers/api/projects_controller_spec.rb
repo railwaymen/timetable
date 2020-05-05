@@ -364,7 +364,7 @@ RSpec.describe Api::ProjectsController do
       expect(project.color).to eq '#5e5e5e'
     end
 
-    it 'creates project as admin' do
+    it 'updates project as admin' do
       sign_in(admin)
       project = create(:project)
       put :update, params: { id: project.id, project: { name: project_name, work_times_allows_task: true, external_integration_enabled: true } }, format: :json
@@ -375,7 +375,7 @@ RSpec.describe Api::ProjectsController do
       expect(response.body).to eq('')
     end
 
-    it 'creates project as manager' do
+    it 'updates project as manager' do
       sign_in(manager)
       project = create(:project)
       put :update, params: { id: project.id, project: { name: project_name, work_times_allows_task: true, external_integration_enabled: true } }, format: :json
