@@ -17,7 +17,7 @@ class VacationWorkTimesService
       next if work_time_dates.include?(day.to_date)
 
       work_time = WorkTimeForm.new(work_time: build_new_work_time(work_time_params(day)))
-      work_time.save(@current_user.admin? ? {} : { context: :user }) # TODO: tylko admin?
+      work_time.save
     end
   end
 
@@ -41,8 +41,6 @@ class VacationWorkTimesService
 
   def build_new_work_time(params)
     WorkTime.new(params).tap do |work_time|
-      # TODO: tylko admin?
-      work_time.updated_by_admin = true if @current_user.admin?
       work_time.creator = @current_user
       work_time.vacation_id = @vacation.id
     end
