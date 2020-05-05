@@ -7,9 +7,7 @@ class RecountAccountingPeriodsWorker
   def perform(options)
     options.symbolize_keys!
     user = User.find(options[:user_id])
-    work_times = WorkTime.kept.where(user: user).order(:starts_at)
-    periods = AccountingPeriod.where(user: user).order(:starts_at)
-    RecountAccountingPeriods.call(user: user, work_times: work_times,
-                                  periods: periods)
+
+    RecountAccountingPeriods.call(user: user)
   end
 end
