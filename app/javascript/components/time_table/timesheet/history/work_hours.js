@@ -474,17 +474,6 @@ class WorkHours extends React.Component {
               </WorkTimeTag>
               )}
             </div>
-            <div className="actions-container">
-              <span className="action-item copy" onClick={this.onCopy} data-tooltip-bottom={I18n.t('common.copy')}>
-                <i className="symbol fa fa-external-link-square" />
-              </span>
-              <span className="action-item history" onClick={this.getInfo} data-tooltip-bottom={I18n.t('common.history')}>
-                <i className="symbol fa fa-clock-o" />
-              </span>
-              <span className="action-item destroy" onClick={this.onDelete} data-tooltip-bottom={I18n.t('common.remove')}>
-                <i className="symbol fa fa-trash-o" />
-              </span>
-            </div>
             {editing ? (
               this.renderDateEditable()
             ) : (
@@ -493,6 +482,32 @@ class WorkHours extends React.Component {
                 <WorkTimeTime workTime={workHours} onClick={this.toggleEdit} />
               </>
             )}
+            <div className="actions-container btn-group">
+              <button
+                className="btn btn-primary btn-sm"
+                type="button"
+                onClick={this.onCopy}
+                data-tooltip-bottom={I18n.t('common.copy')}
+              >
+                <i className="fa fa-external-link-square" />
+              </button>
+              <button
+                className="btn btn-primary btn-sm"
+                type="button"
+                onClick={this.getInfo}
+                data-tooltip-bottom={I18n.t('common.history')}
+              >
+                <i className="fa fa-clock-o" />
+              </button>
+              <button
+                className="btn btn-danger btn-sm"
+                type="button"
+                onClick={this.onDelete}
+                data-tooltip-bottom={I18n.t('common.remove')}
+              >
+                <i className="fa fa-trash-o" />
+              </button>
+            </div>
           </li>
         </ul>
       </div>

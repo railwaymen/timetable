@@ -129,7 +129,7 @@ class ProjectsDistribution extends React.Component {
     return (
       <div className="scheduler-header">
         <div className="add-resource" style={{ width: resourcePercentageWidth }}>
-          <button className="bt bt-main bt-submit" type="button" onClick={this.onAddResourceClick}>
+          <button className="btn btn-success bt-submit" type="button" onClick={this.onAddResourceClick}>
             <span>{I18n.t('apps.projects_distribution.add_resource')}</span>
           </button>
         </div>

@@ -17,15 +17,15 @@ function User(props) {
       <td>{user.contract_name}</td>
       <td>{user.phone}</td>
       <td>
-        <div className="ui buttons">
-          <NavLink className="ui button icon basic grey" to={`/timesheet?user_id=${user.id}`}>
-            <i className="icon calendar" />
+        <div className="btn-group">
+          <NavLink className="btn btn-outline-secondary" to={`/timesheet?user_id=${user.id}`}>
+            <i className="fa fa-calendar" />
           </NavLink>
-          <NavLink className="ui button icon basic grey" to={`/accounting_periods?user_id=${user.id}`}>
-            <i className="icon folder outline" />
+          <NavLink className="btn btn-outline-secondary" to={`/accounting_periods?user_id=${user.id}`}>
+            <i className="fa fa-folder-open-o" />
           </NavLink>
-          <NavLink className="ui button icon basic blue" to={`/users/edit/${user.id}`}>
-            <i className="icon pencil" />
+          <NavLink className="btn btn-outline-primary" to={`/users/edit/${user.id}`}>
+            <i className="fa fa-pencil" />
           </NavLink>
         </div>
       </td>
