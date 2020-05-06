@@ -23,7 +23,13 @@ class ReportUserRecord extends React.Component {
           <div className="card-header">
             <h4 className="row align-items-baseline mx-0">
               <i className="fa fa-user" />
-              <a  className="mx-2" href={`/timesheet?user_id=${overallData.user_id}&from=${from}&to=${to}`} onClick={this.onRedirect}>{overallData.user_name}</a>
+              <a
+                className="mx-2"
+                href={`/timesheet?user_id=${overallData.user_id}&from=${from}&to=${to}`}
+                onClick={this.onRedirect}
+              >
+                {overallData.user_name}
+              </a>
               {currentUser.isAdminOrManagerOrLeader() && (
                 <a href={`/reports/project.csv?from=${from}&to=${to}&user_id=${overallData.user_id}`}><i className="fa fa-calendar" /></a>
               )}
