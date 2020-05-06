@@ -140,6 +140,10 @@ function AdminFields(props) {
           value={user.position_list[0] || ''}
           onChange={setPosition}
           onSelect={selectPosition}
+          menuStyle={{
+            maxHeight: '200px',
+            overflowY: 'auto',
+          }}
         />
       </div>
     </div>
