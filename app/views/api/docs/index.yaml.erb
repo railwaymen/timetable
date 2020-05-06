@@ -326,7 +326,8 @@ paths:
         - authentication: []
       parameters:
         - name: id
-          in: query
+          in: path
+          required: true
           schema:
             type: integer
       responses:
