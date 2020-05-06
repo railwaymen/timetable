@@ -69,7 +69,7 @@ export default function NewCombinedReport(props) {
       <Helmet>
         <title>{I18n.t('apps.combined_reports.new')}</title>
       </Helmet>
-      <form className="row" onSubmit={onSubmit}>
+      <form className="row mx-0" onSubmit={onSubmit}>
         <div className="form-group">
           {errors.base && (
             <div className="alert alert-danger">
