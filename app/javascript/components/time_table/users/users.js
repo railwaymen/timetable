@@ -20,7 +20,7 @@ function Users() {
   }, [visibility]);
 
   return (
-    <div>
+    <>
       <Helmet>
         <title>{I18n.t('common.people')}</title>
       </Helmet>
@@ -57,7 +57,7 @@ function Users() {
           { users.map((user) => <User key={user.id} user={user} />) }
         </tbody>
       </table>
-    </div>
+    </>
   );
 }
 
