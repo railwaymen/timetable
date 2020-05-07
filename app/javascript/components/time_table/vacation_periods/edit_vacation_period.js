@@ -25,16 +25,6 @@ class EditVacationPeriod extends React.Component {
     this.getPeriod({ periodId: this.state.periodId });
   }
 
-  getPeriod(options) {
-    Api.makeGetRequest({
-      url: `/api/vacation_periods/${options.periodId}`,
-    }).then((response) => {
-      this.setState({
-        period: response.data,
-      });
-    });
-  }
-
   onSubmit() {
     const { period } = this.state;
     Api.makePutRequest({

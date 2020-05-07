@@ -17,6 +17,13 @@ class ResourceTooltip extends React.Component {
     $(document.body).on('click.tooltip', this.onDocumentBodyClick);
   }
 
+  onDocumentBodyClick(e) {
+    if ($(e.target).closest(`.resource-tooltip#${this.props.slotId}`).length === 0
+      && $(e.target).closest('.slot-text').find(`.resource-tooltip#${this.props.slotId}`).length === 0) {
+      this.closeTooltip();
+    }
+  }
+
   toggleTooltip() {
     const { show } = this.state;
     if (show) {
@@ -37,13 +44,6 @@ class ResourceTooltip extends React.Component {
       show: false,
     });
     $(document.body).unbind('click.tooltip');
-  }
-
-  onDocumentBodyClick(e) {
-    if ($(e.target).closest(`.resource-tooltip#${this.props.slotId}`).length === 0
-        && $(e.target).closest('.slot-text').find(`.resource-tooltip#${this.props.slotId}`).length === 0) {
-      this.closeTooltip();
-    }
   }
 
   deleteResource() {

@@ -23,60 +23,6 @@ class Event extends React.Component {
     };
   }
 
-  updateAddModal(startsAt, endsAt) {
-    const { projects } = this.props;
-    this.setState({
-      selectedProject: projects[0],
-      startsAt,
-      endsAt,
-    });
-  }
-
-  updateEditModal(event) {
-    const { projects } = this.props;
-    this.setState({
-      selectedProject: projects.filter((p) => p.id === event.projectId)[0],
-      startsAt: event.start,
-      endsAt: event.end,
-      resizable: event.resizable,
-    });
-  }
-
-  updateProject(selectedProject) {
-    this.setState({
-      selectedProject,
-    });
-  }
-
-  filterProjects = (filter) => {
-    const lowerFilter = filter.toLowerCase();
-    return _.filter(this.props.projects, (p) => (
-      p.active && p.name.toLowerCase().match(lowerFilter)
-    ));
-  }
-
-  renderSelectedProject(selectedObject) {
-    return (
-      <div>
-        <div className="circular empty label ui" style={{ background: `#${selectedObject.color}` }} />
-        {selectedObject.name}
-      </div>
-    );
-  }
-
-  renderProjectsList(object, currentObject) {
-    return (
-      <div>
-        <div className="circular empty label ui" style={{ background: `#${object.color}` }} />
-        {object.id === currentObject.id ? (
-          <b>
-            {object.name}
-          </b>
-        ) : object.name}
-      </div>
-    );
-  }
-
   onSubmit() {
     Loader.showLoader();
     const {
@@ -128,6 +74,44 @@ class Event extends React.Component {
     });
   }
 
+  onDateChange(dateName, e) {
+    this.setState({
+      [dateName]: moment(e),
+    });
+  }
+
+  filterProjects = (filter) => {
+    const lowerFilter = filter.toLowerCase();
+    return _.filter(this.props.projects, (p) => (
+      p.active && p.name.toLowerCase().match(lowerFilter)
+    ));
+  }
+
+  updateAddModal(startsAt, endsAt) {
+    const { projects } = this.props;
+    this.setState({
+      selectedProject: projects[0],
+      startsAt,
+      endsAt,
+    });
+  }
+
+  updateEditModal(event) {
+    const { projects } = this.props;
+    this.setState({
+      selectedProject: projects.filter((p) => p.id === event.projectId)[0],
+      startsAt: event.start,
+      endsAt: event.end,
+      resizable: event.resizable,
+    });
+  }
+
+  updateProject(selectedProject) {
+    this.setState({
+      selectedProject,
+    });
+  }
+
   renderDate(dateName) {
     const formatedDate = moment(this.state[dateName]).format('DD/MM/YYYY');
     return (
@@ -137,10 +121,26 @@ class Event extends React.Component {
     );
   }
 
-  onDateChange(dateName, e) {
-    this.setState({
-      [dateName]: moment(e),
-    });
+  renderSelectedProject(selectedObject) {
+    return (
+      <div>
+        <div className="circular empty label ui" style={{ background: `#${selectedObject.color}` }} />
+        {selectedObject.name}
+      </div>
+    );
+  }
+
+  renderProjectsList(object, currentObject) {
+    return (
+      <div>
+        <div className="circular empty label ui" style={{ background: `#${object.color}` }} />
+        {object.id === currentObject.id ? (
+          <b>
+            {object.name}
+          </b>
+        ) : object.name}
+      </div>
+    );
   }
 
   renderEditableDate(dateName) {
@@ -183,18 +183,18 @@ class Event extends React.Component {
                       renderSelectedObject={this.renderSelectedProject}
                       renderObjectsList={this.renderProjectsList}
                     />
-                  ) : null }
+                  ) : null}
                 </div>
               </div>
-            ) : null }
+            ) : null}
             <div className="event-info text-center">
               <div className="slot-name">
                 {slotName}
               </div>
               <div className="date-range">
-                { resizable ? this.renderEditableDate('startsAt') : this.renderDate('startsAt')}
+                {resizable ? this.renderEditableDate('startsAt') : this.renderDate('startsAt')}
                 {' - '}
-                { resizable ? this.renderEditableDate('endsAt') : this.renderDate('endsAt')}
+                {resizable ? this.renderEditableDate('endsAt') : this.renderDate('endsAt')}
               </div>
               <div className="project" style={{ borderColor: projectColor, backgroundColor: projectColor }}>
                 {selectedProject ? selectedProject.name : null}

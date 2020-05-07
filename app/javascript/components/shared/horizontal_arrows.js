@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
 const HorizontalArrows = ({
   onLeftClick, onRightClick, children, className = '',
 }) => (

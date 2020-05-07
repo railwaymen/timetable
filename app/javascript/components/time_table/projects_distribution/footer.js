@@ -32,18 +32,6 @@ class Footer extends React.Component {
     this.getUsers();
   }
 
-  getUsers() {
-    fetch('/api/users?filter=active&staff')
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          users: data,
-          selectedUser: data[0],
-          userFilter: this.renderUserFilter(data[0]),
-        });
-      });
-  }
-
   onClick(projectId) {
     let { selectedProjects } = this.props;
     if (_.includes(selectedProjects, projectId)) {
@@ -58,17 +46,22 @@ class Footer extends React.Component {
     this.props.showSelectedProjects([]);
   }
 
-  updateUser(selectedUser) {
-    let { selectedUsers } = this.props;
-    if (_.findIndex(selectedUsers, (u) => u.id === selectedUser.id) !== -1) { return; }
-    selectedUsers = selectedUsers.concat({ name: selectedUser.name, id: selectedUser.id });
-    this.props.showSelectedUsers(selectedUsers);
-  }
-
   onUserDelete(userId) {
     let { selectedUsers } = this.props;
     selectedUsers = selectedUsers.filter((u) => u.id !== userId);
     this.props.showSelectedUsers(selectedUsers);
+  }
+
+  getUsers() {
+    fetch('/api/users?filter=active&staff')
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({
+          users: data,
+          selectedUser: data[0],
+          userFilter: this.renderUserFilter(data[0]),
+        });
+      });
   }
 
   filterUsers = (filter) => {
@@ -77,6 +70,13 @@ class Footer extends React.Component {
     return _.filter(users, (p) => (
       p.active && (`${p.first_name} ${p.last_name}`.toLowerCase().match(lowerFilter) || `${p.first_name} ${p.last_name}`.toLowerCase().match(lowerFilter))
     ));
+  }
+
+  updateUser(selectedUser) {
+    let { selectedUsers } = this.props;
+    if (_.findIndex(selectedUsers, (u) => u.id === selectedUser.id) !== -1) { return; }
+    selectedUsers = selectedUsers.concat({ name: selectedUser.name, id: selectedUser.id });
+    this.props.showSelectedUsers(selectedUsers);
   }
 
   renderUsersList(object) {
