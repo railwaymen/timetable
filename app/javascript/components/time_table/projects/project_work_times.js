@@ -170,12 +170,12 @@ export default class ProjectWorkTimes extends React.Component {
           <div className="col-md-4">
             <div className="sticky-record">
               { tag_reports.length > 0 && (
-                <div className="row">
+                <div className="row mx-0">
                   <ReportProjectTagRecord reportRows={tag_reports} />
                 </div>
               )}
               { reports.length > 0 && (
-                <div className="row">
+                <div className="row mx-0">
                   <ReportProjectRecord
                     reportRows={reports}
                     from={from}

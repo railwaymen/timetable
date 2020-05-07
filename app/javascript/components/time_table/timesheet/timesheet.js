@@ -60,7 +60,7 @@ class Timesheet extends React.Component {
 
     if (projects.length > 0) {
       return (
-        <div>
+        <>
           <Helmet>
             <title>{I18n.t('common.timesheet')}</title>
           </Helmet>
@@ -72,7 +72,7 @@ class Timesheet extends React.Component {
             setLastProject={this.setLastProject}
             tags={tags}
           />
-        </div>
+        </>
       );
     }
     return (

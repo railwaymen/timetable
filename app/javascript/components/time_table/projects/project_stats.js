@@ -25,26 +25,32 @@ function ProjectStats(props) {
 
   return (
     <div className="col-xs-12 col-sm-6 col-lg-4 card-container project-card">
-      <div className="card h-100">
-        <h3 className="title">
-          {projectLabel()}
-          <div
-            className="badge"
-            style={{
-              backgroundColor: `#${stats.color}`, width: '18px', height: '18px', display: 'block',
-            }}
-          />
-        </h3>
-        <p className="text-center">
-          {stats.leader_first_name ? renderName(stats.leader_first_name, stats.leader_last_name) : ''}
-        </p>
-        <ul>
-          { stats.users.map((user) => (
-            <li className="person" key={user.id}>
-              {renderName(user.first_name, user.last_name)}
-            </li>
-          )) }
-        </ul>
+      <div className="card p-0 h-100">
+        <div className="card-header">
+          <h3 className="title row mx-0">
+            {projectLabel()}
+            <div
+              className=" ml-auto badge"
+              style={{
+                backgroundColor: `#${stats.color}`, width: '18px', height: '18px', display: 'block',
+              }}
+            />
+          </h3>
+        </div>
+        {stats.leader_first_name && (
+          <p className="font-weight-bold text-center">
+            {renderName(stats.leader_first_name, stats.leader_last_name)}
+          </p>
+        )}
+        <div className="card-body">
+          <ul>
+            { stats.users.map((user) => (
+              <li className="person" key={user.id}>
+                {renderName(user.first_name, user.last_name)}
+              </li>
+            )) }
+          </ul>
+        </div>
       </div>
     </div>
   );

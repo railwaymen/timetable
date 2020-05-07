@@ -20,51 +20,48 @@ function ProjectsList() {
   }, [visibility]);
 
   return (
-    <div>
+    <>
       <Helmet>
         <title>{I18n.t('common.projects')}</title>
       </Helmet>
-      <div className="ui grid">
-        <div className="sixteen wide column">
-          <div className="btn-group pull-right">
-            <NavLink className="btn btn-secondary" exact to="/projects">{I18n.t('common.rank')}</NavLink>
-            <NavLink className="btn btn-secondary active" to="/projects/list">{I18n.t('common.all')}</NavLink>
-          </div>
-          { currentUser.isSuperUser() && (
-            <NavLink to="/projects/new" className="btn btn-secondary pull-left">{I18n.t('common.add')}</NavLink>
-          )}
-          <div className="btn-group pull-left">
-            <select
-              name="visibility"
-              id="filter"
-              className="form-control"
-              onChange={(e) => setVisibility(e.target.value)}
-              value={visibility}
-            >
-              <option value="active">{I18n.t('apps.projects.filter_active')}</option>
-              <option value="inactive">{I18n.t('apps.projects.filter_inactive')}</option>
-              <option value="all">{I18n.t('apps.projects.filter_all')}</option>
-            </select>
-          </div>
+      <div className="clearfix mb-3">
+        <div className="btn-group pull-right">
+          <NavLink className="btn btn-secondary" exact to="/projects">{I18n.t('common.rank')}</NavLink>
+          <NavLink className="btn btn-secondary active" to="/projects/list">{I18n.t('common.all')}</NavLink>
         </div>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th />
-              <th>{I18n.t('apps.projects.name')}</th>
-              <th>{I18n.t('apps.projects.leader')}</th>
-              <th />
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            { projects.map((project) => (
-              <Project key={project.id} project={project} />
-            )) }
-          </tbody>
-        </table>
+        { currentUser.isSuperUser() && (
+          <NavLink to="/projects/new" className="btn btn-secondary pull-left">{I18n.t('common.add')}</NavLink>
+        )}
+        <div className="btn-group pull-left">
+          <select
+            name="visibility"
+            id="filter"
+            className="form-control"
+            onChange={(e) => setVisibility(e.target.value)}
+            value={visibility}
+          >
+            <option value="active">{I18n.t('apps.projects.filter_active')}</option>
+            <option value="inactive">{I18n.t('apps.projects.filter_inactive')}</option>
+            <option value="all">{I18n.t('apps.projects.filter_all')}</option>
+          </select>
+        </div>
       </div>
-    </div>
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th />
+            <th>{I18n.t('apps.projects.name')}</th>
+            <th>{I18n.t('apps.projects.leader')}</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          { projects.map((project) => (
+            <Project key={project.id} project={project} />
+          )) }
+        </tbody>
+      </table>
+    </>
   );
 }
 
