@@ -69,6 +69,14 @@ module Api
       respond_with @report
     end
 
+    def refresh
+      @report = @project.project_reports.kept.find(params[:id])
+      authorize @report
+      @report.update!(refresh_status: :in_progress)
+      RefreshProjectReportWorker.perform_async(@report.id, current_user.id)
+      respond_with @report
+    end
+
     def file
       @report = @project.project_reports.kept.find(params[:id])
       authorize @report

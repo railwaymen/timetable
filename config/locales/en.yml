@@ -315,6 +315,9 @@ en:
     hardware: My hardware
     type: Type
     labels: Labels
+    refreshed_at: Refreshed
+    refresh_in_progress: Refresh in progress
+    refresh_error: An error occurred while refreshing
   activerecord:
     errors:
       models:

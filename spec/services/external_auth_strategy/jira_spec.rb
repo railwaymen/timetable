@@ -75,10 +75,10 @@ RSpec.describe ExternalAuthStrategy::Jira do
         allow(jira_double).to receive(:Issue) { issues_double }
         strategy = described_class.new('domain' => domain)
 
-        expect(strategy.integration_payload(WorkTime.new(task: url))).to eq(task_id: issue_double.key,
-                                                                            summary: issue_double.summary,
-                                                                            labels: jira_fields['labels'],
-                                                                            issue_type: jira_fields['issuetype']['name'])
+        expect(strategy.integration_payload(url)).to eq(task_id: issue_double.key,
+                                                        summary: issue_double.summary,
+                                                        labels: jira_fields['labels'],
+                                                        issue_type: jira_fields['issuetype']['name'])
       end
     end
 
@@ -89,7 +89,7 @@ RSpec.describe ExternalAuthStrategy::Jira do
         allow(issues_double).to receive(:find).with('ASD').and_raise(JIRA::HTTPError, 'msg')
         allow(jira_double).to receive(:Issue) { issues_double }
         strategy = described_class.new('domain' => domain)
-        expect(strategy.integration_payload(WorkTime.new(task: url))).to be_nil
+        expect(strategy.integration_payload(url)).to be_nil
       end
     end
   end

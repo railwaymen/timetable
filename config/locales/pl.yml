@@ -315,6 +315,9 @@ pl:
     hardware: Mój sprzęt
     type: Typ
     labels: Etykiety
+    refreshed_at: Odświerzony
+    refresh_in_progress: Trwa odświerzanie
+    refresh_error: Wystąpił błąd podczas odświerzania
   errors:
     format: "%{attribute} %{message}"
     messages:

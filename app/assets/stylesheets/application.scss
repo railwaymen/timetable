@@ -490,3 +490,7 @@ table {
 .autocomplete-item {
   height: 40px;
 }
+
+button:disabled {
+  cursor: not-allowed;
+}

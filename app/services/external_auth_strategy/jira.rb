@@ -42,8 +42,8 @@ module ExternalAuthStrategy
       client.delete(log.patched_url)
     end
 
-    def integration_payload(work_time)
-      id = URI.parse(work_time.task).path.split('/').last.upcase
+    def integration_payload(task)
+      id = URI.parse(task).path.split('/').last.upcase
       issue = client.Issue.find(id)
       {
         task_id: issue.key,

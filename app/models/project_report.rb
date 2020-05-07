@@ -17,6 +17,13 @@ class ProjectReport < ApplicationRecord
     project_report_roles.discard_all
   end
 
+  enum refresh_status: {
+    fresh: 'fresh',
+    in_progress: 'in_progress',
+    done: 'done',
+    error: 'error'
+  }, _prefix: true
+
   validates :project, :name, presence: true
   validates :initial_body, presence: true
   validates :last_body, presence: true
