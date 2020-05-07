@@ -54,7 +54,7 @@ function EditProject(props) {
 
   useEffect(() => {
     getProject();
-    if (currentUser.admin) getUsers();
+    if (currentUser.isAdminOrManager()) getUsers();
   }, []);
 
   if (redirectToReferer) return <Redirect to={redirectToReferer} />;

@@ -7,7 +7,7 @@ module Api
     before_action :authenticate_admin_or_manager!, only: %i[index incoming_birthdays]
 
     def index
-      action = params[:filter].presence_in(visiblity_list) || 'all'
+      action = params[:filter].presence_in(visiblity_list) || 'active'
       @users = User.includes(:tags).order(Arel.sql('contract_name::bytea ASC')).filter_by(action.to_sym)
       @users = @users.order(:last_name) if params.key?(:staff)
       respond_with @users

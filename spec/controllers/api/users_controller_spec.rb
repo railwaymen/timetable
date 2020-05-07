@@ -39,7 +39,7 @@ RSpec.describe Api::UsersController do
       get :index, as: :json
 
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql([user_response(manager), user_response(user)].to_json)
+      expect(response.body).to be_json_eql([user_response(user), user_response(manager)].to_json)
     end
 
     describe 'filters' do
