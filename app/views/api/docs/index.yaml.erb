@@ -733,6 +733,23 @@ paths:
                       - error: incorrect_hours
                     ends_at:
                       - error: blank
+  /remote_works/{id}:
+    delete:
+      tags:
+        - Remote work
+      security:
+        - authentication: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description:
+        404:
+          description:
 components:
   schemas:
     AccountingPeriod:

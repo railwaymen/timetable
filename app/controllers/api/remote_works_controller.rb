@@ -5,7 +5,9 @@ module Api
     respond_to :json
 
     def index
-      @remote_works = policy_scope(RemoteWork.where(user_id: params[:user_id]).kept.order(starts_at: :desc).page(params[:page]).per(params[:per_page] || 24))
+      @remote_works = RemoteWork.kept.order(starts_at: :desc).page(params[:page]).per(params[:per_page] || 24)
+      @remote_works.where!(user_id: params[:user_id]) if params[:user_id].present?
+      @remote_works = policy_scope(@remote_works)
       respond_with @remote_works
     end
 
