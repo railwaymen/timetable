@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Modal = ({
-  id, header, content, actions,
+  id, modalClass, header, content, actions,
 }) => (
   <div className="modal fade" id={id} tabIndex="-1" role="dialog" aria-labelledby={`${id}ExampleModalLabel`} aria-hidden="true">
-    <div className="modal-dialog" role="document">
+    <div className={`modal-dialog ${modalClass}`} role="document">
       <div className="modal-content">
         <div className="modal-header">
           <h5 className="modal-title" id={`${id}ExampleModalLabel`}>{header}</h5>
