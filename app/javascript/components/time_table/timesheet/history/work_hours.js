@@ -4,6 +4,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import ErrorTooltip from '@components/shared/error_tooltip';
+import ModalButton from '@components/shared/modal_button'
 import * as Api from '../../../shared/api';
 import ProjectsList from '../projects_list';
 import TagsDropdown from '../tags_dropdown';
@@ -491,14 +492,15 @@ class WorkHours extends React.Component {
               >
                 <i className="fa fa-external-link-square" />
               </button>
-              <button
-                className="btn btn-primary btn-sm"
-                type="button"
-                onClick={this.getInfo}
+              <ModalButton
+                id="history"
+                btnClass="btn btn-primary btn-sm"
+                content={(
+                  <i className="fa fa-clock-o" />
+                )}
                 data-tooltip-bottom={I18n.t('common.history')}
-              >
-                <i className="fa fa-clock-o" />
-              </button>
+                onClick={this.getInfo}
+              />
               <button
                 className="btn btn-danger btn-sm"
                 type="button"
