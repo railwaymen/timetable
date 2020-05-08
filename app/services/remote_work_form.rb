@@ -67,7 +67,7 @@ class RemoteWorkForm
   end
 
   def validates_hours
-    errors.add(:starts_at, :incorrect_hours) if starts_at && ends_at && hour_to_i(starts_at) > hour_to_i(ends_at)
+    errors.add(:starts_at, :incorrect_hours) if starts_at && ends_at && hour_to_i(starts_at) >= hour_to_i(ends_at)
   end
 
   def hour_to_i(date)
