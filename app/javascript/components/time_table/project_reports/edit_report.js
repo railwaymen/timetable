@@ -6,8 +6,8 @@ import {
 } from 'lodash';
 import * as Api from '../../shared/api';
 import { displayDuration, extractIntegrationPayload } from '../../shared/helpers';
-// TODO: this modal should be replaced with '@components/shared/modal'
-import Modal from './modal';
+import ModalButton from '@components/shared/modal_button'
+import Modal from '@components/shared/modal';
 import TagPill from '../timesheet/tag_pill';
 
 export default class EditReport extends React.Component {
@@ -250,15 +250,15 @@ export default class EditReport extends React.Component {
 
   renderEditOrMergeButton(category, id, addToMerge) {
     return (
-      <button
+      <ModalButton
         key="edit"
+        id={category ? `modal-${category}` : 'workTimeModal'}
         type="button"
-        className={`btn btn-outline-primary ml-0 ${addToMerge ? 'plus' : ''}`}
+        btnClass={`btn btn-outline-primary ml-0 ${addToMerge ? 'plus' : ''}`}
+        content={(<i className="fa fa-pencil" />)}
         onClick={(e) => this.onShowEdit(e, category, id)}
         data-tooltip-bottom={addToMerge ? I18n.t('apps.reports.merge') : I18n.t('common.edit')}
-      >
-        <i className="fa fa-pencil" />
-      </button>
+      />
     );
   }
 
@@ -326,7 +326,7 @@ export default class EditReport extends React.Component {
     const ancestors = this.state.report.initial_body[workTimeModalCategory].filter((wt) => ids.includes(wt.id));
     return (
       <Modal
-        id="work-time-modal"
+        id="workTimeModal"
         header="Details"
         content={(
           <table className="table">
