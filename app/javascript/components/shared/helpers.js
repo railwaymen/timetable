@@ -72,3 +72,11 @@ export const replaceLocationParams = (params) => {
   const newParams = { ...currentParams, ...params };
   window.history.pushState('Timetable', '', href.search(newParams));
 };
+
+export const extractIntegrationPayload = (payload) => {
+  if (payload && payload.Jira) {
+    return { type: payload.Jira.issue_type, labels: payload.Jira.labels };
+  }
+
+  return { type: '', labels: [] };
+};

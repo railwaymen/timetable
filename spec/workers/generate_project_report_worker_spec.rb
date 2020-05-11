@@ -9,9 +9,9 @@ describe GenerateProjectReportWorker do
     let(:content) { 'Lorem ipsum' }
 
     it 'creates correct file' do
-      generatour_double = double
-      allow(ProjectReportGenerator).to receive(:new).and_return(generatour_double)
-      allow(generatour_double).to receive(:call) do |file_path|
+      generator_double = double
+      allow(ProjectReportGenerator).to receive(:new).and_return(generator_double)
+      allow(generator_double).to receive(:call) do |file_path|
         IO.write(file_path, content)
       end
       allow(Rails.root).to receive(:join) do |*arguments|

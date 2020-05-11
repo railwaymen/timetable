@@ -5,7 +5,7 @@ import {
   bindAll, get, sumBy, uniq, partition, without, isEmpty, cloneDeep,
 } from 'lodash';
 import * as Api from '../../shared/api';
-import { displayDuration } from '../../shared/helpers';
+import { displayDuration, extractIntegrationPayload } from '../../shared/helpers';
 // TODO: this modal should be replaced with '@components/shared/modal'
 import Modal from './modal';
 import TagPill from '../timesheet/tag_pill';
@@ -27,6 +27,7 @@ export default class EditReport extends React.Component {
       'onSoftReset',
       'onSubmit',
       'onGenerate',
+      'onRefresh',
     ]);
 
     this.state = {
@@ -84,6 +85,17 @@ export default class EditReport extends React.Component {
       },
     }).then(({ data }) => {
       this.setState({ currentBody: this.prepareBody(data.last_body), report: data });
+    });
+  }
+
+  onRefresh() {
+    const { projectId, reportId } = this.state;
+    Api.makePutRequest({
+      url: `/api/projects/${projectId}/project_reports/${reportId}/refresh`,
+      body: {
+      },
+    }).then(({ data }) => {
+      this.setState({ report: data });
     });
   }
 
@@ -414,6 +426,12 @@ export default class EditReport extends React.Component {
                   {I18n.t('common.task')}
                 </th>
                 <th>
+                  {I18n.t('common.type')}
+                </th>
+                <th>
+                  {I18n.t('common.labels')}
+                </th>
+                <th>
                   {I18n.t('common.description')}
                 </th>
                 <th>
@@ -430,12 +448,20 @@ export default class EditReport extends React.Component {
             </thead>
             <tbody>
               {times.map(({
-                id, task, duration, owner, toMerge, description, cost, touched, tag,
+                id, task, duration, owner, toMerge, description, cost, touched, tag, integration_payload,
               }) => (
                 <tr key={id}>
                   <td><TagPill tag={tag} onClick={() => this.handleTagPillClick(category, tag)} bold={false} /></td>
                   <td>
                     {task && <a href={task} target="_blank" rel="noopener noreferrer">{task}</a>}
+                  </td>
+                  <td>
+                    {extractIntegrationPayload(integration_payload).type}
+                  </td>
+                  <td>
+                    {extractIntegrationPayload(integration_payload).labels.map((label) => (
+                      <span key={label} className="badge badge-pill badge-primary">{label}</span>
+                    ))}
                   </td>
                   <td>{description}</td>
                   <td>{owner}</td>
@@ -604,6 +630,16 @@ export default class EditReport extends React.Component {
               {I18n.t('common.save')}
               <i className="ml-2 fa fa-check" />
             </button>
+            <button
+              key="refresh"
+              disabled={report.refresh_status === 'in_progress'}
+              className="btn btn-outline-success btn-lg"
+              type="button"
+              onClick={this.onRefresh}
+            >
+              {I18n.t('common.refresh')}
+              <i className="ml-2 fa fa-repeat" />
+            </button>
             <button key="generate" className="btn btn-outline-success btn-lg" type="button" onClick={this.onGenerate}>
               {I18n.t('common.generate')}
               <i className="ml-2 fa fa-file-pdf-o" />
@@ -619,16 +655,29 @@ export default class EditReport extends React.Component {
           </div>
         )}
         {this.editable() && (
-          <div className="report-undo-actions">
-            <button key="soft" type="button" className="btn btn-sm text-info" onClick={this.onSoftReset}>
-              <i className="fa fa-undo mr-2" />
-              {I18n.t('apps.reports.restore_previous')}
-            </button>
-            <button key="hard" type="button" className="btn btn-sm text-danger" onClick={this.onHardReset}>
-              <i className="fa fa-history mr-2" />
-              {I18n.t('apps.reports.restore_first')}
-            </button>
-          </div>
+          <>
+            {report.refresh_status === 'done' && (
+              <span className="text-success">
+                {`${I18n.t('common.refreshed_at')}: ${moment(report.refreshed_at).formatTime()}`}
+              </span>
+            )}
+            {report.refresh_status === 'in_progress' && (
+              <span className="text-info">{I18n.t('common.refresh_in_progress')}</span>
+            )}
+            {report.refresh_status === 'error' && (
+              <span className="text-danger">{I18n.t('common.refresh_error')}</span>
+            )}
+            <div className="report-undo-actions">
+              <button key="soft" type="button" className="btn btn-sm text-info" onClick={this.onSoftReset}>
+                <i className="fa fa-undo mr-2" />
+                {I18n.t('apps.reports.restore_previous')}
+              </button>
+              <button key="hard" type="button" className="btn btn-sm text-danger" onClick={this.onHardReset}>
+                <i className="fa fa-history mr-2" />
+                {I18n.t('apps.reports.restore_first')}
+              </button>
+            </div>
+          </>
         )}
       </div>
     );
