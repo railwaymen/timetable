@@ -34,7 +34,7 @@ const FieldsList = (props) => {
     return (
       <div>
         <div className="mb-3">
-          <h4 className="font-weight-bold">Dodatkowe pola</h4>
+          <h4 className="font-weight-bold">{I18n.t('apps.hardware.additional_fields')}</h4>
         </div>
 
         {fields.map((field) => {

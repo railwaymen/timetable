@@ -3,6 +3,7 @@ en:
     hardware:
       locked: "This hardware is locked, you can't edit it"
       add_new: Add hardware
+      additional_fields: Additional fields
       type: Type
       manufacturer: Manufacturer
       model: Model

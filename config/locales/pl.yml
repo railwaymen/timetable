@@ -3,6 +3,7 @@ pl:
     hardware:
       locked: "Ten sprzęt jest zablokowany, nie możesz go edytować"
       add_new: Dodaj sprzęt
+      additional_fields: Dodatkowe pola
       type: Typ
       manufacturer: Producent
       model: Model
