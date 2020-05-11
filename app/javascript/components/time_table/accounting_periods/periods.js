@@ -30,7 +30,7 @@ class Periods extends React.Component {
         total_pages: 0,
       },
       generatePeriods: {
-        periods_count: undefined,
+        periods_count: 1,
         month: moment().format('MM'),
         year: moment().format('YYYY'),
       },
