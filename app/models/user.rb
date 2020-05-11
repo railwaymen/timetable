@@ -24,6 +24,9 @@ class User < ApplicationRecord
   has_many :project_resources, dependent: :destroy
   has_many :project_resource_assignments, dependent: :destroy
   has_many :hardwares, dependent: :destroy
+  has_many :taggings, as: :taggable, dependent: :destroy
+  has_many :tags, through: :taggings
+
   validates :first_name, :last_name, presence: true
   validates :phone, format: { with: PHONE_REGEX }
 

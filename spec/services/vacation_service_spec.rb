@@ -19,7 +19,7 @@ RSpec.describe VacationService do
 
   describe '#approve' do
     it 'returns error when thera are work times entries in vacation range' do
-      create(:project, name: 'Vacation')
+      create(:project, :vacation)
       vacation = create(:vacation)
       create(:work_time, user: vacation.user, starts_at: vacation.start_date.beginning_of_day + 8.hours, ends_at: vacation.start_date.beginning_of_day + 12.hours)
       warnings = [{ work_time: I18n.t('apps.staff.user_has_already_filled_in_work_time', parameter: vacation.user_full_name),
@@ -28,7 +28,7 @@ RSpec.describe VacationService do
     end
 
     it 'returns error when there is already vacation interaction' do
-      create(:project, name: 'Vacation')
+      create(:project, :vacation)
       vacation = create(:vacation)
       create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :accepted)
       errors = [{ vacation_interaction: I18n.t('activerecord.errors.models.vacation_interaction.base.already_interacted', action: I18n.t('apps.staff.accepted').downcase) }]
@@ -36,7 +36,8 @@ RSpec.describe VacationService do
     end
 
     it 'returns error when user did not select vacation_sub_type for others vacations' do
-      create(:project, name: 'ZKS')
+      create(:project, :vacation)
+      create(:project, :zks)
       vacation = create(:vacation, description: 'Description', vacation_type: :others)
       errors = [{ vacation_sub_type: I18n.t('apps.staff.vacation_sub_type_empty') }]
       expect(described_class.new(current_user: staff_manager, vacation: vacation).approve).to eql(response(vacation, staff_manager.to_s, 'unconfirmed', errors))
@@ -48,7 +49,7 @@ RSpec.describe VacationService do
 
         vacation = create(:vacation, start_date: Time.current.to_date, end_date: Time.current.to_date + 7.days,
                                      status: :declined, description: 'Others', vacation_type: :others)
-        create(:project, name: 'ZKS')
+        create(:project, :zks)
         vacation_interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :declined)
 
         expect(WorkTime.count).to eql(0)
@@ -71,7 +72,7 @@ RSpec.describe VacationService do
     context 'when current user can manage staff and is not staff member' do
       it 'approves vacation, creates vacation interaction, deletes previous opposite vacation interaction' do
         vacation = create(:vacation, start_date: Time.current.to_date, end_date: Time.current.to_date + 7.days, status: :declined)
-        create(:project, name: 'Vacation')
+        create(:project, :vacation)
         vacation_interaction = create(:vacation_interaction, user: admin, vacation: vacation, action: :declined)
 
         described_class.new(current_user: admin, vacation: vacation).approve
@@ -87,7 +88,7 @@ RSpec.describe VacationService do
   describe '#decline' do
     it 'declines vacation, destroys vacation work times, creates vacation interaction, deletes previous opposite vacation interaction' do
       vacation = create(:vacation, start_date: Time.current.to_date, end_date: Time.current.to_date + 7.days, status: :approved)
-      project = create(:project, name: 'Vacation')
+      project = create(:project, :vacation)
       create(:work_time, user: vacation.user, starts_at: vacation.start_date.beginning_of_day + 8.hours,
                          ends_at: vacation.start_date.beginning_of_day + 12.hours, project: project, vacation: vacation)
       vacation_interaction = create(:vacation_interaction, user: admin, vacation: vacation, action: :approved)
@@ -227,7 +228,7 @@ RSpec.describe VacationService do
 
       it 'when vacation is declined, user declines vacation, vacation has been accepted by other staff manager' do
         vacation = create(:vacation, status: :declined)
-        create(:project, name: 'Vacation')
+        create(:project, :vacation)
         staff_manager1 = create(:user, :staff_manager)
         staff_manager2 = create(:user, :staff_manager)
         create(:vacation_interaction, user: staff_manager1, vacation: vacation, action: :accepted)

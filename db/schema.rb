@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_28_224608) do
+ActiveRecord::Schema.define(version: 2020_05_05_095052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -185,7 +185,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_224608) do
     t.datetime "updated_at", null: false
     t.boolean "internal", default: false, null: false
     t.string "color", default: "000000", null: false
-    t.boolean "_active", default: true, null: false
     t.boolean "work_times_allows_task", default: false, null: false
     t.bigint "leader_id"
     t.boolean "autofill", default: false, null: false
@@ -205,7 +204,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_224608) do
     t.datetime "ends_at", null: false
     t.integer "duration", null: false
     t.text "note"
-    t.boolean "_active", default: true, null: false
     t.boolean "updated_by_admin", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -213,6 +211,24 @@ ActiveRecord::Schema.define(version: 2020_04_28_224608) do
     t.index ["creator_id"], name: "index_remote_works_on_creator_id"
     t.index ["discarded_at"], name: "index_remote_works_on_discarded_at"
     t.index ["user_id"], name: "index_remote_works_on_user_id"
+  end
+
+  create_table "taggings", force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.string "taggable_type"
+    t.bigint "taggable_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tag_id", "taggable_id", "taggable_type"], name: "index_taggings_on_tag_id_and_taggable_id_and_taggable_type", unique: true
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+    t.index ["taggable_type", "taggable_id"], name: "index_taggings_on_taggable_type_and_taggable_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -233,7 +249,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_224608) do
     t.string "last_name", null: false
     t.string "phone"
     t.string "contract_name"
-    t.boolean "_active", default: true, null: false
     t.boolean "manager", default: false, null: false
     t.string "lang", default: "pl", null: false
     t.boolean "staff_manager", default: false, null: false
@@ -303,7 +318,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_224608) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "contract_name"
-    t.boolean "_active", default: true, null: false
     t.integer "creator_id", null: false
     t.boolean "updated_by_admin", default: false, null: false
     t.string "task"
@@ -334,6 +348,7 @@ ActiveRecord::Schema.define(version: 2020_04_28_224608) do
   add_foreign_key "projects", "users", column: "leader_id"
   add_foreign_key "remote_works", "users"
   add_foreign_key "remote_works", "users", column: "creator_id"
+  add_foreign_key "taggings", "tags"
   add_foreign_key "vacation_interactions", "users"
   add_foreign_key "vacation_interactions", "vacations"
   add_foreign_key "vacation_periods", "users"

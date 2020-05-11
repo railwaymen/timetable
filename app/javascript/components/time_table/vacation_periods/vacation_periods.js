@@ -30,23 +30,6 @@ class VacationPeriods extends React.Component {
     this.getVacationPeriods({ userId });
   }
 
-  getVacationPeriods(options) {
-    Api.makeGetRequest({
-      url: `/api/vacation_periods?user_id=${options.userId}`,
-    }).then((response) => {
-      const vacationPeriods = response.data.vacation_periods;
-      Api.makeGetRequest({
-        url: `/api/users/${options.userId}`,
-      }).then((userResponse) => {
-        this.setState({
-          vacationPeriods,
-          userId: options.userId,
-          user: userResponse.data,
-        });
-      });
-    });
-  }
-
   onPreviousUserChange() {
     const id = this.state.user.prev_id;
 
@@ -69,17 +52,6 @@ class VacationPeriods extends React.Component {
     }
   }
 
-  renderUserInfo(user) {
-    if (_.isEmpty(user)) {
-      return (
-        <div style={{ width: '390px', display: 'inline-block' }} className="preloader" />
-      );
-    }
-    return (
-      <span><NavLink to={`/timesheet?user_id=${user.id}`}>{`${user.first_name} ${user.last_name}`}</NavLink></span>
-    );
-  }
-
   onGenerateClick() {
     Api.makePostRequest({
       url: '/api/vacation_periods/generate',
@@ -89,6 +61,34 @@ class VacationPeriods extends React.Component {
         vacationPeriods: response.data,
       });
     });
+  }
+
+  getVacationPeriods(options) {
+    Api.makeGetRequest({
+      url: `/api/vacation_periods?user_id=${options.userId}`,
+    }).then((response) => {
+      const vacationPeriods = response.data.vacation_periods;
+      Api.makeGetRequest({
+        url: `/api/users/${options.userId}`,
+      }).then((userResponse) => {
+        this.setState({
+          vacationPeriods,
+          userId: options.userId,
+          user: userResponse.data,
+        });
+      });
+    });
+  }
+
+  renderUserInfo(user) {
+    if (_.isEmpty(user)) {
+      return (
+        <div style={{ width: '390px', display: 'inline-block' }} className="preloader" />
+      );
+    }
+    return (
+      <span><NavLink to={`/timesheet?user_id=${user.id}`}>{`${user.first_name} ${user.last_name}`}</NavLink></span>
+    );
   }
 
   render() {
@@ -102,10 +102,10 @@ class VacationPeriods extends React.Component {
         </Helmet>
         { currentUser.admin && (
           <div className="row periods-actions">
-            <div className="col-md-8">
-              <div id="generate" className="bt bt-second" onClick={this.onGenerateClick}>
-                <span className="bt-txt">{I18n.t('apps.vacation_periods.generate_periods')}</span>
-                <i className="symbol fa fa-calendar-plus-o" />
+            <div className="col-auto mr-auto">
+              <div id="generate" className="btn btn-outline-secondary" onClick={this.onGenerateClick}>
+                {I18n.t('apps.vacation_periods.generate_periods')}
+                <i className="ml-2 fa fa-calendar-plus-o" />
               </div>
             </div>
           </div>

@@ -123,41 +123,47 @@ function UnconfirmedVacation(props) {
   if (vacation.status === 'declined' && vacation.interacted === false) { return null; }
 
   return (
-    <div className={`unconfirmed-vacation ${vacation.status}`}>
-      <Errors errors={errors} />
-      <Warnings warnings={warnings} />
-      <div className="vacation-header">
-        <div className="user-full-name">
-          {vacation.full_name}
-          { window.currentUser.staff_manager && (
-            <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
-              <i className="icon calendar" />
-            </NavLink>
-          )}
-        </div>
-        <div className="vacation-time-period">
-          {moment(vacation.start_date).format('DD/MM/YYYY')}
-          -
-          {moment(vacation.end_date).format('DD/MM/YYYY')}
+    <div className={`card p-0 unconfirmed-vacation ${vacation.status}`}>
+      <div className="card-header">
+        <Errors errors={errors} />
+        <Warnings warnings={warnings} />
+        <div className="vacation-header">
+          <div className="user-full-name">
+            {vacation.full_name}
+            { window.currentUser.staff_manager && (
+              <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
+                <i className="icon calendar" />
+              </NavLink>
+            )}
+          </div>
+          <div className="vacation-time-period">
+            {moment(vacation.start_date).format('DD/MM/YYYY')}
+            -
+            {moment(vacation.end_date).format('DD/MM/YYYY')}
+          </div>
         </div>
       </div>
-      <div className="vacation-description">
-        {vacation.description}
-      </div>
-      <div className="vacation-footer">
-        <VacationType />
-        <Buttons />
-      </div>
-      <Interactions vacation={vacation} />
-      { window.currentUser.staff_manager && (
-        <div className="available_vacation_days">
-          {I18n.t('apps.staff.available_vacation_days')}
-          :
-          <span className="vacation-days">
-            {` ${vacation.available_vacation_days}`}
-          </span>
+      <div className="card-body">
+        <div className="vacation-description">
+          {vacation.description}
         </div>
-      )}
+      </div>
+      <div className="card-footer">
+        <div className="vacation-footer">
+          <VacationType />
+          <Buttons />
+        </div>
+        <Interactions vacation={vacation} />
+        { window.currentUser.staff_manager && (
+          <div className="available_vacation_days">
+            {I18n.t('apps.staff.available_vacation_days')}
+            :
+            <span className="vacation-days">
+              {` ${vacation.available_vacation_days}`}
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

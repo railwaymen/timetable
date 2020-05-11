@@ -9,7 +9,7 @@ RSpec.describe RemoteWorkForm do
       form = RemoteWorkForm.new(remote_work)
 
       expect(form.save).to eql(false)
-      expect(form.errors.details).to eql({ starts_at: [{ error: :incorrect_range }] })
+      expect(form.errors.details).to eql({ starts_at: [{ error: :incorrect_range }, { error: :incorrect_hours }] })
     end
 
     it 'validates_hours' do

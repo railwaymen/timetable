@@ -41,9 +41,9 @@ export default function CombinedReports(props) {
           </Link>
         </div>
         <div className="text-right">
-          <Link to={`/projects/${projectId}/new_combined_report`} className="bt bt-main">
-            <i className="symbol fa fa-plus" />
-            <span className="bt-txt">{I18n.t('apps.combined_reports.new')}</span>
+          <Link to={`/projects/${projectId}/new_combined_report`} className="btn btn-success">
+            <i className="fa fa-plus mr-2" />
+            {I18n.t('apps.combined_reports.new')}
           </Link>
         </div>
       </div>
@@ -77,20 +77,22 @@ export default function CombinedReports(props) {
                   <SynchronizeReport url={`/api/combined_reports/${report.id}/synchronize`} />
                 </td>
                 <td className="report-actions text-right">
-                  {report.generated && (
-                    <a className="bt bt-second bt-download" href={`/api/combined_reports/${report.id}/file`}>
-                      <i className="symbol fa fa-file-pdf-o" />
-                      <span className="txt">{I18n.t('common.download')}</span>
-                    </a>
-                  )}
-                  <Link className="bt bt-second" to={`/projects/${projectId}/combined_reports/${report.id}`}>
-                    <i className="symbol fa fa-search" />
-                    <span className="bt-txt">{I18n.t('common.show')}</span>
-                  </Link>
-                  <button type="button" className="bt bt-danger" onClick={() => onDelete(report.id)}>
-                    <i className="symbol fa fa-trash-o" />
-                    <span className="bt-txt">{I18n.t('apps.reports.remove')}</span>
-                  </button>
+                  <div className="btn-group">
+                    {report.generated && (
+                      <a className="btn btn-outline-secondary bt-download" href={`/api/combined_reports/${report.id}/file`}>
+                        <i className="fa fa-file-pdf-o mr-2" />
+                        {I18n.t('common.download')}
+                      </a>
+                    )}
+                    <Link className="btn btn-outline-secondary" to={`/projects/${projectId}/combined_reports/${report.id}`}>
+                      <i className="fa fa-search mr-2" />
+                      {I18n.t('common.show')}
+                    </Link>
+                    <button type="button" className="btn btn-outline-danger" onClick={() => onDelete(report.id)}>
+                      <i className="fa fa-trash-o mr-2" />
+                      {I18n.t('apps.reports.remove')}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

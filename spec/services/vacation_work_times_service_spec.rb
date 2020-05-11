@@ -27,7 +27,6 @@ RSpec.describe VacationWorkTimesService do
       work_times_count = vacation.start_date.business_days_until(vacation.end_date + 1.day)
       expect { described_class.new(vacation, staff_manager).save }.to change { WorkTime.count }.by(work_times_count)
       expect(WorkTime.pluck(:starts_at).map(&:to_date)).to include(*vacation.start_date.business_dates_until(vacation.end_date + 1.day))
-      expect(WorkTime.distinct.pluck(:updated_by_admin)).to eql([true])
       expect(WorkTime.distinct.pluck(:vacation_id)).to eql([vacation.id])
       expect(WorkTime.distinct.pluck(:creator_id)).to eql([staff_manager.id])
       expect(WorkTime.distinct.pluck(:body)).to eql([I18n.t("common.vacation_code.#{vacation.vacation_type}")])

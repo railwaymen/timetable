@@ -85,24 +85,26 @@ const Hardware = ({ hardware, onDelete, fields }) => {
       return null;
     }
     return (
-      <div className="col-md-5 btn-group">
-        <button
-          type="button"
-          onClick={() => onEdit()}
-          data-tooltip-bottom={I18n.t('common.edit')}
-          className="btn btn-primary"
-        >
-          <i className="fa fa-pencil" />
-        </button>
-        <button
-          type="button"
-          onClick={() => onDelete(stateHardware.id)}
-          data-tooltip-bottom={I18n.t('common.destroy')}
-          className="btn btn-danger"
-        >
-          <i className="fa fa-trash" />
-        </button>
-        {lockManagement()}
+      <div className="col-auto">
+        <div className="btn-group bg-white">
+          <button
+            type="button"
+            onClick={() => onEdit()}
+            data-tooltip-bottom={I18n.t('common.edit')}
+            className="btn btn-outline-primary"
+          >
+            <i className="fa fa-pencil" />
+          </button>
+          <button
+            type="button"
+            onClick={() => onDelete(stateHardware.id)}
+            data-tooltip-bottom={I18n.t('common.destroy')}
+            className="btn btn-outline-danger"
+          >
+            <i className="fa fa-trash" />
+          </button>
+          {lockManagement()}
+        </div>
       </div>
     );
   };
@@ -120,16 +122,9 @@ const Hardware = ({ hardware, onDelete, fields }) => {
 
   return (
     <div className="col-md-6">
-      <div className="card">
-        <div className="container">
-          {(hardware.locked && !currentUser.hardware_manager)
-            && (
-            <div>
-              <Errors errors={[I18n.t('apps.hardware.locked')]} />
-              <hr />
-            </div>
-            )}
-          <nav className="row mb-3">
+      <div className="card p-0">
+        <div className="card-header">
+          <nav className="row align-items-start mb-3">
             <div className="col">
               <h3 className="font-weight-bold">
                 {stateHardware.manufacturer}
@@ -140,6 +135,15 @@ const Hardware = ({ hardware, onDelete, fields }) => {
             </div>
             {hardwareActions()}
           </nav>
+        </div>
+        <div className="card-body container">
+          {(hardware.locked && !currentUser.hardware_manager)
+            && (
+            <div>
+              <Errors errors={[I18n.t('apps.hardware.locked')]} />
+              <hr />
+            </div>
+            )}
           <div className="row">
             <div className="col">
               <h6 className="font-weight-bold">{I18n.t('apps.hardware.type')}</h6>

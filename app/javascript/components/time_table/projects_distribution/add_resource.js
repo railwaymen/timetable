@@ -22,32 +22,6 @@ class AddResource extends React.Component {
     };
   }
 
-  updateUser(selectedUser) {
-    this.setState({
-      selectedUser,
-    });
-  }
-
-  updateAddResourceModal(selectedUser) {
-    this.setState({
-      selectedUser,
-      groupOnly: false,
-      name: '',
-      selectedResourceGroup: '',
-    });
-  }
-
-  generateResourceGroups() {
-    const options = [];
-    _.filter(this.props.resources, (r) => (r.groupOnly))
-      .map((resourceGroup) => (options.push(
-        <option value={resourceGroup.realId} key={resourceGroup.id}>
-          {resourceGroup.name}
-        </option>,
-      )));
-    return options;
-  }
-
   onChange(e) {
     this.setState({
       selectedResourceGroup: e.target.value,
@@ -97,11 +71,41 @@ class AddResource extends React.Component {
     });
   }
 
+  onCloseClick() {
+    $('#modal').hide();
+  }
+
   filterUsers = (filter) => {
     const lowerFilter = filter.toLowerCase();
     return _.filter(this.props.users, (p) => (
       p.active && (`${p.first_name} ${p.last_name}`.toLowerCase().match(lowerFilter) || `${p.last_name} ${p.first_name}`.toLowerCase().match(lowerFilter))
     ));
+  }
+
+  updateUser(selectedUser) {
+    this.setState({
+      selectedUser,
+    });
+  }
+
+  updateAddResourceModal(selectedUser) {
+    this.setState({
+      selectedUser,
+      groupOnly: false,
+      name: '',
+      selectedResourceGroup: '',
+    });
+  }
+
+  generateResourceGroups() {
+    const options = [];
+    _.filter(this.props.resources, (r) => (r.groupOnly))
+      .map((resourceGroup) => (options.push(
+        <option value={resourceGroup.realId} key={resourceGroup.id}>
+          {resourceGroup.name}
+        </option>,
+      )));
+    return options;
   }
 
   renderSelectedUser(selectedObject) {
@@ -124,10 +128,6 @@ class AddResource extends React.Component {
         ) : `${object.first_name} ${object.last_name}`}
       </div>
     );
-  }
-
-  onCloseClick() {
-    $('#modal').hide();
   }
 
   render() {
@@ -180,9 +180,9 @@ class AddResource extends React.Component {
           </form>
         </div>
         <div className="actions">
-          <button className="button green icon labeled right ui" id="generate" type="button" onClick={this.onSubmit}>
+          <button className="btn btn-success" id="generate" type="button" onClick={this.onSubmit}>
+            <i className="fa fa-angle-double-right mr-2" />
             {I18n.t('common.add')}
-            <i className="angle double icon right" />
           </button>
         </div>
       </div>

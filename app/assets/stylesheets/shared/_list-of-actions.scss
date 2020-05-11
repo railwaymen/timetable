@@ -3,9 +3,6 @@
   white-space: nowrap;
   label, button, a {
     margin: 0;
-    &:not(:last-child) {
-      margin-right: 8px;
-    }
     display: inline-block;
     vertical-align: middle;
   }

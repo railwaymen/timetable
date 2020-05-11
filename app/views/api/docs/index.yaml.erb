@@ -326,7 +326,8 @@ paths:
         - authentication: []
       parameters:
         - name: id
-          in: query
+          in: path
+          required: true
           schema:
             type: integer
       responses:
@@ -732,6 +733,74 @@ paths:
                       - error: incorrect_hours
                     ends_at:
                       - error: blank
+  /remote_works/{id}:
+    put:
+      tags:
+        - Remote work
+      security:
+        - authentication: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - starts_at
+                - ends_at
+              properties:
+                note:
+                  type: string
+                starts_at:
+                  type: string
+                  example: "2020-03-04T08:00:00.000Z"
+                ends_at:
+                  type: string
+                  example: "2020-03-04T010:00:00.000Z"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoteWork'
+        422:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                example:
+                  errors:
+                    starts_at:
+                      - error: overlap
+                      - overlap_midnight
+                      - error: too_old
+                      - error: blank
+                      - error: incorrect_hours
+                    ends_at:
+                      - error: blank
+    delete:
+      tags:
+        - Remote work
+      security:
+        - authentication: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description:
+        404:
+          description:
 components:
   schemas:
     AccountingPeriod:

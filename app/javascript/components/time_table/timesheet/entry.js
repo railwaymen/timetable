@@ -56,11 +56,6 @@ class Entry extends React.Component {
     }, () => { this.removeErrorsFor(name); });
   }
 
-  submitPath(e) {
-    if (e.ctrlKey) return '/api/work_times/create_filling_gaps';
-    return '/api/work_times';
-  }
-
   onKeyPress(e) {
     if (e.key === 'Enter') this.onSubmit(this.submitPath(e));
   }
@@ -70,11 +65,6 @@ class Entry extends React.Component {
 
     const path = this.submitPath(e);
     this.recountTime(() => this.onSubmit(path));
-  }
-
-  preventScroll(e) {
-    e = e || window.event;
-    e.returnValue = false;
   }
 
   onTimeFocus = (e) => {
@@ -93,50 +83,6 @@ class Entry extends React.Component {
     this.setState({
       [name]: moment(value, 'HH:mm').subtract(Math.sign(e.deltaY), 'minutes').format('HH:mm'),
     });
-  }
-
-  onDateChange(date) {
-    this.setState({
-      date: date.format('DD/MM/YYYY'),
-    }, () => { this.removeErrorsFor('date'); });
-  }
-
-  paste(object) {
-    this.setState({
-      body: _.unescape(object.body),
-      project: object.project,
-      project_id: object.project.id,
-      task: object.task,
-      tag: object.tag || 'dev',
-    });
-  }
-
-  removeErrorsFor(name, stateCallback) {
-    this.setState(({ errors }) => {
-      delete errors[name];
-      return { errors };
-    }, stateCallback);
-  }
-
-  validate() {
-    const { project } = this.state;
-    const {
-      body, starts_at, ends_at, project_id, duration, task, tag,
-    } = this.state;
-
-    if (!project.taggable || project.autofill) {
-      return [];
-    }
-    const errors = {
-      body: (!task ? Validations.presence(body) : undefined),
-      starts_at: Validations.presence(starts_at),
-      ends_at: Validations.presence(ends_at),
-      project_id: Validations.presence(project_id),
-      duration: Validations.greaterThan(0, duration),
-      tag: Validations.presence(tag),
-    };
-    Object.keys(errors).forEach((key) => { if (errors[key] === undefined) { delete errors[key]; } });
-    return errors;
   }
 
   onSubmit(url) {
@@ -187,6 +133,64 @@ class Entry extends React.Component {
         this.setState({ errors: translateErrors('work_time', e.errors) });
       });
     }
+  }
+
+  onDateChange(date) {
+    this.setState({
+      date: date.format('DD/MM/YYYY'),
+    }, () => { this.removeErrorsFor('date'); });
+  }
+
+  onFocus(e) {
+    e.target.setSelectionRange(0, e.target.value.length);
+  }
+
+  preventScroll(e) {
+    e = e || window.event;
+    e.returnValue = false;
+  }
+
+  submitPath(e) {
+    if (e.ctrlKey) return '/api/work_times/create_filling_gaps';
+    return '/api/work_times';
+  }
+
+  paste(object) {
+    this.setState({
+      body: _.unescape(object.body),
+      project: object.project,
+      project_id: object.project.id,
+      task: object.task,
+      tag: object.tag || 'dev',
+    });
+  }
+
+  removeErrorsFor(name, stateCallback) {
+    this.setState(({ errors }) => {
+      delete errors[name];
+      return { errors };
+    }, stateCallback);
+  }
+
+  validate() {
+    const { project } = this.state;
+    const {
+      body, starts_at, ends_at, project_id, duration, task, tag,
+    } = this.state;
+
+    if (!project.taggable || project.autofill) {
+      return [];
+    }
+    const errors = {
+      body: (!task ? Validations.presence(body) : undefined),
+      starts_at: Validations.presence(starts_at),
+      ends_at: Validations.presence(ends_at),
+      project_id: Validations.presence(project_id),
+      duration: Validations.greaterThan(0, duration),
+      tag: Validations.presence(tag),
+    };
+    Object.keys(errors).forEach((key) => { if (errors[key] === undefined) { delete errors[key]; } });
+    return errors;
   }
 
   updateTag(tag_obj) {
@@ -259,10 +263,6 @@ class Entry extends React.Component {
     }, () => {
       this.removeErrorsFor('duration', stateCallback);
     });
-  }
-
-  onFocus(e) {
-    e.target.setSelectionRange(0, e.target.value.length);
   }
 
   renderEasterEgg() {
@@ -379,14 +379,14 @@ class Entry extends React.Component {
                 <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />
               </div>
             )}
-            <div className="form-actions">
-              <button type="button" className="bt bt-second" style={{ marginTop: '5px' }} onClick={() => this.onSubmit('/api/work_times/create_filling_gaps')}>
-                <i className="symbol fa fa-calendar-plus-o" />
-                <span className="bt-txt">{I18n.t('common.fill_save')}</span>
+            <div className="form-actions bg-white btn-group">
+              <button type="button" className="btn btn-outline-success btn-lg" onClick={() => this.onSubmit('/api/work_times/create_filling_gaps')}>
+                <i className="fa fa-calendar-plus-o mr-2" />
+                {I18n.t('common.fill_save')}
               </button>
-              <button type="button" className="bt bt-big bt-main bt-submit" onClick={() => this.onSubmit('/api/work_times')}>
-                <i className="symbol fa fa-calendar-plus-o" />
-                <span className="bt-txt">{I18n.t('common.save')}</span>
+              <button type="button" className="btn btn-success btn-lg" onClick={() => this.onSubmit('/api/work_times')}>
+                <i className="fa fa-calendar-plus-o mr-2" />
+                {I18n.t('common.save')}
               </button>
             </div>
           </div>

@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     end
     resources :users, only: %i[index show create update] do
       get :incoming_birthdays, on: :collection
+      get :positions, on: :collection
     end
     resources :hardwares, only: %i[index create destroy update] do
       get :types, on: :collection

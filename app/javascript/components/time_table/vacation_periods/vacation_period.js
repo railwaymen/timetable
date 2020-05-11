@@ -14,9 +14,12 @@ const VacationPeriod = (props) => {
       <td className="nowrap text-left">
         { currentUser.admin && (
           <>
-            <NavLink to={`/vacation_periods/edit/${period.id}?user_id=${period.user_id}`} className="bt bt-second edit">
-              <i className="symbol fa fa-pencil" />
-              <span className="bt-txt">{I18n.t('common.edit')}</span>
+            <NavLink
+              to={`/vacation_periods/edit/${period.id}?user_id=${period.user_id}`}
+              className="btn btn-outline-secondary edit"
+            >
+              <i className="fa fa-pencil mr-2" />
+              {I18n.t('common.edit')}
             </NavLink>
           </>
         )}

@@ -92,7 +92,6 @@ const Navbar = () => (
       </li>
     </ul>
 
-
     {/* <div className="ui secondary menu">
       { currentUser.admin && (
         <NavLink className="item" to="/users">{I18n.t('common.people')}</NavLink>

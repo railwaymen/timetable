@@ -36,17 +36,37 @@ export default class ProjectWorkTimes extends React.Component {
     _.bindAll(this, ['getWorkTimes', 'nextWeek', 'prevWeek', 'replaceUrl', 'pushUrl', 'onFromChange', 'onToChange', 'allUsers']);
   }
 
-  parseRange() {
-    const url = URI(window.location.href);
-    const queries = url.search(true);
-    const from = (queries.from ? moment(queries.from) : moment().startOf('week')).format();
-    const to = (queries.to ? moment(queries.to) : moment().endOf('week')).format();
-    const { user_id } = queries;
-    return { from, to, user_id };
-  }
-
   componentDidMount() {
     this.getWorkTimes(this.state, this.replaceUrl);
+  }
+
+  onFromChange(date) {
+    this.setState({
+      from: moment(date).format(),
+    });
+  }
+
+  onToChange(date) {
+    this.setState({
+      to: moment(date).format(),
+    });
+  }
+
+  getWorkTimes({ from, to, user_id }, stateCallback = this.pushUrl) {
+    const url = URI(`/api/projects/${this.state.projectId}/work_times`).addSearch({ from, to, user_id });
+    this.setState({ sync: true });
+    Api.makeGetRequest({ url })
+      .then((response) => {
+        const {
+          project, work_times, reports, tag_reports,
+        } = response.data;
+        const groupedWorkTimes = _.groupBy(work_times, (workTime) => (
+          moment(workTime.starts_at).format('YYYYMMDD')
+        ));
+        this.setState({
+          project, reports, tag_reports, groupedWorkTimes, from, to, user_id, sync: false,
+        }, stateCallback);
+      });
   }
 
   replaceUrl() {
@@ -90,33 +110,13 @@ export default class ProjectWorkTimes extends React.Component {
     this.getWorkTimes({ from: from.format(), to: from.endOf('week').format(), user_id: this.state.user_id });
   }
 
-  getWorkTimes({ from, to, user_id }, stateCallback = this.pushUrl) {
-    const url = URI(`/api/projects/${this.state.projectId}/work_times`).addSearch({ from, to, user_id });
-    this.setState({ sync: true });
-    Api.makeGetRequest({ url })
-      .then((response) => {
-        const {
-          project, work_times, reports, tag_reports,
-        } = response.data;
-        const groupedWorkTimes = _.groupBy(work_times, (workTime) => (
-          moment(workTime.starts_at).format('YYYYMMDD')
-        ));
-        this.setState({
-          project, reports, tag_reports, groupedWorkTimes, from, to, user_id, sync: false,
-        }, stateCallback);
-      });
-  }
-
-  onFromChange(date) {
-    this.setState({
-      from: moment(date).format(),
-    });
-  }
-
-  onToChange(date) {
-    this.setState({
-      to: moment(date).format(),
-    });
+  parseRange() {
+    const url = URI(window.location.href);
+    const queries = url.search(true);
+    const from = (queries.from ? moment(queries.from) : moment().startOf('week')).format();
+    const to = (queries.to ? moment(queries.to) : moment().endOf('week')).format();
+    const { user_id } = queries;
+    return { from, to, user_id };
   }
 
   render() {
@@ -170,12 +170,12 @@ export default class ProjectWorkTimes extends React.Component {
           <div className="col-md-4">
             <div className="sticky-record">
               { tag_reports.length > 0 && (
-                <div className="row">
+                <div className="row mx-0">
                   <ReportProjectTagRecord reportRows={tag_reports} />
                 </div>
               )}
               { reports.length > 0 && (
-                <div className="row">
+                <div className="row mx-0">
                   <ReportProjectRecord
                     reportRows={reports}
                     from={from}

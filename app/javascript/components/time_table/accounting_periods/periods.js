@@ -54,28 +54,6 @@ class Periods extends React.Component {
     }
   }
 
-  getPeriods(options) {
-    Api.makeGetRequest({
-      url: `/api/accounting_periods?user_id=${options.userId}&page=${options.page}`,
-    }).then((response) => {
-      const periods = response.data;
-
-      Api.makeGetRequest({ url: `/api/users/${options.userId}` })
-        .then((userResponse) => {
-          this.setState({
-            periods,
-            userId: options.userId,
-            user: userResponse.data,
-            page: options.page,
-            recounting: periods.recounting,
-          });
-          if (!!periods.recounting && !this.recountingTimer) {
-            this.recountingTimer = setInterval(this.getRecountingPeriodsState, 1000);
-          }
-        });
-    });
-  }
-
   onPageChange(e) {
     e.preventDefault();
     const href = URI(e.target.href);
@@ -145,6 +123,53 @@ class Periods extends React.Component {
     }));
   }
 
+  onDelete(id) {
+    const { userId, page } = this.state;
+    Api.makeDeleteRequest({ url: `/api/accounting_periods/${id}` })
+      .then((response) => {
+        if (parseInt(response.status, 10) === 204) {
+          this.getPeriods({ userId, page });
+        } else {
+          alert('Error while trying to remove accounting period');
+        }
+      });
+  }
+
+  getPeriods(options) {
+    Api.makeGetRequest({
+      url: `/api/accounting_periods?user_id=${options.userId}&page=${options.page}`,
+    }).then((response) => {
+      const periods = response.data;
+
+      Api.makeGetRequest({ url: `/api/users/${options.userId}` })
+        .then((userResponse) => {
+          this.setState({
+            periods,
+            userId: options.userId,
+            user: userResponse.data,
+            page: options.page,
+            recounting: periods.recounting,
+          });
+          if (!!periods.recounting && !this.recountingTimer) {
+            this.recountingTimer = setInterval(this.getRecountingPeriodsState, 1000);
+          }
+        });
+    });
+  }
+
+  getRecountingPeriodsState() {
+    Api.makeGetRequest({
+      url: `/api/accounting_periods/recount_status?user_id=${this.state.userId}`,
+    }).then((response) => {
+      const { userId, page } = this.state;
+      if (response.data.complete) {
+        clearInterval(this.recountingTimer);
+        this.setState({ recounting: false });
+        this.getPeriods({ userId, page });
+      }
+    });
+  }
+
   recountPeriods() {
     const { recounting } = this.state;
 
@@ -161,18 +186,46 @@ class Periods extends React.Component {
     }
   }
 
-  getRecountingPeriodsState() {
-    Api.makeGetRequest({
-      url: `/api/accounting_periods/recount_status?user_id=${this.state.userId}`,
-    }).then((response) => {
-      const { userId, page } = this.state;
-      if (response.data.complete) {
-        clearInterval(this.recountingTimer);
-        this.setState({ recounting: false });
-        this.getPeriods({ userId, page });
-      }
-    });
+  generateYears() {
+    const options = [];
+    const currentYear = parseInt(moment().format('YYYY'), 10);
+    const maxYear = currentYear + 10;
+
+    for (let i = currentYear; i <= maxYear; i += 1) {
+      options.push(
+        <option key={i} value={i}>{i}</option>,
+      );
+    }
+
+    return options;
   }
+
+  generateMonths() {
+    const options = [];
+
+    for (let i = 1; i <= 12; i += 1) {
+      options.push(
+        <option key={i} value={i}>{i}</option>,
+      );
+    }
+
+    return options;
+  }
+
+  paginationBody(size, page, userId) {
+    const li = [];
+
+    for (let i = 1; i < size + 1; i += 1) {
+      li.push(
+        <li key={i} className={`page ${parseInt(page, 10) === i ? 'active' : ''}`}>
+          <a onClick={this.onPageChange} className="page" href={`/accounting_periods?user_id=${userId}&page=${i}`}>{i}</a>
+        </li>,
+      );
+    }
+
+    return li;
+  }
+
 
   renderButtons() {
     const { recounting } = this.state;
@@ -180,26 +233,27 @@ class Periods extends React.Component {
     if (currentUser.admin) {
       return (
         <div className="row periods-actions">
-          <div className="col-md-8">
-            <NavLink className="bt bt-main" to={`/accounting_periods/new?user_id=${this.state.userId}`}>
-              <span className="bt-txt">{I18n.t('apps.accounting_periods.add')}</span>
-              <i className="symbol fa fa-calendar-plus-o" />
+          <div className="col-auto btn-group mr-auto">
+            <NavLink className="btn btn-success" to={`/accounting_periods/new?user_id=${this.state.userId}`}>
+              {I18n.t('apps.accounting_periods.add')}
+              <i className="ml-2 fa fa-calendar-plus-o" />
             </NavLink>
-            <a id="generate" className="bt bt-second">
-              <span className="bt-txt">{I18n.t('apps.accounting_periods.generate_periods')}</span>
-              <i className="symbol fa fa-calendar-plus-o" />
-            </a>
+            <button id="generate" className="btn btn-outline-success" type="button">
+              {I18n.t('apps.accounting_periods.generate_periods')}
+              <i className="ml-2 fa fa-calendar-plus-o" />
+            </button>
           </div>
           <div className="col-md-4 text-right">
-            <a
+            <button
               id="recount"
               onClick={this.recountPeriods}
               disabled={!!recounting}
-              className={`bt bt-second ${recounting ? 'disabled-button-wrapper' : ''}`}
+              type="button"
+              className={`btn btn-outline-secondary ${recounting ? 'disabled-button-wrapper' : ''}`}
             >
-              <span className="bt-txt">{I18n.t('apps.accounting_periods.recount_periods')}</span>
-              <i className="symbol fa fa-repeat" />
-            </a>
+              {I18n.t('apps.accounting_periods.recount_periods')}
+              <i className="ml-2 fa fa-repeat" />
+            </button>
           </div>
         </div>
       );
@@ -236,58 +290,6 @@ class Periods extends React.Component {
         )}
       </ul>
     );
-  }
-
-  paginationBody(size, page, userId) {
-    const li = [];
-
-    for (let i = 1; i < size + 1; i += 1) {
-      li.push(
-        <li key={i} className={`page ${parseInt(page, 10) === i ? 'active' : ''}`}>
-          <a onClick={this.onPageChange} className="page" href={`/accounting_periods?user_id=${userId}&page=${i}`}>{i}</a>
-        </li>,
-      );
-    }
-
-    return li;
-  }
-
-  onDelete(id) {
-    const { userId, page } = this.state;
-    Api.makeDeleteRequest({ url: `/api/accounting_periods/${id}` })
-      .then((response) => {
-        if (parseInt(response.status, 10) === 204) {
-          this.getPeriods({ userId, page });
-        } else {
-          alert('Error while trying to remove accounting period');
-        }
-      });
-  }
-
-  generateMonths() {
-    const options = [];
-
-    for (let i = 1; i <= 12; i += 1) {
-      options.push(
-        <option key={i} value={i}>{i}</option>,
-      );
-    }
-
-    return options;
-  }
-
-  generateYears() {
-    const options = [];
-    const currentYear = parseInt(moment().format('YYYY'), 10);
-    const maxYear = currentYear + 10;
-
-    for (let i = currentYear; i <= maxYear; i += 1) {
-      options.push(
-        <option key={i} value={i}>{i}</option>,
-      );
-    }
-
-    return options;
   }
 
   renderUserInfo(user) {
@@ -335,18 +337,18 @@ class Periods extends React.Component {
               <th className="text-left">{I18n.t('apps.accounting_periods.note')}</th>
               <th>{I18n.t('apps.accounting_periods.closed')}</th>
               <th>{I18n.t('apps.accounting_periods.full_time')}</th>
-              { currentUser.admin ? <th /> : null }
+              {currentUser.admin ? <th /> : null}
             </tr>
           </thead>
           <tbody>
-            { periods.records.map((period) => (
+            {periods.records.map((period) => (
               <Period
                 key={period.id}
                 period={period}
                 onDelete={this.onDelete}
                 userName={userId ? `${user.first_name} ${user.last_name}` : `${currentUser.first_name} ${currentUser.last_name}`}
               />
-            )) }
+            ))}
           </tbody>
         </table>
         {this.renderPagination()}
@@ -400,9 +402,9 @@ class Periods extends React.Component {
             </form>
           )}
           actions={(
-            <button onClick={this.onGenerateSubmit} className="button green icon labeled right ui" id="generate" type="button">
+            <button onClick={this.onGenerateSubmit} className="btn btn-success" id="generate" type="button">
+              <i className="fa fa-angle-double-right mr-2" />
               {I18n.t('apps.accounting_periods.generate')}
-              <i className="angle double icon right" />
             </button>
           )}
         />

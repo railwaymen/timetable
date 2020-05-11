@@ -40,20 +40,6 @@ class ProjectsDropdown extends React.Component {
     });
   }
 
-  handleCurrentIndexDecrement() {
-    const { currentIndex } = this.state;
-    if (currentIndex - 1 >= 0) {
-      this.setState({ currentIndex: currentIndex - 1 });
-    }
-  }
-
-  handleCurrentIndexIncrement() {
-    const { filteredProjects, currentIndex } = this.state;
-    if (currentIndex + 1 < filteredProjects.length) {
-      this.setState({ currentIndex: currentIndex + 1 });
-    }
-  }
-
   onKeyDown(e) {
     const { filteredProjects, currentIndex } = this.state;
     if ((e.keyCode === 13 || e.keyCode === 9) && filteredProjects.length > 0) {
@@ -74,25 +60,6 @@ class ProjectsDropdown extends React.Component {
     }
   }
 
-  filterProjects(filter = this.state.filter) {
-    const lowerFilter = filter.toLowerCase();
-    return _.filter(this.props.projects, (p) => (
-      p.active && p.name.toLowerCase().match(escape(lowerFilter))
-    ));
-  }
-
-  hideDropdown(e) {
-    if (e && e.target === this.searchRef.current) return; // Do not hide when click is on search input
-    document.removeEventListener('click', this.hideDropdown);
-    this.setState({ isExpanded: false, filter: '', filteredProjects: this.filterProjects('') });
-  }
-
-  expandDropdown() {
-    this.setState({ isExpanded: true, filter: '', filteredProjects: this.filterProjects('') }, () => {
-      document.addEventListener('click', this.hideDropdown);
-    });
-  }
-
   onBlur() {
     this.setState({ isExpanded: false });
   }
@@ -108,6 +75,39 @@ class ProjectsDropdown extends React.Component {
 
       this.hideDropdown();
       this.props.updateProject(selectedProject);
+    }
+  }
+
+  expandDropdown() {
+    this.setState({ isExpanded: true, filter: '', filteredProjects: this.filterProjects('') }, () => {
+      document.addEventListener('click', this.hideDropdown);
+    });
+  }
+
+  hideDropdown(e) {
+    if (e && e.target === this.searchRef.current) return; // Do not hide when click is on search input
+    document.removeEventListener('click', this.hideDropdown);
+    this.setState({ isExpanded: false, filter: '', filteredProjects: this.filterProjects('') });
+  }
+
+  filterProjects(filter = this.state.filter) {
+    const lowerFilter = filter.toLowerCase();
+    return _.filter(this.props.projects, (p) => (
+      p.active && p.name.toLowerCase().match(escape(lowerFilter))
+    ));
+  }
+
+  handleCurrentIndexIncrement() {
+    const { filteredProjects, currentIndex } = this.state;
+    if (currentIndex + 1 < filteredProjects.length) {
+      this.setState({ currentIndex: currentIndex + 1 });
+    }
+  }
+
+  handleCurrentIndexDecrement() {
+    const { currentIndex } = this.state;
+    if (currentIndex - 1 >= 0) {
+      this.setState({ currentIndex: currentIndex - 1 });
     }
   }
 

@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-class RecountAccountingPeriods < IncreaseWorkTime
-  delegate :user, :work_times, :periods, to: :context
+class RecountAccountingPeriods
+  include Interactor
+  delegate :user, to: :context
 
   def call
-    recount
-  end
-
-  def recount
+    work_times = WorkTime.kept.where(user: user).order(:starts_at)
+    periods = AccountingPeriod.where(user: user).order(:starts_at)
     periods.update_all(counted_duration: 0, closed: false)
-    periods.where(protected: false, full_time: false).update_all(ends_at: nil)
+    periods.where(protected: false, full_time: false).update_all(starts_at: nil, ends_at: nil)
     work_times.each do |work_time|
       IncreaseWorkTime.call(user: user, duration: work_time.duration,
                             starts_at: work_time.starts_at,

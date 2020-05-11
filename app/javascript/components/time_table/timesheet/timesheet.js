@@ -25,10 +25,6 @@ class Timesheet extends React.Component {
     this.getTags();
   }
 
-  pushEntry(object) {
-    this.entryHistory.pushEntry(object);
-  }
-
   onCopy(object) {
     this.entry.paste(object);
   }
@@ -55,12 +51,16 @@ class Timesheet extends React.Component {
     if (!_.isEmpty(project)) this.entry.paste({ project });
   }
 
+  pushEntry(object) {
+    this.entryHistory.pushEntry(object);
+  }
+
   render() {
     const { projects, tags } = this.state;
 
     if (projects.length > 0) {
       return (
-        <div>
+        <>
           <Helmet>
             <title>{I18n.t('common.timesheet')}</title>
           </Helmet>
@@ -72,7 +72,7 @@ class Timesheet extends React.Component {
             setLastProject={this.setLastProject}
             tags={tags}
           />
-        </div>
+        </>
       );
     }
     return (

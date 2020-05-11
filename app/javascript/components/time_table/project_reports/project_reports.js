@@ -23,7 +23,7 @@ export default function ProjectReports(props) {
     })[state] || 'fa-info-circle';
     return (
       <span className="report-status">
-        <i className={`symbol fa ${iconClass}`} />
+        <i className={`fa ${iconClass} mr-2`} />
         {state}
       </span>
     );
@@ -65,9 +65,9 @@ export default function ProjectReports(props) {
           </Link>
         </div>
         <div className="text-right">
-          <Link to={`/projects/${projectId}/new_report`} className="bt bt-main">
-            <i className="symbol fa fa-plus" />
-            <span className="bt-txt">{I18n.t('apps.reports.new')}</span>
+          <Link to={`/projects/${projectId}/new_report`} className="btn btn-success">
+            <i className="fa fa-plus mr-2" />
+            {I18n.t('apps.reports.new')}
           </Link>
         </div>
       </div>
@@ -108,27 +108,29 @@ export default function ProjectReports(props) {
                   <SynchronizeReport url={`/api/projects/${projectId}/project_reports/${report.id}/synchronize`} />
                 </td>
                 <td className="report-actions text-right">
-                  {report.generated && (
+                  <div className="btn-group">
+                    {report.generated && (
+                      <a
+                        className="btn btn-outline-secondary bt-download"
+                        href={`/api/projects/${projectId}/project_reports/${report.id}/file`}
+                      >
+                        <i className="fa fa-file-pdf-o mr-2" />
+                        {I18n.t('common.download')}
+                      </a>
+                    )}
+                    <Link className="btn btn-outline-secondary" to={`/projects/${projectId}/edit_report/${report.id}`}>
+                      <i className="fa fa-search mr-2" />
+                      {I18n.t('common.show')}
+                    </Link>
                     <a
-                      className="bt bt-second bt-download"
-                      href={`/api/projects/${projectId}/project_reports/${report.id}/file`}
+                      className="btn btn-outline-danger"
+                      onClick={onDelete}
+                      href={`/api/projects/${projectId}/project_reports/${report.id}`}
                     >
-                      <i className="symbol fa fa-file-pdf-o" />
-                      <span className="txt">{I18n.t('common.download')}</span>
+                      <i className="fa fa-trash-o mr-2" />
+                      {I18n.t('apps.reports.remove')}
                     </a>
-                  )}
-                  <Link className="bt bt-second" to={`/projects/${projectId}/edit_report/${report.id}`}>
-                    <i className="symbol fa fa-search" />
-                    <span className="bt-txt">{I18n.t('common.show')}</span>
-                  </Link>
-                  <a
-                    className="bt bt-danger"
-                    onClick={onDelete}
-                    href={`/api/projects/${projectId}/project_reports/${report.id}`}
-                  >
-                    <i className="symbol fa fa-trash-o" />
-                    <span className="bt-txt">{I18n.t('apps.reports.remove')}</span>
-                  </a>
+                  </div>
                 </td>
               </tr>
             ))}

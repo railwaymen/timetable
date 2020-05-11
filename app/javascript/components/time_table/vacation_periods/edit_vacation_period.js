@@ -25,16 +25,6 @@ class EditVacationPeriod extends React.Component {
     this.getPeriod({ periodId: this.state.periodId });
   }
 
-  getPeriod(options) {
-    Api.makeGetRequest({
-      url: `/api/vacation_periods/${options.periodId}`,
-    }).then((response) => {
-      this.setState({
-        period: response.data,
-      });
-    });
-  }
-
   onSubmit() {
     const { period } = this.state;
     Api.makePutRequest({
@@ -129,14 +119,14 @@ class EditVacationPeriod extends React.Component {
                 </label>
               </div>
             </form>
-            <div className="form-actions text-right">
-              <NavLink activeClassName="" className="bt bt-second" to={this.cancelUrl()}>
-                <i className="symbol fa fa-undo" />
-                <span className="bt-txt">{I18n.t('common.cancel')}</span>
+            <div className="form-actions text-right btn-group">
+              <NavLink activeClassName="" className="btn btn-secondary" to={this.cancelUrl()}>
+                <i className="fa fa-undo mr-2" />
+                {I18n.t('common.cancel')}
               </NavLink>
-              <button onClick={this.onSubmit} className="bt bt-big bt-main bt-submit" type="button">
-                <i className="symbol fa fa-calendar-check-o" />
-                <span className="bt-txt">{I18n.t('common.save')}</span>
+              <button onClick={this.onSubmit} className="btn btn-success" type="button">
+                <i className="fa fa-calendar-check-o mr-2" />
+                {I18n.t('common.save')}
               </button>
             </div>
           </div>

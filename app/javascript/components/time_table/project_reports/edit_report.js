@@ -48,31 +48,6 @@ export default class EditReport extends React.Component {
     this.getReport();
   }
 
-  prepareBody(body) {
-    if (!body) return body;
-    const newBody = cloneDeep(body);
-    Object.keys(newBody).forEach((key) => {
-      newBody[key].forEach((workTime) => {
-        workTime.toMerge = false;
-      });
-    });
-    return newBody;
-  }
-
-  stripBody(body) {
-    const newBody = cloneDeep(body);
-    Object.keys(newBody).forEach((key) => {
-      newBody[key].forEach((workTime) => {
-        delete workTime.toMerge;
-      });
-    });
-    return newBody;
-  }
-
-  editable() {
-    return this.state.report.state !== 'done';
-  }
-
   onHardReset() {
     if (window.confirm(I18n.t('common.confirm'))) {
       this.setState(({ report }) => ({ currentBody: this.prepareBody(report.initial_body) }));
@@ -147,14 +122,6 @@ export default class EditReport extends React.Component {
     }, () => $(`#modal-${category}`).toggle());
   }
 
-  getReport() {
-    const { projectId, reportId } = this.state;
-    Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports/${reportId}/edit` })
-      .then(({ data }) => {
-        this.setState({ report: data, currentBody: this.prepareBody(data.last_body) });
-      });
-  }
-
   onShowWorkTimeModal(e, category, id) {
     e.preventDefault();
     this.setState({ workTimeModalCategory: category, workTimeModalId: id }, () => $('#work-time-modal').toggle());
@@ -188,17 +155,6 @@ export default class EditReport extends React.Component {
     }, () => $(`#modal-${category}`).toggle());
   }
 
-  handleMergeChange(event, category, id) {
-    const checkValue = event.target.checked;
-    this.setState(({ currentBody }) => {
-      const newCurrentBody = currentBody[category].map((wt) => {
-        if (wt.id === id) wt.toMerge = checkValue;
-        return wt;
-      });
-      return { currentBody: { ...currentBody, [category]: newCurrentBody } };
-    });
-  }
-
   onShowEdit(event, category, id) {
     this.setState(({ currentBody }) => {
       const newCurrentBody = currentBody[category].map((wt) => {
@@ -210,16 +166,72 @@ export default class EditReport extends React.Component {
     }, () => this.onShowMerge(event, category));
   }
 
+  getReport() {
+    const { projectId, reportId } = this.state;
+    Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports/${reportId}/edit` })
+      .then(({ data }) => {
+        this.setState({ report: data, currentBody: this.prepareBody(data.last_body) });
+      });
+  }
+
+  handleMergeChange(event, category, id) {
+    const checkValue = event.target.checked;
+    this.setState(({ currentBody }) => {
+      const newCurrentBody = currentBody[category].map((wt) => {
+        if (wt.id === id) wt.toMerge = checkValue;
+        return wt;
+      });
+      return { currentBody: { ...currentBody, [category]: newCurrentBody } };
+    });
+  }
+
+  prepareBody(body) {
+    if (!body) return body;
+    const newBody = cloneDeep(body);
+    Object.keys(newBody).forEach((key) => {
+      newBody[key].forEach((workTime) => {
+        workTime.toMerge = false;
+      });
+    });
+    return newBody;
+  }
+
+  stripBody(body) {
+    const newBody = cloneDeep(body);
+    Object.keys(newBody).forEach((key) => {
+      newBody[key].forEach((workTime) => {
+        delete workTime.toMerge;
+      });
+    });
+    return newBody;
+  }
+
+  editable() {
+    return this.state.report.state !== 'done';
+  }
+
+  handleTagPillClick(category, tag) {
+    this.setState(({ currentBody }) => {
+      const toMergeValue = !currentBody[category].find((wt) => wt.toMerge && wt.tag === tag);
+      const newBody = currentBody[category].map((wt) => {
+        const { toMerge, ...workTime } = wt;
+        workTime.toMerge = toMergeValue && workTime.tag === tag;
+        return workTime;
+      });
+      return { currentBody: { ...currentBody, [category]: newBody } };
+    });
+  }
+
   renderMergeButton(category) {
     return (
       <button
         key="merge"
         type="button"
-        className="action-item"
+        className="btn btn-outline-secondary"
         onClick={(e) => this.onShowMerge(e, category)}
         data-tooltip-bottom={I18n.t('apps.reports.merge')}
       >
-        <i className="symbol fa fa-compress" />
+        <i className="fa fa-compress" />
       </button>
     );
   }
@@ -229,11 +241,11 @@ export default class EditReport extends React.Component {
       <button
         key="edit"
         type="button"
-        className={`action-item ${addToMerge ? 'plus' : ''}`}
+        className={`btn btn-outline-primary ml-0 ${addToMerge ? 'plus' : ''}`}
         onClick={(e) => this.onShowEdit(e, category, id)}
         data-tooltip-bottom={addToMerge ? I18n.t('apps.reports.merge') : I18n.t('common.edit')}
       >
-        <i className="symbol fa fa-pencil" />
+        <i className="fa fa-pencil" />
       </button>
     );
   }
@@ -252,21 +264,28 @@ export default class EditReport extends React.Component {
         <button
           key="details"
           type="button"
-          className="action-item info"
+          className="btn btn-info"
           onClick={(e) => this.onShowWorkTimeModal(e, category, id)}
           data-tooltip-bottom={I18n.t('common.history')}
         >
-          <i className="symbol fa fa-clock-o" />
+          <i className="fa fa-clock-o" />
         </button>,
       );
     }
     if (this.editable()) {
       result.push(
         <React.Fragment key="merge">
-          <label className="form-check-label">
-            <input name="toMerge" type="checkbox" className="merge-check-box" checked={toMerge} onChange={(e) => this.handleMergeChange(e, category, id)} />
-            <span className="checkbox" />
-          </label>
+          <div className="input-group-prepend">
+            <div className="input-group-text">
+              <input
+                name="toMerge"
+                type="checkbox"
+                checked={toMerge}
+                onChange={(e) => this.handleMergeChange(e, category, id)}
+                aria-label="Mark report to merge"
+              />
+            </div>
+          </div>
           {toMerge && toMergeTasks.length >= 2 ? (
             this.renderMergeButton(category)
           ) : (
@@ -276,11 +295,11 @@ export default class EditReport extends React.Component {
         <button
           key="ignore"
           type="button"
-          className="action-item destroy"
+          className="btn btn-outline-danger destroy"
           onClick={(e) => this.onIgnore(e, category, id)}
           data-tooltip-bottom={I18n.t('apps.reports.ignore')}
         >
-          <i className="symbol fa fa-trash-o" />
+          <i className="fa fa-trash-o" />
         </button>,
       );
     }
@@ -375,18 +394,6 @@ export default class EditReport extends React.Component {
     );
   }
 
-  handleTagPillClick(category, tag) {
-    this.setState(({ currentBody }) => {
-      const toMergeValue = !currentBody[category].find((wt) => wt.toMerge && wt.tag === tag);
-      const newBody = currentBody[category].map((wt) => {
-        const { toMerge, ...workTime } = wt;
-        workTime.toMerge = toMergeValue && workTime.tag === tag;
-        return workTime;
-      });
-      return { currentBody: { ...currentBody, [category]: newBody } };
-    });
-  }
-
   renderCategory(category) {
     const {
       mergeTask, mergeOwner, mergeDescription, currentBody,
@@ -435,7 +442,9 @@ export default class EditReport extends React.Component {
                   <td className="text-center">{displayDuration(duration)}</td>
                   <td className="text-right">{this.renderCost(cost)}</td>
                   <td className="task-actions list-of-actions">
-                    {this.renderRowActions({ id, toMerge, touched }, category, toMergeTasks)}
+                    <div className="input-group btn-group">
+                      {this.renderRowActions({ id, toMerge, touched }, category, toMergeTasks)}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -590,34 +599,34 @@ export default class EditReport extends React.Component {
           </table>
         </div>
         {this.editable() && (
-          <div className="report-main-actions">
-            <button key="submit" className="bt bt-main bt-big" type="button" onClick={this.onSubmit}>
-              <span className="txt">{I18n.t('common.save')}</span>
-              <i className="symbol fa fa-check" />
+          <div className="report-main-actions btn-group">
+            <button key="submit" className="btn btn-outline-success btn-lg" type="button" onClick={this.onSubmit}>
+              {I18n.t('common.save')}
+              <i className="ml-2 fa fa-check" />
             </button>
-            <button key="generate" className="bt bt-second bt-big" type="button" onClick={this.onGenerate}>
-              <span className="txt">{I18n.t('common.generate')}</span>
-              <i className="symbol fa fa-file-pdf-o" />
+            <button key="generate" className="btn btn-outline-success btn-lg" type="button" onClick={this.onGenerate}>
+              {I18n.t('common.generate')}
+              <i className="ml-2 fa fa-file-pdf-o" />
             </button>
           </div>
         )}
         {report.generated && (
           <div className="report-download-actions">
-            <a className="bt bt-second bt-big bt-download" href={`/api/projects/${projectId}/project_reports/${reportId}/file`}>
-              <i className="symbol fa fa-file-pdf-o" />
-              <span className="txt">{I18n.t('common.download')}</span>
+            <a className="btn btn-outline-success btn-lg" href={`/api/projects/${projectId}/project_reports/${reportId}/file`}>
+              <i className="fa fa-file-pdf-o mr-2" />
+              {I18n.t('common.download')}
             </a>
           </div>
         )}
         {this.editable() && (
           <div className="report-undo-actions">
-            <button key="soft" type="button" className="ln ln-second" onClick={this.onSoftReset}>
-              <i className="symbol fa fa-undo" />
-              <span className="txt">{I18n.t('apps.reports.restore_previous')}</span>
+            <button key="soft" type="button" className="btn btn-sm text-info" onClick={this.onSoftReset}>
+              <i className="fa fa-undo mr-2" />
+              {I18n.t('apps.reports.restore_previous')}
             </button>
-            <button key="hard" type="button" className="ln ln-second" onClick={this.onHardReset}>
-              <i className="symbol fa fa-history" />
-              <span className="txt">{I18n.t('apps.reports.restore_first')}</span>
+            <button key="hard" type="button" className="btn btn-sm text-danger" onClick={this.onHardReset}>
+              <i className="fa fa-history mr-2" />
+              {I18n.t('apps.reports.restore_first')}
             </button>
           </div>
         )}

@@ -12,7 +12,7 @@ import UserFields from './user_fields';
 function EditUser(props) {
   const userId = parseInt(props.match.params.id, 10);
 
-  const [user, setUser, onChange] = useFormHandler({});
+  const [user, setUser, onChange] = useFormHandler({ position_list: [] });
   const [errors, setErrors] = useState({});
   const [redirectToReferer, setRedirectToReferer] = useState();
 
@@ -55,7 +55,7 @@ function EditUser(props) {
   function renderFields() {
     if (user.id === userId || !userId) {
       return currentUser.admin
-        ? <AdminFields user={user} errors={errors} onChange={onChange} />
+        ? <AdminFields user={user} errors={errors} onChange={onChange} setUser={setUser} />
         : <UserFields user={user} errors={errors} onChange={onChange} />;
     }
 
@@ -78,8 +78,10 @@ function EditUser(props) {
         )}
       </Helmet>
       {renderFields()}
-      <NavLink activeClassName="" className="btn btn-secondary" to="/users">{I18n.t('common.cancel')}</NavLink>
-      <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={onSubmit} />
+      <div className="btn-group">
+        <NavLink activeClassName="" className="btn btn-secondary" to="/users">{I18n.t('common.cancel')}</NavLink>
+        <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={onSubmit} />
+      </div>
     </form>
   );
 }
