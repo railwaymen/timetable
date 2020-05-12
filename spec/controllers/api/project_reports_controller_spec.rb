@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::ProjectReportsController, type: :controller do
-  render_views
-
   let(:admin) { create(:user, :admin) }
   let(:project) { create(:project) }
 

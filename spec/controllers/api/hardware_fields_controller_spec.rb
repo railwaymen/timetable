@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::HardwareFieldsController do
-  render_views
   describe '#create' do
     it 'creates hardware field for hardware' do
       hardware = create(:hardware)

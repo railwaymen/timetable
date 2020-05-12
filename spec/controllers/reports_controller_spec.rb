@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe ReportsController do
-  render_views
   let(:user) { create(:user) }
   let(:manager) { create(:user, :manager) }
 

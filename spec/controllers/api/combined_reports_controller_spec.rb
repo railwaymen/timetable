@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::CombinedReportsController do
-  render_views
   let(:project) { create(:project) }
   let(:project_report) { create(:project_report, state: :done, project: project) }
   let(:user) { create(:user) }

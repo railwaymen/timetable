@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::RemoteWorksController do
-  render_views
   let(:user) { create(:user) }
   let(:admin) { create(:admin) }
   let(:starts_at) do

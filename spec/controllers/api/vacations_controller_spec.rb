@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::VacationsController do
-  render_views
   let(:user) { create(:user) }
   let(:staff_manager) { create(:user, :staff_manager) }
   let(:admin) { create(:user, :admin) }

@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::SessionsController, type: :controller do
-  render_views
-
   before do
     @request.env['devise.mapping'] = Devise.mappings[:user]
   end

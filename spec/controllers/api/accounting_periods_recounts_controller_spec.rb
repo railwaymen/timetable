@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::AccountingPeriodsRecountsController do
-  render_views
-
   let(:accounting_periods_manager) { double :accounting_periods_manager }
 
   describe '#status' do

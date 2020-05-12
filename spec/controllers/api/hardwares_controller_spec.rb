@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::HardwaresController do
-  render_views
-
   describe '#index' do
     context 'when user is employee' do
       it 'returns all user hardwares' do

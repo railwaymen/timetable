@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::ExternalAuthsController do
-  render_views
-
   module ExternalAuthStrategy
     class Sample < Base
       def initialize(*args); end
