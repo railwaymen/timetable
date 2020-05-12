@@ -5,6 +5,7 @@ FactoryBot.define do
     sequence(:first_name) { |n| "John #{n}" }
     sequence(:last_name) { |n| "Smith #{n}" }
     sequence(:email) { |n| "test#{n}@example.com" }
+    sequence(:password) { |n| "password#{n}" }
 
     trait :admin do
       admin { true }
