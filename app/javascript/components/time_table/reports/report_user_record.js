@@ -30,7 +30,7 @@ class ReportUserRecord extends React.Component {
               >
                 {overallData.user_name}
               </a>
-              {currentUser.isAdminOrManagerOrLeader() && (
+              {currentUser.isManagerOrLeader() && (
                 <a href={`/reports/project.csv?from=${from}&to=${to}&user_id=${overallData.user_id}`}><i className="fa fa-calendar" /></a>
               )}
               <span className="ml-auto badge badge-dark">{formattedDuration(overallData.user_work_time)}</span>
