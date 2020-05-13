@@ -6,7 +6,7 @@ import useFormHandler from '../../../../hooks/use_form_handler';
 import translateErrors from '../../../shared/translate_errors';
 
 const Field = ({
-  hardware_id, id, name, value, onDelete,
+  hardware_id, id, name, value, locked, onDelete,
 }) => {
   const [edit, setEdit] = useState(false);
   const [field, , onChange] = useFormHandler({ id, name, value });
@@ -49,6 +49,7 @@ const Field = ({
           </div>
         </div>
         <div className="col-md-4">
+          {(!locked || currentUser.isHardwareManager()) && (
           <div className="btn-group">
             <button
               type="button"
@@ -67,6 +68,7 @@ const Field = ({
               <i className="fa fa-trash" />
             </button>
           </div>
+          )}
         </div>
       </div>
       <hr />
