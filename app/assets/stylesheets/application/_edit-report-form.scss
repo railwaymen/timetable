@@ -23,7 +23,7 @@
     width: 350px; 
     position: fixed;
     top: 50%;
-    right: 15px;
+    right: calc(50% - 785px);
     transform: translateY(-50%);
     margin: 0;
   }
