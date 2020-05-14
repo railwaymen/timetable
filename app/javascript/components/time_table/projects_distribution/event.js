@@ -13,9 +13,11 @@ class Event extends React.Component {
 
     this.updateProject = this.updateProject.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onNoteChange = this.onNoteChange.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.onDateClick = this.onDateClick.bind(this);
     this.state = {
+      note: '',
       selectedProject: undefined,
       startsAt: undefined,
       endsAt: undefined,
@@ -26,10 +28,11 @@ class Event extends React.Component {
   onSubmit() {
     Loader.showLoader();
     const {
-      selectedProject, startsAt, endsAt,
+      selectedProject, startsAt, endsAt, note,
     } = this.state;
 
     const params = {
+      note,
       project_id: selectedProject.id,
       starts_at: startsAt,
       ends_at: endsAt,
@@ -80,6 +83,10 @@ class Event extends React.Component {
     });
   }
 
+  onNoteChange(e) {
+    this.setState({ note: e.target.value });
+  }
+
   filterProjects = (filter) => {
     const lowerFilter = filter.toLowerCase();
     return _.filter(this.props.projects, (p) => (
@@ -102,6 +109,7 @@ class Event extends React.Component {
       selectedProject: projects.filter((p) => p.id === event.projectId)[0],
       startsAt: event.start,
       endsAt: event.end,
+      note: event.note || '',
       resizable: event.resizable,
     });
   }
@@ -159,7 +167,7 @@ class Event extends React.Component {
 
   render() {
     const { slotName, projects, eventInstance } = this.props;
-    const { selectedProject, resizable } = this.state;
+    const { note, selectedProject, resizable } = this.state;
     const projectColor = selectedProject ? `#${selectedProject.color}` : 'black';
     return (
       <div className="ui centered-modal modal transition visible active overflow-visible">
@@ -184,6 +192,10 @@ class Event extends React.Component {
                       renderObjectsList={this.renderProjectsList}
                     />
                   ) : null}
+                </div>
+                <div className="field">
+                  <label>{I18n.t('apps.projects.note')}</label>
+                  <input onChange={this.onNoteChange} value={note} />
                 </div>
               </div>
             ) : null}

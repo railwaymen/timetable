@@ -37,6 +37,7 @@ class AgendaEventItem extends Component {
             <EventItemPopover
                 {...this.props}
                 title={eventItem.title}
+                note={eventItem.note}
                 startTime={eventItem.start}
                 endTime={eventItem.end}
                 statusColor={bgColor}

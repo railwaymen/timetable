@@ -27,11 +27,8 @@ pl:
       name: Nazwa
       leader: Lider
       project: Projekt
-      tests_count: Liczba testów
-      tests_duration: Czas trwania testów
+      note: Notatka
       update: Aktualizacja
-      urls: Adresy
-      urls_comma_separated: Adresy (rozdzielone przecinkami)
       leader: lider
       developers: Deweloperzy
       testers: Testerzy

@@ -49,7 +49,7 @@ module Api
     end
 
     def events_params
-      params.permit(:project_id, :resource_rid, :starts_at, :ends_at, :title, :color)
+      params.permit(:project_id, :resource_rid, :starts_at, :ends_at, :title, :color, :note)
     end
   end
 end

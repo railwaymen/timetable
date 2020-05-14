@@ -488,6 +488,7 @@ class EventItem extends Component {
                 {...this.props}
                 eventItem={eventItem}
                 title={eventItem.title}
+                note={eventItem.note}
                 startTime={eventItem.start}
                 endTime={eventItem.end}
                 statusColor={bgColor}/>

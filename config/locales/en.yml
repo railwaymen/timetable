@@ -27,11 +27,8 @@ en:
       name: Name
       leader: Leader
       project: Project
-      tests_count: Tests count
-      tests_duration: Tests duration
+      note: Note
       update: Update
-      urls: Urls
-      urls_comma_separated: Urls (comma separated)
       leader: leader
       developers: Developers
       testers: Testers

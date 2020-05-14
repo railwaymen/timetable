@@ -357,12 +357,13 @@ class ProjectsDistribution extends React.Component {
     }
   }
 
-  eventItemPopoverTemplateResolver = (schedulerData, eventItem, title, start, end) => (
+  eventItemPopoverTemplateResolver = (schedulerData, eventItem, title, note, start, end) => (
     <>
       <h3 className="popover-event-title">
         <div className="circular empty label ui" style={{ background: `${eventItem.bgColor} none repeat scroll 0% 0%` }} />
         {title}
       </h3>
+      <h4>{note}</h4>
       <h5>{`${start.format('DD/MM/YYYY')} - ${end.format('DD/MM/YYYY')}`}</h5>
       <div className="event-buttons">
         <div className="event-delete" onClick={() => this.destroyEvent(eventItem)}>
