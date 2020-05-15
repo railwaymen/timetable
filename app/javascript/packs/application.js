@@ -19,17 +19,6 @@ const ReactRailsUJS = require('react_ujs');
 
 ReactRailsUJS.useContext(componentRequireContext);
 
-// TODO: Refactor
-// Used to show modal on work time history
-$(document).on('click', '.action-item.history', () => {
-  $('#modal-info').addClass('active visible');
-});
-
-// Used to hide modal on work time history when click cancel or outside modal
-$(document).on('click', '#modal-info .button.cancel, .modal-backdrop', () => {
-  $('#modal-info').removeClass('active visible');
-});
-
 // Used to hide dropdown for month/project selection on timesheet when clicking outside of it
 $(document).on('click', (e) => {
   const klass = $(e.target).attr('class') || '';
