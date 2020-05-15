@@ -45,9 +45,8 @@ class ProjectsDistribution extends React.Component {
     let cellWidth = '1.375%';
     if (viewWidth <= 1600) {
       maxSchedulerWidth = '100%';
-      cellWidth = '1.3%'
-    } 
-    console.log(viewWidth, maxSchedulerWidth);
+      cellWidth = '1.3%';
+    }
     const schedulerData = new SchedulerData(
       moment().format(DATE_FORMAT),
       ViewTypes.Custom,
