@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import _ from 'lodash';
+import ModalButton from '@components/shared/modal_button';
 import Modal from '@components/shared/modal';
 import * as Api from '../../shared/api';
 import Period from './period';
@@ -238,10 +239,16 @@ class Periods extends React.Component {
               {I18n.t('apps.accounting_periods.add')}
               <i className="ml-2 fa fa-calendar-plus-o" />
             </NavLink>
-            <button id="generate" className="btn btn-outline-success" type="button">
-              {I18n.t('apps.accounting_periods.generate_periods')}
-              <i className="ml-2 fa fa-calendar-plus-o" />
-            </button>
+            <ModalButton
+              id="generate"
+              btnClass="btn btn-outline-success"
+              content={(
+                <>
+                  {I18n.t('apps.accounting_periods.generate_periods')}
+                  <i className="ml-2 fa fa-calendar-plus-o" />
+                </>
+              )}
+            />
           </div>
           <div className="col-md-4 text-right">
             <button
@@ -353,7 +360,7 @@ class Periods extends React.Component {
         </table>
         {this.renderPagination()}
         <Modal
-          id="modal"
+          id="generate"
           header={I18n.t('apps.accounting_periods.generate_accounting_periods')}
           content={(
             <form className="form ui">

@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import URI from 'urijs';
 import _ from 'lodash';
+import Modal from '@components/shared/modal';
 import WorkHoursDay from './work_hours_day';
 import * as Api from '../../../shared/api';
 import { displayDuration } from '../../../shared/helpers';
@@ -578,12 +579,12 @@ class EntryHistory extends React.Component {
             </div>
           </div>
         </div>
-        <div className="ui dimmer modal-backdrop modals page transition" id="modal-info" style={{ display: 'none; !important' }}>
-          <div className="ui centered-modal modal transition visible active" style={{ display: 'none !important' }}>
-            <div className="header">
-              { info ? info.body : <div className="preloader" /> }
-            </div>
-            <div className="content">
+        <Modal
+          id="history"
+          header={info ? info.body : 'loading...'}
+          modalClass="modal-lg"
+          content={(
+            <>
               <table className="history table table-striped">
                 <thead>
                   <tr>
@@ -614,14 +615,9 @@ class EntryHistory extends React.Component {
               {
                 this.renderTaskDuration()
               }
-            </div>
-            <div className="actions">
-              <button className="button cancel right ui" type="button">
-                {I18n.t('common.close')}
-              </button>
-            </div>
-          </div>
-        </div>
+            </>
+          )}
+        />
       </div>
     );
   }
