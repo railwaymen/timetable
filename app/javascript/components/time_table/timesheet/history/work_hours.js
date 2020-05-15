@@ -4,7 +4,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import ErrorTooltip from '@components/shared/error_tooltip';
-import ModalButton from '@components/shared/modal_button'
+import ModalButton from '@components/shared/modal_button';
 import * as Api from '../../../shared/api';
 import ProjectsList from '../projects_list';
 import TagsDropdown from '../tags_dropdown';

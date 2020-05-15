@@ -4,10 +4,10 @@ import moment from 'moment';
 import {
   bindAll, get, sumBy, uniq, partition, without, isEmpty, cloneDeep,
 } from 'lodash';
+import ModalButton from '@components/shared/modal_button';
+import Modal from '@components/shared/modal';
 import * as Api from '../../shared/api';
 import { displayDuration, extractIntegrationPayload } from '../../shared/helpers';
-import ModalButton from '@components/shared/modal_button'
-import Modal from '@components/shared/modal';
 import TagPill from '../timesheet/tag_pill';
 
 export default class EditReport extends React.Component {

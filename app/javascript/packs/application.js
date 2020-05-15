@@ -9,10 +9,13 @@
 
 // Support component names relative to this directory:
 import jquery from 'jquery';
-window.$ = window.jquery = jquery;
+
 import 'popper.js';
 import 'bootstrap';
 import moment from 'moment';
+
+window.$ = jquery;
+window.jquery = jquery;
 
 const componentRequireContext = require.context('components', true);
 const ReactRailsUJS = require('react_ujs');

@@ -28,6 +28,7 @@ class Event extends React.Component {
 
   onSubmit() {
     Loader.showLoader();
+    const { showUpdatedEvent, slotId, eventInstance } = this.props;
     const {
       selectedProject, startsAt, endsAt, note,
     } = this.state;
@@ -37,18 +38,19 @@ class Event extends React.Component {
       project_id: selectedProject.id,
       starts_at: startsAt,
       ends_at: endsAt,
-      resource_rid: this.props.slotId,
+      resource_rid: slotId,
       title: selectedProject.name,
       color: `#${selectedProject.color}`,
     };
-    if (this.props.eventInstance) {
+    const id = eventInstance ? '#editEventModal' : '#addEventModal';
+    console.log(id, $(id));
+    if (eventInstance) {
       Api.makePutRequest({
-        url: `/api/project_resource_assignments/${this.props.eventInstance.id}`,
+        url: `/api/project_resource_assignments/${eventInstance.id}`,
         body: params,
       }).then((response) => {
-        const id = eventInstance ? '#editEventModal' : '#addEventModal';
         $(id).modal('hide');
-        this.props.showUpdatedEvent(response.data);
+        showUpdatedEvent(response.data);
       }).catch(() => {
         Loader.hideLoader();
       });
@@ -57,6 +59,7 @@ class Event extends React.Component {
         url: '/api/project_resource_assignments',
         body: params,
       }).then((response) => {
+        $(id).modal('hide');
         this.props.addEvent(response.data);
       }).catch(() => {
         Loader.hideLoader();
@@ -169,7 +172,7 @@ class Event extends React.Component {
     const { note, selectedProject, resizable } = this.state;
     const projectColor = selectedProject ? `#${selectedProject.color}` : 'black';
     return (
-      <Modal 
+      <Modal
         id={eventInstance ? 'editEventModal' : 'addEventModal'}
         modalClass="modal-lg"
         header={I18n.t(`apps.projects_distribution.${eventInstance ? 'edit_event' : 'add_event'}`)}

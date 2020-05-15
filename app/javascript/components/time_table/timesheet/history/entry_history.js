@@ -2,8 +2,8 @@ import React from 'react';
 import moment from 'moment';
 import URI from 'urijs';
 import _ from 'lodash';
-import WorkHoursDay from './work_hours_day';
 import Modal from '@components/shared/modal';
+import WorkHoursDay from './work_hours_day';
 import * as Api from '../../../shared/api';
 import { displayDuration } from '../../../shared/helpers';
 

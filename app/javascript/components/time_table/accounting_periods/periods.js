@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import _ from 'lodash';
-import ModalButton from '@components/shared/modal_button'
+import ModalButton from '@components/shared/modal_button';
 import Modal from '@components/shared/modal';
 import * as Api from '../../shared/api';
 import Period from './period';
