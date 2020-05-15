@@ -33,12 +33,13 @@ RSpec.describe Api::UsersController do
     end
 
     it 'returns users' do
+      manager = create(:manager, contract_name: 'AX1')
+      user = create(:user, contract_name: 'ZX1')
       sign_in(manager)
-      user = create(:user)
       get :index, as: :json
 
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql([user_response(user), user_response(manager)].to_json)
+      expect(response.body).to be_json_eql([user_response(manager), user_response(user)].to_json)
     end
 
     describe 'filters' do
