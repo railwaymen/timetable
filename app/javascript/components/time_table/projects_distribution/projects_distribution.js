@@ -4,6 +4,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import tinycolor from 'tinycolor2';
 import ReactDOM from 'react-dom';
+import ModalButton from '@components/shared/modal_button'
 import Scheduler, {
   SchedulerData, ViewTypes, CellUnits, DATE_FORMAT,
 } from '../../src/index';
@@ -397,9 +398,12 @@ class ProjectsDistribution extends React.Component {
     return (
       <div className="scheduler-header">
         <div className="add-resource" style={{ width: resourcePercentageWidth }}>
-          <button className="btn btn-success bt-submit" type="button" onClick={this.onAddResourceClick}>
-            <span>{I18n.t('apps.projects_distribution.add_resource')}</span>
-          </button>
+          <ModalButton 
+            btnClass="btn btn-success bt-submit"
+            onClick={this.onAddResourceClick}
+            id="resourceModal"
+            content={I18n.t('apps.projects_distribution.add_resource')}
+          />
         </div>
         <div style={{ width: firstMonthPercentageWidth }}>
           <div className="chevron-left">

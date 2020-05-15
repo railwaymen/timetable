@@ -17,7 +17,7 @@ class Modal extends React.Component {
       modal: this.renderAddResource(),
     }, () => {
       this.addResource.updateAddResourceModal(this.props.users[0]);
-      $('#modal').show();
+      $('#resourceModal').modal('show');
     });
   }
 
@@ -26,7 +26,7 @@ class Modal extends React.Component {
       modal: this.renderEvent(slotId, slotName, start, end, true),
     }, () => {
       this.event.updateAddModal(start, end);
-      $('#modal').show();
+      $('#addEventModal').modal('show');
     });
   }
 
@@ -36,7 +36,7 @@ class Modal extends React.Component {
     }, () => {
       this.event.updateEditModal(event);
       $('.ant-popover').not('.ant-popover-hidden').addClass('ant-popover-hidden');
-      $('#modal').show();
+      $('#editEventModal').modal('show');
     });
   }
 
@@ -73,12 +73,7 @@ class Modal extends React.Component {
   render() {
     const { modal } = this.state;
 
-    return (
-      <div id="modal" style={{ display: 'none' }}>
-        {modal}
-        <div className="ui dimmer modals modal-backdrop page transition visible active" style={{ display: 'flex !important' }} />
-      </div>
-    );
+    return (<>{modal}</>);
   }
 }
 
