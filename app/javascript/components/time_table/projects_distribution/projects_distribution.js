@@ -41,6 +41,13 @@ class ProjectsDistribution extends React.Component {
   }
 
   componentDidMount() {
+    const viewWidth = window.innerWidth;
+    let maxSchedulerWidth = '1600';
+    let cellWidth = '1.375%';
+    if (viewWidth <= 1600) {
+      maxSchedulerWidth = '100%';
+      cellWidth = '1.3%';
+    }
     const schedulerData = new SchedulerData(
       moment().format(DATE_FORMAT),
       ViewTypes.Custom,
@@ -48,8 +55,8 @@ class ProjectsDistribution extends React.Component {
       false,
       {
         displayWeekend: false,
-        customCellWidth: '1.3%',
-        besidesWidth: '30',
+        customCellWidth: cellWidth,
+        schedulerWidth: maxSchedulerWidth,
         schedulerMaxHeight: '0',
         tableHeaderHeight: '55px',
         headerEnabled: false,

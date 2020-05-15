@@ -13,6 +13,12 @@ body {
 button, input, optgroup, select, textarea {
   font-family: $font-family;
 }
+
+.app {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
 .page-header {
   margin-bottom: 2rem;
 }
