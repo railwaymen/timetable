@@ -8,7 +8,8 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Support component names relative to this directory:
-import 'jquery';
+import jquery from 'jquery';
+window.$ = window.jquery = jquery;
 import 'popper.js';
 import 'bootstrap';
 import moment from 'moment';
