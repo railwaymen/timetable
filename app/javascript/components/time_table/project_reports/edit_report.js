@@ -131,12 +131,12 @@ export default class EditReport extends React.Component {
         mergeOwner: uniq(tasksToMerge.map((wt) => wt.owner)).join(', '),
         mergeDescription: uniq(tasksToMerge.map((wt) => wt.description)).join(', '),
       };
-    }, () => $(`#modal-${category}`).toggle());
+    }, () => $(`#modal-${category}`).modal('show'));
   }
 
   onShowWorkTimeModal(e, category, id) {
     e.preventDefault();
-    this.setState({ workTimeModalCategory: category, workTimeModalId: id }, () => $('#work-time-modal').toggle());
+    this.setState({ workTimeModalCategory: category, workTimeModalId: id }, () => $('#workTimeModal').modal('show'));
   }
 
   onMergeSubmit(e, category) {
@@ -164,7 +164,7 @@ export default class EditReport extends React.Component {
       return {
         mergeOwner: '', mergeTask: '', mergeDescription: '', currentBody: newBody, workTimeModalCategory: null, workTimeModalId: null,
       };
-    }, () => $(`#modal-${category}`).toggle());
+    }, () => $(`#modal-${category}`).modal('hide'));
   }
 
   onShowEdit(event, category, id) {
@@ -327,6 +327,7 @@ export default class EditReport extends React.Component {
     return (
       <Modal
         id="workTimeModal"
+        modalClass="modal-lg"
         header="Details"
         content={(
           <table className="table">
@@ -479,6 +480,7 @@ export default class EditReport extends React.Component {
         </div>
         <Modal
           id={`modal-${category}`}
+          modalClass="modal-lg"
           header={modalHeader}
           content={(
             <form className="form ui">
