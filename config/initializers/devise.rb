@@ -247,6 +247,7 @@ Devise.setup do |config|
   # change the failure app, you can configure them inside the config.warden block.
   #
   config.warden do |manager|
+    manager.failure_app = CustomFailureApp
     manager.strategies.add(:jwt_strategy, Devise::Strategies::JwtStrategy)
     manager.default_strategies(scope: :user).unshift :jwt_strategy
     manager.default_strategies(scope: :user).unshift :ldap_authenticatable if Rails.application.secrets.ldap[:enabled]

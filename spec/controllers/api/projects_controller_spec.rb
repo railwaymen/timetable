@@ -3,9 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::ProjectsController do
-  before(:each) { I18n.locale = :pl }
-
-  render_views
   let(:user) { create(:user) }
   let(:admin) { create(:user, :admin) }
   let(:manager) { create(:user, :manager) }

@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
+import Modal from '@components/shared/modal';
 import { defaultDatePickerProps } from '../../shared/helpers';
 import Dropdown from '../../shared/dropdown';
 import * as Api from '../../shared/api';
@@ -13,9 +14,11 @@ class Event extends React.Component {
 
     this.updateProject = this.updateProject.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onNoteChange = this.onNoteChange.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.onDateClick = this.onDateClick.bind(this);
     this.state = {
+      note: '',
       selectedProject: undefined,
       startsAt: undefined,
       endsAt: undefined,
@@ -25,24 +28,29 @@ class Event extends React.Component {
 
   onSubmit() {
     Loader.showLoader();
+    const { showUpdatedEvent, slotId, eventInstance } = this.props;
     const {
-      selectedProject, startsAt, endsAt,
+      selectedProject, startsAt, endsAt, note,
     } = this.state;
 
     const params = {
+      note,
       project_id: selectedProject.id,
       starts_at: startsAt,
       ends_at: endsAt,
-      resource_rid: this.props.slotId,
+      resource_rid: slotId,
       title: selectedProject.name,
       color: `#${selectedProject.color}`,
     };
-    if (this.props.eventInstance) {
+    const id = eventInstance ? '#editEventModal' : '#addEventModal';
+    console.log(id, $(id));
+    if (eventInstance) {
       Api.makePutRequest({
-        url: `/api/project_resource_assignments/${this.props.eventInstance.id}`,
+        url: `/api/project_resource_assignments/${eventInstance.id}`,
         body: params,
       }).then((response) => {
-        this.props.showUpdatedEvent(response.data);
+        $(id).modal('hide');
+        showUpdatedEvent(response.data);
       }).catch(() => {
         Loader.hideLoader();
       });
@@ -51,15 +59,12 @@ class Event extends React.Component {
         url: '/api/project_resource_assignments',
         body: params,
       }).then((response) => {
+        $(id).modal('hide');
         this.props.addEvent(response.data);
       }).catch(() => {
         Loader.hideLoader();
       });
     }
-  }
-
-  onCloseClick() {
-    $('#modal').hide();
   }
 
   onDeleteClick() {
@@ -78,6 +83,10 @@ class Event extends React.Component {
     this.setState({
       [dateName]: moment(e),
     });
+  }
+
+  onNoteChange(e) {
+    this.setState({ note: e.target.value });
   }
 
   filterProjects = (filter) => {
@@ -102,6 +111,7 @@ class Event extends React.Component {
       selectedProject: projects.filter((p) => p.id === event.projectId)[0],
       startsAt: event.start,
       endsAt: event.end,
+      note: event.note || '',
       resizable: event.resizable,
     });
   }
@@ -159,20 +169,21 @@ class Event extends React.Component {
 
   render() {
     const { slotName, projects, eventInstance } = this.props;
-    const { selectedProject, resizable } = this.state;
+    const { note, selectedProject, resizable } = this.state;
     const projectColor = selectedProject ? `#${selectedProject.color}` : 'black';
     return (
-      <div className="ui centered-modal modal transition visible active overflow-visible">
-        <i className="close icon" onClick={this.onCloseClick} />
-        <div className="header">{I18n.t(`apps.projects_distribution.${eventInstance ? 'edit_event' : 'add_event'}`)}</div>
-        <div className="content">
-          <form className="form ui">
+      <Modal
+        id={eventInstance ? 'editEventModal' : 'addEventModal'}
+        modalClass="modal-lg"
+        header={I18n.t(`apps.projects_distribution.${eventInstance ? 'edit_event' : 'add_event'}`)}
+        content={(
+          <form className="form row mx-0 justify-content-between">
             <div className="error hidden message ui">
               <p />
             </div>
             {!eventInstance || (eventInstance && eventInstance.type !== 2) ? (
-              <div className="fields add-event">
-                <div className="project-field field">
+              <div className="fields add-event row col">
+                <div className="project-field field col">
                   <label>{I18n.t('apps.projects.project')}</label>
                   {selectedProject ? (
                     <Dropdown
@@ -185,9 +196,13 @@ class Event extends React.Component {
                     />
                   ) : null}
                 </div>
+                <div className="field col">
+                  <label>{I18n.t('apps.projects.note')}</label>
+                  <input onChange={this.onNoteChange} value={note} className="form-control" />
+                </div>
               </div>
             ) : null}
-            <div className="event-info text-center">
+            <div className="event-info text-center col">
               <div className="slot-name">
                 {slotName}
               </div>
@@ -201,20 +216,22 @@ class Event extends React.Component {
               </div>
             </div>
           </form>
-        </div>
-        <div className="actions">
-          {eventInstance && eventInstance.type !== 2 ? (
-            <button className="button red icon labeled right ui" id="generate" type="button" onClick={this.onDeleteClick}>
-              {I18n.t('common.destroy')}
+        )}
+        actions={(
+          <>
+            {eventInstance && eventInstance.type !== 2 ? (
+              <button className="button red icon labeled right ui" id="generate" type="button" onClick={this.onDeleteClick}>
+                {I18n.t('common.destroy')}
+                <i className="angle double icon right" />
+              </button>
+            ) : null}
+            <button className="button green icon labeled right ui" id="generate" type="button" onClick={this.onSubmit}>
+              {I18n.t(`${eventInstance ? 'common.edit' : 'common.add'}`)}
               <i className="angle double icon right" />
             </button>
-          ) : null}
-          <button className="button green icon labeled right ui" id="generate" type="button" onClick={this.onSubmit}>
-            {I18n.t(`${eventInstance ? 'common.edit' : 'common.add'}`)}
-            <i className="angle double icon right" />
-          </button>
-        </div>
-      </div>
+          </>
+        )}
+      />
     );
   }
 }

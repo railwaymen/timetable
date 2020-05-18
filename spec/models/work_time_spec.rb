@@ -104,20 +104,12 @@ RSpec.describe WorkTime, type: :model do
     end
 
     context 'integration_payload' do
-      it 'external_task_id' do
+      it 'external values' do
         external_auth = create(:external_auth, provider: 'Sample')
         work_time = build_stubbed :work_time,
                                   user: external_auth.user,
-                                  integration_payload: { Sample: { task_id: 'TIM-18' } }
-        expect(work_time.external_task_id).to eq('TIM-18')
-      end
-
-      it 'external_summary' do
-        external_auth = create(:external_auth, provider: 'Sample')
-        work_time = build_stubbed :work_time,
-                                  user: external_auth.user,
-                                  integration_payload: { Sample: { summary: 'Task title' } }
-        expect(work_time.external_summary).to eq('Task title')
+                                  integration_payload: { Sample: { project: 'TIM-18' } }
+        expect(work_time.external(:project)).to eq('TIM-18')
       end
     end
   end

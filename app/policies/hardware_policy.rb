@@ -2,17 +2,15 @@
 
 class HardwarePolicy < ApplicationPolicy
   def update?
-    if user.hardware_manager?
+    if user.admin? || user.hardware_manager?
       true
-    elsif record.locked?
-      false
     else
-      true
+      !record.locked?
     end
   end
 
   def permitted_attributes
-    user.hardware_manager? ? hardware_manager_params : user_params
+    user.admin? || user.hardware_manager? ? hardware_manager_params : user_params
   end
 
   private
@@ -36,7 +34,7 @@ class HardwarePolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user.hardware_manager?
+      if user.admin? || user.hardware_manager?
         scope.all
       else
         scope.where(user_id: user.id)

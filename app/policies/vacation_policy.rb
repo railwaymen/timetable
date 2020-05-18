@@ -17,7 +17,7 @@ class VacationPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user.admin? || user.staff_manager?
+      if user.admin? || user.staff_manager? || user.leader?
         scope.all
       else
         scope.where(user_id: user.id)

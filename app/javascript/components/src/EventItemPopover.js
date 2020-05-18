@@ -14,6 +14,7 @@ class EventItemPopover extends Component {
         schedulerData: PropTypes.object.isRequired,
         eventItem: PropTypes.object.isRequired,
         title: PropTypes.string.isRequired,
+        note: PropTypes.string,
         startTime: PropTypes.string.isRequired,
         endTime: PropTypes.string.isRequired,
         statusColor: PropTypes.string.isRequired,
@@ -26,12 +27,12 @@ class EventItemPopover extends Component {
     }
 
     render(){
-        const {schedulerData, eventItem, title, startTime, endTime, statusColor,subtitleGetter, viewEventClick, viewEventText, viewEvent2Click, viewEvent2Text, eventItemPopoverTemplateResolver} = this.props;
+        const {schedulerData, eventItem, title, note, startTime, endTime, statusColor,subtitleGetter, viewEventClick, viewEventText, viewEvent2Click, viewEvent2Text, eventItemPopoverTemplateResolver} = this.props;
         const {localeMoment, config} = schedulerData;
         let start = localeMoment(startTime), end = localeMoment(endTime);
 
         if (eventItemPopoverTemplateResolver != undefined) {
-            return eventItemPopoverTemplateResolver(schedulerData, eventItem, title, start, end, statusColor);
+            return eventItemPopoverTemplateResolver(schedulerData, eventItem, title, note, start, end, statusColor);
         } else {
             let subtitleRow = <div />;
             if(subtitleGetter !== undefined){

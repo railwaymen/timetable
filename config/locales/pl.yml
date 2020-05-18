@@ -3,6 +3,7 @@ pl:
     hardware:
       locked: "Ten sprzęt jest zablokowany, nie możesz go edytować"
       add_new: Dodaj sprzęt
+      additional_fields: Dodatkowe pola
       type: Typ
       manufacturer: Producent
       model: Model
@@ -26,11 +27,8 @@ pl:
       name: Nazwa
       leader: Lider
       project: Projekt
-      tests_count: Liczba testów
-      tests_duration: Czas trwania testów
+      note: Notatka
       update: Aktualizacja
-      urls: Adresy
-      urls_comma_separated: Adresy (rozdzielone przecinkami)
       leader: lider
       developers: Deweloperzy
       testers: Testerzy
@@ -313,6 +311,11 @@ pl:
     date: Data
     refresh: Odśwież
     hardware: Mój sprzęt
+    type: Typ
+    labels: Etykiety
+    refreshed_at: Odświerzony
+    refresh_in_progress: Trwa odświerzanie
+    refresh_error: Wystąpił błąd podczas odświerzania
   errors:
     format: "%{attribute} %{message}"
     messages:

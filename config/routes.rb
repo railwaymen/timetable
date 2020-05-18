@@ -46,6 +46,7 @@ Rails.application.routes.draw do
       resources :project_reports, except: %i[delete] do
         get :roles, on: :collection
         put :generate, on: :member
+        put :refresh, on: :member
         get :file, on: :member
         get :synchronize, on: :member
       end

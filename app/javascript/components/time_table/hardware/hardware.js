@@ -53,7 +53,7 @@ const Hardware = ({ hardware, onDelete, fields }) => {
 
 
   const lockManagement = () => {
-    if (currentUser.hardware_manager) {
+    if (currentUser.isHardwareManager()) {
       if (stateHardware.locked) {
         return (
           <button
@@ -81,7 +81,7 @@ const Hardware = ({ hardware, onDelete, fields }) => {
   };
 
   const hardwareActions = () => {
-    if (hardware.locked && !currentUser.hardware_manager) {
+    if (hardware.locked && !currentUser.isHardwareManager()) {
       return null;
     }
     return (
@@ -137,7 +137,7 @@ const Hardware = ({ hardware, onDelete, fields }) => {
           </nav>
         </div>
         <div className="card-body container">
-          {(hardware.locked && !currentUser.hardware_manager)
+          {(hardware.locked && !currentUser.isHardwareManager())
             && (
             <div>
               <Errors errors={[I18n.t('apps.hardware.locked')]} />
@@ -153,7 +153,7 @@ const Hardware = ({ hardware, onDelete, fields }) => {
               <h6 className="font-weight-bold">{I18n.t('apps.hardware.serial_number')}</h6>
               <p>{stateHardware.serial_number}</p>
             </div>
-            {currentUser.hardware_manager
+            {currentUser.isHardwareManager()
             && (
             <div className="col">
               <h6 className="font-weight-bold">{I18n.t('common.user')}</h6>
@@ -164,7 +164,7 @@ const Hardware = ({ hardware, onDelete, fields }) => {
             )}
           </div>
           <div className="ui divider" />
-          <FieldsList hardware_id={stateHardware.id} fields={fields} />
+          <FieldsList locked={hardware.locked} hardware_id={stateHardware.id} fields={fields} />
         </div>
       </div>
     </div>

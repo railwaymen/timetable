@@ -3,6 +3,7 @@ en:
     hardware:
       locked: "This hardware is locked, you can't edit it"
       add_new: Add hardware
+      additional_fields: Additional fields
       type: Type
       manufacturer: Manufacturer
       model: Model
@@ -26,11 +27,8 @@ en:
       name: Name
       leader: Leader
       project: Project
-      tests_count: Tests count
-      tests_duration: Tests duration
+      note: Note
       update: Update
-      urls: Urls
-      urls_comma_separated: Urls (comma separated)
       leader: leader
       developers: Developers
       testers: Testers
@@ -313,6 +311,11 @@ en:
     date: Date
     refresh: Refresh
     hardware: My hardware
+    type: Type
+    labels: Labels
+    refreshed_at: Refreshed
+    refresh_in_progress: Refresh in progress
+    refresh_error: An error occurred while refreshing
   activerecord:
     errors:
       models:

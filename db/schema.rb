@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_05_095052) do
+ActiveRecord::Schema.define(version: 2020_05_13_084902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,6 +138,8 @@ ActiveRecord::Schema.define(version: 2020_05_05_095052) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
+    t.string "refresh_status", default: "fresh", null: false
+    t.datetime "refreshed_at"
     t.index ["discarded_at"], name: "index_project_reports_on_discarded_at"
     t.index ["project_id"], name: "index_project_reports_on_project_id"
   end
@@ -158,6 +160,7 @@ ActiveRecord::Schema.define(version: 2020_05_05_095052) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
+    t.string "note"
     t.index ["discarded_at"], name: "index_project_resource_assignments_on_discarded_at"
     t.index ["project_id"], name: "index_project_resource_assignments_on_project_id"
     t.index ["project_resource_id"], name: "index_project_resource_assignments_on_project_resource_id"

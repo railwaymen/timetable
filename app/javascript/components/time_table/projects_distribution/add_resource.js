@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import Modal from '@components/shared/modal';
 import Dropdown from '../../shared/dropdown';
 import * as Api from '../../shared/api';
 import * as Loader from './loader';
@@ -54,6 +55,7 @@ class AddResource extends React.Component {
       url: '/api/project_resources',
       body: params,
     }).then(() => {
+      $('#resourceModal').modal('hide');
       this.props.updateResourcesAndEvents();
     }).catch((e) => {
       Loader.hideLoader();
@@ -69,10 +71,6 @@ class AddResource extends React.Component {
         alert('Something bad happend');
       }
     });
-  }
-
-  onCloseClick() {
-    $('#modal').hide();
   }
 
   filterUsers = (filter) => {
@@ -136,10 +134,10 @@ class AddResource extends React.Component {
     } = this.state;
 
     return (
-      <div className="ui centered-modal modal transition visible active overflow-visible">
-        <i className="close icon" onClick={this.onCloseClick} />
-        <div className="header">{I18n.t('apps.projects_distribution.resource_menu')}</div>
-        <div className="content">
+      <Modal
+        id="resourceModal"
+        header={I18n.t('apps.projects_distribution.resource_menu')}
+        content={(
           <form className="form">
             <div className="error hidden message ui">
               <p />
@@ -178,14 +176,14 @@ class AddResource extends React.Component {
               </div>
             </div>
           </form>
-        </div>
-        <div className="actions">
+        )}
+        actions={(
           <button className="btn btn-success" id="generate" type="button" onClick={this.onSubmit}>
             <i className="fa fa-angle-double-right mr-2" />
             {I18n.t('common.add')}
           </button>
-        </div>
-      </div>
+        )}
+      />
     );
   }
 }

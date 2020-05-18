@@ -3,11 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Api::HardwareFieldsController do
-  render_views
   describe '#create' do
     it 'creates hardware field for hardware' do
-      hardware = create(:hardware)
       user = create(:user)
+      hardware = create(:hardware, user: user)
       sign_in user
 
       params = {
@@ -46,8 +45,9 @@ RSpec.describe Api::HardwareFieldsController do
 
   describe '#destroy' do
     it 'destories hardware field' do
-      field = create(:hardware_field)
       user = create(:user)
+      hardware = create(:hardware, user: user)
+      field = create(:hardware_field, hardware: hardware)
 
       sign_in user
 

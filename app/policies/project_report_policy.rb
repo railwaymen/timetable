@@ -33,6 +33,10 @@ class ProjectReportPolicy < ApplicationPolicy
     create?
   end
 
+  def refresh?
+    create?
+  end
+
   def index?
     create?
   end

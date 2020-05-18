@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::ProjectReportsController, type: :controller do
-  render_views
-
   let(:admin) { create(:user, :admin) }
   let(:project) { create(:project) }
 
@@ -271,6 +269,21 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
       expect(response).to be_ok
       expect(project_report.reload).to be_done
       expect(GenerateProjectReportWorker).to have_received(:perform_async).with(project_report.id)
+    end
+  end
+
+  describe 'PUT #refresh' do
+    it 'refreshes project report' do
+      allow(RefreshProjectReportWorker).to receive(:perform_async)
+      project_report = create(:project_report)
+      patch :refresh, params: {
+        format: 'json',
+        project_id: project_report.project.id,
+        id: project_report.id
+      }
+      expect(response).to be_ok
+      expect(project_report.reload.refresh_status).to eql('in_progress')
+      expect(RefreshProjectReportWorker).to have_received(:perform_async).with(project_report.id, admin.id)
     end
   end
 

@@ -24,7 +24,7 @@ const Navbar = () => (
     </button>
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav">
-        { currentUser.isAdminOrManager() && (
+        { currentUser.isManager() && (
           <li className="nav-pills">
             <NavLink className="nav-link" to="/users">{I18n.t('common.people')}</NavLink>
           </li>
@@ -45,7 +45,7 @@ const Navbar = () => (
             {I18n.t('common.reports')}
           </NavLink>
         </li>
-        { currentUser.isAdminOrManager()
+        { currentUser.isManager()
           && (
             <li className="nav-pills">
               <NavLink className="nav-link" to="/projects_distribution">{I18n.t('common.projects_distribution')}</NavLink>
@@ -103,7 +103,7 @@ const Navbar = () => (
       <NavLink className="item" to={(currentUser.isSuperUser() || currentUser.is_leader) ? '/reports/work_times/by_projects' : '/reports/work_times/by_users'}>
         {I18n.t('common.reports')}
       </NavLink>
-      { currentUser.isAdminOrManager()
+      { currentUser.isManager()
             && <NavLink className="item" to="/projects_distribution">{I18n.t('common.projects_distribution')}</NavLink>}
       <NavLink className="item" to="/accounting_periods">{I18n.t('common.accounting_periods')}</NavLink>
       <NavLink className="item" to="/vacation_periods">{I18n.t('common.vacation_periods')}</NavLink>

@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::RemoteWorksController do
-  render_views
   let(:user) { create(:user) }
   let(:admin) { create(:admin) }
   let(:starts_at) do
@@ -147,10 +146,11 @@ RSpec.describe Api::RemoteWorksController do
       params = { note: 'note 2', starts_at: starts_at + 1.hour, ends_at: ends_at + 1.hour }
       put :update, params: { id: remote_work.id, remote_work: params }, format: :json
 
-      expect(response.code).to eql('204')
+      expect(response.code).to eql('200')
       expect(remote_work.reload.starts_at).to eql(starts_at + 1.hour)
       expect(remote_work.ends_at).to eql(ends_at + 1.hour)
       expect(remote_work.note).to eql('note 2')
+      expect(response.body).to be_json_eql(remote_work_response(remote_work).to_json)
     end
 
     it 'updates remote work of other user by admin' do
@@ -159,11 +159,12 @@ RSpec.describe Api::RemoteWorksController do
       params = { note: 'note 2', starts_at: starts_at + 1.hour, ends_at: ends_at + 1.hour }
       put :update, params: { id: remote_work.id, remote_work: params }, format: :json
 
-      expect(response.code).to eql('204')
+      expect(response.code).to eql('200')
       expect(remote_work.reload.starts_at).to eql(starts_at + 1.hour)
       expect(remote_work.ends_at).to eql(ends_at + 1.hour)
       expect(remote_work.note).to eql('note 2')
       expect(remote_work.updated_by_admin).to eql(true)
+      expect(response.body).to be_json_eql(remote_work_response(remote_work).to_json)
     end
 
     it 'user cannot update remote work older than 3 business days' do

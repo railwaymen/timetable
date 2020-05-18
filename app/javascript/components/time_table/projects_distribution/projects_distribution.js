@@ -4,6 +4,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import tinycolor from 'tinycolor2';
 import ReactDOM from 'react-dom';
+import ModalButton from '@components/shared/modal_button';
 import Scheduler, {
   SchedulerData, ViewTypes, CellUnits, DATE_FORMAT,
 } from '../../src/index';
@@ -40,6 +41,13 @@ class ProjectsDistribution extends React.Component {
   }
 
   componentDidMount() {
+    const viewWidth = window.innerWidth;
+    let maxSchedulerWidth = '1600';
+    let cellWidth = '1.375%';
+    if (viewWidth <= 1600) {
+      maxSchedulerWidth = '100%';
+      cellWidth = '1.3%';
+    }
     const schedulerData = new SchedulerData(
       moment().format(DATE_FORMAT),
       ViewTypes.Custom,
@@ -47,8 +55,8 @@ class ProjectsDistribution extends React.Component {
       false,
       {
         displayWeekend: false,
-        customCellWidth: '1.3%',
-        besidesWidth: '30',
+        customCellWidth: cellWidth,
+        schedulerWidth: maxSchedulerWidth,
         schedulerMaxHeight: '0',
         tableHeaderHeight: '55px',
         headerEnabled: false,
@@ -357,12 +365,13 @@ class ProjectsDistribution extends React.Component {
     }
   }
 
-  eventItemPopoverTemplateResolver = (schedulerData, eventItem, title, start, end) => (
+  eventItemPopoverTemplateResolver = (schedulerData, eventItem, title, note, start, end) => (
     <>
       <h3 className="popover-event-title">
         <div className="circular empty label ui" style={{ background: `${eventItem.bgColor} none repeat scroll 0% 0%` }} />
         {title}
       </h3>
+      <h4>{note}</h4>
       <h5>{`${start.format('DD/MM/YYYY')} - ${end.format('DD/MM/YYYY')}`}</h5>
       <div className="event-buttons">
         <div className="event-delete" onClick={() => this.destroyEvent(eventItem)}>
@@ -396,9 +405,12 @@ class ProjectsDistribution extends React.Component {
     return (
       <div className="scheduler-header">
         <div className="add-resource" style={{ width: resourcePercentageWidth }}>
-          <button className="btn btn-success bt-submit" type="button" onClick={this.onAddResourceClick}>
-            <span>{I18n.t('apps.projects_distribution.add_resource')}</span>
-          </button>
+          <ModalButton
+            btnClass="btn btn-success bt-submit"
+            onClick={this.onAddResourceClick}
+            id="resourceModal"
+            content={I18n.t('apps.projects_distribution.add_resource')}
+          />
         </div>
         <div style={{ width: firstMonthPercentageWidth }}>
           <div className="chevron-left">

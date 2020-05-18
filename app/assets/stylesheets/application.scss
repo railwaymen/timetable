@@ -322,34 +322,24 @@ table {
   }
 }
 
-#modal .centered-modal {
-  height: auto;
-  max-height: 55%;
-  .content {
-    max-height: 75%;
+
+.event-info {
+  .project {
+    display: inline-block;
+    border: 3px solid;
+    padding: 5px 9px;
+    margin-top: 5px;
+    border-radius: 20px;
+    color: white;
   }
-  .event-info {
-    .project {
-      display: inline-block;
-      border: 3px solid;
-      padding: 5px 9px;
-      margin-top: 5px;
-      border-radius: 20px;
-      color: white;
+  .date-range {
+    > span {
+      cursor: pointer;
     }
-    .date-range {
-      > span {
-        cursor: pointer;
-      }
-      input {
-        width: 120px;
-        text-align: center;
-      }
+    input {
+      width: 120px;
+      text-align: center;
     }
-  }
-  .form {
-    display: flex;
-    justify-content: space-around;
   }
 }
 .waiting {
@@ -489,4 +479,8 @@ table {
 
 .autocomplete-item {
   height: 40px;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }

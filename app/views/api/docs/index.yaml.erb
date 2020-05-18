@@ -76,6 +76,7 @@ paths:
                   errors:
                     base:
                       - error: invalid_email_or_password
+                      - error: inactive
   /projects:
     get:
       tags:
@@ -779,7 +780,7 @@ paths:
                   errors:
                     starts_at:
                       - error: overlap
-                      - overlap_midnight
+                      - error: overlap_midnight
                       - error: too_old
                       - error: blank
                       - error: incorrect_hours

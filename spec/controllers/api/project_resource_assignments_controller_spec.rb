@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::ProjectResourceAssignmentsController do
-  render_views
-
   let(:user) { create(:user) }
   let(:admin) { create(:user, :admin) }
 
@@ -23,6 +21,7 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
         end: assignment.ends_at,
         resourceId: assignment.resource_rid,
         title: assignment.title,
+        note: assignment.note,
         bgColor: assignment.color,
         projectId: assignment.project_id,
         resourceRealId: assignment.project_resource_id,
@@ -43,6 +42,7 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
         end: assignment.ends_at,
         resourceId: assignment.resource_rid,
         title: assignment.title,
+        note: assignment.note,
         bgColor: assignment.color,
         projectId: assignment.project_id,
         resourceRealId: assignment.project_resource_id,
@@ -63,6 +63,7 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
         end: assignment.ends_at,
         resourceId: assignment.resource_rid,
         title: assignment.title,
+        note: assignment.note,
         bgColor: assignment.color,
         projectId: assignment.project_id,
         resourceRealId: assignment.project_resource_id,

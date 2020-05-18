@@ -34,7 +34,7 @@ const FieldsList = (props) => {
     return (
       <div>
         <div className="mb-3">
-          <h4 className="font-weight-bold">Dodatkowe pola</h4>
+          <h4 className="font-weight-bold">{I18n.t('apps.hardware.additional_fields')}</h4>
         </div>
 
         {fields.map((field) => {
@@ -47,6 +47,7 @@ const FieldsList = (props) => {
               id={id}
               name={name}
               value={value}
+              locked={props.locked}
             />
           );
         })}
@@ -54,12 +55,14 @@ const FieldsList = (props) => {
         <div>
           <div className="row">
             <div className="col">
-              <CreateField
-                toggleExpand={onCreateFieldExpand}
-                expanded={createFieldExpanded}
-                updateFieldList={updateFieldList}
-                hardware_id={props.hardware_id}
-              />
+              {(!props.locked || currentUser.isHardwareManager()) && (
+                <CreateField
+                  toggleExpand={onCreateFieldExpand}
+                  expanded={createFieldExpanded}
+                  updateFieldList={updateFieldList}
+                  hardware_id={props.hardware_id}
+                />
+              )}
             </div>
             {!createFieldExpanded && (
               <div className="col-md-3">

@@ -5,20 +5,24 @@ module Api
     respond_to :json
 
     def create
-      hardware = Hardware.find(params[:hardware_id])
-      @field = HardwareField.create(hardware_fields_params)
-      hardware.hardware_fields << @field
+      hardware = policy_scope(Hardware).find(params[:hardware_id])
+      @field = hardware.hardware_fields.build(hardware_fields_params)
+      authorize @field
+      @field.save
       respond_with @field
     end
 
     def update
       @field = HardwareField.find(params[:id])
+      authorize @field
       @field.update(hardware_fields_params)
       respond_with @field
     end
 
     def destroy
-      @field = HardwareField.find(params[:id]).destroy
+      @field = HardwareField.find(params[:id])
+      authorize @field
+      @field.destroy
       respond_with @field
     end
 

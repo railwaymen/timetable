@@ -3,6 +3,7 @@
 module Api
   class HardwaresController < Api::BaseController
     respond_to :json
+
     def index
       @hardwares = policy_scope(Hardware)
       respond_with @hardwares

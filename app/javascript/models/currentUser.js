@@ -10,11 +10,14 @@ Object.assign(window.currentUser, {
   isSuperUser() {
     return this.admin || this.manager || this.staff_manager;
   },
-  isAdminOrManager() {
+  isManager() {
     return this.admin || this.manager;
   },
-  isAdminOrManagerOrLeader() {
+  isManagerOrLeader() {
     return this.admin || this.manager || this.is_leader;
+  },
+  isHardwareManager() {
+    return this.admin || this.hardware_manager;
   },
   fullName() {
     return `${this.first_name} ${this.last_name}`;
