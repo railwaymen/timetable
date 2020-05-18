@@ -409,7 +409,7 @@ class Periods extends React.Component {
             </form>
           )}
           actions={(
-            <button onClick={this.onGenerateSubmit} className="btn btn-success"  type="button">
+            <button onClick={this.onGenerateSubmit} className="btn btn-success" id="generate" type="button">
               <i className="fa fa-angle-double-right mr-2" />
               {I18n.t('apps.accounting_periods.generate')}
             </button>
