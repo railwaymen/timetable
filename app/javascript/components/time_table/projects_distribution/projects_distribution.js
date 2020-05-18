@@ -99,6 +99,16 @@ class ProjectsDistribution extends React.Component {
     });
   }
 
+  getActivities() {
+    Api.makeGetRequest({
+      url: '/api/project_resources/activity',
+    }).then((response) => {
+      this.setState({
+        activities: response.data,
+      });
+    });
+  }
+
   getData(schedulerData) {
     const resources_promise = Api.makeGetRequest({
       url: '/api/project_resources',
@@ -112,16 +122,12 @@ class ProjectsDistribution extends React.Component {
     const projects_promise = Api.makeGetRequest({
       url: '/api/projects/simple',
     });
-    const activity_promise = Api.makeGetRequest({
-      url: '/api/project_resources/activity',
-    });
-    Promise.all([resources_promise, events_promise, users_promise, projects_promise, activity_promise]).then((values) => {
+    Promise.all([resources_promise, events_promise, users_promise, projects_promise]).then((values) => {
       const resources = values[0].data;
       const events = values[1].data;
       const users = values[2].data;
       const assignedProjectIds = _.map(events, 'projectId');
       const projects = values[3].data;
-      const activities = values[4].data;
       schedulerData.setResources(resources);
       schedulerData.setEvents(events);
       this.setState({
@@ -131,8 +137,8 @@ class ProjectsDistribution extends React.Component {
         resources,
         users,
         projects,
-        activities,
       }, () => {
+        this.getActivities();
         this.setState({
           schedulerHeader: this.schedulerHeader(),
         });
@@ -164,11 +170,9 @@ class ProjectsDistribution extends React.Component {
     });
     const url = `/api/project_resource_assignments?selected_projects=${selectedProjects}&selected_users=${selectedUsersIds}`;
     const events_promise = Api.makeGetRequest({ url });
-    const activity_promise = Api.makeGetRequest({ url: '/api/project_resources/activity' });
-    Promise.all([resources_promise, events_promise, activity_promise]).then((values) => {
+    Promise.all([resources_promise, events_promise]).then((values) => {
       const resources = values[0].data;
       const events = values[1].data;
-      const activities = values[2].data;
       const assignedProjectIds = _.map(events, 'projectId');
       schedulerData.setResources(resources);
       schedulerData.setEvents(events);
@@ -177,8 +181,7 @@ class ProjectsDistribution extends React.Component {
         resources,
         events,
         assignedProjectIds,
-        activities,
-      });
+      }, () => this.getActivities());
     });
   }
 

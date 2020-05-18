@@ -43,7 +43,6 @@ class Event extends React.Component {
       color: `#${selectedProject.color}`,
     };
     const id = eventInstance ? '#editEventModal' : '#addEventModal';
-    console.log(id, $(id));
     if (eventInstance) {
       Api.makePutRequest({
         url: `/api/project_resource_assignments/${eventInstance.id}`,
@@ -70,6 +69,8 @@ class Event extends React.Component {
   onDeleteClick() {
     const { eventInstance } = this.props;
     this.props.destroyEvent(eventInstance);
+    const id = eventInstance ? '#editEventModal' : '#addEventModal';
+    $(id).modal('hide');
   }
 
   onDateClick(e) {
