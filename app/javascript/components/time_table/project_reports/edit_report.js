@@ -459,7 +459,7 @@ export default class EditReport extends React.Component {
                     {extractIntegrationPayload(integration_payload).type}
                   </td>
                   <td>
-                    {extractIntegrationPayload(integration_payload).labels.map((label) => (
+                    {(extractIntegrationPayload(integration_payload).labels || []).map((label) => (
                       <span key={label} className="badge badge-pill badge-primary">{label}</span>
                     ))}
                   </td>
