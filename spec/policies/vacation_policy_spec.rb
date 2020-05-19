@@ -23,6 +23,17 @@ RSpec.describe VacationPolicy, type: :policy do
       end
     end
 
+    context 'manager user' do
+      it 'returns all records' do
+        vacation = create(:vacation)
+
+        user = build_stubbed(:user)
+        expect(user).to receive(:manager?).and_return(true)
+
+        expect(described_class::Scope.new(user, Vacation).resolve).to match_array [vacation]
+      end
+    end
+
     context 'regular user' do
       it 'returns only user records' do
         user = create(:user)
