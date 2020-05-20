@@ -54,7 +54,6 @@ class ProjectsDistribution extends React.Component {
         customCellWidth: 20,
         tableHeaderHeight: 50,
         schedulerWidth: maxSchedulerWidth,
-        schedulerMaxHeight: 800,
         headerEnabled: true,
         resourceName: '',
         views: [],
@@ -260,7 +259,7 @@ class ProjectsDistribution extends React.Component {
       color: 'rgb(153, 153, 153)',
     };
 
-    const isEndOfMonth = date.format('D') === moment().endOf('month').format('D');
+    const isEndOfMonth = date.format('D') === moment(date).endOf('month').format('D');
 
     if (isEndOfMonth) style.borderRight = '1px solid #828282';
 
