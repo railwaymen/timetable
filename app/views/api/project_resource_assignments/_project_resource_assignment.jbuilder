@@ -4,6 +4,5 @@ json.extract! project_resource_assignment, :id, :note, :type, :resizable, :movab
 json.start project_resource_assignment.starts_at
 json.end project_resource_assignment.ends_at
 json.resourceId project_resource_assignment.resource_rid
-json.bgColor project_resource_assignment.color
 json.projectId project_resource_assignment.project_id
 json.resourceRealId project_resource_assignment.project_resource_id

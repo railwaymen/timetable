@@ -43,7 +43,7 @@ class BodyView extends Component {
                 );
                 if (isFriday) { className = 'friday' }
                 if (isLastDay) { className += ' last-day' }
-                if (isFridayLastDay) { style = {...style, borderRight: '1px solid #828282'} }
+                // if (isFridayLastDay) { style = {...style, borderRight: '1px solid #828282'} }
                 return (
                     <td key={key} className={className} style={style}><div></div></td>
                 )
