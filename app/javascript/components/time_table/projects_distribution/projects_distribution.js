@@ -263,8 +263,8 @@ class ProjectsDistribution extends React.Component {
 
     if (isEndOfMonth) style.borderRight = '1px solid #828282';
 
-    const isMonday = date.weekday() === 1;
-    const isFriday = date.weekday() === 5;
+    const isMonday = date.isoWeekday() === 1;
+    const isFriday = date.isoWeekday() === 5;
 
     if (isMonday) {
       day = date.format('D');
