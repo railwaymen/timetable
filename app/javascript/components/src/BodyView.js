@@ -24,6 +24,7 @@ class BodyView extends Component {
             let rowCells = headers.map((header, index) => {
                 let key = item.slotId + '_' + header.time;
                 let style = index === headers.length - 1 ? {} : {width: cellWidth};
+
                 if(!!header.nonWorkingTime)
                     style = {...style, backgroundColor: config.nonWorkingTimeBodyBgColor};
                 if(item.groupOnly)
@@ -34,7 +35,7 @@ class BodyView extends Component {
                         style = {...style, backgroundColor: cellBgColor};
                 }
                 let className = '';
-                const isFriday = moment(header.time).weekday() === 5;
+                const isFriday = moment(header.time).isoWeekday() === 5;
                 const isLastDay = moment(header.time).date() === moment(header.time).daysInMonth();
                 const isFridayLastDay =  (
                     isFriday &&
