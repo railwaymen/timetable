@@ -346,52 +346,22 @@ paths:
                       versions:
                         type: array
                         items:
-                          properties:
-                            event:
-                              type: string
-                              enum: ['create', 'update']
-                            updated_by:
-                              type: string
-                              example: John Smith
-                            created_at:
-                              type: string
-                              format: date-time
-                            project_name_was:
-                              type: string
-                            project_name:
-                              type: string
-                            body_was:
-                              type: string
-                            body:
-                              type: string
-                            starts_at_was:
-                              type: string
-                              format: date-time
-                            starts_at:
-                              type: string
-                              format: date-time
-                            tag_was:
-                              type: string
-                            tag:
-                              type: string
-                            task_was:
-                              type: string
-                            task:
-                              type: string
-                            task_preview_was:
-                              type: string
-                            task_preview:
-                              type: string
-                            ends_at_was:
-                              type: string
-                              format: date-time
-                            ends_at:
-                              type: string
-                              format: date-time
-                            duration_was:
-                              type: integer
-                            duration:
-                              type: integer
+                          allOf:
+                            - $ref: '#/components/schemas/WorkTime'
+                            - type: object
+                              properties:
+                                event:
+                                  type: string
+                                  enum: ['create', 'update']
+                                updated_by:
+                                  type: string
+                                  example: John Smith
+                                created_at:
+                                  type: string
+                                  format: date-time
+                                changeset:
+                                  type: array
+                                  example: ["project_id", "start_at", "ends_at"]
     put:
       tags:
         - Work times

@@ -409,7 +409,7 @@ RSpec.describe Api::ProjectsController do
         project = FactoryBot.create :project
 
         work_time = FactoryBot.create :work_time, user: user, project: project, starts_at: current_time - 30.minutes, ends_at: current_time - 25.minutes
-        FactoryBot.create :work_time, user: user, project: project, starts_at: current_time - 70.days - 8.hours, ends_at: current_time - 70.days - 7.hours
+        FactoryBot.create :work_time, user: user, project: project, starts_at: 70.days.ago.beginning_of_day + 8.hours, ends_at: 70.days.ago.beginning_of_day + 9.hours
 
         get :work_times, params: { id: project }, format: :json
         expect(response).to be_ok
