@@ -101,6 +101,7 @@ pl:
       unsaved_changes: Masz niezapisane zmiany!
       history:
         date: Data
+        when: Kiedy
         who: Kto
         project: Projekt
         from: Od

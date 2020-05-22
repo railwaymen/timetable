@@ -101,6 +101,7 @@ en:
       unsaved_changes: You have unsaved changes!
       history:
         date: Date
+        when: When
         who: Who
         project: Project
         from: From

@@ -430,13 +430,18 @@ class EntryHistory extends React.Component {
             </span>
           </td>
           <td>
-            <span className={this.changedClassName(version, 'starts_at')}>
+            <span className={(version.event === 'update' && version.changeset.includes('starts_at') && !version.changeset.includes('date')) ? 'changed' : ''}>
               {moment(version.starts_at).format('HH:mm')}
             </span>
           </td>
           <td>
-            <span className={this.changedClassName(version, 'ends_at')}>
+            <span className={(version.event === 'update' && version.changeset.includes('ends_at') && !version.changeset.includes('date')) ? 'changed' : ''}>
               {moment(version.ends_at).format('HH:mm')}
+            </span>
+          </td>
+          <td>
+            <span className={this.changedClassName(version, 'date')}>
+              {moment(version.date).formatDate()}
             </span>
           </td>
           <td>
@@ -590,7 +595,7 @@ class EntryHistory extends React.Component {
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>{I18n.t('apps.timesheet.history.date')}</th>
+                    <th>{I18n.t('apps.timesheet.history.when')}</th>
                     <th>{I18n.t('apps.timesheet.history.who')}</th>
                     <th>{I18n.t('apps.timesheet.history.project')}</th>
                     <th>{I18n.t('apps.timesheet.history.task')}</th>
@@ -598,6 +603,7 @@ class EntryHistory extends React.Component {
                     <th>{I18n.t('apps.timesheet.history.tag')}</th>
                     <th>{I18n.t('apps.timesheet.history.from')}</th>
                     <th>{I18n.t('apps.timesheet.history.to')}</th>
+                    <th>{I18n.t('apps.timesheet.history.date')}</th>
                     <th>{I18n.t('apps.timesheet.history.duration')}</th>
                   </tr>
                 </thead>

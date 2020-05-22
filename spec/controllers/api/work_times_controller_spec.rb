@@ -152,18 +152,8 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       PaperTrail.request(whodunnit: admin.id) do
         work_time = create(:work_time, user: user)
         version1 = work_time_response(work_time).merge(updated_by_admin: false, event: :create, created_at: work_time.created_at,
-                                                       updated_by: admin.accounting_name, changeset: %i[
-                                                         id
-                                                         user_id
-                                                         project_id
-                                                         starts_at
-                                                         ends_at
-                                                         duration
-                                                         body
-                                                         created_at
-                                                         updated_at
-                                                         creator_id
-                                                       ])
+                                                       updated_by: admin.accounting_name,
+                                                       changeset: %i[id user_id project_id starts_at ends_at duration body created_at updated_at creator_id date])
         work_time.update! body: 'New body'
         version2 = work_time_response(work_time).merge(updated_by_admin: false, event: :update, created_at: work_time.created_at, updated_by: admin.accounting_name, changeset: %i[body updated_at])
 
