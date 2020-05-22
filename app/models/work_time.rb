@@ -3,7 +3,7 @@
 class WorkTime < ApplicationRecord
   include Discard::Model
 
-  has_paper_trail skip: %i[contract_name updated_by_admin]
+  has_paper_trail skip: %i[contract_name]
   belongs_to :project
   belongs_to :user
   belongs_to :creator, class_name: 'User'

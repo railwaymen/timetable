@@ -151,7 +151,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       PaperTrail.enabled = true
       PaperTrail.request(whodunnit: admin.id) do
         work_time = create(:work_time, user: user)
-        version1 = work_time_response(work_time).merge(updated_by_admin: nil, event: :create, created_at: work_time.created_at,
+        version1 = work_time_response(work_time).merge(updated_by_admin: false, event: :create, created_at: work_time.created_at,
                                                        updated_by: admin.accounting_name, changeset: %i[
                                                          id
                                                          user_id
