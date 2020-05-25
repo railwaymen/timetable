@@ -17,7 +17,7 @@ module Api
       @remote_work_form = RemoteWorkForm.new(@remote_work)
       authorize @remote_work_form.remote_work
 
-      @remote_work_form.save(save_params)
+      @remote_work_form.save(validation_context)
       respond_with @remote_work_form
     end
 
@@ -27,7 +27,7 @@ module Api
 
       @remote_work.assign_attributes(permitted_attributes(@remote_work))
       @remote_work.updated_by_admin = true if @remote_work.user_id != current_user.id
-      @remote_work.save(save_params)
+      @remote_work.save(validation_context)
 
       respond_with @remote_work
     end
@@ -37,15 +37,14 @@ module Api
       authorize @remote_work
 
       @remote_work.updated_by_admin = true if @remote_work.user_id != current_user.id
-      @remote_work.save(save_params)
-      @remote_work.discard
+      @remote_work.discard if @remote_work.valid?(*validation_context.values)
 
       respond_with @remote_work
     end
 
     private
 
-    def save_params
+    def validation_context
       current_user.admin? ? {} : { context: :user }
     end
   end
