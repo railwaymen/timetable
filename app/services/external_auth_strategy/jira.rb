@@ -3,6 +3,21 @@
 require 'jira-ruby'
 require 'uri'
 
+JIRA::HTTPError.class_eval do
+  def initialize(response)
+    @response = response
+    response_body = JSON.parse(response.try(:body))
+    @message = {
+      message: response.try(:message),
+      body: response_body.try(:[], 'message') || response_body.try(:[], 'errorMessage'),
+      code: response.code,
+      class: response.class.to_s,
+      all: response_body
+    }.to_json
+    Raven.capture_message(@message)
+  end
+end
+
 module ExternalAuthStrategy
   class Jira < Base
     CONSUMER_KEY = 'timetable'
