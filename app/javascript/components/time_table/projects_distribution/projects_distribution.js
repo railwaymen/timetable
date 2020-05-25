@@ -2,7 +2,6 @@
 import React from 'react';
 import moment from 'moment';
 import _ from 'lodash';
-import tinycolor from 'tinycolor2';
 import ReactDOM from 'react-dom';
 import ModalButton from '@components/shared/modal_button';
 import Scheduler, {
@@ -14,6 +13,7 @@ import Modal from './modal';
 import Footer from './footer';
 import ResourceTooltip from './resource_tooltip';
 import * as Loader from './loader';
+import 'react-big-scheduler/lib/css/style.css';
 
 class ProjectsDistribution extends React.Component {
   constructor(props) {
@@ -34,43 +34,35 @@ class ProjectsDistribution extends React.Component {
       projects: [],
       events: [],
       assignedProjectIds: [],
-      schedulerHeader: null,
       selectedProjects: [],
       selectedUsers: [],
     };
-  }
 
-  componentDidMount() {
+    moment.locale(currentUser.lang);
+
     const viewWidth = window.innerWidth;
     let maxSchedulerWidth = '1600';
-    let cellWidth = '1.375%';
     if (viewWidth <= 1600) {
       maxSchedulerWidth = '100%';
-      cellWidth = '1.3%';
     }
     const schedulerData = new SchedulerData(
-      moment().format(DATE_FORMAT),
+      moment().formatDate(),
       ViewTypes.Custom,
       false,
       false,
       {
-        displayWeekend: false,
-        customCellWidth: cellWidth,
+        customCellWidth: 20,
+        tableHeaderHeight: 50,
         schedulerWidth: maxSchedulerWidth,
-        schedulerMaxHeight: '0',
-        tableHeaderHeight: '55px',
-        headerEnabled: false,
+        headerEnabled: true,
         resourceName: '',
-        views: [
-          {
-            viewName: 'Three months',
-            viewType: ViewTypes.Custom,
-            showAgenda: false,
-            isEventPerspective: false,
-          },
-        ],
+        views: [],
       },
-      { getCustomDateFunc: this.getCustomDate },
+      {
+        getCustomDateFunc: this.getCustomDate,
+        isNonWorkingTimeFunc: this.isNonWorkingTime,
+      },
+      moment,
     );
     this.getData(schedulerData);
   }
@@ -84,10 +76,6 @@ class ProjectsDistribution extends React.Component {
     schedulerData.setEvents(this.state.events);
     this.setState({
       viewModel: schedulerData,
-    }, () => {
-      this.setState({
-        schedulerHeader: this.schedulerHeader(),
-      });
     });
   }
 
@@ -139,9 +127,6 @@ class ProjectsDistribution extends React.Component {
         projects,
       }, () => {
         this.getActivities();
-        this.setState({
-          schedulerHeader: this.schedulerHeader(),
-        });
       });
     });
   }
@@ -150,9 +135,8 @@ class ProjectsDistribution extends React.Component {
     let selectDate = schedulerData.startDate;
     if (date !== undefined) { selectDate = date; }
 
-    const firstDayOfMonth = schedulerData.localeMoment(selectDate).startOf('month').format(DATE_FORMAT);
-    const startDate = num === 0 ? firstDayOfMonth : schedulerData.localeMoment(firstDayOfMonth).add(3 * num, 'months').format(DATE_FORMAT);
-    const endDate = schedulerData.localeMoment(startDate).add(2, 'months').endOf('month').format(DATE_FORMAT);
+    const startDate = schedulerData.localeMoment(selectDate).startOf('month').add(num, 'months').format(DATE_FORMAT);
+    const endDate = schedulerData.localeMoment(startDate).add(1, 'months').endOf('month').format(DATE_FORMAT);
     const cellUnit = CellUnits.Day;
 
     return {
@@ -185,31 +169,23 @@ class ProjectsDistribution extends React.Component {
     });
   }
 
-  prevClick = () => {
+  isNonWorkingTime = (schedulerData, time) => new Date(time).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
+
+  prevClick = (schedulerData) => {
     // eslint-disable-next-line react/no-access-state-in-setstate
-    const schedulerData = this.state.viewModel;
     schedulerData.prev();
     schedulerData.setEvents(this.state.events);
     this.setState({
       viewModel: schedulerData,
-    }, () => {
-      this.setState({
-        schedulerHeader: this.schedulerHeader(),
-      });
     });
   }
 
-  nextClick = () => {
+  nextClick = (schedulerData) => {
     // eslint-disable-next-line react/no-access-state-in-setstate
-    const schedulerData = this.state.viewModel;
     schedulerData.next();
     schedulerData.setEvents(this.state.events);
     this.setState({
       viewModel: schedulerData,
-    }, () => {
-      this.setState({
-        schedulerHeader: this.schedulerHeader(),
-      });
     });
   }
 
@@ -275,74 +251,66 @@ class ProjectsDistribution extends React.Component {
   }
 
   nonAgendaCellHeaderTemplateResolver = (schedulerData, item, formattedDateItems, style) => {
-    const datetime = schedulerData.localeMoment(item.time);
-    let isCurrentDate = false;
-    const isFriday = datetime.weekday() === 5;
-    const isMonday = datetime.weekday() === 1;
-    const isLastDay = datetime.date() === datetime.daysInMonth();
-    const childeStyle = {
-      display: 'inline-block',
-      lineHeight: '1.15',
-      position: 'absolute',
-      bottom: '2px',
-      backgroundColor: '#fff',
+    const date = schedulerData.localeMoment(item.time);
+    const month = date.format('MM');
+    let day = '\u00A0';
+    let weekday = '\u00A0';
+    const childStyle = {
+      color: 'rgb(153, 153, 153)',
     };
 
-    isCurrentDate = datetime.isSame(new Date(), 'day');
-    childeStyle.fontSize = '0px';
+    const isEndOfMonth = date.format('D') === moment(date).endOf('month').format('D');
 
-    style.border = 'none';
-    style.position = 'relative';
-    if (isCurrentDate) {
-      style.backgroundColor = '#66b4ee';
-      childeStyle.fontSize = '11px';
-      childeStyle.left = '0';
-      childeStyle.bottom = '28px';
-    }
-    if (isFriday) {
-      style.borderRight = '1px dashed #E0E0E0';
-      childeStyle.fontSize = '11px';
-      childeStyle.right = '0';
-      if (datetime.date() === datetime.daysInMonth() - 1 || datetime.date() === datetime.daysInMonth() - 2) {
-        style.borderRight = '1px solid #828282';
-      }
-    }
+    if (isEndOfMonth) style.borderRight = '1px solid #828282';
+
+    const isMonday = date.isoWeekday() === 1;
+    const isFriday = date.isoWeekday() === 5;
 
     if (isMonday) {
-      childeStyle.fontSize = '11px';
-      childeStyle.left = '0';
+      day = date.format('D');
+      weekday = date.format('dd');
+    }
+    if (isFriday) {
+      day = date.format('D');
+      weekday = date.format('dd');
     }
 
-    if (isLastDay) {
-      style.borderRight = '1px solid #828282';
-    }
-
-    const className = `header3-text ${datetime.format('MMMM').toLowerCase()}`;
     return (
-      <th key={item.time} className={className} style={style}>
-        <b key={datetime} style={childeStyle}>{datetime.format('ddd, DD/MM')}</b>
+      <th key={item.time} className="header3-text" style={style}>
+        <b key={date} style={childStyle}>
+          {month}
+          <br />
+          {day}
+          <br />
+          {weekday}
+        </b>
       </th>
     );
   }
 
-  eventItemTemplateResolver = (schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight) => {
-    const borderColor = tinycolor(bgColor).darken(5);
-    const backgroundColor = bgColor;
-    const titleText = schedulerData.behaviors.getEventTextFunc(schedulerData, event);
-    const divStyle = {
-      border: `2px solid ${borderColor}`,
-      borderRadius: '4px',
-      backgroundColor,
-      height: mustBeHeight,
-      width: 'calc(100% + 4px)',
-      transform: 'translateX(-2px)',
-    };
-    if (event.type === 2) { divStyle.height = '100%'; }
-    const className = event.type === 2 ? 'vacation' : 'normal';
+  eventItemTemplateResolver = (schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight, agendaMaxEventWidth) => {
+    const borderWidth = '0';
+    let borderColor = 'rgba(0,139,236,1)';
+    let backgroundColor = '#80C5F6';
+    let titleText = schedulerData.behaviors.getEventTextFunc(schedulerData, event);
 
+    if (event.type === 1) {
+      borderColor = 'rgba(0,139,236,1)';
+      backgroundColor = '#80C5F6';
+    }
+    if (event.type === 2) {
+      titleText = '';
+      borderColor = '#999';
+      backgroundColor = '#D9D9D9';
+    }
+
+    let divStyle = { borderLeft: `${borderWidth}px solid ${borderColor}`, backgroundColor, height: mustBeHeight };
+    if (agendaMaxEventWidth) {
+      divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };
+    }
     return (
-      <div key={event.id} className={`${mustAddCssClass} ${className}`} style={divStyle}>
-        <span style={{ lineHeight: `${mustBeHeight}px` }}>{titleText}</span>
+      <div key={event.id} className={mustAddCssClass} style={divStyle}>
+        <span style={{ marginLeft: '4px', lineHeight: `${mustBeHeight}px` }}>{titleText}</span>
       </div>
     );
   }
@@ -368,68 +336,34 @@ class ProjectsDistribution extends React.Component {
     }
   }
 
-  eventItemPopoverTemplateResolver = (schedulerData, eventItem, title, note, start, end) => (
+  eventItemPopoverTemplateResolver = (schedulerData, event) => (
     <>
       <h3 className="popover-event-title">
-        <div className="circular empty label ui" style={{ background: `${eventItem.bgColor} none repeat scroll 0% 0%` }} />
-        {title}
+        <div className="circular empty label ui" style={{ background: `${event.bgColor} none repeat scroll 0% 0%` }} />
+        {event.title}
       </h3>
-      <h4>{note}</h4>
-      <h5>{`${start.format('DD/MM/YYYY')} - ${end.format('DD/MM/YYYY')}`}</h5>
+      <h4>{event.note}</h4>
+      <h5>{`${moment(event.start).formatDate()} - ${moment(event.end).formatDate()}`}</h5>
       <div className="event-buttons">
-        <div className="event-delete" onClick={() => this.destroyEvent(eventItem)}>
+        <div className="event-delete" onClick={() => this.destroyEvent(event)}>
           {I18n.t('common.destroy')}
         </div>
-        <div className="event-edit" onClick={() => this.modal.showEditEvent(eventItem)}>
+        <div className="event-edit" onClick={() => this.modal.showEditEvent(event)}>
           {I18n.t('common.edit')}
         </div>
       </div>
     </>
   );
 
-  schedulerHeader() {
-    const { viewModel } = this.state;
-    const firstMonth = moment(viewModel.startDate).format('MMMM');
-    const secondMonth = moment(viewModel.startDate).add(1, 'M').format('MMMM');
-    const thirdMonth = moment(viewModel.startDate).add(2, 'M').format('MMMM');
-    const firstMonthSelector = $('.scheduler-bg-table').first().children('thead').find(`.${firstMonth.toLowerCase()}`);
-    const secondMonthSelector = $('.scheduler-bg-table').first().children('thead').find(`.${secondMonth.toLowerCase()}`);
-    const thirdMonthSelector = $('.scheduler-bg-table').first().children('thead').find(`.${thirdMonth.toLowerCase()}`);
-    const firstMonthWidth = (firstMonthSelector.length) * firstMonthSelector.first().outerWidth();
-    const secondMonthWidth = (secondMonthSelector.length) * secondMonthSelector.first().outerWidth();
-    const thirdMonthWidth = (thirdMonthSelector.length) * thirdMonthSelector.first().outerWidth();
-    const resourceWidth = $('.resource-table').first().width();
-    const totalWidth = resourceWidth + firstMonthWidth + secondMonthWidth + thirdMonthWidth;
-    const firstMonthPercentageWidth = `${(firstMonthWidth / totalWidth) * 100}%`;
-    const secondMonthPercentageWidth = `${(secondMonthWidth / totalWidth) * 100}%`;
-    const thirdMonthPercentageWidth = `${(thirdMonthWidth / totalWidth) * 100}%`;
-    const resourcePercentageWidth = `${(resourceWidth / totalWidth) * 100}%`;
-
+  leftCustomHeader() {
     return (
-      <div className="scheduler-header">
-        <div className="add-resource" style={{ width: resourcePercentageWidth }}>
-          <ModalButton
-            btnClass="btn btn-success bt-submit"
-            onClick={this.onAddResourceClick}
-            id="resourceModal"
-            content={I18n.t('apps.projects_distribution.add_resource')}
-          />
-        </div>
-        <div style={{ width: firstMonthPercentageWidth }}>
-          <div className="chevron-left">
-            <i className="fa fa-chevron-left" onClick={this.prevClick} />
-          </div>
-          {firstMonth}
-        </div>
-        <div style={{ width: secondMonthPercentageWidth }}>
-          {secondMonth}
-        </div>
-        <div style={{ width: thirdMonthPercentageWidth }}>
-          {thirdMonth}
-          <div className="chevron-right">
-            <i className="fa fa-chevron-right" onClick={this.nextClick} />
-          </div>
-        </div>
+      <div className="add-resource">
+        <ModalButton
+          btnClass="btn btn-success bt-submit"
+          onClick={this.onAddResourceClick}
+          id="resourceModal"
+          content={I18n.t('apps.projects_distribution.add_resource')}
+        />
       </div>
     );
   }
@@ -592,14 +526,13 @@ class ProjectsDistribution extends React.Component {
 
   render() {
     const {
-      assignedProjectIds, viewModel, users, resources, projects, schedulerHeader, selectedProjects, selectedUsers,
+      assignedProjectIds, viewModel, users, resources, projects, selectedProjects, selectedUsers,
     } = this.state;
     Loader.hideLoader();
     return (
       <>
         {viewModel ? (
           <div className="projects-distribution">
-            {schedulerHeader}
             <Scheduler
               schedulerData={viewModel}
               prevClick={this.prevClick}
@@ -607,15 +540,15 @@ class ProjectsDistribution extends React.Component {
               onSelectDate={this.onSelectDate}
               onViewChange={this.onViewChange}
               eventItemClick={this.eventClicked}
-              Footer={this.Footer}
               updateEventStart={this.updateEventStart}
               updateEventEnd={this.updateEventEnd}
               moveEvent={this.moveEvent}
               newEvent={this.newEvent}
               nonAgendaCellHeaderTemplateResolver={this.nonAgendaCellHeaderTemplateResolver}
-              eventItemTemplateResolver={this.eventItemTemplateResolver}
               slotClickedFunc={this.slotClickedFunc}
               eventItemPopoverTemplateResolver={this.eventItemPopoverTemplateResolver}
+              eventItemTemplateResolver={this.eventItemTemplateResolver}
+              leftCustomHeader={this.leftCustomHeader()}
             />
             <Footer
               projects={projects}
