@@ -86,7 +86,10 @@ RSpec.describe ExternalAuthStrategy::Jira do
       it 'returns nil' do
         url = "#{domain}/asd?a=3"
         issues_double = double('Issue')
-        allow(issues_double).to receive(:find).with('ASD').and_raise(JIRA::HTTPError, 'msg')
+        response = Net::HTTPSuccess.new(1.0, '200', 'OK')
+
+        expect(response).to receive(:body).and_return('{}')
+        allow(issues_double).to receive(:find).with('ASD').and_raise(JIRA::HTTPError, response)
         allow(jira_double).to receive(:Issue) { issues_double }
         strategy = described_class.new('domain' => domain)
         expect(strategy.integration_payload(url)).to be_nil
