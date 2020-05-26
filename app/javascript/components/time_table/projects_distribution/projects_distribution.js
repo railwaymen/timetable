@@ -305,12 +305,19 @@ class ProjectsDistribution extends React.Component {
     }
 
     let divStyle = { borderLeft: `${borderWidth}px solid ${borderColor}`, backgroundColor, height: mustBeHeight };
+    let note = '';
+
+    if (event.note && /^\d+$/.test(event.note[0])) {
+      note = event.note.substr(0, 5);
+    }
+
     if (agendaMaxEventWidth) {
       divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };
     }
+    const textDisplay = [note, titleText].join(' ');
     return (
       <div key={event.id} className={mustAddCssClass} style={divStyle}>
-        <span style={{ marginLeft: '4px', lineHeight: `${mustBeHeight}px` }}>{titleText}</span>
+        <span style={{ marginLeft: '4px', lineHeight: `${mustBeHeight}px` }}>{textDisplay}</span>
       </div>
     );
   }
