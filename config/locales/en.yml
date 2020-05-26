@@ -384,6 +384,9 @@ en:
           attributes:
             user_id:
               validates_uniqueness: There is already a record with the same user_id, starts_at and ends_at
+            vacation_days:
+              blank: Number of vacation days is required
+              not_a_number: Number of vacation days must be a number
         user:
           attributes:
             email:
