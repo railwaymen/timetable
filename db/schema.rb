@@ -108,22 +108,6 @@ ActiveRecord::Schema.define(version: 2020_05_22_082437) do
     t.index ["user_id"], name: "index_hardwares_on_user_id"
   end
 
-  create_table "milestones", force: :cascade do |t|
-    t.bigint "project_id"
-    t.string "name"
-    t.text "note"
-    t.boolean "closed", default: false, null: false
-    t.date "starts_on"
-    t.date "ends_on"
-    t.integer "estimate"
-    t.integer "position", null: false
-    t.jsonb "integration_payload", default: {}, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["position", "project_id"], name: "index_milestones_on_position_and_project_id", unique: true
-    t.index ["project_id"], name: "index_milestones_on_project_id"
-  end
-
   create_table "project_report_roles", force: :cascade do |t|
     t.bigint "project_report_id", null: false
     t.bigint "user_id", null: false
@@ -211,7 +195,6 @@ ActiveRecord::Schema.define(version: 2020_05_22_082437) do
     t.boolean "count_duration", default: true, null: false
     t.boolean "external_integration_enabled", default: false, null: false
     t.datetime "discarded_at"
-    t.jsonb "external_payload", default: {}, null: false
     t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["leader_id"], name: "index_projects_on_leader_id"
     t.index ["name"], name: "index_projects_on_name", unique: true
