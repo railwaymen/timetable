@@ -43,6 +43,10 @@ Rails.application.routes.draw do
       post :create_filling_gaps, on: :collection
     end
     resources :projects, only: %i[index show create update] do
+      resources :milestones do
+        post :import, on: :collection
+        get :import_status, on: :collection
+      end
       resources :project_reports, except: %i[delete] do
         get :roles, on: :collection
         put :generate, on: :member

@@ -40,7 +40,12 @@ pl:
       filter_active_label: Pokaż tylko
       work_times_allows_task: Zezwalaj na dodawanie urli do zadań
       external_integration_enabled: Integracja z JIRA
+      external_id: Zewnetrzne ID
       new: Nowy projekt
+    milestones:
+      add: Nowy etap
+      import_from_jira: Importuj z JIRA
+      import_in_progress: Trwa import z JIRA ...
     reports:
       new: Nowy Raport
       remove: Usuń Raport
@@ -321,9 +326,10 @@ pl:
     hardware: Mój sprzęt
     type: Typ
     labels: Etykiety
-    refreshed_at: Odświerzony
-    refresh_in_progress: Trwa odświerzanie
-    refresh_error: Wystąpił błąd podczas odświerzania
+    refreshed_at: Odświeżony
+    refresh_in_progress: Trwa odświeżanie
+    refresh_error: Wystąpił błąd podczas odświeżania
+    project_milestones: Etapy projektu
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -478,6 +484,12 @@ pl:
               only_done_allowed: Można użyć tylko zakończonych raportów
             name:
               blank: Nazwa jest wymagana
+        project:
+          attributes:
+            name:
+              blank: Nazwa jest wymagana
+            external_id:
+              blank: ID jest wymagane gdy właczona jest zewnętrzna integracja
         project_report:
           attributes:
             base:

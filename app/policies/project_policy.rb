@@ -12,6 +12,6 @@ class ProjectPolicy < ApplicationPolicy
   end
 
   def admin_params
-    %i[name color leader_id active work_times_allows_task external_integration_enabled]
+    %i[name color leader_id active work_times_allows_task external_integration_enabled external_id]
   end
 end

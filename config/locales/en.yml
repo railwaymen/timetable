@@ -40,7 +40,12 @@ en:
       filter_active_label: Show only
       work_times_allows_task: Allow for adding task urls
       external_integration_enabled: JIRA integration
+      external_id: External ID
       new: New Project
+    milestones:
+      add: New Milestone
+      import_from_jira: Import from JIRA
+      import_in_progress: Import from JIRA in progress ...
     reports:
       new: New Report
       remove: Remove Report
@@ -324,6 +329,7 @@ en:
     refreshed_at: Refreshed
     refresh_in_progress: Refresh in progress
     refresh_error: An error occurred while refreshing
+    project_milestones: Project milestones
   activerecord:
     errors:
       models:
@@ -427,6 +433,12 @@ en:
               only_done_allowed: Only done reports are allowed
             name:
               blank: Name is required
+        project:
+          attributes:
+            name:
+              blank: Name is required
+            external_id:
+              blank: ID is required when external integration is enabled
         project_report:
           attributes:
             base:

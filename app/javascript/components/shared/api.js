@@ -40,16 +40,17 @@ export const makePostRequest = (params) => fetch(params.url, {
     'Content-Type': 'application/json',
   },
   credentials: 'same-origin',
-}).then((response) => (
-  response.json().then((data) => {
+}).then((response) => {
+  if (response.status === 204) return '';
+  return response.json().then((data) => {
     if (response.status >= 400 && response.status < 500) {
       return Promise.reject(data);
     }
     return {
       data,
     };
-  })
-));
+  });
+});
 
 export const makeGetRequest = (data) => fetch(data.url, {
   headers: {

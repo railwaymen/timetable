@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class CheckJobExist
-  def initialize(worker, args)
+  def initialize(worker)
     @worker = worker
-    @args = args.stringify_keys
   end
 
   def call
@@ -31,6 +30,6 @@ class CheckJobExist
   end
 
   def job
-    @job ||= jobs.find { |q| q['worker'] == @worker.to_s && JSON.parse(q['args']).first == @args && q['status'] != 'complete' }
+    @job ||= jobs.find { |q| q['worker'] == @worker.to_s && q['status'] != 'complete' }
   end
 end

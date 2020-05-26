@@ -19,5 +19,10 @@ FactoryBot.define do
     trait :discarded do
       discarded_at { Time.zone.now }
     end
+
+    trait :external_integration_enabled do
+      external_integration_enabled { true }
+      external_id { 1 }
+    end
   end
 end

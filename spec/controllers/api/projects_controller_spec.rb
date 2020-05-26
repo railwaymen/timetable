@@ -10,7 +10,7 @@ RSpec.describe Api::ProjectsController do
   let(:tags_list) { WorkTime.tags.keys }
 
   def full_project_response(project)
-    project.attributes.slice('id', 'name', 'work_times_allows_task', 'external_integration_enabled', 'color', 'leader_id').merge(active: project.kept?)
+    project.attributes.slice('id', 'name', 'work_times_allows_task', 'external_integration_enabled', 'color', 'leader_id').merge(active: project.kept?, external_id: project.external_id)
   end
 
   describe '#index' do
@@ -242,6 +242,7 @@ RSpec.describe Api::ProjectsController do
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
+        external_id: project.external_id,
         color: project.color,
         active: project.kept?,
         leader_id: project.leader_id,
@@ -268,6 +269,7 @@ RSpec.describe Api::ProjectsController do
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
+        external_id: project.external_id,
         color: project.color,
         active: project.kept?,
         leader_id: project.leader_id
@@ -288,6 +290,7 @@ RSpec.describe Api::ProjectsController do
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
+        external_id: project.external_id,
         color: project.color,
         active: project.kept?,
         leader_id: project.leader_id
@@ -364,22 +367,24 @@ RSpec.describe Api::ProjectsController do
     it 'updates project as admin' do
       sign_in(admin)
       project = create(:project)
-      put :update, params: { id: project.id, project: { name: project_name, work_times_allows_task: true, external_integration_enabled: true } }, format: :json
+      put :update, params: { id: project.id, project: { name: project_name, work_times_allows_task: true, external_id: '11', external_integration_enabled: true } }, format: :json
       expect(response.code).to eql('204')
       expect(project.reload.name).to eql(project_name)
       expect(project.work_times_allows_task).to eql(true)
       expect(project.external_integration_enabled).to eql(true)
+      expect(project.external_id).to eql('11')
       expect(response.body).to eq('')
     end
 
     it 'updates project as manager' do
       sign_in(manager)
       project = create(:project)
-      put :update, params: { id: project.id, project: { name: project_name, work_times_allows_task: true, external_integration_enabled: true } }, format: :json
+      put :update, params: { id: project.id, project: { name: project_name, work_times_allows_task: true, external_id: '11', external_integration_enabled: true } }, format: :json
       expect(response.code).to eql('204')
       expect(project.reload.name).to eql(project_name)
       expect(project.work_times_allows_task).to eql(true)
       expect(project.external_integration_enabled).to eql(true)
+      expect(project.external_id).to eql('11')
       expect(response.body).to eq('')
     end
   end
