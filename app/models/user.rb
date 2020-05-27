@@ -29,6 +29,7 @@ class User < ApplicationRecord
 
   validates :first_name, :last_name, presence: true
   validates :phone, format: { with: PHONE_REGEX }
+  enum department: { 'dev': 'dev', 'qa': 'qa', 'pm': 'pm', 'ux': 'ux', 'other': 'other' }
 
   def self.with_next_and_previous_user_id
     from(%(

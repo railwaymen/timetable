@@ -6,7 +6,7 @@ RSpec.describe Api::CombinedReportsController do
   let(:project) { create(:project) }
   let(:project_report) { create(:project_report, state: :done, project: project) }
   let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
+  let(:admin) { create(:user, :admin) }
 
   def combined_report_response(combined_report)
     combined_report.attributes

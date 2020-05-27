@@ -11,13 +11,13 @@ RSpec.describe Api::UsersController do
   let(:email) { "#{SecureRandom.hex}@example.com" }
 
   def user_response(user)
-    user.attributes.slice('id', 'email', 'first_name', 'last_name', 'lang')
+    user.attributes.slice('id', 'email', 'first_name', 'last_name', 'lang', 'department')
         .merge(active: user.kept?, name: user.name, accounting_name: user.accounting_name,
                position_list: user.tags.pluck(:name))
   end
 
   def user_response_for_admin(user)
-    user_response(user).merge(phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
+    user_response(user).merge(department: user.department, phone: user.phone, contract_name: user.contract_name, birthdate: user.birthdate)
   end
 
   describe '#index' do
@@ -33,7 +33,7 @@ RSpec.describe Api::UsersController do
     end
 
     it 'returns users' do
-      manager = create(:manager, contract_name: 'AX1')
+      manager = create(:user, :manager, contract_name: 'AX1')
       user = create(:user, contract_name: 'ZX1')
       sign_in(manager)
       get :index, as: :json
@@ -129,10 +129,13 @@ RSpec.describe Api::UsersController do
 
     it 'creates user as admin' do
       sign_in(admin)
-      user_params = { first_name: first_name, last_name: last_name, email: email, position_list: ['Junior'] }
+      user_params = { first_name: first_name, last_name: last_name, email: email, position_list: ['Junior'], department: :dev }
       post :create, params: { user: user_params }, as: :json
       expect(response.code).to eql('201')
       user = User.find_by email: email
+      expect(user.first_name).to eql(first_name)
+      expect(user.last_name).to eql(last_name)
+      expect(user.department).to eql('dev')
       expect(response.body).to be_json_eql(user.to_json)
     end
   end

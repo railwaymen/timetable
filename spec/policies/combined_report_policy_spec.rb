@@ -6,8 +6,8 @@ RSpec.describe CombinedReportPolicy, type: :policy do
   subject { described_class }
 
   let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
-  let(:manager) { create(:manager) }
+  let(:admin) { create(:user, :admin) }
+  let(:manager) { create(:user, :manager) }
 
   permissions '.scope' do
     context 'admin user' do

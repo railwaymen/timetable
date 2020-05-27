@@ -125,6 +125,7 @@ en:
       birthday: Birthday
       new: New account
       position: Position
+      department: Department
     external_auths:
       authorized: External authorizations
       generate_link: Generate link
@@ -145,6 +146,12 @@ en:
       ux: User Experience
       pm: Project Management
       ignored: Ignored
+    department:
+      dev: Dev
+      qa: QA
+      ux: UX
+      pm: PM
+      other: Other
     vacations:
       vacation_description: Reason for the vacation
       status:

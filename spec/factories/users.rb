@@ -6,6 +6,7 @@ FactoryBot.define do
     sequence(:last_name) { |n| "Smith #{n}" }
     sequence(:email) { |n| "test#{n}@example.com" }
     sequence(:password) { |n| "password#{n}" }
+    department { 'dev' }
 
     trait :admin do
       admin { true }
@@ -26,26 +27,5 @@ FactoryBot.define do
     trait :discarded do
       discarded_at { Time.zone.now }
     end
-  end
-
-  factory :admin, class: User do
-    first_name { 'Admin' }
-    last_name { 'Admin' }
-    sequence(:email) { |n| "admin#{n}@example.com" }
-    admin { true }
-  end
-
-  factory :manager, class: User do
-    first_name { 'Manager' }
-    last_name { 'Manager' }
-    sequence(:email) { |n| "manager#{n}@example.com" }
-    manager { true }
-  end
-
-  factory :staff_manager, class: User do
-    first_name { 'Staff' }
-    last_name { 'Manager' }
-    sequence(:email) { |n| "staffmanager#{n}@example.com" }
-    staff_manager { true }
   end
 end
