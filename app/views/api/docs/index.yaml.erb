@@ -772,6 +772,18 @@ paths:
           description:
         404:
           description:
+        422:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                example:
+                  errors:
+                    starts_at:
+                      - error: too_old
 components:
   schemas:
     AccountingPeriod:
