@@ -16,7 +16,7 @@ function User(props) {
       <td>{user.email}</td>
       <td>{user.contract_name}</td>
       <td>{user.phone}</td>
-      <td>{user.department}</td>
+      <td>{I18n.t(user.department, { scope: 'apps.department' })}</td>
       <td>
         <div className="btn-group">
           <NavLink className="btn btn-outline-secondary" to={`/timesheet?user_id=${user.id}`}>
