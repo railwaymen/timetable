@@ -8,11 +8,11 @@ import * as Api from '../../shared/api';
 function Vacations() {
   const [vacationsInfo, setVacationsInfo] = useState({ vacations: [], availableVacationDays: 0, usedVacationDays: {} });
   const [selectedYear, setSelectedYear] = useState(parseInt(moment().year(), 10));
-  const [selectedUser, setSelectedUser] = useState(window.currentUser.id.toString());
+  const [selectedUser, setSelectedUser] = useState(window.currentUser);
 
   function getVacations() {
     let url = `/api/vacations?year=${selectedYear}`;
-    if (window.currentUser.staff_manager) { url += `&user_id=${selectedUser}`; }
+    if (window.currentUser.staff_manager) { url += `&user_id=${selectedUser.id}`; }
     Api.makeGetRequest({ url })
       .then((response) => {
         const vacationsInfoResponse = {

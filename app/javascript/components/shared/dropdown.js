@@ -85,7 +85,7 @@ class Dropdown extends React.Component {
 
   renderDropdownList() {
     return (
-      <div style={{ marginTop: '15px' }}>
+      <div>
         <DropdownList
           objects={this.state.filteredObjects}
           currentObject={this.props.selectedObject}
