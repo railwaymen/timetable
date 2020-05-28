@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_13_084902) do
+ActiveRecord::Schema.define(version: 2020_05_26_135551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -258,6 +258,7 @@ ActiveRecord::Schema.define(version: 2020_05_13_084902) do
     t.date "birthdate"
     t.datetime "discarded_at"
     t.boolean "hardware_manager", default: false, null: false
+    t.string "department", null: false
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -320,7 +321,7 @@ ActiveRecord::Schema.define(version: 2020_05_13_084902) do
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "contract_name"
+    t.string "_contract_name"
     t.integer "creator_id", null: false
     t.boolean "updated_by_admin", default: false, null: false
     t.string "task"
@@ -328,6 +329,7 @@ ActiveRecord::Schema.define(version: 2020_05_13_084902) do
     t.string "tag", default: "dev", null: false
     t.integer "vacation_id"
     t.datetime "discarded_at"
+    t.date "date", null: false
     t.index ["discarded_at"], name: "index_work_times_on_discarded_at"
   end
 

@@ -24,10 +24,6 @@ RSpec.describe Api::WorkTimesController, type: :controller do
                                work_times_allows_task: work_time.project.work_times_allows_task })
   end
 
-  def full_work_time_response(work_time)
-    work_time_response(work_time).merge(versions: []).merge(sum_duration: work_time.duration)
-  end
-
   describe '#index' do
     it 'authenticates user' do
       get :index, format: :json
@@ -146,7 +142,26 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       work_time = create(:work_time, user: user)
       get :show, params: { id: work_time.id }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql(full_work_time_response(work_time).to_json)
+      expect(response.body).to be_json_eql(work_time_response(work_time).merge(sum_duration: work_time.duration, versions: []).to_json)
+    end
+
+    it 'returns work time versions' do
+      sign_in(user)
+
+      PaperTrail.enabled = true
+      PaperTrail.request(whodunnit: admin.id) do
+        work_time = create(:work_time, user: user)
+        version1 = work_time_response(work_time).merge(updated_by_admin: false, event: :create, created_at: work_time.created_at,
+                                                       updated_by: admin.accounting_name,
+                                                       changeset: %i[id user_id project_id starts_at ends_at duration body created_at updated_at creator_id date])
+        work_time.update! body: 'New body'
+        version2 = work_time_response(work_time).merge(updated_by_admin: false, event: :update, created_at: work_time.created_at, updated_by: admin.accounting_name, changeset: %i[body updated_at])
+
+        get :show, params: { id: work_time.id }, format: :json
+        expect(response.code).to eql('200')
+        expect(response.body).to be_json_eql(work_time_response(work_time).merge(sum_duration: work_time.duration, versions: [version1, version2]).to_json)
+      end
+      PaperTrail.enabled = false
     end
   end
 

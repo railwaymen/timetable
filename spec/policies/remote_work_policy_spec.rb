@@ -7,7 +7,7 @@ RSpec.describe RemoteWorkPolicy, type: :policy do
 
   permissions '.scope' do
     let(:user) { create(:user) }
-    let(:admin) { create(:admin) }
+    let(:admin) { create(:user, :admin) }
 
     context 'admin user' do
       it "checks admin's scope" do

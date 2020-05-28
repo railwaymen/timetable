@@ -128,6 +128,7 @@ class Entry extends React.Component {
           newState.project_id = this.lastProject.id;
         }
         if (!this.state.project.lunch) this.lastProject = this.state.project;
+        newState.errors = {};
         this.setState(newState);
       }).catch((e) => {
         this.setState({ errors: translateErrors('work_time', e.errors) });

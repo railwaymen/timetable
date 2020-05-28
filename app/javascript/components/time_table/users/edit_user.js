@@ -12,7 +12,7 @@ import UserFields from './user_fields';
 function EditUser(props) {
   const userId = parseInt(props.match.params.id, 10);
 
-  const [user, setUser, onChange] = useFormHandler({ position_list: [] });
+  const [user, setUser, onChange] = useFormHandler({ department: 'dev', position_list: [] });
   const [errors, setErrors] = useState({});
   const [redirectToReferer, setRedirectToReferer] = useState();
 

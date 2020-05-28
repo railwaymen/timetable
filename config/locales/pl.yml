@@ -101,6 +101,7 @@ pl:
       unsaved_changes: Masz niezapisane zmiany!
       history:
         date: Data
+        when: Kiedy
         who: Kto
         project: Projekt
         from: Od
@@ -124,6 +125,7 @@ pl:
       birthday: Urodziny
       new: Nowe konto
       position: Pozycja
+      department: Dział
     external_auths:
       authorized: Zewnętrzne autoryzacje
       generate_link: Wygeneruj link
@@ -144,6 +146,12 @@ pl:
       ux: User Experience
       pm: Project Management
       ignored: Ignored
+    department:
+      dev: Dev
+      qa: QA
+      ux: UX
+      pm: PM
+      other: Inny
     vacations:
       vacation_description: Powód urlopu
       status:

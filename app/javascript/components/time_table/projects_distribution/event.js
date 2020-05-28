@@ -103,6 +103,8 @@ class Event extends React.Component {
       selectedProject: projects[0],
       startsAt,
       endsAt,
+      resizable: true,
+      note: '',
     });
   }
 

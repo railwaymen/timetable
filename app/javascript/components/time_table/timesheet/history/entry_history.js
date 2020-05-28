@@ -282,6 +282,11 @@ class EntryHistory extends React.Component {
     });
   }
 
+  changedClassName(version, fieldName) {
+    if (version.event === 'update' && version.changeset.includes(fieldName)) return 'changed';
+    return '';
+  }
+
   decreaseWorkHours(seconds) {
     const time = moment.duration(this.state.total, 'hh:mm').subtract(seconds, 'seconds').asMinutes();
     let hours = Math.floor(time / 60);
@@ -405,43 +410,44 @@ class EntryHistory extends React.Component {
           <td>{moment(version.created_at).format('YYYY-MM-DD HH:mm')}</td>
           <td>{version.updated_by}</td>
           <td>
-            { version.hasOwnProperty('project_name')
-              ? (
-                <span className={(version.event === 'update' ? 'changed' : '')}>
-                  {version.project_name}
-                </span>
-              )
-              : <span>{version.project_name_was}</span> }
+            <span className={this.changedClassName(version, 'project_id')}>
+              {version.project.name}
+            </span>
           </td>
           <td>
-            { version.hasOwnProperty('body')
-              ? <span className={(version.event === 'update' ? 'changed' : '')}>{(version.body || '').replace(/\n/g, '<br />')}</span>
-              : <span>{(version.body_was || '').replace(/\n/g, '<br />')}</span> }
+            <span className={this.changedClassName(version, 'body')}>
+              {(version.body || '').replace(/\n/g, '<br />')}
+            </span>
           </td>
           <td>
-            { version.hasOwnProperty('task_preview')
-              ? <span className={(version.event === 'update' ? 'changed' : '')}>{version.task_preview}</span>
-              : <span>{version.task_preview_was}</span> }
+            <span className={this.changedClassName(version, 'task')}>
+              {version.task_preview}
+            </span>
           </td>
           <td>
-            { version.hasOwnProperty('tag')
-              ? <span className={(version.event === 'update' ? 'changed' : '')}>{this.translateTag(version.tag)}</span>
-              : <span>{this.translateTag(version.tag_was)}</span> }
+            <span className={this.changedClassName(version, 'tag')}>
+              {version.tag}
+            </span>
           </td>
           <td>
-            { version.hasOwnProperty('starts_at')
-              ? <span className={(version.event === 'update' ? 'changed' : '')}>{moment(version.starts_at).format('HH:mm')}</span>
-              : <span>{moment(version.starts_at_was).format('HH:mm')}</span> }
+            <span className={(version.event === 'update' && version.changeset.includes('starts_at') && !version.changeset.includes('date')) ? 'changed' : ''}>
+              {moment(version.starts_at).format('HH:mm')}
+            </span>
           </td>
           <td>
-            { version.hasOwnProperty('ends_at')
-              ? <span className={(version.event === 'update' ? 'changed' : '')}>{moment(version.ends_at).format('HH:mm')}</span>
-              : <span>{moment(version.ends_at_was).format('HH:mm')}</span> }
+            <span className={(version.event === 'update' && version.changeset.includes('ends_at') && !version.changeset.includes('date')) ? 'changed' : ''}>
+              {moment(version.ends_at).format('HH:mm')}
+            </span>
           </td>
           <td>
-            { version.hasOwnProperty('duration')
-              ? <span className={(version.event === 'update' ? 'changed' : '')}>{this.formattedDuration(version.duration)}</span>
-              : <span>{this.formattedDuration(version.duration_was)}</span> }
+            <span className={this.changedClassName(version, 'date')}>
+              {moment(version.date).formatDate()}
+            </span>
+          </td>
+          <td>
+            <span className={this.changedClassName(version, 'duration')}>
+              {this.formattedDuration(version.duration)}
+            </span>
           </td>
         </tr>
       ))
@@ -589,7 +595,7 @@ class EntryHistory extends React.Component {
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>{I18n.t('apps.timesheet.history.date')}</th>
+                    <th>{I18n.t('apps.timesheet.history.when')}</th>
                     <th>{I18n.t('apps.timesheet.history.who')}</th>
                     <th>{I18n.t('apps.timesheet.history.project')}</th>
                     <th>{I18n.t('apps.timesheet.history.task')}</th>
@@ -597,6 +603,7 @@ class EntryHistory extends React.Component {
                     <th>{I18n.t('apps.timesheet.history.tag')}</th>
                     <th>{I18n.t('apps.timesheet.history.from')}</th>
                     <th>{I18n.t('apps.timesheet.history.to')}</th>
+                    <th>{I18n.t('apps.timesheet.history.date')}</th>
                     <th>{I18n.t('apps.timesheet.history.duration')}</th>
                   </tr>
                 </thead>

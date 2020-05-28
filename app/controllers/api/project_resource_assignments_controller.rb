@@ -12,7 +12,7 @@ module Api
                        ProjectResource.kept.pluck(:id)
                      end
 
-      @project_resource_assignments = ProjectResourceAssignment.kept.where(project_resource_id: resource_ids.flatten).order(:starts_at)
+      @project_resource_assignments = ProjectResourceAssignment.kept.where(project_resource_id: resource_ids.flatten).order(id: :asc)
       @project_resource_assignments.where!(project_id: params[:selected_projects].split(',')) if params[:selected_projects].present?
       respond_with @project_resource_assignments
     end

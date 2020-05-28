@@ -125,6 +125,17 @@ function AdminFields(props) {
       </div>
 
       <div className="form-group">
+        <label htmlFor="department">{I18n.t('apps.users.department')}</label>
+        <select id="department" className="form-control" name="department" onChange={onChange} value={user.department}>
+          <option value="dev">{I18n.t('apps.department.dev')}</option>
+          <option value="qa">{I18n.t('apps.department.qa')}</option>
+          <option value="ux">{I18n.t('apps.department.ux')}</option>
+          <option value="pm">{I18n.t('apps.department.pm')}</option>
+          <option value="other">{I18n.t('apps.department.other')}</option>
+        </select>
+      </div>
+
+      <div className="form-group">
         <Autocomplete
           inputProps={{ className: 'form-control', placeholder: I18n.t('apps.users.position') }}
           wrapperStyle={{ width: '100%' }}

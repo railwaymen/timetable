@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::RemoteWorksController do
   let(:user) { create(:user) }
-  let(:admin) { create(:admin) }
+  let(:admin) { create(:user, :admin) }
   let(:starts_at) do
     Time.zone.today.workday? ? Time.zone.now.beginning_of_day + 9.hours : 1.business_day.from_now.beginning_of_day + 9.hours
   end

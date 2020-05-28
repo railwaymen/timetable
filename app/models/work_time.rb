@@ -3,14 +3,14 @@
 class WorkTime < ApplicationRecord
   include Discard::Model
 
-  has_paper_trail skip: %i[contract_name updated_by_admin]
+  has_paper_trail
   belongs_to :project
   belongs_to :user
   belongs_to :creator, class_name: 'User'
   belongs_to :vacation
 
   before_validation :assign_duration
-  before_save :delete_spaces
+  before_save :delete_spaces, :assign_date
 
   enum tag: {
     'dev': 'dev',
@@ -31,6 +31,10 @@ class WorkTime < ApplicationRecord
 
   def delete_spaces
     self.task = task.strip if task
+  end
+
+  def assign_date
+    self.date = starts_at.to_date
   end
 
   def project_zero?
