@@ -32,6 +32,7 @@ import RemoteWork from './time_table/remote_work/remote_work';
 import HardwareList from './time_table/hardware/hardware_list';
 import Milestones from './time_table/milestones/milestones';
 import EditMilestone from './time_table/milestones/edit_milestone';
+import MilestoneEstimates from './time_table/milestones/milestone_estimates';
 
 class TimeTable extends React.Component {
   constructor(props) {
@@ -59,6 +60,7 @@ class TimeTable extends React.Component {
             <Route path="/projects/:projectId/milestones" exact component={Milestones} />
             <Route path="/projects/:projectId/milestones/new" exact component={EditMilestone} />
             <Route path="/projects/:projectId/milestones/:id/edit" exact component={EditMilestone} />
+            <Route path="/projects/:projectId/milestones/:id/estimates" exact component={MilestoneEstimates} />
             <Route path="/projects/:projectId/reports" component={ProjectReports} />
             <Route path="/projects/:projectId/new_report" component={NewReport} />
             <Route path="/projects/:projectId/edit_report/:reportId" component={EditReport} />

@@ -46,6 +46,7 @@ Rails.application.routes.draw do
       resources :milestones do
         post :import, on: :collection
         get :import_status, on: :collection
+        resources :estimates, only: [:index], controller: :milestone_estimates
       end
       resources :project_reports, except: %i[delete] do
         get :roles, on: :collection

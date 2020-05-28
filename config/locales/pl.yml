@@ -46,6 +46,9 @@ pl:
       add: Nowy etap
       import_from_jira: Importuj z JIRA
       import_in_progress: Trwa import z JIRA ...
+      estimate: Estymata
+      change: Zmiana
+      estimate_change_note: Notatka do zmiany estymaty
     reports:
       new: Nowy Raport
       remove: Usuń Raport
@@ -241,6 +244,7 @@ pl:
         update_assignment: '{{user}} zaktualizował zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
         delete_assignment: '{{user}} usunął zasób {{resource}} przypisany do projektu {{project}} od {{start}} do {{end}}'
   common:
+    back: Wróć
     expand: "Rozwiń"
     lock: "Zablokuj"
     unlock: "Odblokuj"

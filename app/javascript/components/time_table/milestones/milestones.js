@@ -69,7 +69,7 @@ function Milestones() {
               <th>{I18n.t('common.name')}</th>
               <th>{I18n.t('common.from')}</th>
               <th>{I18n.t('common.to')}</th>
-              <th />
+              <th>{I18n.t('apps.milestones.estimate')}</th>
               <th />
             </tr>
           </thead>

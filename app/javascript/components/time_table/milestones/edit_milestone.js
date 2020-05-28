@@ -93,8 +93,7 @@ const EditMilestone = () => {
   function getMilestone() {
     makeGetRequest({ url: `/api/projects/${projectId}/milestones/${id}` })
       .then((response) => {
-        // console.log(calculateEstimateFieldsIntoHoursAndMinutes(response.data))
-        setMilestone({ ...response.data, ...calculateEditableHours(response.data) });
+        setMilestone({ ...response.data, ...calculateEditableHours(response.data), isExternal: response.data.external_id != null });
       });
   }
 
@@ -122,21 +121,8 @@ const EditMilestone = () => {
   const totalEstimate = editableEstimateTypes.map((type) => parseInt(milestone[`${type}_estimate`], 10))
     .reduce((a, b) => a + b) + parseInt(milestone.external_estimate, 10);
 
-  // console.log(editableEstimateTypes.map((type) => milestone[`${type}_estimate_hours`]))
-
-  // const totalEstimate = editableEstimateTypes.map((type) => parseInt(milestone[`${type}_estimate`], 10))
-  //   .reduce((a, b) => a + b) + parseInt(milestone.external_estimate_hours, 10);
-
-  // const totalEstimateHours = editableEstimateTypes.map((type) => parseInt(milestone[`${type}_estimate_hours`], 10))
-  //   .reduce((a, b) => a + b) + parseInt(milestone.external_estimate_hours, 10);
-
-  // const totalEstimateMinutes = editableEstimateTypes.map((type) => parseInt(milestone[`${type}_estimate_minutes`], 10))
-  //   .reduce((a, b) => a + b) + parseInt(milestone.external_estimate_minutes, 10);
-
-  // console.log(milestone)
-
   useEffect(() => {
-    getMilestone();
+    if (id) getMilestone();
   }, []);
 
   return (
@@ -147,6 +133,7 @@ const EditMilestone = () => {
             type="text"
             className="form-control"
             name="name"
+            disabled={milestone.isExternal}
             placeholder={I18n.t('common.name')}
             onChange={onChange}
             value={milestone.name || ''}
@@ -158,6 +145,7 @@ const EditMilestone = () => {
             <DatePicker
               {...defaultDatePickerProps}
               dateFormat="YYYY-MM-DD"
+              disabled={milestone.isExternal}
               className={`${errors.startsOn ? 'error' : ''} form-control`}
               selected={milestone.starts_on ? moment(milestone.starts_on, 'YYYY-MM-DD') : null}
               value={milestone.starts_on}
@@ -171,6 +159,7 @@ const EditMilestone = () => {
             <DatePicker
               {...defaultDatePickerProps}
               dateFormat="YYYY-MM-DD"
+              disabled={milestone.isExternal}
               className={`${errors.endsOn ? 'error' : ''} form-control`}
               selected={milestone.ends_on ? moment(milestone.ends_on, 'YYYY-MM-DD') : null}
               value={milestone.ends_on}
@@ -192,6 +181,16 @@ const EditMilestone = () => {
 
         <div className="form-group row">
           {renderEditableEstimates()}
+        </div>
+
+        <div className="form-group">
+          <textarea
+            className="form-control"
+            name="estimate_change_note"
+            placeholder={I18n.t('apps.milestones.estimate_change_note')}
+            onChange={onChange}
+            value={milestone.estimate_change_note || ''}
+          />
         </div>
 
         <div className="form-group row">

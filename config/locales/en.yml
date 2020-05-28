@@ -46,6 +46,9 @@ en:
       add: New Milestone
       import_from_jira: Import from JIRA
       import_in_progress: Import from JIRA in progress ...
+      estimate: Estimate
+      change: Change
+      estimate_change_note: Estimate change note
     reports:
       new: New Report
       remove: Remove Report
@@ -241,6 +244,7 @@ en:
         update_assignment: '{{user}} updated assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
         delete_assignment: '{{user}} deleted assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
   common:
+    back: Back
     expand: Expand
     lock: "Lock"
     unlock: "Unlock"
