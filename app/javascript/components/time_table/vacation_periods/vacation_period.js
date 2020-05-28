@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { preserveLines } from '../../shared/helpers';
 
-const VacationPeriod = (props) => {
+function VacationPeriod(props) {
   const { period, userName } = props;
+
   return (
     <tr>
       <td>{userName}</td>
@@ -26,6 +28,11 @@ const VacationPeriod = (props) => {
       </td>
     </tr>
   );
+}
+
+VacationPeriod.propTypes = {
+  period: PropTypes.object.isRequired,
+  userName: PropTypes.string.isRequired,
 };
 
 export default VacationPeriod;

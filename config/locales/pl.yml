@@ -442,6 +442,9 @@ pl:
           attributes:
             user_id:
               validates_uniqueness: Jest już rekord o tym samym user_id, starts_at i ends_at
+            vacation_days:
+              blank: Ilość dni urlopowych jest wymagana
+              not_a_number: Ilość dni urlopowych musi byc liczbą
         user:
           attributes:
             email:
