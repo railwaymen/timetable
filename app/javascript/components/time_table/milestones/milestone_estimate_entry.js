@@ -5,10 +5,10 @@ import { formattedDuration } from '../../shared/helpers';
 function MilestoneEstimateEntry(props) {
   const { estimate } = props;
 
-  function formatEstimateChange(estimate, diff) {
+  function formatEstimateChange(value, diff) {
     return (
       <span>
-        {formattedDuration(estimate)}
+        {formattedDuration(value)}
         {diff > 0 && (
           <span className="positive">
             +

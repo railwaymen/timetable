@@ -13,13 +13,5 @@ module Api
     def milestone
       @milestone ||= Milestone.find(params[:milestone_id])
     end
-
-    def project
-      @project ||= Project.find(params[:project_id])
-    end
-
-    def recounting
-      AccountingPeriodsManager.new(user_id: params[:user_id]).job_exist?
-    end
   end
 end

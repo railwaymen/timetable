@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import moment from 'moment';
-import DatePicker from 'react-datepicker';
-import { useParams, NavLink, useHistory } from 'react-router-dom';
-import useFormHandler from '@hooks/use_form_handler';
-import { defaultDatePickerProps } from '@components/shared/helpers';
-import ErrorTooltip from '@components/shared/error_tooltip';
-import translateErrors from '@components/shared/translate_errors';
-import { makeGetRequest, makePostRequest, makePutRequest } from '../../shared/api';
-import MilestoneEstimateEntry from './milestone_estimate_entry';
+import { useParams, NavLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { makeGetRequest } from '../../shared/api';
+import MilestoneEstimateEntry from './milestone_estimate_entry';
 
 const MilestoneEstimates = () => {
-  const history = useHistory();
   const { projectId, id } = useParams();
   const [estimates, setEstimates] = useState([]);
 
