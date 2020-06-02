@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_26_135551) do
+ActiveRecord::Schema.define(version: 2020_06_02_132232) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -330,6 +330,7 @@ ActiveRecord::Schema.define(version: 2020_05_26_135551) do
     t.integer "vacation_id"
     t.datetime "discarded_at"
     t.date "date", null: false
+    t.string "department", null: false
     t.index ["discarded_at"], name: "index_work_times_on_discarded_at"
   end
 

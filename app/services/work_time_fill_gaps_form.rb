@@ -27,6 +27,7 @@ class WorkTimeFillGapsForm
   def save(additional_params = {})
     return false unless valid?
 
+    work_time.department = user.department
     @saved = WorkTime.transaction { create_filler_work_times(additional_params) }
     if @saved.present? && external_payload
       work_time = @saved.first

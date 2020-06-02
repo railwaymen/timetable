@@ -28,6 +28,7 @@ class WorkTimeForm
     return false unless valid?
 
     work_time.integration_payload = external_payload
+    work_time.department = user.department
     work_time.body = work_time.external(:summary) if work_time.body.blank? && work_time.external(:summary).present?
     saved = work_time.save(additional_params)
     if saved
