@@ -107,14 +107,14 @@ export default class ProjectWorkTimes extends React.Component {
   }
 
   loadWeek(from) {
-    this.getWorkTimes({ from: from.format(), to: from.endOf('week').format(), user_id: this.state.user_id });
+    this.getWorkTimes({ from: from.format(), to: from.endOf('isoWeek').format(), user_id: this.state.user_id });
   }
 
   parseRange() {
     const url = URI(window.location.href);
     const queries = url.search(true);
-    const from = (queries.from ? moment(queries.from) : moment().startOf('week')).format();
-    const to = (queries.to ? moment(queries.to) : moment().endOf('week')).format();
+    const from = (queries.from ? moment(queries.from) : moment().startOf('isoWeek')).format();
+    const to = (queries.to ? moment(queries.to) : moment().endOf('isoWeek')).format();
     const { user_id } = queries;
     return { from, to, user_id };
   }
@@ -132,11 +132,25 @@ export default class ProjectWorkTimes extends React.Component {
         </Helmet>
         <header className="page-header projects-header text-center">
           <h1 className="project-title">
+            <span
+              className="badge badge-secondary project-badge"
+              style={{
+                backgroundColor: `#${project.color}`,
+              }}
+            />
             {project.name}
             {currentUser.isSuperUser() && (
-              <Link to={`/projects/${projectId}/reports`} className="btn btn-success">
-                Reports
-              </Link>
+              <>
+                <Link to={`/projects/${projectId}/reports`} className="btn btn-success">
+                  {I18n.t('common.reports')}
+                </Link>
+                <Link to={`/projects/${projectId}/milestone_reports`} className="btn btn-success">
+                  {I18n.t('common.milestone_reports')}
+                </Link>
+                <Link to={`/projects/${projectId}/milestones`} className="btn btn-success">
+                  {I18n.t('common.project_milestones')}
+                </Link>
+              </>
             )}
           </h1>
           <HorizontalArrows className="row mx-0" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>

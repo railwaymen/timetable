@@ -3,7 +3,7 @@
 module Api
   class MilestonesController < Api::BaseController
     def index
-      @milestones = project.milestones.kept.order(:position)
+      @milestones = project.milestones.kept.order(:starts_on)
       authorize @milestones
       respond_with @milestones
     end
@@ -15,7 +15,7 @@ module Api
     end
 
     def create
-      @milestone = project.milestones.create(milestone_params.merge(position: next_position))
+      @milestone = project.milestones.create(milestone_params)
       authorize @milestone
       respond_with @milestone
     end
@@ -27,22 +27,37 @@ module Api
       respond_with @milestone
     end
 
+    def work_times
+      authorize Milestone
+      milestone = project.milestones.find_by(id: params[:milestone_id]) || project.current_milestone
+
+      from_date = params[:from].presence || milestone.starts_on
+      to_date = params[:to].presence || milestone.ends_on
+
+      work_times_query = project.work_times.kept.where('starts_at >= ?', from_date).order(:starts_at)
+      work_times_query.where!('ends_at <= ?', to_date) if to_date
+
+      @work_times = WorkTimePolicy::Scope.new(current_user, work_times_query)
+                                         .resolve
+                                         .includes(:user)
+      respond_with @work_times
+    end
+
     def import
+      authorize Milestone
       ImportJiraMilestonesWorker.perform_async(project.id, current_user.id)
     end
 
     def import_status
+      authorize Milestone
       render json: { complete: !CheckJobExist.new(ImportJiraMilestonesWorker).call }
     end
 
     private
 
-    def next_position
-      (project.milestones.maximum(:position) || 0) + 1
-    end
-
     def milestone_params
-      params.permit(:name, :starts_on, :ends_on, :note, :dev_estimate, :qa_estimate, :ux_estimate, :pm_estimate, :other_estimate, :estimate_change_note)
+      params.permit(:name, :starts_on, :ends_on, :note, :closed,
+                    :dev_estimate, :qa_estimate, :ux_estimate, :pm_estimate, :other_estimate, :estimate_change_note)
     end
 
     def project

@@ -9,7 +9,5 @@ json.body sanitize(work_time.body)
 json.task sanitize(work_time.task)
 json.tag work_time.tag
 json.task_preview sanitize(task_preview_helper(work_time.task))
-json.user do
-  json.extract! work_time.user, :id, :first_name, :last_name
-end
+json.user_name work_time.user.name
 json.date work_time.starts_at.to_date

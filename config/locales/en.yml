@@ -49,6 +49,17 @@ en:
       estimate: Estimate
       change: Change
       estimate_change_note: Estimate change note
+      milestone_closed: Milestone closed
+    milestone_reports:
+      current_milestone: Current milestone
+      by_user: By users
+      by_type: By type
+      type:
+        progress: Time progress
+        tag_breakdown: Time type
+      range_type:
+        show_milestone: Show milestone
+        date_range: Dates range
     reports:
       new: New Report
       remove: Remove Report
@@ -334,6 +345,7 @@ en:
     refresh_in_progress: Refresh in progress
     refresh_error: An error occurred while refreshing
     project_milestones: Project milestones
+    milestone_reports: Milestone reports
   activerecord:
     errors:
       models:

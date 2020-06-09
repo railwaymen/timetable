@@ -201,6 +201,12 @@ ol.projects .dl-horizontal {
   float: none;
 }
 
+.badge.project-badge {
+  display: inline;
+  width: 10px;
+  margin-right: 5px;
+}
+
 #milestone-estimates {
   span.positive {
     color: green;

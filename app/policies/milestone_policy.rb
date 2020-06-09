@@ -8,4 +8,7 @@ class MilestonePolicy < ApplicationPolicy
   alias index? create?
   alias show? create?
   alias update? create?
+  alias import? create?
+  alias import_status? create?
+  alias work_times? create?
 end

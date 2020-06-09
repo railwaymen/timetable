@@ -8,12 +8,20 @@ import { makeGetRequest, makePostRequest } from '../../shared/api';
 function Milestones() {
   const { projectId } = useParams();
   const [milestones, setMilestones] = useState([]);
+  const [project, setProject] = useState({});
   const [recounting, setRecounting] = useState(null);
 
   function getMilestones() {
     makeGetRequest({ url: `/api/projects/${projectId}/milestones` })
       .then((response) => {
         setMilestones(response.data);
+      });
+  }
+
+  function getProject() {
+    makeGetRequest({ url: `/api/projects/${projectId}` })
+      .then((response) => {
+        setProject(response.data);
       });
   }
 
@@ -37,6 +45,7 @@ function Milestones() {
 
   useEffect(() => {
     getMilestones();
+    getProject();
   }, []);
 
   function renderImportButton() {
@@ -55,7 +64,18 @@ function Milestones() {
         <title>{I18n.t('common.project_milesontes')}</title>
       </Helmet>
       <div className="row mb-3">
-        <div className="col-md-12 text-right">
+        <div className="col-md-8">
+          <h1 className="project-title">
+            <span
+              className="badge badge-secondary project-badge"
+              style={{
+                backgroundColor: `#${project.color}`,
+              }}
+            />
+            {project.name}
+          </h1>
+        </div>
+        <div className="col-md-4 text-right">
           {renderImportButton()}
           <NavLink to={`/projects/${projectId}/milestones/new`} className="btn btn-secondary">{I18n.t('apps.milestones.add')}</NavLink>
         </div>
@@ -69,6 +89,7 @@ function Milestones() {
               <th>{I18n.t('common.name')}</th>
               <th>{I18n.t('common.from')}</th>
               <th>{I18n.t('common.to')}</th>
+              <th>{I18n.t('common.state')}</th>
               <th>{I18n.t('apps.milestones.estimate')}</th>
               <th />
             </tr>

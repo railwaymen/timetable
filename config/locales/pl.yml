@@ -49,6 +49,17 @@ pl:
       estimate: Estymata
       change: Zmiana
       estimate_change_note: Notatka do zmiany estymaty
+      milestone_closed: Etap zamkniety
+    milestone_reports:
+      current_milestone: Obecny etap
+      by_users: Według osób
+      by_type: Według typu
+      type:
+        progress: Postęp czasu
+        tag_breakdown: Rodzaj czasu
+      range_type:
+        show_milestone: Pokaż etap
+        date_range: Zakres dat
     reports:
       new: Nowy Raport
       remove: Usuń Raport
@@ -334,6 +345,7 @@ pl:
     refresh_in_progress: Trwa odświeżanie
     refresh_error: Wystąpił błąd podczas odświeżania
     project_milestones: Etapy projektu
+    milestone_reports: Raporty etapów
   errors:
     format: "%{attribute} %{message}"
     messages:

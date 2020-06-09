@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { displayDayInfo, displayDuration } from '../../shared/helpers';
 import WorkTimeDuration from '../../shared/work_time_duration';
 import WorkTimeTime from '../../shared/work_time_time';
-import WorkTimeTimeDescription from '../../shared/work_time_description';
+import WorkTimeDescription from '../../shared/work_time_description';
 
 function ProjectWorkTimeEntry(props) {
   const { dayKey, groupedWorkTimes } = props;
@@ -24,11 +24,14 @@ function ProjectWorkTimeEntry(props) {
                   key={workTime.id}
                 >
                   <div className="col-md-2 project-container">
-                    {`${workTime.user.first_name} ${workTime.user.last_name}`}
+                    {workTime.user_name}
+                  </div>
+                  <div className="col-md-1">
+                    <a href={workTime.task} target="_blank" rel="noopener noreferrer">{workTime.task_preview}</a>
                   </div>
                   <div className="col-md-4 description-container" style={{ cursor: 'inherit' }}>
                     <span className="description-text">
-                      {WorkTimeTimeDescription(workTime)}
+                      {WorkTimeDescription(workTime)}
                     </span>
                   </div>
                   {workTime.tag && (

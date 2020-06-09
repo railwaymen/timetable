@@ -17,4 +17,8 @@ class Milestone < ApplicationRecord
   def any_estimate_changed?
     [dev_estimate_changed?, qa_estimate_changed?, ux_estimate_changed?, pm_estimate_changed?, other_estimate_changed?].any?
   end
+
+  def opened?
+    !closed?
+  end
 end

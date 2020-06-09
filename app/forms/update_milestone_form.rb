@@ -4,8 +4,8 @@ class UpdateMilestoneForm
   ESTIAMTE_FIELDS = %i[dev_estimate qa_estimate ux_estimate pm_estimate other_estimate].freeze
   include ActiveModel::Model
 
-  attr_accessor :milestone, :name, :estimate_change_note, :starts_on, :ends_on, :note, :dev_estimate, :qa_estimate, :ux_estimate,
-                :pm_estimate, :other_estimate
+  attr_accessor :milestone, :name, :closed, :estimate_change_note, :starts_on, :ends_on, :note,
+                :dev_estimate, :qa_estimate, :ux_estimate, :pm_estimate, :other_estimate
 
   def initialize(attributes = {})
     super
@@ -13,7 +13,8 @@ class UpdateMilestoneForm
   end
 
   def save
-    milestone.assign_attributes(@attributes.slice(:name, :starts_on, :ends_on, :note, :dev_estimate, :qa_estimate, :ux_estimate, :pm_estimate, :other_estimate))
+    milestone.assign_attributes(@attributes.slice(:name, :starts_on, :ends_on, :note, :closed,
+                                                  :dev_estimate, :qa_estimate, :ux_estimate, :pm_estimate, :other_estimate))
     return if milestone.invalid?
 
     build_estimate if milestone.any_estimate_changed?

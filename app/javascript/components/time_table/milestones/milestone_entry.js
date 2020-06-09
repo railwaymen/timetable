@@ -19,6 +19,10 @@ function MilestoneEntry(props) {
         {milestone.ends_on && moment(milestone.ends_on).formatDate()}
       </td>
       <td>
+        {(milestone.closed && <i className="fa fa-check-circle" />)}
+        {(milestone.current && <i className="fa fa-hourglass-half" />)}
+      </td>
+      <td>
         {formattedDuration(milestone.total_estimate)}
       </td>
       <td>

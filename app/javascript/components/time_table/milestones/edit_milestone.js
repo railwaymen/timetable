@@ -168,6 +168,12 @@ const EditMilestone = () => {
               onChange={(date) => onDateChange(date.format('YYYY-MM-DD'), 'ends_on')}
             />
           </div>
+          <div className="col form-check">
+            <input className="form-check-input" type="checkbox" name="closed" value={milestone.closed} onChange={onChange} id="milestone-closed" />
+            <label className="form-check-label" htmlFor="milestone-closed">
+              {I18n.t('apps.milestones.milestone_closed')}
+            </label>
+          </div>
         </div>
         <div className="form-group">
           <textarea

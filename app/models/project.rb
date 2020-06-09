@@ -44,6 +44,10 @@ class Project < ApplicationRecord
     name == 'ZKS'
   end
 
+  def current_milestone
+    milestones.select(&:opened?).select(&:starts_on).min_by(&:starts_on)
+  end
+
   def change_events_color_and_name
     assignments.update_all(color: "##{color}", title: name) if assignments.any?
   end

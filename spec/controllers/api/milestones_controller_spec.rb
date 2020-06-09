@@ -7,8 +7,9 @@ RSpec.describe Api::MilestonesController do
   let(:admin) { create(:user, :admin) }
 
   def milestone_response(milestone)
-    milestone.slice('id', 'external_id', 'name', 'starts_on', 'ends_on', 'position', 'project_id', 'dev_estimate',
+    milestone.slice('id', 'external_id', 'name', 'starts_on', 'ends_on', 'project_id', 'dev_estimate', 'closed',
                     'qa_estimate', 'ux_estimate', 'pm_estimate', 'other_estimate', 'external_estimate', 'total_estimate')
+             .merge(current: milestone == milestone.project.current_milestone)
   end
 
   describe '#index' do
@@ -95,6 +96,31 @@ RSpec.describe Api::MilestonesController do
       expect(estimate.total_estimate_diff).to eql(17)
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql(milestone_response(milestone).to_json)
+    end
+  end
+
+  describe '#work_times' do
+    it 'authenticates user' do
+      get :work_times, params: { project_id: 1 }, format: :json
+      expect(response.code).to eql('401')
+    end
+
+    it 'returns report data' do
+      sign_in(admin)
+      milestone = create(:milestone, starts_on: 5.days.ago, ends_on: 5.days.from_now)
+      work_time = create(:work_time, project: milestone.project)
+      work_time_response = work_time.slice(:id, :starts_at, :ends_at, :duration, :tag, :date, :department)
+                                    .merge({
+                                             body: work_time.body,
+                                             task: work_time.task,
+                                             task_preview: work_time.task,
+                                             user_name: work_time.user.name,
+                                             external_id: work_time.external('task_id')
+                                           })
+
+      get :work_times, params: { project_id: milestone.project_id, milestone_id: milestone.id }, format: :json
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql([work_time_response].to_json)
     end
   end
 

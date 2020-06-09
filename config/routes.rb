@@ -44,6 +44,7 @@ Rails.application.routes.draw do
     end
     resources :projects, only: %i[index show create update] do
       resources :milestones do
+        get :work_times, on: :collection
         post :import, on: :collection
         get :import_status, on: :collection
         resources :estimates, only: [:index], controller: :milestone_estimates
