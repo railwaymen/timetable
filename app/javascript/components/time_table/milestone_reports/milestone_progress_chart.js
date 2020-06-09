@@ -33,7 +33,6 @@ function MilestoneProgressChart(props) {
         datasets: [{ data, fill: false, borderColor: 'rgb(0, 123, 255)' }, { data: estimateData, pointRadius: 0, fill: false }],
         labels,
       };
-
       chart.update();
     }
   }

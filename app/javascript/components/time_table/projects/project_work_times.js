@@ -8,8 +8,8 @@ import * as Api from '../../shared/api';
 import HorizontalArrows from '../../shared/horizontal_arrows';
 import DateRangeFilter from '../../shared/date_range_filter';
 import ReportProjectRecord from '../reports/report_project_record';
+import WorkTimesReportTable from '../../shared/work_times_report_table';
 import ReportProjectTagRecord from '../reports/report_project_tag_record';
-import ProjectWorkTimeEntry from './project_work_time_entry';
 import Preloader from '../../shared/preloader';
 
 export default class ProjectWorkTimes extends React.Component {
@@ -25,7 +25,7 @@ export default class ProjectWorkTimes extends React.Component {
         leader_id: '',
       },
       projectId: parseInt(this.props.match.params.id, 10),
-      groupedWorkTimes: {},
+      work_times: [],
       reports: [],
       tag_reports: [],
       sync: false,
@@ -60,11 +60,8 @@ export default class ProjectWorkTimes extends React.Component {
         const {
           project, work_times, reports, tag_reports,
         } = response.data;
-        const groupedWorkTimes = _.groupBy(work_times, (workTime) => (
-          moment(workTime.starts_at).format('YYYYMMDD')
-        ));
         this.setState({
-          project, reports, tag_reports, groupedWorkTimes, from, to, user_id, sync: false,
+          project, reports, tag_reports, work_times, from, to, user_id, sync: false,
         }, stateCallback);
       });
   }
@@ -121,9 +118,8 @@ export default class ProjectWorkTimes extends React.Component {
 
   render() {
     const {
-      groupedWorkTimes, from, to, project, reports, tag_reports, user_id, sync, projectId,
+      work_times, from, to, project, reports, tag_reports, user_id, sync, projectId,
     } = this.state;
-    const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
 
     return (
       <div className="content-wrapper box">
@@ -173,13 +169,9 @@ export default class ProjectWorkTimes extends React.Component {
         <div className="row row-eq-height">
           {sync && <Preloader rowsNumber={1} />}
           <div className="col-md-8">
-            {dayKeys.map((dayKey) => (
-              <ProjectWorkTimeEntry
-                key={dayKey}
-                dayKey={dayKey}
-                groupedWorkTimes={groupedWorkTimes}
-              />
-            ))}
+            <WorkTimesReportTable
+              workTimes={work_times}
+            />
           </div>
           <div className="col-md-4">
             <div className="sticky-record">

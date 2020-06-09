@@ -5,7 +5,7 @@ import usePrevious from '@hooks/use_previous';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import ProjectWorkTimeEntry from '../projects/project_work_time_entry';
+import WorkTimesReportTable from '../../shared/work_times_report_table';
 import { makeGetRequest } from '../../shared/api';
 import { defaultDatePickerProps } from '../../shared/helpers';
 import MilestonePieChart from './milestone_pie_chart';
@@ -56,21 +56,19 @@ function MilestoneReports() {
       });
   }
 
-  function getProject() {
-    makeGetRequest({ url: `/api/projects/${projectId}` })
-      .then((response) => {
-        setProject(response.data);
-      });
-  }
+  function getInitialData() {
+    const projectPromise = makeGetRequest({ url: `/api/projects/${projectId}` });
+    const milestonesPromise = makeGetRequest({ url: `/api/projects/${projectId}/milestones?only_visible=true` });
 
-  function getMilestones() {
-    makeGetRequest({ url: `/api/projects/${projectId}/milestones?only_visible=true` })
-      .then((response) => {
-        const currentMilestone = response.data.find((m) => m.current);
-        setMilestones(response.data);
-        setSelectedMilestone(currentMilestone);
-        setSelectedMilestoneId(currentMilestone.id);
-      });
+    return Promise.all([projectPromise, milestonesPromise]).then((values) => {
+      const [projectResponse, milestonesResponse] = values;
+      const currentMilestone = milestonesResponse.data.find((m) => m.current);
+
+      setProject(projectResponse.data);
+      setMilestones(milestonesResponse.data);
+      setSelectedMilestone(currentMilestone);
+      setSelectedMilestoneId(currentMilestone.id);
+    });
   }
 
   function onMilestoneChange(event) {
@@ -94,9 +92,7 @@ function MilestoneReports() {
   }
 
   useEffect(() => {
-    getWorkTimes();
-    getProject();
-    getMilestones();
+    getInitialData().then(getWorkTimes);
   }, []);
 
   useEffect(() => {
@@ -147,12 +143,6 @@ function MilestoneReports() {
       </div>
     );
   }
-
-  const groupedWorkTimes = _.groupBy(reportData.workTimes, (workTime) => (
-    moment(workTime.starts_at).format('YYYYMMDD')
-  ));
-
-  const dayKeys = Object.keys(groupedWorkTimes).sort((l, r) => r.localeCompare(l));
 
   return (
     <div>
@@ -208,13 +198,11 @@ function MilestoneReports() {
               workTimes={reportData.workTimes}
             />
           )}
-          {dayKeys.map((dayKey) => (
-            <ProjectWorkTimeEntry
-              key={dayKey}
-              dayKey={dayKey}
-              groupedWorkTimes={groupedWorkTimes}
+          <div className="mt-2">
+            <WorkTimesReportTable
+              workTimes={reportData.workTimes.reverse()}
             />
-          ))}
+          </div>
         </div>
         <div className="col-md-4">
           <div className="sticky-record">
