@@ -12,7 +12,7 @@ function Milestones() {
   const [recounting, setRecounting] = useState(null);
 
   function getMilestones() {
-    makeGetRequest({ url: `/api/projects/${projectId}/milestones` })
+    makeGetRequest({ url: `/api/projects/${projectId}/milestones?with_estimates=true` })
       .then((response) => {
         setMilestones(response.data);
       });
@@ -37,11 +37,11 @@ function Milestones() {
       url: `/api/projects/${projectId}/milestones/import_status`,
     }).then((response) => {
       setRecounting(!response.data.complete);
-      if (response.data.complete) getMilestones();
+      if (recounting === true && response.data.complete) getMilestones();
     });
   }
 
-  useInterval(getImportState, (recounting === null || recounting === true) ? 1000 : null);
+  useInterval(getImportState, (project.external_integration_enabled === true && (recounting === null || recounting === true)) ? 1000 : null);
 
   useEffect(() => {
     getMilestones();
@@ -49,6 +49,13 @@ function Milestones() {
   }, []);
 
   function renderImportButton() {
+    if (project.external_integration_enabled === false) {
+      return (
+        <button type="button" disabled="disabled" className="btn btn-secondary" title={I18n.t('apps.milestones.jira_not_available')}>
+          {I18n.t('apps.milestones.import_from_jira')}
+        </button>
+      );
+    }
     if (recounting === null) {
       return <button type="button" disabled="disabled" className="btn btn-secondary">{I18n.t('apps.milestones.import_from_jira')}</button>;
     }
@@ -61,7 +68,9 @@ function Milestones() {
   return (
     <div>
       <Helmet>
-        <title>{I18n.t('common.project_milesontes')}</title>
+        <title>
+          {[project.name, I18n.t('common.project_milestones')].join(' - ')}
+        </title>
       </Helmet>
       <div className="row mb-3">
         <div className="col-md-8">

@@ -28,6 +28,7 @@ function MilestoneReports() {
   const [toDate, setToDate] = useState(moment().endOf('isoWeek').formatDate());
   const [selectedMilestone, setSelectedMilestone] = useState(null);
   const prevSelectedMilestoneId = usePrevious(selectedMilestoneId);
+  const prevRangeType = usePrevious(rangeType);
 
   function getWorkTimes() {
     const params = rangeType === 'customDates' ? `?from=${fromDate}&to=${toDate}` : `?milestone_id=${selectedMilestoneId}`;
@@ -63,7 +64,7 @@ function MilestoneReports() {
   }
 
   function getMilestones() {
-    makeGetRequest({ url: `/api/projects/${projectId}/milestones` })
+    makeGetRequest({ url: `/api/projects/${projectId}/milestones?only_visible=true` })
       .then((response) => {
         const currentMilestone = response.data.find((m) => m.current);
         setMilestones(response.data);
@@ -103,7 +104,7 @@ function MilestoneReports() {
   }, [selectedMilestoneId]);
 
   useEffect(() => {
-    getWorkTimes();
+    if (prevRangeType) getWorkTimes();
   }, [rangeType, fromDate, toDate]);
 
   function renderDatesRange() {
@@ -156,7 +157,9 @@ function MilestoneReports() {
   return (
     <div>
       <Helmet>
-        <title>{I18n.t('common.project_milesontes')}</title>
+        <title>
+          {[project.name, I18n.t('common.milestone_reports')].join(' - ')}
+        </title>
       </Helmet>
       <div className="row mb-3">
         <div className="col-md-8">

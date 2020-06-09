@@ -48,8 +48,11 @@ en:
       import_in_progress: Import from JIRA in progress ...
       estimate: Estimate
       change: Change
+      date_overlaps: Miestone dates overlaps with other
       estimate_change_note: Estimate change note
       milestone_closed: Milestone closed
+      visible_on_reports: Visible on reports
+      jira_not_available: JIRA integrations is disabled for this project
     milestone_reports:
       current_milestone: Current milestone
       by_user: By users
@@ -416,6 +419,12 @@ en:
             vacation_days:
               blank: Number of vacation days is required
               not_a_number: Number of vacation days must be a number
+        milestone:
+          attributes:
+            starts_on:
+              blank: Is required for milestone to be visible on reports
+            name:
+              blank: Is required
         user:
           attributes:
             email:

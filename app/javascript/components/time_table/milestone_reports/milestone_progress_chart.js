@@ -30,7 +30,7 @@ function MilestoneProgressChart(props) {
       });
 
       chart.config.data = {
-        datasets: [{ data, fill: false, borderColor: 'rgb(0, 123, 255)' }, { data: estimateData, fill: false }],
+        datasets: [{ data, fill: false, borderColor: 'rgb(0, 123, 255)' }, { data: estimateData, pointRadius: 0, fill: false }],
         labels,
       };
 

@@ -7,9 +7,9 @@ RSpec.describe Api::MilestonesController do
   let(:admin) { create(:user, :admin) }
 
   def milestone_response(milestone)
-    milestone.slice('id', 'external_id', 'name', 'starts_on', 'ends_on', 'project_id', 'dev_estimate', 'closed',
+    milestone.slice('id', 'external_id', 'name', 'starts_on', 'ends_on', 'project_id', 'dev_estimate', 'closed', 'visible_on_reports',
                     'qa_estimate', 'ux_estimate', 'pm_estimate', 'other_estimate', 'external_estimate', 'total_estimate')
-             .merge(current: milestone == milestone.project.current_milestone)
+             .merge(current: milestone == milestone.project.current_milestone, date_overlaps: milestone.overlaps_with_other?)
   end
 
   describe '#index' do
@@ -18,10 +18,20 @@ RSpec.describe Api::MilestonesController do
       expect(response.code).to eql('401')
     end
 
-    it 'returns milestones' do
+    it 'returns milestones with estimates' do
       sign_in(admin)
-      milestone = create(:milestone)
-      get :index, params: { project_id: milestone.project_id }, format: :json
+      milestone = create(:milestone, starts_on: 5.days.ago, ends_on: 5.days.from_now)
+      work_time = create(:work_time, project: milestone.project)
+      get :index, params: { project_id: milestone.project_id, with_estimates: true }, format: :json
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql([milestone_response(milestone).merge(work_times_duration: work_time.duration)].to_json)
+    end
+
+    it 'returns milestones visible for reports' do
+      sign_in(admin)
+      milestone = create(:milestone, visible_on_reports: true, starts_on: 5.days.ago, ends_on: 5.days.from_now)
+      create(:milestone, project: milestone.project, starts_on: 10.days.ago, ends_on: 10.days.from_now)
+      get :index, params: { project_id: milestone.project_id, only_visible: true }, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql([milestone_response(milestone)].to_json)
     end

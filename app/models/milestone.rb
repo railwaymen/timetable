@@ -7,6 +7,7 @@ class Milestone < ApplicationRecord
   belongs_to :project
 
   validates :name, presence: true
+  validates :starts_on, presence: true, if: :visible_on_reports?
 
   before_save :calculate_total_estimate
 
@@ -20,5 +21,12 @@ class Milestone < ApplicationRecord
 
   def opened?
     !closed?
+  end
+
+  def overlaps_with_other?
+    project.milestones.reject { |m| m.id == id }.any? do |milestone|
+      (starts_on && ends_on && milestone.starts_on && milestone.ends_on && (starts_on..ends_on).cover?(milestone.starts_on..milestone.ends_on)) ||
+        (starts_on && ends_on && milestone.starts_on && (starts_on..ends_on).cover?(milestone.starts_on))
+    end
   end
 end

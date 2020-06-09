@@ -3,8 +3,9 @@
 module Api
   class MilestonesController < Api::BaseController
     def index
-      @milestones = project.milestones.kept.order(:starts_on)
-      authorize @milestones
+      @milestones = MilestonesQuery.new(project: project, params: params).results
+
+      authorize Milestone
       respond_with @milestones
     end
 
@@ -34,8 +35,8 @@ module Api
       from_date = params[:from].presence || milestone.starts_on
       to_date = params[:to].presence || milestone.ends_on
 
-      work_times_query = project.work_times.kept.where('starts_at >= ?', from_date).order(:starts_at)
-      work_times_query.where!('ends_at <= ?', to_date) if to_date
+      work_times_query = project.work_times.kept.where('date >= ?', from_date).order(:starts_at)
+      work_times_query.where!('date <= ?', to_date) if to_date
 
       @work_times = WorkTimePolicy::Scope.new(current_user, work_times_query)
                                          .resolve
@@ -56,7 +57,7 @@ module Api
     private
 
     def milestone_params
-      params.permit(:name, :starts_on, :ends_on, :note, :closed,
+      params.permit(:name, :starts_on, :ends_on, :note, :closed, :visible_on_reports,
                     :dev_estimate, :qa_estimate, :ux_estimate, :pm_estimate, :other_estimate, :estimate_change_note)
     end
 

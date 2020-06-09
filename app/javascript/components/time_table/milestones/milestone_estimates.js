@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, NavLink } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
 import { makeGetRequest } from '../../shared/api';
 import MilestoneEstimateEntry from './milestone_estimate_entry';
 
@@ -21,10 +20,6 @@ const MilestoneEstimates = () => {
 
   return (
     <div>
-      <Helmet>
-        <title>{I18n.t('common.project_milesontes')}</title>
-      </Helmet>
-
       <div className="row">
         <table id="milestone-estimates" className="table">
           <thead>

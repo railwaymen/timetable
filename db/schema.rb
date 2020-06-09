@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_09_071858) do
+ActiveRecord::Schema.define(version: 2020_06_09_081808) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,6 +148,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_071858) do
     t.integer "pm_estimate", default: 0, null: false
     t.integer "external_estimate", default: 0, null: false
     t.integer "other_estimate", default: 0, null: false
+    t.boolean "visible_on_reports", default: false, null: false
     t.index ["discarded_at"], name: "index_milestones_on_discarded_at"
     t.index ["project_id"], name: "index_milestones_on_project_id"
   end

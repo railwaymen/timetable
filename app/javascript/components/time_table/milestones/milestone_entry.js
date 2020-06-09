@@ -6,6 +6,8 @@ import { formattedDuration } from '../../shared/helpers';
 
 function MilestoneEntry(props) {
   const { milestone } = props;
+  const estimatedValue = milestone.total_estimate ? milestone.total_estimate : 1;
+  const percentage = !milestone.work_times_duration ? 0 : (milestone.work_times_duration / estimatedValue) * 100;
 
   return (
     <tr>
@@ -17,13 +19,22 @@ function MilestoneEntry(props) {
       </td>
       <td>
         {milestone.ends_on && moment(milestone.ends_on).formatDate()}
+        {milestone.date_overlaps && (<i className="fa fa-exclamation-triangle text-warning ml-1" title={I18n.t('apps.milestones.date_overlaps')} />)}
       </td>
       <td>
-        {(milestone.closed && <i className="fa fa-check-circle" />)}
-        {(milestone.current && <i className="fa fa-hourglass-half" />)}
+        {(milestone.closed && <i className="fa fa-check-circle" title={I18n.t('apps.milestones.milestone_closed')} />)}
+        {(milestone.current && <i className="fa fa-hourglass-half" title={I18n.t('apps.milestone_reports.current_milestone')} />)}
       </td>
       <td>
-        {formattedDuration(milestone.total_estimate)}
+        <div className="row">
+          <div className="col-2">{formattedDuration(milestone.work_times_duration)}</div>
+          <div className="col-8">
+            <div className="progress">
+              <div className="progress-bar" role="progressbar" style={{ width: `${percentage}%` }} />
+            </div>
+          </div>
+          <div className="col-2">{formattedDuration(milestone.total_estimate)}</div>
+        </div>
       </td>
       <td>
         <div className="btn-group">

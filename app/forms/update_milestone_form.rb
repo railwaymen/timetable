@@ -5,7 +5,7 @@ class UpdateMilestoneForm
   include ActiveModel::Model
 
   attr_accessor :milestone, :name, :closed, :estimate_change_note, :starts_on, :ends_on, :note,
-                :dev_estimate, :qa_estimate, :ux_estimate, :pm_estimate, :other_estimate
+                :visible_on_reports, :dev_estimate, :qa_estimate, :ux_estimate, :pm_estimate, :other_estimate
 
   def initialize(attributes = {})
     super
@@ -13,7 +13,7 @@ class UpdateMilestoneForm
   end
 
   def save
-    milestone.assign_attributes(@attributes.slice(:name, :starts_on, :ends_on, :note, :closed,
+    milestone.assign_attributes(@attributes.slice(:name, :starts_on, :ends_on, :note, :closed, :visible_on_reports,
                                                   :dev_estimate, :qa_estimate, :ux_estimate, :pm_estimate, :other_estimate))
     return if milestone.invalid?
 

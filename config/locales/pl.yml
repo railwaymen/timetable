@@ -48,8 +48,11 @@ pl:
       import_in_progress: Trwa import z JIRA ...
       estimate: Estymata
       change: Zmiana
+      date_overlaps: Data etapu zachodzi na inne
       estimate_change_note: Notatka do zmiany estymaty
       milestone_closed: Etap zamkniety
+      visible_on_reports: Widoczny w raportach
+      jira_not_available: Integracja z JIRA jest wyłączona dla tego projektu
     milestone_reports:
       current_milestone: Obecny etap
       by_users: Według osób
@@ -467,6 +470,12 @@ pl:
             vacation_days:
               blank: Ilość dni urlopowych jest wymagana
               not_a_number: Ilość dni urlopowych musi byc liczbą
+        milestone:
+          attributes:
+            starts_on:
+              blank: Jest wymagane aby etap był widoczny w raportach
+            name:
+              blank: Jest wymagana
         user:
           attributes:
             email:

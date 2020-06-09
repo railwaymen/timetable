@@ -26,12 +26,15 @@ const EditMilestone = () => {
     other_estimate_hours: 0,
     external_estimate: 0,
     total_estimate: 0,
+    closed: false,
+    visible_on_reports: false,
   };
   const [milestone, setMilestone, onChange] = useFormHandler(milestoneDefaults);
   const [errors, setErrors] = useState({});
 
   function onDateChange(date, name) {
-    setMilestone({ ...milestone, [name]: date });
+    const value = date ? date.format('YYYY-MM-DD') : null;
+    setMilestone({ ...milestone, [name]: value });
   }
 
   function calculateHours(valueInSeconds) {
@@ -126,12 +129,13 @@ const EditMilestone = () => {
   }, []);
 
   return (
-    <div id="content" className="new-remote-work">
+    <div id="content">
       <form onSubmit={onSubmit}>
         <div className="form-group">
+          {errors.name && <div className="error-description">{errors.name.join(', ')}</div>}
           <input
             type="text"
-            className="form-control"
+            className={`${errors.name ? 'error' : ''} form-control`}
             name="name"
             disabled={milestone.isExternal}
             placeholder={I18n.t('common.name')}
@@ -139,7 +143,7 @@ const EditMilestone = () => {
             value={milestone.name || ''}
           />
         </div>
-        <div className="row calendar-row">
+        <div className="row">
           <div className="col form-group">
             {errors.startsOn && <ErrorTooltip errors={errors.startsOn} />}
             <DatePicker
@@ -151,7 +155,7 @@ const EditMilestone = () => {
               value={milestone.starts_on}
               name="starts_on"
               placeholderText={I18n.t('common.from')}
-              onChange={(date) => onDateChange(date.format('YYYY-MM-DD'), 'starts_on')}
+              onChange={(date) => onDateChange(date, 'starts_on')}
             />
           </div>
           <div className="col form-group">
@@ -165,11 +169,24 @@ const EditMilestone = () => {
               value={milestone.ends_on}
               name="ends_on"
               placeholderText={I18n.t('common.to')}
-              onChange={(date) => onDateChange(date.format('YYYY-MM-DD'), 'ends_on')}
+              onChange={(date) => onDateChange(date, 'ends_on')}
             />
           </div>
           <div className="col form-check">
-            <input className="form-check-input" type="checkbox" name="closed" value={milestone.closed} onChange={onChange} id="milestone-closed" />
+            <input
+              className="form-check-input"
+              type="checkbox"
+              name="visible_on_reports"
+              checked={milestone.visible_on_reports}
+              onChange={onChange}
+              id="visible_on_reports"
+            />
+            <label className="form-check-label" htmlFor="visible_on_reports">
+              {I18n.t('apps.milestones.visible_on_reports')}
+            </label>
+          </div>
+          <div className="col form-check">
+            <input className="form-check-input" type="checkbox" name="closed" checked={milestone.closed} onChange={onChange} id="milestone-closed" />
             <label className="form-check-label" htmlFor="milestone-closed">
               {I18n.t('apps.milestones.milestone_closed')}
             </label>
