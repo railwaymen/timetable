@@ -10,6 +10,7 @@ import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 import * as Validations from '../../shared/validations';
 import Description from './description_field';
+import Dropdown from '../../shared/dropdown';
 
 const defaultVacation = {
   startDate: moment().format('DD/MM/YYYY'),
@@ -103,24 +104,6 @@ function Entry(props) {
     }
   }
 
-  function UserFilter() {
-    const options = [];
-    users.forEach((user) => {
-      options.push(
-        <option key={user.id} value={user.id}>
-          {`${user.last_name} ${user.first_name}`}
-        </option>,
-      );
-    });
-    return (
-      <div className="user-filter">
-        <select className="form-control user-select-filter" value={selectedUser} onChange={(e) => setSelectedUser(e.target.value)}>
-          {options}
-        </select>
-      </div>
-    );
-  }
-
   function validate() {
     const newErrors = {
       description: (vacationType === 'others' ? Validations.presence(description) : undefined),
@@ -135,7 +118,7 @@ function Entry(props) {
   function onSubmit() {
     const newErrors = validate();
     if (!_.isEmpty(newErrors)) { return setErrors(newErrors); }
-    const userId = (window.currentUser.staff_manager) ? parseInt(selectedUser, 10) : URI(window.location.href).search(true).user_id || currentUser.id;
+    const userId = (window.currentUser.staff_manager) ? selectedUser.id : URI(window.location.href).search(true).user_id || currentUser.id;
     const entryData = {
       user_id: userId,
       start_date: startDate,
@@ -186,6 +169,35 @@ function Entry(props) {
     );
   }
 
+  function FilterUsers(filter) {
+    const lowerFilter = filter.toLowerCase();
+    return _.filter(users, (u) => (
+      u.active && (`${u.first_name} ${u.last_name}`.toLowerCase().match(lowerFilter) || `${u.last_name} ${u.first_name}`.toLowerCase().match(lowerFilter))
+    ));
+  }
+
+  function RenderSelectedUser(currentlySelectedUser) {
+    return (
+      <div>
+        <b>
+          {`${currentlySelectedUser.first_name} ${currentlySelectedUser.last_name}`}
+        </b>
+      </div>
+    );
+  }
+
+  function RenderUsersList(user, currentlySelectedUser) {
+    return (
+      <div>
+        {user.id === currentlySelectedUser.id ? (
+          <b>
+            {`${user.first_name} ${user.last_name}`}
+          </b>
+        ) : `${user.first_name} ${user.last_name}`}
+      </div>
+    );
+  }
+
   return (
     <div className="pb-3 mb-3 border-bottom w-100">
       <div className="row mx-0 vacation-date-range">
@@ -207,7 +219,16 @@ function Entry(props) {
       </div>
       <div className="row mx-0">
         { window.currentUser.staff_manager && users && (
-          <UserFilter />
+          <div className="user-filter">
+            <Dropdown
+              objects={users}
+              updateObject={(currentlySelectedUser) => setSelectedUser(currentlySelectedUser)}
+              selectedObject={selectedUser}
+              filterObjects={FilterUsers}
+              renderSelectedObject={RenderSelectedUser}
+              renderObjectsList={RenderUsersList}
+            />
+          </div>
         )}
         <div className="form-actions">
           <Submit />
@@ -218,7 +239,7 @@ function Entry(props) {
 }
 
 Entry.propTypes = {
-  selectedUser: PropTypes.string.isRequired,
+  selectedUser: PropTypes.object.isRequired,
   setSelectedUser: PropTypes.func.isRequired,
   getVacations: PropTypes.func.isRequired,
 };
