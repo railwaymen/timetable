@@ -57,6 +57,14 @@ module ExternalAuthStrategy
       client.delete(log.patched_url)
     end
 
+    def versions(project_id)
+      client.Project.find(project_id).versions
+    end
+
+    def version_issues(project_id, version_id)
+      client.Issue.jql("project = '#{project_id}' AND fixVersion = #{version_id}")
+    end
+
     def integration_payload(task)
       id = URI.parse(task).path.split('/').last.upcase
       issue = client.Issue.find(id)

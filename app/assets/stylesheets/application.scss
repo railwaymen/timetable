@@ -201,6 +201,23 @@ ol.projects .dl-horizontal {
   float: none;
 }
 
+.badge.project-badge {
+  display: inline;
+  width: 10px;
+  margin-right: 5px;
+}
+
+#milestone-estimates {
+  span.positive {
+    color: green;
+    margin-left: 2px;
+  }
+  span.negative {
+    color: red;
+    margin-left: 2px;
+  }
+}
+
 .birthday-templates {
   th:first-child {
     text-align: center;

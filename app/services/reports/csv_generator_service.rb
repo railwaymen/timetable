@@ -113,7 +113,7 @@ module Reports
         JOIN users u on w.user_id = u.id
         JOIN projects p on w.project_id = p.id
         WHERE w.discarded_at IS NULL AND #{by_what} = ? AND w.starts_at >= ? AND w.ends_at <= ? #{projects_access}
-        ORDER BY user_name, task
+        ORDER BY user_name, task, duration
       )
     end
     # rubocop:enable Metrics/MethodLength

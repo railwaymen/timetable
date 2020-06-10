@@ -3,6 +3,7 @@ import { NavLink, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import useFormHandler from '@hooks/use_form_handler';
 import Preloader from '../../shared/preloader';
+import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 
 function EditProject(props) {
@@ -12,6 +13,7 @@ function EditProject(props) {
     name: '',
     color: '0c0c0c',
     leader_id: '',
+    external_id: '',
     work_times_allows_task: true,
     external_integration_enabled: true,
     active: true,
@@ -44,11 +46,11 @@ function EditProject(props) {
     if (projectId) {
       Api.makePutRequest({ url: `/api/projects/${project.id}`, body: { project } })
         .then(() => setRedirectToReferer('/projects/list'))
-        .catch((results) => setErrors(results.errors));
+        .catch((results) => setErrors(translateErrors('project', results.errors)));
     } else {
       Api.makePostRequest({ url: '/api/projects', body: { project } })
         .then(() => setRedirectToReferer('/projects/list'))
-        .catch((results) => setErrors(results.errors));
+        .catch((results) => setErrors(translateErrors('project', results.errors)));
     }
   }
 
@@ -137,6 +139,19 @@ function EditProject(props) {
               />
             </label>
           </div>
+          {project.external_integration_enabled && (
+            <div className="form-group">
+              {errors.externalId && <div className="error-description">{errors.externalId.join(', ')}</div>}
+              <input
+                className={`${errors.externalId ? 'error' : ''} form-control`}
+                type="text"
+                name="external_id"
+                placeholder={I18n.t('apps.projects.external_id')}
+                onChange={onChange}
+                value={project.external_id}
+              />
+            </div>
+          )}
           <NavLink className="btn btn-secondary" to="/projects/list">{I18n.t('common.cancel')}</NavLink>
           <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={onSubmit} />
         </form>

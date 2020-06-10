@@ -29,11 +29,12 @@ export const defaultDatePickerProps = {
   locale: 'pl',
 };
 
+const padZeroes = (input) => padStart(String(input), 2, '0');
+
 export const displayDuration = (seconds) => {
-  const duration = moment.duration(seconds, 'seconds');
+  const duration = moment.duration(Math.abs(seconds), 'seconds');
   const hours = Math.floor(duration.asHours());
   const minutes = duration.minutes();
-  const padZeroes = (input) => padStart(String(input), 2, '0');
 
   return `${padZeroes(hours)}:${padZeroes(minutes)}`;
 };

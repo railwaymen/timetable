@@ -27,5 +27,9 @@ FactoryBot.define do
     trait :discarded do
       discarded_at { Time.zone.now }
     end
+
+    trait :with_external_auth do
+      external_auth
+    end
   end
 end

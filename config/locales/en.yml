@@ -40,7 +40,29 @@ en:
       filter_active_label: Show only
       work_times_allows_task: Allow for adding task urls
       external_integration_enabled: JIRA integration
+      external_id: External ID
       new: New Project
+    milestones:
+      add: New Milestone
+      import_from_jira: Import from JIRA
+      import_in_progress: Import from JIRA in progress ...
+      estimate: Estimate
+      change: Change
+      date_overlaps: Miestone dates overlaps with other
+      estimate_change_note: Estimate change note
+      milestone_closed: Milestone closed
+      visible_on_reports: Visible on reports
+      jira_not_available: JIRA integrations is disabled for this project
+    milestone_reports:
+      current_milestone: Current milestone
+      by_user: By users
+      by_type: By type
+      type:
+        progress: Time progress
+        tag_breakdown: Time type
+      range_type:
+        show_milestone: Show milestone
+        date_range: Dates range
     reports:
       new: New Report
       remove: Remove Report
@@ -236,6 +258,7 @@ en:
         update_assignment: '{{user}} updated assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
         delete_assignment: '{{user}} deleted assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
   common:
+    back: Back
     expand: Expand
     lock: "Lock"
     unlock: "Unlock"
@@ -324,6 +347,8 @@ en:
     refreshed_at: Refreshed
     refresh_in_progress: Refresh in progress
     refresh_error: An error occurred while refreshing
+    project_milestones: Project milestones
+    milestone_reports: Milestone reports
   activerecord:
     errors:
       models:
@@ -394,6 +419,12 @@ en:
             vacation_days:
               blank: Number of vacation days is required
               not_a_number: Number of vacation days must be a number
+        milestone:
+          attributes:
+            starts_on:
+              blank: Is required for milestone to be visible on reports
+            name:
+              blank: Is required
         user:
           attributes:
             email:
@@ -427,6 +458,12 @@ en:
               only_done_allowed: Only done reports are allowed
             name:
               blank: Name is required
+        project:
+          attributes:
+            name:
+              blank: Name is required
+            external_id:
+              blank: ID is required when external integration is enabled
         project_report:
           attributes:
             base:
