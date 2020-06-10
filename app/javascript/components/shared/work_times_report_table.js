@@ -12,8 +12,7 @@ function WorkTimesReportTable(props) {
   function renderEntry(workTime) {
     return (
       <li
-        className={`entry ${workTime.updated_by_admin ? 'updated' : ''}`}
-        id={`work-time-${workTime.id}`}
+        className="entry"
         key={workTime.id}
       >
         <div className="col-md-2 project-container">
