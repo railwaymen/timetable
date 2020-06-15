@@ -17,8 +17,8 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
       assignment = create(:project_resource_assignment)
       assignment_response = [{
         id: assignment.id,
-        start: assignment.starts_at,
-        end: assignment.ends_at,
+        start: assignment.starts_at.to_date,
+        end: assignment.ends_at.to_date,
         resourceId: assignment.resource_rid,
         title: assignment.title,
         note: assignment.note,
@@ -37,8 +37,8 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
       assignment = create(:project_resource_assignment)
       assignment_response = [{
         id: assignment.id,
-        start: assignment.starts_at,
-        end: assignment.ends_at,
+        start: assignment.starts_at.to_date,
+        end: assignment.ends_at.to_date,
         resourceId: assignment.resource_rid,
         title: assignment.title,
         note: assignment.note,
@@ -57,8 +57,8 @@ RSpec.describe Api::ProjectResourceAssignmentsController do
       assignment = create(:project_resource_assignment)
       assignment_response = [{
         id: assignment.id,
-        start: assignment.starts_at,
-        end: assignment.ends_at,
+        start: assignment.starts_at.to_date,
+        end: assignment.ends_at.to_date,
         resourceId: assignment.resource_rid,
         title: assignment.title,
         note: assignment.note,
