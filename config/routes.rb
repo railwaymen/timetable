@@ -68,6 +68,7 @@ Rails.application.routes.draw do
       get :generate_csv, on: :collection
       put :self_decline
       get :generate_yearly_report, on: :collection
+      post :update_dates
     end
     resources :vacation_periods, only: %i[index show update] do
       post :generate, on: :collection

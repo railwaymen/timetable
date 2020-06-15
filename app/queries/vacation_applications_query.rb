@@ -14,7 +14,8 @@ class VacationApplicationsQuery
     @show_all = params[:show_all]
     @show_declined = params[:show_declined]
     @vacation_id = params[:id]
-    @sort_direction = params[:sort]
+    @interacted_order_dir = params[:interacted_order]
+    @waiting_order_dir = params[:waiting_order]
   end
 
   def accepted_or_declined_vacations
@@ -35,8 +36,9 @@ class VacationApplicationsQuery
 
   private
 
-  def sanitized_sql(accepted, status)
-    sanitize_array [raw_sql(accepted), current_user: @current_user.id, status: status]
+  def sanitized_sql(accepted, statuses)
+    order_dir = %w[unconfirmed approved].any? { |status| statuses.include?(status) } ? @waiting_order_dir : @interacted_order_dir
+    sanitize_array [raw_sql(accepted, order_dir), current_user: @current_user.id, statuses: statuses]
   end
 
   def date_filter
@@ -64,7 +66,7 @@ class VacationApplicationsQuery
   end
 
   # rubocop:disable Metrics/MethodLength
-  def raw_sql(accepted)
+  def raw_sql(accepted, order_dir)
     %(
       SELECT
         v.id,
@@ -86,12 +88,12 @@ class VacationApplicationsQuery
       LEFT JOIN users AS us ON us.id = vi.user_id AND vi.action = ANY(ARRAY['accepted', 'approved', 'declined'])
       LEFT JOIN users AS us_apr ON us_apr.id = vi.user_id AND vi.action = ANY(ARRAY['accepted', 'approved'])
       LEFT JOIN users AS us_dec ON us_dec.id = vi.user_id AND vi.action = 'declined'
-      WHERE v.status IN (:status)
+      WHERE v.status IN (:statuses)
         #{date_filter}
         #{user_filter}
         #{vacation_type_filter(accepted)}
       GROUP BY v.id, full_name, v.start_date, v.end_date, v.vacation_type, v.description, v.status
-      ORDER BY v.start_date #{@sort_direction};
+      ORDER BY v.start_date #{order_dir};
     )
   end
 

@@ -8,10 +8,11 @@ import UnconfirmedVacations from './unconfirmed_vacations';
 import * as Api from '../../shared/api';
 
 const defaultFilters = {
-  selectedUser: '',
+  selectedUserId: null,
   startDate: moment().startOf('month').format('DD/MM/YYYY'),
   endDate: null,
-  sort: 'asc',
+  interactedOrder: 'asc',
+  waitingOrder: 'asc',
 };
 
 function Staff() {
@@ -20,24 +21,27 @@ function Staff() {
   const [showAll, setShowAll] = useState(false);
   const [showDeclined, setShowDeclined] = useState(false);
   const {
-    selectedUser,
+    selectedUserId,
     startDate,
     endDate,
+    interactedOrder,
+    waitingOrder,
   } = filters;
-  const sortFilter = filters.sort;
   const isFirstRun = useRef(true);
 
   function getVacations() {
     const prepareParams = {
+      user_id: selectedUserId,
       start_date: startDate,
       end_date: endDate,
-      user_id: selectedUser,
-      sort: sortFilter,
+      interacted_order: interactedOrder,
+      waiting_order: waitingOrder,
     };
-    if (!selectedUser) { delete prepareParams.user_id; }
+    if (!selectedUserId) { delete prepareParams.user_id; }
     if (!startDate) { delete prepareParams.start_date; }
     if (!endDate) { delete prepareParams.end_date; }
-    if (!sortFilter) { delete prepareParams.sort; }
+    if (!interactedOrder) { delete prepareParams.interacted_order; }
+    if (!waitingOrder) { delete prepareParams.waiting_order; }
     const url = URI('/api/vacations/vacation_applications');
     if (showAll) { url.addSearch({ show_all: true }); }
     if (showDeclined) { url.addSearch({ show_declined: true }); }
@@ -49,7 +53,8 @@ function Staff() {
           .removeSearch('start_date')
           .removeSearch('end_date')
           .removeSearch('user_id')
-          .removeSearch('sort')
+          .removeSearch('interacted_order')
+          .removeSearch('waiting_order')
           .addSearch(prepareParams);
 
         window.history.pushState('Timetable', 'Staff', newPath);
@@ -59,6 +64,7 @@ function Staff() {
         });
       });
   }
+
   useEffect(() => {
     if (isFirstRun.current) {
       isFirstRun.current = false;
@@ -73,13 +79,15 @@ function Staff() {
       user_id,
       start_date,
       end_date,
-      sort,
+      interacted_order,
+      waiting_order,
     } = urlQuery;
     const urlFilters = {};
-    if (user_id) { urlFilters.selectedUser = user_id; }
+    if (user_id) { urlFilters.selectedUserId = user_id; }
     if (start_date) { urlFilters.startDate = start_date; }
     if (end_date) { urlFilters.endDate = end_date; }
-    if (sort) { urlFilters.sort = sort; }
+    if (interacted_order) { urlFilters.interactedOrder = interacted_order; }
+    if (waiting_order) { urlFilters.waitingOrder = waiting_order; }
     setFilters({ ...filters, ...urlFilters });
   }, []);
 
@@ -140,6 +148,8 @@ function Staff() {
                 unconfirmedVacations={vacations.unconfirmedVacations}
                 showAll={showAll}
                 setShowAll={setShowAll}
+                filters={filters}
+                setFilters={setFilters}
                 removeFromInteractedVacations={removeFromInteractedVacations}
                 addToInteractedVacations={addToInteractedVacations}
               />

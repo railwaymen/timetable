@@ -1,4 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import moment from 'moment';
+import DatePicker from 'react-datepicker';
+import _ from 'lodash';
+import { defaultDatePickerProps } from '../../shared/helpers';
+import { makePostRequest } from '../../shared/api';
 
 export function Errors({ errors }) {
   if (errors.length <= 0) { return null; }
@@ -65,6 +70,70 @@ export function Interactions({ vacation }) {
     <div className="interactions-list">
       {approvers}
       {decliners}
+    </div>
+  );
+}
+
+export function VacationPeriod({ vacation, setVacation, setErrors }) {
+  const [editing, setEditing] = useState(false);
+  const [startDate, setStartDate] = useState(vacation.start_date);
+  const [endDate, setEndDate] = useState(vacation.end_date);
+
+  function onSaveClick() {
+    makePostRequest({
+      url: `/api/vacations/${vacation.id}/update_dates`,
+      body: { vacation: { start_date: startDate, end_date: endDate } },
+    }).then((response) => {
+      if (!_.isEmpty(response.data.errors)) { return setErrors(response.data.errors); }
+      setVacation(response.data.vacation);
+      return setEditing(false);
+    });
+  }
+
+  if (editing) {
+    return (
+      <div className="vacation-time-period d-flex">
+        <DatePicker
+          {...defaultDatePickerProps}
+          name="start_date"
+          className="form-control text-center nm-100"
+          selected={moment(startDate)}
+          value={moment(startDate).format('DD/MM/YYYY')}
+          format="DD/MM/YYYYs"
+          dateFormat="DD/MM/YYYY"
+          onChange={(date) => setStartDate((date ? date.format('YYYY-MM-DD') : null))}
+          onSelect={(date) => setStartDate((date ? date.format('YYYY-MM-DD') : null))}
+        />
+        <DatePicker
+          {...defaultDatePickerProps}
+          name="end_date"
+          className="form-control text-center nm-100"
+          selected={moment(endDate)}
+          value={moment(endDate).format('DD/MM/YYYY')}
+          format="DD/MM/YYYYs"
+          dateFormat="DD/MM/YYYY"
+          onChange={(date) => setEndDate((date ? date.format('YYYY-MM-DD') : null))}
+          onSelect={(date) => setEndDate((date ? date.format('YYYY-MM-DD') : null))}
+        />
+        <div className="ml-2 mt-auto mb-auto">
+          <button className="bt-vacation btn-sm save" type="button" onClick={onSaveClick}>
+            <span className="bt-txt">{I18n.t('common.save')}</span>
+          </button>
+          <button className="bt-vacation btn-sm cancel mr-2" type="button" onClick={() => setEditing(false)}>
+            <span className="bt-txt">{I18n.t('common.cancel')}</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="vacation-time-period">
+      {moment(vacation.start_date).format('DD/MM/YYYY')}
+      -
+      {moment(vacation.end_date).format('DD/MM/YYYY')}
+      {(vacation.status === 'unconfirmed' || vacation.status === 'approved')
+        && <i className="icon pencil ml-2" style={{ cursor: 'pointer' }} onClick={() => setEditing(true)} />}
     </div>
   );
 }

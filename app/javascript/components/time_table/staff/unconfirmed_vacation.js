@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import moment from 'moment';
 import _ from 'lodash';
 import { NavLink } from 'react-router-dom';
 import * as Api from '../../shared/api';
-import { Errors, Warnings, Interactions } from './shared_functionalities';
+import {
+  Errors, Warnings, Interactions, VacationPeriod,
+} from './shared_functionalities';
 
 function UnconfirmedVacation(props) {
   const { propsVacation, removeFromInteractedVacations, addToInteractedVacations } = props;
@@ -98,6 +99,11 @@ function UnconfirmedVacation(props) {
     if (vacation.interacted) {
       return (
         <div className="vacation-buttons">
+          {_.isEmpty(warnings) ? undefined : (
+            <button className="bt-vacation ok ml-4" type="button" onClick={() => addToInteractedVacations(vacation, 'accept')}>
+              <span className="bt-txt">{I18n.t('apps.staff.ok')}</span>
+            </button>
+          )}
           <button className="bt-vacation undone" type="button" onClick={onUndoneClick}>
             <span className="bt-txt">{I18n.t('apps.staff.undone')}</span>
           </button>
@@ -136,11 +142,11 @@ function UnconfirmedVacation(props) {
               </NavLink>
             )}
           </div>
-          <div className="vacation-time-period">
-            {moment(vacation.start_date).format('DD/MM/YYYY')}
-            -
-            {moment(vacation.end_date).format('DD/MM/YYYY')}
-          </div>
+          <VacationPeriod
+            vacation={vacation}
+            setVacation={setVacation}
+            setErrors={setErrors}
+          />
         </div>
       </div>
       <div className="card-body">

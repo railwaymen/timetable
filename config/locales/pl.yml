@@ -160,7 +160,6 @@ pl:
       fold_used_days: Zwiń użyte dni urlopu
     staff:
       general: Ogólne
-      by_person: Wg. osoby
       filter: Filtruj
       csv_export: Export .csv
       accepted: Zaakceptowane
@@ -184,13 +183,16 @@ pl:
       acceptable: Do zaakceptowania
       all: Wszystkie
       available_vacation_days: Pozostałe dni urlopu
-      user_has_already_filled_in_work_time: Użytkownik %{parameter} już wypełnił czas pracy w dniach
+      user_has_already_filled_in_work_time: 'Użytkownik %{parameter} już wypełnił czas pracy w dniach: '
       too_early: Nie można zaakceptować urlopu z wyprzedzeniem o miesiąc
       not_just_vacations: Użytkownik %{user} ma wpisy w czasie pracy nie tylko z urlopu w danym okresie urlopu
       vacation_sub_type_empty: Podtyp urlopu nie może być pusty
       canceled: Anulowany
       yearly_report: Raport roczny
-      sort_direction: Sortowanie
+      order_direction: Kierunek porządkowania
+      user: użytkownika
+      ok: OK
+      non_editable: Edycja jest możliwa tylko, gdy urlop jest niepotwierdzony lub zatwierdzony
     vacation_periods:
       vacation_days: Dni urlopu
       note: Notatka

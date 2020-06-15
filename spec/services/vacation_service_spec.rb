@@ -346,4 +346,52 @@ RSpec.describe VacationService do
       end
     end
   end
+
+  describe '#update_dates' do
+    it 'returns error when vacation is declined or accepted' do
+      vacation = create(:vacation, status: :declined)
+      params = {
+        vacation: {
+          start_date: (Time.current + 10.days).to_date,
+          end_date: (Time.current + 12.days).to_date
+        }
+      }
+
+      response = described_class.new(current_user: staff_manager, vacation: vacation, params: params).update_dates
+      expect(response[:errors][0]).to eql({ non_editable: 'Vacation is only editable when vaction is uncofirmed or approved' })
+    end
+
+    it 'returns error when vacation start_date > end_date' do
+      vacation = create(:vacation)
+      params = ActionController::Parameters.new(
+        {
+          vacation:
+            {
+              start_date: (Time.current + 12.days).to_date,
+              end_date: (Time.current + 10.days).to_date
+            }
+        }
+      )
+
+      response = described_class.new(current_user: staff_manager, vacation: vacation, params: params).update_dates
+      expect(response[:errors][0]).to eql({ vacation: 'Invalid end date' })
+    end
+
+    it 'update dates' do
+      vacation = create(:vacation)
+      params = ActionController::Parameters.new(
+        {
+          vacation:
+            {
+              start_date: (Time.current + 10.days).to_date,
+              end_date: (Time.current + 12.days).to_date
+            }
+        }
+      )
+
+      described_class.new(current_user: staff_manager, vacation: vacation, params: params).update_dates
+      expect(vacation.reload.start_date).to eql(params[:vacation][:start_date])
+      expect(vacation.end_date).to eql(params[:vacation][:end_date])
+    end
+  end
 end

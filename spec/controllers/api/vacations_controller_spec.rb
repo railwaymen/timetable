@@ -378,4 +378,30 @@ RSpec.describe Api::VacationsController do
       expect(response.header['Content-Disposition']).to include('attachment; filename="vacations_yearly_report.csv"')
     end
   end
+
+  describe '#update"_dates' do
+    it 'authenticates user' do
+      post :update_dates, params: { vacation_id: 1 }, format: :json
+      expect(response.code).to eql('401')
+    end
+
+    it 'forbids regular user' do
+      sign_in(user)
+      post :update_dates, params: { vacation_id: 1 }, format: :json
+      expect(response.code).to eql('403')
+    end
+
+    it 'should update vacation dates' do
+      sign_in(staff_manager)
+      vacation = create(:vacation, user: user)
+      new_dates = {
+        start_date: (Time.current + 10.days).to_date,
+        end_date: (Time.current + 12.days).to_date
+      }
+
+      post :update_dates, params: { vacation_id: vacation.id, vacation: new_dates }, format: :json
+      expect(vacation.reload.start_date).to eql(new_dates[:start_date])
+      expect(vacation.end_date).to eql(new_dates[:end_date])
+    end
+  end
 end

@@ -9,7 +9,7 @@ module Api
     def index
       action = params[:filter].presence_in(visiblity_list) || 'active'
       @users = User.includes(:tags).order(Arel.sql('contract_name::bytea ASC')).filter_by(action.to_sym)
-      @users = @users.order(:last_name) if params.key?(:staff)
+      @users = @users.reorder(:last_name) if params.key?(:staff)
       respond_with @users
     end
 
