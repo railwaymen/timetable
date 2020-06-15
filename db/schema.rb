@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_09_081808) do
+ActiveRecord::Schema.define(version: 2020_06_10_125100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -241,8 +241,11 @@ ActiveRecord::Schema.define(version: 2020_06_09_081808) do
     t.boolean "external_integration_enabled", default: false, null: false
     t.datetime "discarded_at"
     t.jsonb "external_payload", default: {}, null: false
+    t.boolean "milestones_import_enabled", default: false, null: false
+    t.bigint "milestones_import_user_id"
     t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["leader_id"], name: "index_projects_on_leader_id"
+    t.index ["milestones_import_user_id"], name: "index_projects_on_milestones_import_user_id"
     t.index ["name"], name: "index_projects_on_name", unique: true
   end
 
@@ -398,6 +401,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_081808) do
   add_foreign_key "project_resource_assignments", "vacations"
   add_foreign_key "project_resources", "users"
   add_foreign_key "projects", "users", column: "leader_id"
+  add_foreign_key "projects", "users", column: "milestones_import_user_id"
   add_foreign_key "remote_works", "users"
   add_foreign_key "remote_works", "users", column: "creator_id"
   add_foreign_key "taggings", "tags"

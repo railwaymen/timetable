@@ -10,7 +10,7 @@ RSpec.describe Api::ProjectsController do
   let(:tags_list) { WorkTime.tags.keys }
 
   def full_project_response(project)
-    project.attributes.slice('id', 'name', 'work_times_allows_task', 'external_integration_enabled', 'color', 'leader_id').merge(active: project.kept?, external_id: project.external_id)
+    project.attributes.slice('id', 'name', 'work_times_allows_task', 'milestones_import_enabled', 'external_integration_enabled', 'color', 'leader_id').merge(active: project.kept?, external_id: project.external_id)
   end
 
   describe '#index' do
@@ -242,6 +242,7 @@ RSpec.describe Api::ProjectsController do
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
+        milestones_import_enabled: project.milestones_import_enabled,
         external_id: project.external_id,
         color: project.color,
         active: project.kept?,
@@ -269,6 +270,7 @@ RSpec.describe Api::ProjectsController do
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
+        milestones_import_enabled: project.milestones_import_enabled,
         external_id: project.external_id,
         color: project.color,
         active: project.kept?,
@@ -290,6 +292,7 @@ RSpec.describe Api::ProjectsController do
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
+        milestones_import_enabled: project.milestones_import_enabled,
         external_id: project.external_id,
         color: project.color,
         active: project.kept?,

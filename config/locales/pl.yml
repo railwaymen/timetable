@@ -53,6 +53,8 @@ pl:
       milestone_closed: Etap zamkniety
       visible_on_reports: Widoczny w raportach
       jira_not_available: Integracja z JIRA jest wyłączona dla tego projektu
+      enable_import_milestones: Włącz dzienny import etapów z JIRY
+      disable_import_milestones: Wyłącz dzienny import etapów z JIRY
     milestone_reports:
       current_milestone: Obecny etap
       by_users: Według osób

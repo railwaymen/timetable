@@ -3,7 +3,7 @@ import { useParams, NavLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import useInterval from 'react-useinterval';
 import MilestoneEntry from './milestone_entry';
-import { makeGetRequest, makePostRequest } from '../../shared/api';
+import { makeGetRequest, makePostRequest, makePutRequest } from '../../shared/api';
 
 function Milestones() {
   const { projectId } = useParams();
@@ -32,6 +32,12 @@ function Milestones() {
       });
   }
 
+  function updateProject() {
+    const value = !project.milestones_import_enabled;
+    makePutRequest({ url: `/api/projects/${projectId}`, body: { milestones_import_enabled: value } });
+    setProject({ ...project, milestones_import_enabled: value });
+  }
+
   function getImportState() {
     makeGetRequest({
       url: `/api/projects/${projectId}/milestones/import_status`,
@@ -47,6 +53,22 @@ function Milestones() {
     getMilestones();
     getProject();
   }, []);
+
+  function renderEnableImportButton() {
+    if (project.external_integration_enabled === false) {
+      return (
+        <button type="button" disabled="disabled" className="btn btn-secondary" title={I18n.t('apps.milestones.jira_not_available')}>
+          {I18n.t('apps.milestones.enable_import_milestones')}
+        </button>
+      );
+    }
+    return (
+      <button type="button" className="btn btn-secondary" onClick={updateProject}>
+        {project.milestones_import_enabled === false && I18n.t('apps.milestones.enable_import_milestones')}
+        {project.milestones_import_enabled === true && I18n.t('apps.milestones.disable_import_milestones')}
+      </button>
+    );
+  }
 
   function renderImportButton() {
     if (project.external_integration_enabled === false) {
@@ -85,6 +107,7 @@ function Milestones() {
           </h1>
         </div>
         <div className="col-md-4 text-right">
+          {renderEnableImportButton()}
           {renderImportButton()}
           <NavLink to={`/projects/${projectId}/milestones/new`} className="btn btn-secondary">{I18n.t('apps.milestones.add')}</NavLink>
         </div>

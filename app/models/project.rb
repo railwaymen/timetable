@@ -13,6 +13,7 @@ class Project < ApplicationRecord
   has_many :combined_reports, dependent: :nullify
   has_many :milestones, dependent: :nullify
   belongs_to :leader, class_name: 'User'
+  belongs_to :milestones_import_user, class_name: 'User'
 
   validates :name, presence: true
   validates :name, uniqueness: true
