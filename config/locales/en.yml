@@ -58,7 +58,7 @@ en:
       disable_import_milestones: Disable daily milestone import from JIRA
     milestone_reports:
       current_milestone: Current milestone
-      by_user: By users
+      by_users: By users
       by_type: By type
       type:
         progress: Time progress
