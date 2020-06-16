@@ -113,7 +113,7 @@ function EditProject(props) {
                   checked={project.active}
                   onChange={onChange}
                 />
-                <label className="form-check-label" htmlFor="external_integration_enabled">
+                <label className="form-check-label" htmlFor="active">
                   {I18n.t('apps.projects.active')}
                 </label>
               </div>

@@ -15,6 +15,6 @@ class UpdateProjectForm
     project.milestones_import_user = milestones_import_enabled ? current_user : nil
     project.update(@attributes.slice(:name, :color, :leader_id, :work_times_allows_task, :milestones_import_enabled,
                                      :external_integration_enabled, :external_id))
-    active ? project.undiscard : project.discard
+    active.is_a?(FalseClass) ? project.discard : project.undiscard
   end
 end

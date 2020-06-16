@@ -54,6 +54,8 @@ en:
       milestone_closed: Milestone closed
       visible_on_reports: Visible on reports
       jira_not_available: JIRA integrations is disabled for this project
+      enable_import_milestones: Enable daily milestone import from JIRA
+      disable_import_milestones: Disable daily milestone import from JIRA
     milestone_reports:
       current_milestone: Current milestone
       by_user: By users
