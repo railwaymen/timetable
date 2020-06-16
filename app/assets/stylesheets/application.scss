@@ -34,10 +34,6 @@
 @import 'react-datepicker/dist/react-datepicker';
 @import '../../../node_modules/antd/dist/antd';
 
-.bootbox.ui.modal.fade.bootbox-confirm {
-  opacity: 1;
-}
-
 .clearfix {
   clear: both
 }
@@ -203,7 +199,6 @@ ol.projects .dl-horizontal {
 
 .badge.project-badge {
   display: inline;
-  width: 10px;
   margin-right: 5px;
 }
 

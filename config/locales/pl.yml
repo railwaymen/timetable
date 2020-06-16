@@ -29,7 +29,6 @@ pl:
       project: Projekt
       note: Notatka
       update: Aktualizacja
-      leader: lider
       developers: Deweloperzy
       testers: Testerzy
       color: Kolor
@@ -42,6 +41,8 @@ pl:
       external_integration_enabled: Integracja z JIRA
       external_id: Zewnetrzne ID
       new: Nowy projekt
+      external_integration_help: Włącza integracje z JIRA która loguje czas pracy w zadaniach
+      external_id_help: Wartość tą można znaleźć na liście projektów JIRA w kolumnie "key" np. SH
     milestones:
       add: Nowy etap
       import_from_jira: Importuj z JIRA

@@ -15,7 +15,7 @@ function EditProject(props) {
     leader_id: '',
     external_id: '',
     work_times_allows_task: true,
-    external_integration_enabled: true,
+    external_integration_enabled: false,
     active: true,
   };
 
@@ -73,10 +73,12 @@ function EditProject(props) {
         </Helmet>
         <form>
           {currentUser.isSuperUser() && (
-            <div>
+            <>
               <div className="form-group">
+                <label htmlFor="name">{I18n.t('common.name')}</label>
                 {errors.name && <div className="error-description">{errors.name.join(', ')}</div>}
                 <input
+                  id="name"
                   className={`${errors.name ? 'error' : ''} form-control`}
                   type="text"
                   name="name"
@@ -102,42 +104,62 @@ function EditProject(props) {
                   ))}
                 </select>
               </div>
-              <div className="form-group">
-                <label>
+              <div className="form-group form-check">
+                <input
+                  id="active"
+                  type="checkbox"
+                  className="form-check-input"
+                  name="active"
+                  checked={project.active}
+                  onChange={onChange}
+                />
+                <label className="form-check-label" htmlFor="active">
                   {I18n.t('apps.projects.active')}
-                  <input type="checkbox" name="active" checked={project.active} onChange={onChange} />
                 </label>
               </div>
-            </div>
+            </>
           )}
-          <div className="form-group" />
-          <input
-            type="color"
-            name="color"
-            value={((project.color && project.color[0] !== '#') ? '#' : '') + project.color}
-            onChange={onChange}
-          />
           <div className="form-group">
-            <label>
+            <label htmlFor="color">
+              {I18n.t('apps.projects.color')}
+              :
+            </label>
+            <input
+              id="color"
+              type="color"
+              name="color"
+              value={((project.color && project.color[0] !== '#') ? '#' : '') + project.color}
+              onChange={onChange}
+            />
+          </div>
+          <div className="form-group form-check">
+            <input
+              id="work_times_allows_task"
+              type="checkbox"
+              className="form-check-input"
+              name="work_times_allows_task"
+              checked={project.work_times_allows_task}
+              onChange={onChange}
+            />
+            <label className="form-check-label" htmlFor="work_times_allows_task">
               {I18n.t('apps.projects.work_times_allows_task')}
-              <input
-                type="checkbox"
-                name="work_times_allows_task"
-                checked={project.work_times_allows_task}
-                onChange={onChange}
-              />
             </label>
           </div>
-          <div className="form-group">
-            <label>
+          <div className="form-group form-check">
+            <input
+              id="external_integration_enabled"
+              type="checkbox"
+              className="form-check-input"
+              name="external_integration_enabled"
+              checked={project.external_integration_enabled}
+              onChange={onChange}
+            />
+            <label className="form-check-label" htmlFor="external_integration_enabled">
               {I18n.t('apps.projects.external_integration_enabled')}
-              <input
-                type="checkbox"
-                name="external_integration_enabled"
-                checked={project.external_integration_enabled}
-                onChange={onChange}
-              />
             </label>
+            <small className="form-text text-muted">
+              {I18n.t('apps.projects.external_integration_help')}
+            </small>
           </div>
           {project.external_integration_enabled && (
             <div className="form-group">
@@ -150,6 +172,9 @@ function EditProject(props) {
                 onChange={onChange}
                 value={project.external_id}
               />
+              <small className="form-text text-muted">
+                {I18n.t('apps.projects.external_id_help')}
+              </small>
             </div>
           )}
           <NavLink className="btn btn-secondary" to="/projects/list">{I18n.t('common.cancel')}</NavLink>
