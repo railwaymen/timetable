@@ -29,7 +29,6 @@ en:
       project: Project
       note: Note
       update: Update
-      leader: leader
       developers: Developers
       testers: Testers
       color: Color
@@ -42,6 +41,8 @@ en:
       external_integration_enabled: JIRA integration
       external_id: External ID
       new: New Project
+      external_integration_help: Enable JIRA integration which logs work time in tickets
+      external_id_help: This value can be found on projects list in column 'key' i.e. SH
     milestones:
       add: New Milestone
       import_from_jira: Import from JIRA
