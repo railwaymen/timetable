@@ -6,7 +6,7 @@ class AccountingPeriodsManager
   end
 
   def check_job_exist
-    @check_job_exist ||= CheckJobExist.new(worker, worker_params)
+    @check_job_exist ||= CheckJobExist.new(worker)
   end
 
   def perform_async_once

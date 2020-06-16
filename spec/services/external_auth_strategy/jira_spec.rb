@@ -97,6 +97,37 @@ RSpec.describe ExternalAuthStrategy::Jira do
     end
   end
 
+  describe 'versions' do
+    it 'fetches project versions' do
+      project_id = '1'
+
+      version = { id: 10 }
+      project_double = double('Project')
+      project_class_double = double('Project')
+      expect(jira_double).to receive(:Project) { project_class_double }
+      expect(project_class_double).to receive(:find).with(project_id) { project_double }
+      expect(project_double).to receive(:versions) { [version] }
+
+      strategy = described_class.new('domain' => domain)
+      expect(strategy.versions(project_id)).to eql([version])
+    end
+  end
+
+  describe 'version_issues' do
+    it 'fetches project versions' do
+      project_id = '1'
+      version_id = '10'
+
+      issue = { id: 10 }
+      issue_class_double = double('Issue')
+      expect(jira_double).to receive(:Issue) { issue_class_double }
+      expect(issue_class_double).to receive(:jql).with("project = '#{project_id}' AND fixVersion = #{version_id}") { [issue] }
+
+      strategy = described_class.new('domain' => domain)
+      expect(strategy.version_issues(project_id, version_id)).to eql([issue])
+    end
+  end
+
   describe 'update' do
     context 'work log exists' do
       it 'updates worklog' do

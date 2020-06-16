@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_02_132232) do
+ActiveRecord::Schema.define(version: 2020_06_10_125100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,51 @@ ActiveRecord::Schema.define(version: 2020_06_02_132232) do
     t.index ["user_id"], name: "index_hardwares_on_user_id"
   end
 
+  create_table "milestone_estimates", force: :cascade do |t|
+    t.bigint "milestone_id", null: false
+    t.integer "dev_estimate", default: 0, null: false
+    t.integer "dev_estimate_diff", default: 0, null: false
+    t.integer "qa_estimate", default: 0, null: false
+    t.integer "qa_estimate_diff", default: 0, null: false
+    t.integer "ux_estimate", default: 0, null: false
+    t.integer "ux_estimate_diff", default: 0, null: false
+    t.integer "pm_estimate", default: 0, null: false
+    t.integer "pm_estimate_diff", default: 0, null: false
+    t.integer "external_estimate", default: 0, null: false
+    t.integer "external_estimate_diff", default: 0, null: false
+    t.integer "other_estimate", default: 0, null: false
+    t.integer "other_estimate_diff", default: 0, null: false
+    t.integer "total_estimate", default: 0, null: false
+    t.integer "total_estimate_diff", default: 0, null: false
+    t.text "note"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["milestone_id"], name: "index_milestone_estimates_on_milestone_id"
+  end
+
+  create_table "milestones", force: :cascade do |t|
+    t.bigint "project_id"
+    t.string "name"
+    t.text "note"
+    t.boolean "closed", default: false, null: false
+    t.date "starts_on"
+    t.date "ends_on"
+    t.integer "total_estimate", default: 0, null: false
+    t.jsonb "external_payload", default: {}, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "discarded_at"
+    t.integer "dev_estimate", default: 0, null: false
+    t.integer "qa_estimate", default: 0, null: false
+    t.integer "ux_estimate", default: 0, null: false
+    t.integer "pm_estimate", default: 0, null: false
+    t.integer "external_estimate", default: 0, null: false
+    t.integer "other_estimate", default: 0, null: false
+    t.boolean "visible_on_reports", default: false, null: false
+    t.index ["discarded_at"], name: "index_milestones_on_discarded_at"
+    t.index ["project_id"], name: "index_milestones_on_project_id"
+  end
+
   create_table "project_report_roles", force: :cascade do |t|
     t.bigint "project_report_id", null: false
     t.bigint "user_id", null: false
@@ -195,8 +240,12 @@ ActiveRecord::Schema.define(version: 2020_06_02_132232) do
     t.boolean "count_duration", default: true, null: false
     t.boolean "external_integration_enabled", default: false, null: false
     t.datetime "discarded_at"
+    t.jsonb "external_payload", default: {}, null: false
+    t.boolean "milestones_import_enabled", default: false, null: false
+    t.bigint "milestones_import_user_id"
     t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["leader_id"], name: "index_projects_on_leader_id"
+    t.index ["milestones_import_user_id"], name: "index_projects_on_milestones_import_user_id"
     t.index ["name"], name: "index_projects_on_name", unique: true
   end
 
@@ -321,7 +370,6 @@ ActiveRecord::Schema.define(version: 2020_06_02_132232) do
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "_contract_name"
     t.integer "creator_id", null: false
     t.boolean "updated_by_admin", default: false, null: false
     t.string "task"
@@ -343,6 +391,7 @@ ActiveRecord::Schema.define(version: 2020_06_02_132232) do
   add_foreign_key "external_auths", "users"
   add_foreign_key "hardware_fields", "hardwares"
   add_foreign_key "hardwares", "users"
+  add_foreign_key "milestone_estimates", "milestones"
   add_foreign_key "project_report_roles", "project_reports"
   add_foreign_key "project_report_roles", "users"
   add_foreign_key "project_reports", "projects"
@@ -352,6 +401,7 @@ ActiveRecord::Schema.define(version: 2020_06_02_132232) do
   add_foreign_key "project_resource_assignments", "vacations"
   add_foreign_key "project_resources", "users"
   add_foreign_key "projects", "users", column: "leader_id"
+  add_foreign_key "projects", "users", column: "milestones_import_user_id"
   add_foreign_key "remote_works", "users"
   add_foreign_key "remote_works", "users", column: "creator_id"
   add_foreign_key "taggings", "tags"

@@ -40,7 +40,31 @@ pl:
       filter_active_label: Pokaż tylko
       work_times_allows_task: Zezwalaj na dodawanie urli do zadań
       external_integration_enabled: Integracja z JIRA
+      external_id: Zewnetrzne ID
       new: Nowy projekt
+    milestones:
+      add: Nowy etap
+      import_from_jira: Importuj z JIRA
+      import_in_progress: Trwa import z JIRA ...
+      estimate: Estymata
+      change: Zmiana
+      date_overlaps: Data etapu zachodzi na inne
+      estimate_change_note: Notatka do zmiany estymaty
+      milestone_closed: Etap zamkniety
+      visible_on_reports: Widoczny w raportach
+      jira_not_available: Integracja z JIRA jest wyłączona dla tego projektu
+      enable_import_milestones: Włącz dzienny import etapów z JIRY
+      disable_import_milestones: Wyłącz dzienny import etapów z JIRY
+    milestone_reports:
+      current_milestone: Obecny etap
+      by_users: Według osób
+      by_type: Według typu
+      type:
+        progress: Postęp czasu
+        tag_breakdown: Rodzaj czasu
+      range_type:
+        show_milestone: Pokaż etap
+        date_range: Zakres dat
     reports:
       new: Nowy Raport
       remove: Usuń Raport
@@ -236,6 +260,7 @@ pl:
         update_assignment: '{{user}} zaktualizował zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
         delete_assignment: '{{user}} usunął zasób {{resource}} przypisany do projektu {{project}} od {{start}} do {{end}}'
   common:
+    back: Wróć
     expand: "Rozwiń"
     lock: "Zablokuj"
     unlock: "Odblokuj"
@@ -321,9 +346,11 @@ pl:
     hardware: Mój sprzęt
     type: Typ
     labels: Etykiety
-    refreshed_at: Odświerzony
-    refresh_in_progress: Trwa odświerzanie
-    refresh_error: Wystąpił błąd podczas odświerzania
+    refreshed_at: Odświeżony
+    refresh_in_progress: Trwa odświeżanie
+    refresh_error: Wystąpił błąd podczas odświeżania
+    project_milestones: Etapy projektu
+    milestone_reports: Raporty etapów
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -445,6 +472,12 @@ pl:
             vacation_days:
               blank: Ilość dni urlopowych jest wymagana
               not_a_number: Ilość dni urlopowych musi byc liczbą
+        milestone:
+          attributes:
+            starts_on:
+              blank: Jest wymagane aby etap był widoczny w raportach
+            name:
+              blank: Jest wymagana
         user:
           attributes:
             email:
@@ -478,6 +511,12 @@ pl:
               only_done_allowed: Można użyć tylko zakończonych raportów
             name:
               blank: Nazwa jest wymagana
+        project:
+          attributes:
+            name:
+              blank: Nazwa jest wymagana
+            external_id:
+              blank: ID jest wymagane gdy właczona jest zewnętrzna integracja
         project_report:
           attributes:
             base:

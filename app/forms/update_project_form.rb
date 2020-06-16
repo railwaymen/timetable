@@ -3,7 +3,8 @@
 class UpdateProjectForm
   include ActiveModel::Model
 
-  attr_accessor :project, :active, :name, :color, :leader_id, :work_times_allows_task, :external_integration_enabled
+  attr_accessor :project, :active, :name, :color, :leader_id, :work_times_allows_task, :milestones_import_enabled,
+                :external_integration_enabled, :external_id, :current_user
 
   def initialize(attributes = {})
     super
@@ -11,7 +12,9 @@ class UpdateProjectForm
   end
 
   def save
-    project.update(@attributes.slice(:name, :color, :leader_id, :work_times_allows_task, :external_integration_enabled))
+    project.milestones_import_user = milestones_import_enabled ? current_user : nil
+    project.update(@attributes.slice(:name, :color, :leader_id, :work_times_allows_task, :milestones_import_enabled,
+                                     :external_integration_enabled, :external_id))
     active ? project.undiscard : project.discard
   end
 end

@@ -58,7 +58,7 @@ module Api
 
     def update
       @project = project_scope
-      UpdateProjectForm.new(permitted_attributes(@project).merge(project: @project)).save
+      UpdateProjectForm.new(permitted_attributes(@project).merge(current_user: current_user, project: @project)).save
       respond_with @project
     end
 

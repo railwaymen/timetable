@@ -2,6 +2,7 @@
 
 class Project < ApplicationRecord
   include Discard::Model
+  store_accessor :external_payload, :id, prefix: :external
 
   has_many :metrics, dependent: :destroy
   has_many :work_times, dependent: :nullify
@@ -10,10 +11,13 @@ class Project < ApplicationRecord
   has_one :external_auth, dependent: :destroy
   has_many :assignments, class_name: 'ProjectResourceAssignment', dependent: :destroy
   has_many :combined_reports, dependent: :nullify
+  has_many :milestones, dependent: :nullify
   belongs_to :leader, class_name: 'User'
+  belongs_to :milestones_import_user, class_name: 'User'
 
   validates :name, presence: true
   validates :name, uniqueness: true
+  validates :external_id, presence: true, if: :external_integration_enabled?
 
   after_save :change_events_color_and_name, if: proc { |project| project.saved_change_to_color? || project.saved_change_to_name? }
 
@@ -39,6 +43,10 @@ class Project < ApplicationRecord
 
   def zks?
     name == 'ZKS'
+  end
+
+  def current_milestone
+    milestones.select(&:opened?).select(&:starts_on).min_by(&:starts_on)
   end
 
   def change_events_color_and_name
