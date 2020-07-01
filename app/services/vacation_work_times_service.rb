@@ -34,8 +34,8 @@ class VacationWorkTimesService
       project_id: @project.id,
       user_id: @user.id,
       body: I18n.t("common.vacation_code.#{@vacation.vacation_sub_type || @vacation.vacation_type}"),
-      starts_at: day.to_date.beginning_of_day + 9.hours,
-      ends_at: day.to_date.beginning_of_day + 17.hours
+      starts_at: day.to_date.beginning_of_day,
+      ends_at: day.to_date.beginning_of_day + 8.hours
     }
   end
 

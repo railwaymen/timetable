@@ -12,18 +12,18 @@ function InteractedVacations(props) {
     removeFromInteractedVacations,
     addToInteractedVacations,
   } = props;
-  const { sort } = filters;
+  const { interactedOrder } = filters;
 
-  function onSortChange() {
-    if (sort === 'asc') {
-      setFilters({ ...filters, sort: 'desc' });
+  function onOrderChange() {
+    if (interactedOrder === 'asc') {
+      setFilters({ ...filters, interactedOrder: 'desc' });
     } else {
-      setFilters({ ...filters, sort: 'asc' });
+      setFilters({ ...filters, interactedOrder: 'asc' });
     }
   }
 
   const title = showDeclined ? { mainTitle: 'declined', leftTitle: 'show_accepted' } : { mainTitle: 'accepted', leftTitle: 'show_declined' };
-  const sortIcon = sort === 'asc' ? 'up' : 'down';
+  const orderIcon = interactedOrder === 'asc' ? 'up' : 'down';
 
   return (
     <div className="accepted-or-declined-vacations">
@@ -36,9 +36,9 @@ function InteractedVacations(props) {
         <div className="mid-title">
           {I18n.t(`apps.staff.${title.mainTitle}`)}
         </div>
-        <div className="right-title" onClick={onSortChange}>
-          {I18n.t('apps.staff.sort_direction')}
-          <i className={`fa fa-chevron-${sortIcon}`} />
+        <div className="right-title" onClick={onOrderChange}>
+          {I18n.t('apps.staff.order_direction')}
+          <i className={`fa fa-chevron-${orderIcon}`} />
         </div>
       </div>
       {interactedVacations.map((vacation) => (

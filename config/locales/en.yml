@@ -192,7 +192,6 @@ en:
       fold_used_days: Fold used vacation days
     staff:
       general: General
-      by_person: By person
       filter: Filter
       csv_export: Export .csv
       accepted: Accepted
@@ -216,13 +215,16 @@ en:
       acceptable: Acceptable
       all: All
       available_vacation_days: Available vacation days
-      user_has_already_filled_in_work_time: User %{parameter} has already filled in the work time in days
+      user_has_already_filled_in_work_time: 'User %{parameter} has already filled in the work time in days: '
       too_early: Can not approve vacation that starts more than 1 month from now
       not_just_vacations: User %{user} has not only vacation entries in work time during vacation period
       vacation_sub_type_empty: Vacation Subtype can't be empty
       canceled: Canceled
       yearly_report: Yearly report
-      sort_direction: Sort direction
+      order_direction: Order direction
+      user: user
+      ok: OK
+      non_editable: Vacation is only editable when vaction is uncofirmed or approved
     vacation_periods:
       vacation_days: Vacation days
       note: Note
