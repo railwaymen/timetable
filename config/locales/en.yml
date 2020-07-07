@@ -147,7 +147,6 @@ en:
       phone: Phone
       button_disabled_tooltip: Account creation disabled. Automatic creation with LDAP login.
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
-      birthday: Birthday
       new: New account
       position: Position
       department: Department
@@ -231,21 +230,6 @@ en:
       closed: Closed
       generate_periods: Generate vacation periods
       edit: Edit vacation period
-    birthday_templates:
-      new: New birthday template
-      edit: Edit birthday template
-      email_content: Enter email content
-      email_header: Enter email header
-      email_bottom: Enter email bottom
-      incoming_birthdays: 'Incoming birthdays:'
-      last_used: Last used
-      set_as_last_used: Set as last used
-      save_and_preview: Save and refresh preview
-      days:
-        few: '%{count} days'
-        many: '%{count} days'
-        one: '%{count} day'
-        other: '%{count} days'
     projects_distribution:
       add_resource: Add resource
       resource_menu: Resource menu
@@ -338,7 +322,6 @@ en:
       illness: Ch
       care: Op
     vacation_periods: Vacation Periods
-    birthday_templates: Birthday Templates
     title: Title
     user: User
     projects_distribution: Projects distribution
@@ -388,12 +371,6 @@ en:
             serial_number:
               blank: Serial Number can't be blank
               taken: Serial Number is already in use
-        birthday_email_template:
-          attributes:
-            name:
-              blank: Name is required
-            title:
-              blank: Title is required
         vacation:
           basic: There was an error while trying to add application for vacation
           attributes:

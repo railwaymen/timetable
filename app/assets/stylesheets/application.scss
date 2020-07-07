@@ -21,7 +21,6 @@
 
 @import 'application/vacation-entry';
 @import 'application/staff';
-@import 'application/birthday_templates';
 @import 'application/remote-work';
 
 @import 'pages/projects';
@@ -210,12 +209,6 @@ ol.projects .dl-horizontal {
   span.negative {
     color: red;
     margin-left: 2px;
-  }
-}
-
-.birthday-templates {
-  th:first-child {
-    text-align: center;
   }
 }
 

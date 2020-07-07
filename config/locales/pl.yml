@@ -147,7 +147,6 @@ pl:
       phone: Telefon
       button_disabled_tooltip: Tworzenie kont zablokowane. Automatyczne tworzenie poprzez logowanie LDAP.
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
-      birthday: Urodziny
       new: Nowe konto
       position: Pozycja
       department: Dział
@@ -231,21 +230,6 @@ pl:
       closed: Zamknięty
       generate_periods: Generuj okresy urlopowe
       edit: Edycja okresu urlopowego
-    birthday_templates:
-      new: Nowy szablon urodzinowy
-      edit: Edycja szablonu urodzinowego
-      email_content: Wprowadź treść maila
-      email_header: Wprowadź nagłówek maila
-      email_bottom: Wprowadź stopke maila
-      incoming_birthdays: 'Nadchodzące urodziny:'
-      last_used: Ostatnio użyte
-      set_as_last_used: Ustaw jako ostatnio użyte
-      save_and_preview: Zapisz i odśwież podgląd
-      days:
-        few: '%{count} dni'
-        many: '%{count} dni'
-        one: '%{count} dzień'
-        other: '%{count} dni'
     projects_distribution:
       add_resource: Dodaj zasoby
       resource_menu: Menu zasobów
@@ -338,7 +322,6 @@ pl:
       illness: Ch
       care: Op
     vacation_periods: Okresy urlopowe
-    birthday_templates: Szablony urodzinowe
     title: Tytuł
     user: Użytkownik
     projects_distribution: Obłożenie projektów
@@ -439,12 +422,6 @@ pl:
             serial_number:
               blank: Numer seryjny jest wymagany
               taken: Numer seryjny jest zajety
-        birthday_email_template:
-          attributes:
-            name:
-              blank: Nazwa jest wymagana
-            title:
-              blank: Tytuł jest wymagany
         vacation:
           basic: Nie udało się dodać podania o urlop
           attributes:

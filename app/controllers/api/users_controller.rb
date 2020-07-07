@@ -3,8 +3,8 @@
 module Api
   class UsersController < Api::BaseController
     before_action :authenticate_notself, only: [:update]
-    before_action :authenticate_admin!, except: %i[index show update incoming_birthdays]
-    before_action :authenticate_admin_or_manager!, only: %i[index incoming_birthdays]
+    before_action :authenticate_admin!, except: %i[index show update]
+    before_action :authenticate_admin_or_manager!, only: %i[index]
 
     def index
       action = params[:filter].presence_in(visiblity_list) || 'active'
@@ -30,18 +30,6 @@ module Api
       respond_with @user
     end
 
-    def incoming_birthdays
-      @users = incoming_birthday_users
-
-      if @users.length < 3
-        limit = 3 - @users.length
-        missing_users = missing_users(limit)
-        @users += missing_users
-      end
-
-      respond_with @users
-    end
-
     def positions
       tags = Tag.order(:name).pluck(:name)
       render json: tags
@@ -55,20 +43,6 @@ module Api
 
     def authenticate_notself
       authenticate_admin! unless current_user.id == params[:id].to_i
-    end
-
-    def incoming_birthday_users
-      @users = User.where("#{Time.current.year} || TO_CHAR(birthdate, '/mm/dd') > ?", Time.current.to_date)
-                   .order(Arel.sql("TO_CHAR(birthdate, 'mm/dd')"))
-                   .select("id, TO_CHAR(birthdate, 'dd/mm/') || #{Time.current.year} birthday_date,"\
-                           "CONCAT(last_name, ' ', first_name) AS full_name").limit(3)
-    end
-
-    def missing_users(limit)
-      User.where("#{(Time.current + 1.year).year} || TO_CHAR(birthdate, '/mm/dd') > ?",
-                 Time.current.to_date).order(Arel.sql("TO_CHAR(birthdate, 'mm/dd')"))
-          .select("id, TO_CHAR(birthdate, 'dd/mm/') || #{(Time.current + 1.year).year} birthday_date,"\
-                  "CONCAT(last_name, ' ', first_name) AS full_name").limit(limit)
     end
   end
 end

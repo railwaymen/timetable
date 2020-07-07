@@ -23,7 +23,6 @@ Rails.application.routes.draw do
       end
     end
     resources :users, only: %i[index show create update] do
-      get :incoming_birthdays, on: :collection
       get :positions, on: :collection
     end
     resources :hardwares, only: %i[index create destroy update] do
@@ -80,9 +79,6 @@ Rails.application.routes.draw do
       post :generate, on: :collection
     end
     resources :remote_works, only: %i[index create destroy update]
-    resources :birthday_email_templates do
-      put :set_last_used
-    end
     resources :project_resources do
       get :activity, on: :collection
     end
