@@ -52,7 +52,7 @@ group :development do
   gem 'capistrano-rvm'
   gem 'capistrano-yarn'
   gem 'immigrant'
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.87.0'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
 end

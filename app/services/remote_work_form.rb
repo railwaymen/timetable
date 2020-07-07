@@ -3,8 +3,7 @@
 class RemoteWorkForm
   include ActiveModel::Validations
 
-  attr_reader :remote_work
-  attr_reader :saved
+  attr_reader :remote_work, :saved
 
   delegate :starts_at, :ends_at, to: :remote_work
 

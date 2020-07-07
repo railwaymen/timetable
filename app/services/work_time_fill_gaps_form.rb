@@ -4,8 +4,8 @@ class WorkTimeFillGapsForm
   include ActiveModel::Model
   include ExternalValidatable
 
-  attr_reader :work_time
   attr_reader :saved
+  attr_accessor :work_time
 
   delegate :id,
            :external_auth,
@@ -36,8 +36,6 @@ class WorkTimeFillGapsForm
     errors.add(:starts_at, :no_gaps_to_fill) if @saved == []
     @saved.present?
   end
-
-  attr_writer :work_time
 
   private
 

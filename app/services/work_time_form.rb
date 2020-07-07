@@ -4,8 +4,7 @@ class WorkTimeForm
   include ActiveModel::Model
   include ExternalValidatable
 
-  attr_reader :work_time
-  attr_reader :old_payload
+  attr_reader :work_time, :old_payload
 
   delegate :id,
            :external_auth,
