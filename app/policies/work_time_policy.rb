@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 class WorkTimePolicy < ApplicationPolicy
+  def update?
+    !record.project.vacation?
+  end
+
+  alias destroy? update?
+  alias create? update?
+  alias create_filling_gaps? update?
+
   class Scope < Scope
     def resolve
       if user.admin? || user.manager?

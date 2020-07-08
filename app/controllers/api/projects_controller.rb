@@ -16,8 +16,8 @@ module Api
     end
 
     def simple
-      @projects = Project.order(:internal, :name)
-      @projects = @projects.where("name != 'Vacation' AND name != 'ZKS'") unless current_user.admin?
+      @projects = Project.order(:internal, :name).where("name != 'Vacation'")
+      @projects = @projects.where("name != 'ZKS'") unless current_user.admin?
     end
 
     def tags

@@ -18,14 +18,18 @@ module Api
     end
 
     def create
-      @work_time = WorkTimeForm.new(work_time: build_new_work_time)
+      work_time = build_new_work_time
+      authorize work_time
+      @work_time = WorkTimeForm.new(work_time: work_time)
       @work_time.save(work_hours_save_params)
       increase_work_time(@work_time, @work_time.duration) if @work_time.valid?(context)
       respond_with @work_time
     end
 
     def create_filling_gaps
-      @work_time = WorkTimeFillGapsForm.new(work_time: build_new_work_time)
+      work_time = build_new_work_time
+      authorize work_time
+      @work_time = WorkTimeFillGapsForm.new(work_time: work_time)
       saved = @work_time.save(work_hours_save_params)
       increase_work_time(@work_time, @work_time.saved.sum(&:duration)) if saved
       respond_with @work_time
@@ -33,6 +37,7 @@ module Api
 
     def update
       @work_time = find_work_time
+      authorize @work_time
       @work_time.assign_attributes(work_time_params)
       duration_was = @work_time.duration
       if current_user.admin? && @work_time.changed?
@@ -46,6 +51,7 @@ module Api
 
     def destroy
       @work_time = find_work_time
+      authorize @work_time
       @work_time.assign_attributes(updated_by_admin: true) if @work_time.user_id != current_user.id
       @work_time.assign_attributes(discarded_at: Time.zone.now)
       @work_time.save(work_hours_save_params)

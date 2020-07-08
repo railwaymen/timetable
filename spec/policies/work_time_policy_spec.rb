@@ -4,8 +4,50 @@ require 'rails_helper'
 
 RSpec.describe WorkTimePolicy, type: :policy do
   let(:user) { User.new }
+  let(:vacation_project) { build_stubbed(:project, :vacation) }
+  let(:project) { build_stubbed(:project) }
 
   subject { described_class }
+
+  permissions :create? do
+    it 'grants access for non vacation type' do
+      expect(described_class).to permit(build_stubbed(:user), WorkTime.new(project: project))
+    end
+
+    it 'denies access for vacation type' do
+      expect(described_class).not_to permit(build_stubbed(:user), WorkTime.new(project: vacation_project))
+    end
+  end
+
+  permissions :create_filling_gaps? do
+    it 'grants access for non vacation type' do
+      expect(described_class).to permit(build_stubbed(:user), WorkTime.new(project: project))
+    end
+
+    it 'denies access for vacation type' do
+      expect(described_class).not_to permit(build_stubbed(:user), WorkTime.new(project: vacation_project))
+    end
+  end
+
+  permissions :update? do
+    it 'grants access for non vacation type' do
+      expect(described_class).to permit(build_stubbed(:user), WorkTime.new(project: project))
+    end
+
+    it 'denies access for vacation type' do
+      expect(described_class).not_to permit(build_stubbed(:user), WorkTime.new(project: vacation_project))
+    end
+  end
+
+  permissions :destroy? do
+    it 'grants access for non vacation type' do
+      expect(described_class).to permit(build_stubbed(:user), WorkTime.new(project: project))
+    end
+
+    it 'denies access for vacation type' do
+      expect(described_class).not_to permit(build_stubbed(:user), WorkTime.new(project: vacation_project))
+    end
+  end
 
   permissions '.scope' do
     let(:user) { create(:user) }
