@@ -14,7 +14,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
 
   def work_time_response(work_time)
     work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'tag', 'user_id')
-             .merge(task_preview: task_preview_helper(work_time.task))
+             .merge(task_preview: task_preview_helper(work_time.task), editable: !work_time.project.vacation?)
              .merge(date: work_time.starts_at.to_date,
                     project: { name: work_time.project.name,
                                color: work_time.project.color,
@@ -64,6 +64,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
             tag: work_time.tag,
             task_preview: task_preview_helper(work_time.task),
             user_id: work_time.user_id,
+            editable: !work_time.project.vacation?,
             project: {
               id: work_time.project.id,
               name: work_time.project.name,
@@ -102,6 +103,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
             tag: work_time.tag,
             task_preview: task_preview_helper(work_time.task),
             user_id: user_work_time.user_id,
+            editable: !work_time.project.vacation?,
             project: {
               id: user_work_time.project.id,
               name: user_work_time.project.name,

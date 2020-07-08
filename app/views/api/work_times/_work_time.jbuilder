@@ -12,6 +12,7 @@ json.task sanitize(work_time.task)
 json.tag work_time.tag
 json.task_preview sanitize(task_preview_helper(work_time.task))
 json.user_id work_time.user_id
+json.editable !work_time.project.vacation?
 json.project do
   json.extract! work_time.project, :id, :name, :color, :work_times_allows_task, :lunch, :count_duration
   json.set! :taggable, work_time.project.taggable?

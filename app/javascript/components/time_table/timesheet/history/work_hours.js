@@ -289,30 +289,34 @@ class WorkHours extends React.Component {
   }
 
   toggleEdit() {
-    this.setState({
-      editing: true,
-      tagEditable: true,
-      errors: [],
-    }, () => {
-      document.addEventListener('click', this.disableEdit);
-    });
+    if (this.state.workHours.editable === true) {
+      this.setState({
+        editing: true,
+        tagEditable: true,
+        errors: [],
+      }, () => {
+        document.addEventListener('click', this.disableEdit);
+      });
+    }
   }
 
   toggleProjectEdit() {
-    const { projectEditable } = this.state;
+    if (this.state.workHours.editable === true) {
+      const { projectEditable } = this.state;
 
-    if (projectEditable) {
-      document.removeEventListener('click', this.toggleProjectEdit);
-    } else {
-      document.addEventListener('click', this.toggleProjectEdit);
+      if (projectEditable) {
+        document.removeEventListener('click', this.toggleProjectEdit);
+      } else {
+        document.addEventListener('click', this.toggleProjectEdit);
+      }
+
+      this.setState({
+        projectEditable: !projectEditable,
+        filter: '',
+      }, () => {
+        if (this.state.projectEditable && this.searchRef.current) this.searchRef.current.focus();
+      });
     }
-
-    this.setState({
-      projectEditable: !projectEditable,
-      filter: '',
-    }, () => {
-      if (this.state.projectEditable && this.searchRef.current) this.searchRef.current.focus();
-    });
   }
 
   toggleTagEdit() {
@@ -501,14 +505,16 @@ class WorkHours extends React.Component {
                 data-tooltip-bottom={I18n.t('common.history')}
                 onClick={this.getInfo}
               />
-              <button
-                className="btn btn-danger btn-sm"
-                type="button"
-                onClick={this.onDelete}
-                data-tooltip-bottom={I18n.t('common.remove')}
-              >
-                <i className="fa fa-trash-o" />
-              </button>
+              { workHours.editable && (
+                <button
+                  className="btn btn-danger btn-sm"
+                  type="button"
+                  onClick={this.onDelete}
+                  data-tooltip-bottom={I18n.t('common.remove')}
+                >
+                  <i className="fa fa-trash-o" />
+                </button>
+              )}
             </div>
           </li>
         </ul>

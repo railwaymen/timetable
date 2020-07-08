@@ -273,6 +273,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WorkTimeValidation'
+        403:
+          description:
   /work_times/create_filling_gaps:
     post:
       tags:
@@ -319,6 +321,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WorkTimeValidation'
+        403:
+          description:
   /work_times/{id}:
     get:
       tags:
@@ -413,6 +417,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WorkTimeValidation'
+        403:
+          description:
     delete:
       tags:
         - Work times
@@ -426,6 +432,8 @@ paths:
             type: integer
       responses:
         204:
+          description:
+        403:
           description:
   /accounting_periods:
     get:
@@ -918,6 +926,9 @@ components:
         date:
           type: string
           example: "2020-03-04"
+        editable:
+          type: boolean
+          example: true
         project:
           type: object
           required:
