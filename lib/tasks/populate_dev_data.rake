@@ -18,7 +18,7 @@ task populate_dev_data: :environment do
     Project.where(id: index).first_or_create! name: FFaker::Product.product_name
   end
 
-  project_ids = Project.active.pluck(:id)
+  project_ids = Project.filter_by(:active).pluck(:id)
 
   User.find_each do |user|
     90.times do |day|
@@ -26,7 +26,7 @@ task populate_dev_data: :environment do
         body = FFaker::DizzleIpsum.sentence
         starts_at = day.days.ago.beginning_of_day + 8.hours + i.hours
         ends_at = day.days.ago.beginning_of_day + 8.hours + i.hours + 1.hour
-        user.work_times.create! body: body, starts_at: starts_at, ends_at: ends_at, project_id: project_ids.sample, creator: user
+        user.work_times.create! body: body, starts_at: starts_at, ends_at: ends_at, project_id: project_ids.sample, creator: user, department: user.department
       end
     end
   end
