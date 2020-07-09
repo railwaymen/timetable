@@ -20,6 +20,7 @@ function Staff() {
   const [vacations, setVacations] = useState({ interactedVacations: [], unconfirmedVacations: [] });
   const [showAll, setShowAll] = useState(false);
   const [showDeclined, setShowDeclined] = useState(false);
+  const [usersVacationDays, setUsersVacationDays] = useState({});
   const {
     selectedUserId,
     startDate,
@@ -103,8 +104,10 @@ function Staff() {
   function removeFromUnconfirmedVacation(object) {
     if (window.currentUser.staff_manager) {
       const undefinedIndex = vacations.unconfirmedVacations.findIndex((vacation) => vacation.id === object.id);
-      vacations.unconfirmedVacations.splice(undefinedIndex, 1);
-      setVacations({ ...vacations, unconfirmedVacations: vacations.unconfirmedVacations });
+      if (undefinedIndex !== -1) {
+        vacations.unconfirmedVacations.splice(undefinedIndex, 1);
+        setVacations({ ...vacations, unconfirmedVacations: vacations.unconfirmedVacations });
+      }
     }
   }
 
@@ -120,6 +123,21 @@ function Staff() {
       unconfirmedVacations.splice(undefinedIndex, 1);
       setVacations({ interactedVacations: [object].concat(interactedVacations), unconfirmedVacations });
     }
+  }
+
+  useEffect(() => {
+    const vacationDays = {};
+    vacations.unconfirmedVacations.forEach((vacation) => {
+      vacationDays[vacation.user_id] = vacation.available_vacation_days;
+    });
+    setUsersVacationDays(vacationDays);
+  }, [vacations.unconfirmedVacations]);
+
+  function setUserVacationDays(userId, availableVacationDays) {
+    setUsersVacationDays({
+      ...usersVacationDays,
+      [userId]: availableVacationDays,
+    });
   }
 
   return (
@@ -141,6 +159,7 @@ function Staff() {
                 getVacations={getVacations}
                 removeFromInteractedVacations={removeFromInteractedVacations}
                 addToInteractedVacations={addToInteractedVacations}
+                setUserVacationDays={setUserVacationDays}
               />
             </div>
             <div className="col-md-6 pr-0">
@@ -152,6 +171,8 @@ function Staff() {
                 setFilters={setFilters}
                 removeFromInteractedVacations={removeFromInteractedVacations}
                 addToInteractedVacations={addToInteractedVacations}
+                usersVacationDays={usersVacationDays}
+                setUserVacationDays={setUserVacationDays}
               />
             </div>
           </div>
