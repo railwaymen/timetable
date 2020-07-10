@@ -13,6 +13,9 @@ development:
 staging:
   <<: *global
 
+demo:
+  <<: *global
+
 production:
   <<: *global
 

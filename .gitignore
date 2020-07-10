@@ -34,3 +34,5 @@ system
 public/images/reports_logo.jpg
 public/javascripts
 .vscode
+
+/config/master.key
