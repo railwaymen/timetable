@@ -2,6 +2,8 @@
 
 class WorkTimePolicy < ApplicationPolicy
   def update?
+    return true if record.project.nil?
+
     !record.project.vacation?
   end
 
