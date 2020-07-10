@@ -25,3 +25,10 @@ staging:
     - develop
   script:
     - bundle exec cap staging deploy
+
+demo:
+  stage: deploy
+  only:
+    - master
+  script:
+    - bundle exec cap demo deploy
