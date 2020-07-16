@@ -342,11 +342,9 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       starts_at = Time.zone.now.beginning_of_day
       ends_at = Time.zone.now.beginning_of_day + 2.hours
       work_time = create(:work_time, starts_at: starts_at, ends_at: ends_at, user: user)
-      project = create(:project)
-      put :update, params: { id: work_time.id, work_time: { project_id: project.id, body: body, starts_at: work_time.starts_at + 1.hour } }, format: :json
+      put :update, params: { id: work_time.id, work_time: { body: body, starts_at: work_time.starts_at + 1.hour } }, format: :json
       expect(response.code).to eql('200')
       expect(work_time.reload.body).to eql(body)
-      expect(work_time.project_id).to eql(project.id)
       expect(work_time.starts_at).to eql(starts_at + 1.hour)
       expect(work_time.ends_at).to eql(ends_at)
       expect(response.body).to be_json_eql(work_time_response(work_time).to_json)
@@ -357,11 +355,9 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       starts_at = Time.zone.now.beginning_of_day
       ends_at = Time.zone.now.beginning_of_day + 2.hours
       work_time = create(:work_time, starts_at: starts_at, ends_at: ends_at, user: user)
-      project = create(:project)
-      put :update, params: { id: work_time.id, work_time: { project_id: project.id, body: body, ends_at: work_time.ends_at + 1.hour } }, format: :json
+      put :update, params: { id: work_time.id, work_time: { body: body, ends_at: work_time.ends_at + 1.hour } }, format: :json
       expect(response.code).to eql('200')
       expect(work_time.reload.body).to eql(body)
-      expect(work_time.project_id).to eql(project.id)
       expect(work_time.starts_at).to eql(starts_at)
       expect(work_time.ends_at).to eql(ends_at + 1.hour)
       expect(response.body).to be_json_eql(work_time_response(work_time).to_json)
@@ -370,32 +366,13 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'updates work time as admin' do
       sign_in(admin)
       work_time = create(:work_time, user: user)
-      project = create(:project)
-      put :update, params: { id: work_time.id, work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+      put :update, params: { id: work_time.id, work_time: { body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
       expect(response.code).to eql('200')
       expect(work_time.reload.body).to eql(body)
       expect(work_time.updated_by_admin).to be true
-      expect(work_time.project_id).to eql(project.id)
       expect(work_time.starts_at).to eql(starts_at)
       expect(work_time.ends_at).to eql(ends_at)
       expect(response.body).to be_json_eql(work_time_response(work_time).to_json)
-    end
-
-    it 'updates old external task' do
-      module ExternalAuthStrategy
-        class Sample < Base; def self.from_data(*args); end; end
-      end
-      project = create(:project, :external_integration_enabled)
-      sign_in(user)
-      create(:external_auth, user: user, provider: 'Sample')
-      work_time = create(:work_time, project: project, user: user, integration_payload: { 'Sample' => { 'task_id' => '1' } })
-      strategy_double = double('strategy')
-      allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
-      expect(strategy_double).to receive(:integration_payload) { { 'task_id' => 1 } }
-      expect(UpdateExternalAuthWorker).to receive(:perform_async).twice
-      put :update, params: { id: work_time.id, work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://www.example.com' } }, format: :json
-      expect(response.code).to eql('200')
-      expect(work_time.reload.body).to eql(body)
     end
   end
 
