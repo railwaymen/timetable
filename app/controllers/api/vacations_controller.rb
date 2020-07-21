@@ -8,16 +8,16 @@ module Api
     around_action :disable_paper_trail, only: %i[approve decline undone self_decline update_dates]
 
     def index
-      user_id =
+      selected_user =
         if current_user.staff_manager?
-          params[:user_id] || current_user.id
+          params[:user_id] && User.kept.find(params[:user_id]) || current_user
         else
-          current_user.id
+          current_user
         end
       @vacations = Vacation.where('user_id = :user_id AND (extract(year from start_date) = :year OR extract(year from start_date) = :year)',
-                                  user_id: user_id, year: params[:year]).order(:start_date)
-      @available_vacation_days = current_user.available_vacation_days(@vacations)
-      @used_vacation_days = current_user.used_vacation_days(@vacations)
+                                  user_id: selected_user.id, year: params[:year]).order(:start_date)
+      @available_vacation_days = selected_user.available_vacation_days(@vacations)
+      @used_vacation_days = selected_user.used_vacation_days(@vacations)
     end
 
     def create
