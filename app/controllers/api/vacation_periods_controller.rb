@@ -6,7 +6,7 @@ module Api
     before_action :find_period, only: %i[show update]
 
     def index
-      respond_with vacation_periods
+      respond_with @vacation_periods = vacation_periods.page(params[:page]).per(params[:per_page] || 24)
     end
 
     def show
@@ -26,11 +26,9 @@ module Api
     private
 
     def vacation_periods
-      @vacation_periods ||= begin
-        periods = current_user.admin? ? VacationPeriod.order(:created_at) : current_user.vacation_periods.order(:created_at)
-        periods.where!(user_id: params[:user_id]) if params[:user_id].present? && current_user.admin?
-        periods
-      end
+      periods = current_user.admin? ? VacationPeriod.order(:created_at) : current_user.vacation_periods.order(:created_at)
+      periods.where!(user_id: params[:user_id]) if params[:user_id].present? && current_user.admin?
+      periods
     end
 
     def find_period

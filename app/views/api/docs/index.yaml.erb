@@ -497,6 +497,39 @@ paths:
                   should_worked:
                     type: integer
                     example: 604800
+  /vacation_periods:
+    get:
+      tags:
+        - Vacations
+      security:
+        - authentication: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: per_page
+          description: Records per page. By default it is 24
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - total_pages
+                  - vacation_periods
+                properties:
+                  total_pages:
+                    type: integer
+                    example: 20
+                  vacation_periods:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VacationPeriod'
   /vacations:
     get:
       tags:
@@ -837,6 +870,37 @@ components:
           type: boolean
           example: false
         protected:
+          type: boolean
+          example: false
+    VacationPeriod:
+      type: object
+      required:
+        - id
+        - user_id
+        - vacation_days
+        - closed
+        - starts_at
+        - ends_at
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        starts_at:
+          type: string
+          example: 2020-01-01
+        ends_at:
+          type: string
+          example: 2020-12-31
+        vacation_days:
+          type: integer
+          example: 26
+        note:
+          type: string
+          example: Lorem ipsum
+        closed:
           type: boolean
           example: false
     RemoteWork:

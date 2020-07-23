@@ -23,7 +23,7 @@ RSpec.describe Api::VacationPeriodsController do
       vacation_period = create(:vacation_period, user: user)
       get :index, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ vacation_periods: [vacation_period_response(vacation_period)] }.to_json)
+      expect(response.body).to be_json_eql({ total_pages: 1, records: [vacation_period_response(vacation_period)] }.to_json)
     end
 
     it 'returns all vacation periods as staff manager' do
@@ -31,7 +31,7 @@ RSpec.describe Api::VacationPeriodsController do
       vacation_period = create(:vacation_period)
       get :index, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ vacation_periods: [vacation_period_response(vacation_period)] }.to_json)
+      expect(response.body).to be_json_eql({ total_pages: 1, records: [vacation_period_response(vacation_period)] }.to_json)
     end
 
     it 'filters by user_id by staff manager' do
@@ -39,7 +39,7 @@ RSpec.describe Api::VacationPeriodsController do
       vacation_period = create(:vacation_period, user: user)
       get :index, params: { user_id: user.id }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql({ vacation_periods: [vacation_period_response(vacation_period)] }.to_json)
+      expect(response.body).to be_json_eql({ total_pages: 1, records: [vacation_period_response(vacation_period)] }.to_json)
     end
   end
 

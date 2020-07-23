@@ -16,7 +16,7 @@ function VacationPeriods() {
     Api.makeGetRequest({
       url: `/api/vacation_periods?user_id=${userId}`,
     }).then((response) => {
-      const responseVacationPeriods = response.data.vacation_periods;
+      const responseVacationPeriods = response.data.records;
       Api.makeGetRequest({
         url: `/api/users/${userId}`,
       }).then((userResponse) => {
