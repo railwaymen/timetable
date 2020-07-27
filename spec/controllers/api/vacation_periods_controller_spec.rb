@@ -29,7 +29,7 @@ RSpec.describe Api::VacationPeriodsController do
     it 'returns all vacation periods as staff manager' do
       sign_in(staff_manager)
       vacation_period = create(:vacation_period)
-      get :index, format: :json
+      get :index, params: { user_id: vacation_period.user_id }, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql({ total_pages: 1, records: [vacation_period_response(vacation_period)] }.to_json)
     end
