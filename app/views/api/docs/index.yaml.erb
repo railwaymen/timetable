@@ -521,12 +521,12 @@ paths:
                 type: object
                 required:
                   - total_pages
-                  - vacation_periods
+                  - records
                 properties:
                   total_pages:
                     type: integer
                     example: 20
-                  vacation_periods:
+                  records:
                     type: array
                     items:
                       $ref: '#/components/schemas/VacationPeriod'
