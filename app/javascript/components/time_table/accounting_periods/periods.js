@@ -227,7 +227,6 @@ class Periods extends React.Component {
     return li;
   }
 
-
   renderButtons() {
     const { recounting } = this.state;
 

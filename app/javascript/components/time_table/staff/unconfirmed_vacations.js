@@ -13,7 +13,6 @@ function UnconfirmedVacations(props) {
   } = props;
   const { waitingOrder } = filters;
 
-
   function onOrderChange() {
     if (waitingOrder === 'asc') {
       setFilters({ ...filters, waitingOrder: 'desc' });

@@ -46,24 +46,6 @@ export default class NewReport extends React.Component {
     this.setState({ endsAt });
   }
 
-  getRoles() {
-    this.setState({ sync: true });
-    const { projectId, startsAt, endsAt } = this.state;
-    const url = `/api/projects/${projectId}/project_reports/roles?starts_at=${startsAt.toISOString()}&ends_at=${endsAt.toISOString()}`;
-    Api.makeGetRequest({ url })
-      .then(({ data }) => {
-        this.setState(({ currency }) => ({ sync: false, userRoles: data.user_roles, currency: currency || data.currency }));
-      });
-    this.checkForCollision();
-  }
-
-  checkForCollision() {
-    const { projectId, startsAt, endsAt } = this.state;
-    const url = `/api/projects/${projectId}/project_reports?starts_at=${startsAt.toISOString()}&ends_at=${endsAt.toISOString()}`;
-    Api.makeGetRequest({ url })
-      .then(({ data }) => this.setState({ collisions: data }));
-  }
-
   onFieldChange(event, field, userId) {
     const { value } = event.target;
     this.setState(({ userRoles }) => {
@@ -103,6 +85,24 @@ export default class NewReport extends React.Component {
         alert('Failed to create report');
       }
     });
+  }
+
+  getRoles() {
+    this.setState({ sync: true });
+    const { projectId, startsAt, endsAt } = this.state;
+    const url = `/api/projects/${projectId}/project_reports/roles?starts_at=${startsAt.toISOString()}&ends_at=${endsAt.toISOString()}`;
+    Api.makeGetRequest({ url })
+      .then(({ data }) => {
+        this.setState(({ currency }) => ({ sync: false, userRoles: data.user_roles, currency: currency || data.currency }));
+      });
+    this.checkForCollision();
+  }
+
+  checkForCollision() {
+    const { projectId, startsAt, endsAt } = this.state;
+    const url = `/api/projects/${projectId}/project_reports?starts_at=${startsAt.toISOString()}&ends_at=${endsAt.toISOString()}`;
+    Api.makeGetRequest({ url })
+      .then(({ data }) => this.setState({ collisions: data }));
   }
 
   collisionAlert() {

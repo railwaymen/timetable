@@ -97,7 +97,6 @@ const EditHardware = ({
   );
 };
 
-
 EditHardware.propTypes = {
   errors: PropTypes.object.isRequired,
   onEdit: PropTypes.func.isRequired,
