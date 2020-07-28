@@ -10,7 +10,7 @@ json.vacation do
   json.end_date response[:vacation].end_date
   json.vacation_type response[:vacation].vacation_type
   json.status response[:vacation].status
-  json.description response[:vacation].description
+  json.description response[:vacation].description if current_user.admin? || current_user.staff_manager?
 end
 json.previous_status response[:previous_status]
 json.user_available_vacation_days response[:user_available_vacation_days]

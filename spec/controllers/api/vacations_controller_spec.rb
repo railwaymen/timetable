@@ -244,6 +244,24 @@ RSpec.describe Api::VacationsController do
                                              warnings: [],
                                              user_available_vacation_days: nil }.to_json)
     end
+
+    context 'for leader' do
+      it 'declines & does not return description info' do
+        leader = create(:project, :with_leader).leader
+        sign_in(leader)
+        vacation = create(:vacation, user: user, description: 'Declined')
+        expect(VacationService).to receive(:new).with(vacation: vacation, current_user: leader, params: default_params.merge(vacation_id: vacation.id.to_s, action: 'decline')).and_return(vacation_service)
+        expect(vacation_service).to receive(:decline).and_return(vacation_service_response(vacation, leader))
+        post :decline, params: { vacation_id: vacation.id }, format: :json
+        expect(response.code).to eql('200')
+        expect(response.body).to be_json_eql({ user_full_name: leader.to_s,
+                                               errors: [],
+                                               vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s).except('description'),
+                                               previous_status: 'unconfirmed',
+                                               warnings: [],
+                                               user_available_vacation_days: nil }.to_json)
+      end
+    end
   end
 
   describe '#approve' do
