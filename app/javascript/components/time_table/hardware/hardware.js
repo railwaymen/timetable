@@ -11,7 +11,6 @@ const Hardware = ({ hardware, onDelete, fields }) => {
   const [errors, setErrors] = useState({});
   const [stateHardware, setStateHardware] = useState(hardware);
 
-
   const onSave = (FHardware) => {
     makePutRequest({
       url: `/api/hardwares/${stateHardware.id}`,
@@ -50,7 +49,6 @@ const Hardware = ({ hardware, onDelete, fields }) => {
       setStateHardware(response.data);
     });
   };
-
 
   const lockManagement = () => {
     if (currentUser.isHardwareManager()) {
