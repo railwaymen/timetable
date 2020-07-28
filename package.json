@@ -10,8 +10,8 @@
     "chart.js": "^2.9.3",
     "classnames": "^2.2.6",
     "component-webpack-plugin": "^0.2.1",
-    "jquery": "^3.4.1",
-    "lodash": "^4.17.11",
+    "jquery": "^3.5.1",
+    "lodash": "^4.17.19",
     "moment": "^2.22.2",
     "popper.js": "^1.16.1",
     "prop-types": "^15.7.2",
@@ -37,7 +37,7 @@
     "eslint-plugin-import": "^2.17.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.3",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
     "lint": "yarn run eslint -- --ext .js --ext .jsx app/javascript"
