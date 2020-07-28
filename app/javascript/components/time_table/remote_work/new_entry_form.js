@@ -52,7 +52,7 @@ const NewEntryForm = (props) => {
   }, [userId]);
 
   return (
-    <div id="content" className="new-remote-work">
+    <div id="content" className="new-remote-work mb-3">
       <form onSubmit={onSubmit}>
         <div className="row calendar-row">
           <div className="col form-group">
