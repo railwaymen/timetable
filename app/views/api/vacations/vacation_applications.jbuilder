@@ -8,7 +8,7 @@ json.accepted_or_declined_vacations do |accepted_or_declinedvacation_element|
     json.end_date vacation['end_date']
     json.vacation_type vacation['vacation_type']
     json.status vacation['status']
-    json.description vacation['description']
+    json.description vacation['description'] if current_user.admin? || current_user.staff_manager?
   end
 end
 
@@ -22,7 +22,7 @@ json.unconfirmed_vacations do |unconfirmed_vacation_element|
     json.vacation_type vacation['vacation_type']
     json.vacation_sub_type vacation['vacation_sub_type']
     json.status vacation['status']
-    json.description vacation['description']
+    json.description vacation['description'] if current_user.admin? || current_user.staff_manager?
     json.self_declined vacation['self_declined']
 
     json.approvers vacation['approvers']

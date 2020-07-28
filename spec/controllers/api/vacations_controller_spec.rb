@@ -200,6 +200,22 @@ RSpec.describe Api::VacationsController do
                                                unconfirmed_vacations: [unconfirmed_vacation_response(unconfirmed_vacation).merge(available_vacation_days: nil)] }.to_json)
       end
     end
+
+    context 'for leader' do
+      it 'does not return description info' do
+        leader = create(:project, :with_leader).leader
+        sign_in(leader)
+        accepted_vacation = create(:vacation, user: user, description: 'Accepted', status: :accepted)
+        unconfirmed_vacation = create(:vacation, user: user, description: 'Unconfirmed')
+        expect(VacationApplicationsQuery).to receive(:new).with(leader, default_params.merge(action: 'vacation_applications')).and_return(vacation_applications_query)
+        expect(vacation_applications_query).to receive(:accepted_or_declined_vacations).and_return([accepted_vacation])
+        expect(vacation_applications_query).to receive(:unconfirmed_vacations).and_return([unconfirmed_vacation])
+        get :vacation_applications, format: :json
+        expect(response.code).to eql('200')
+        expect(response.body).to be_json_eql({ accepted_or_declined_vacations: [vacation_response_with_description(accepted_vacation).merge(full_name: nil).except('description')],
+                                               unconfirmed_vacations: [unconfirmed_vacation_response(unconfirmed_vacation).merge(available_vacation_days: nil).except('description')] }.to_json)
+      end
+    end
   end
 
   describe '#decline' do
