@@ -52,7 +52,7 @@ class ProjectsDistribution extends React.Component {
       false,
       {
         customCellWidth: 20,
-        tableHeaderHeight: 50,
+        tableHeaderHeight: 60,
         schedulerWidth: maxSchedulerWidth,
         headerEnabled: true,
         resourceName: '',
