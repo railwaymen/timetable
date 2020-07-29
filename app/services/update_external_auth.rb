@@ -3,7 +3,7 @@
 require 'logger'
 
 class UpdateExternalAuth
-  attr_reader :project, :work_time_task, :work_time
+  attr_reader :project, :work_time_task, :work_time, :logger, :name
 
   def initialize(project, work_time_task, work_time)
     @project = project
@@ -27,8 +27,6 @@ class UpdateExternalAuth
   end
 
   private
-
-  attr_reader :logger, :name
 
   def calculate_sum
     WorkTime.kept.where(project_id: project.id, user_id: work_time.user_id)

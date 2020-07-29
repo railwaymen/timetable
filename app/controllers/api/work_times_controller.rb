@@ -38,7 +38,7 @@ module Api
     def update
       @work_time = find_work_time
       authorize @work_time
-      @work_time.assign_attributes(work_time_params)
+      @work_time.assign_attributes(work_time_params.except(:project_id))
       duration_was = @work_time.duration
       if current_user.admin? && @work_time.changed?
         @work_time.updated_by_admin = true if @work_time.user_id != current_user.id

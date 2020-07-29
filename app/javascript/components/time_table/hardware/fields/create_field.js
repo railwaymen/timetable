@@ -5,7 +5,6 @@ import Errors from '../errors';
 import useFormHandler from '../../../../hooks/use_form_handler';
 import translateErrors from '../../../shared/translate_errors';
 
-
 const CreateField = ({
   toggleExpand, expanded, hardware_id, updateFieldList,
 }) => {

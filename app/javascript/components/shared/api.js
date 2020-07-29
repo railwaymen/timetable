@@ -1,4 +1,3 @@
-
 const csrfToken = () => {
   const csrf = document.getElementsByName('csrf-token')[0];
 

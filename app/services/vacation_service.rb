@@ -39,6 +39,14 @@ class VacationService
     response
   end
 
+  def update_dates
+    return non_editable_error unless @vacation.unconfirmed? || @vacation.approved?
+
+    @vacation.assign_attributes(update_dates_vacation_params)
+    @vacation.valid? ? @vacation.save : (return vacation_errors(@vacation.errors))
+    response
+  end
+
   private
 
   def approve_transaction
@@ -209,6 +217,30 @@ class VacationService
     else
       {}
     end
+  end
+
+  def update_dates_vacation_params
+    @params.require(:vacation)
+           .permit(
+             %i[
+               start_date
+               end_date
+             ]
+           )
+  end
+
+  def non_editable_error
+    @errors << { non_editable: I18n.t('apps.staff.non_editable') }
+    response
+  end
+
+  def vacation_errors(errors)
+    error_list = []
+    errors.details.each do |key, value|
+      error_list << I18n.t("activerecord.errors.models.vacation.attributes.#{key}.#{value[0][:error]}")
+    end
+    @errors << { vacation: error_list.join(', ') }
+    response
   end
 end
 # rubocop:enable Metrics/ClassLength

@@ -6,7 +6,6 @@ import DatePicker from 'react-datepicker';
 import ErrorTooltip from '@components/shared/error_tooltip';
 import ModalButton from '@components/shared/modal_button';
 import * as Api from '../../../shared/api';
-import ProjectsList from '../projects_list';
 import TagsDropdown from '../tags_dropdown';
 import { defaultDatePickerProps } from '../../../shared/helpers';
 import translateErrors from '../../../shared/translate_errors';
@@ -30,9 +29,7 @@ class WorkHours extends React.Component {
     this.workHoursJsonApi = this.workHoursJsonApi.bind(this);
     this.saveWorkHours = this.saveWorkHours.bind(this);
     this.getInfo = this.getInfo.bind(this);
-    this.onChangeProject = this.onChangeProject.bind(this);
     this.disableEdit = this.disableEdit.bind(this);
-    this.toggleProjectEdit = this.toggleProjectEdit.bind(this);
     this.toggleTagEdit = this.toggleTagEdit.bind(this);
     this.onHoursEdit = this.onHoursEdit.bind(this);
     this.onTimeFocus = this.onTimeFocus.bind(this);
@@ -40,19 +37,13 @@ class WorkHours extends React.Component {
     this.recountTime = this.recountTime.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onTagChange = this.onTagChange.bind(this);
-    this.onFilterChange = this.onFilterChange.bind(this);
-    this.onFilterKeyPress = this.onFilterKeyPress.bind(this);
 
     this.state = {
       workHours: this.props.workHours,
       editing: false,
-      projectEditable: false,
       tagEditable: false,
       errors: [],
-      filter: '',
     };
-
-    this.searchRef = React.createRef();
   }
 
   componentDidMount() {
@@ -105,11 +96,6 @@ class WorkHours extends React.Component {
     }));
   }
 
-  onChangeProject(e) {
-    const projectId = parseInt(e.target.attributes.getNamedItem('data-value').value, 10);
-    this.changeProject(_.find(this.props.projects, (p) => p.id === projectId));
-  }
-
   onHoursEdit(e) {
     this.setState({
       [e.target.name]: e.target.value,
@@ -132,20 +118,6 @@ class WorkHours extends React.Component {
     this.setState({
       [name]: moment(value, 'HH:mm').subtract(Math.sign(e.deltaY), 'minutes').format('HH:mm'),
     });
-  }
-
-  onFilterChange({ target }) {
-    this.setState({ filter: target.value });
-  }
-
-  onFilterKeyPress({ key }) {
-    if (key !== 'Enter') return;
-
-    const project = this.filteredProjects()[0];
-
-    if (project) {
-      this.changeProject(project);
-    }
   }
 
   onDateChange(date) {
@@ -175,21 +147,6 @@ class WorkHours extends React.Component {
   preventScroll(e) {
     e = e || window.event;
     e.returnValue = false;
-  }
-
-  changeProject(project) {
-    this.toggleProjectEdit();
-    if (project.id !== this.state.selectedProject) {
-      this.setState((prevState) => ({
-        workHours: {
-          ...prevState.workHours,
-          project,
-          project_id: project.id,
-        },
-      }), () => {
-        this.saveWorkHours();
-      });
-    }
   }
 
   formattedHoursAndMinutesDuration(duration) {
@@ -230,11 +187,6 @@ class WorkHours extends React.Component {
         }
       </span>
     );
-  }
-
-  filteredProjects(filter = this.state.filter) {
-    const lowerFilter = filter.toLowerCase();
-    return this.props.projects.filter((p) => p.name.toLowerCase().match(escape(lowerFilter)));
   }
 
   saveWorkHours() {
@@ -300,25 +252,6 @@ class WorkHours extends React.Component {
     }
   }
 
-  toggleProjectEdit() {
-    if (this.state.workHours.editable === true) {
-      const { projectEditable } = this.state;
-
-      if (projectEditable) {
-        document.removeEventListener('click', this.toggleProjectEdit);
-      } else {
-        document.addEventListener('click', this.toggleProjectEdit);
-      }
-
-      this.setState({
-        projectEditable: !projectEditable,
-        filter: '',
-      }, () => {
-        if (this.state.projectEditable && this.searchRef.current) this.searchRef.current.focus();
-      });
-    }
-  }
-
   toggleTagEdit() {
     const { tagEditable } = this.state;
 
@@ -357,7 +290,6 @@ class WorkHours extends React.Component {
 
     return {
       id: workHours.id,
-      project_id: workHours.project_id,
       body: workHours.body,
       task: workHours.task,
       tag: workHours.tag,
@@ -427,7 +359,7 @@ class WorkHours extends React.Component {
 
   render() {
     const {
-      workHours, projectEditable, editing, errors, tagEditable, filter,
+      workHours, editing, errors, tagEditable,
     } = this.state;
 
     return (
@@ -449,29 +381,6 @@ class WorkHours extends React.Component {
                 <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
                   {workHours.project.name}
                 </span>
-                <div className="projects-region">
-                  { projectEditable && (
-                    <div>
-                      <div className="dropdown fluid search ui active visible">
-                        <input type="hidden" name="project" value="12" />
-                        <input
-                          className="search"
-                          style={{ width: '0' }}
-                          autoComplete="off"
-                          ref={this.searchRef}
-                          value={filter}
-                          onKeyPress={this.onFilterKeyPress}
-                          onChange={this.onFilterChange}
-                        />
-                        <div className="text">
-                          <div className="circular empty label ui" style={{ background: `#${workHours.project.color}` }} />
-                          {workHours.project.name}
-                        </div>
-                        <ProjectsList projects={this.filteredProjects()} currentProject={workHours.project} onChangeProject={this.onChangeProject} />
-                      </div>
-                    </div>
-                  )}
-                </div>
               </div>
               { workHours.project.taggable && (
               <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>

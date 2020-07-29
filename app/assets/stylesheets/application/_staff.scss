@@ -131,6 +131,18 @@
             &.folded {
               margin-left: 0;
             }
+            .nm-100 {
+              margin-right: -100px;
+            }
+            button.bt-vacation {
+              height: fit-content;
+              width: fit-content;
+              &.cancel {
+                background-color: $white;
+                border: 1px solid $vacations-declined-color;
+                color: $vacations-declined-color;
+              }
+            }
           }
           &.folded {
             margin-bottom: 0;

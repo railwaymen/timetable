@@ -147,7 +147,6 @@ pl:
       phone: Telefon
       button_disabled_tooltip: Tworzenie kont zablokowane. Automatyczne tworzenie poprzez logowanie LDAP.
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
-      birthday: Urodziny
       new: Nowe konto
       position: Pozycja
       department: Dział
@@ -192,7 +191,6 @@ pl:
       fold_used_days: Zwiń użyte dni urlopu
     staff:
       general: Ogólne
-      by_person: Wg. osoby
       filter: Filtruj
       csv_export: Export .csv
       accepted: Zaakceptowane
@@ -216,34 +214,22 @@ pl:
       acceptable: Do zaakceptowania
       all: Wszystkie
       available_vacation_days: Pozostałe dni urlopu
-      user_has_already_filled_in_work_time: Użytkownik %{parameter} już wypełnił czas pracy w dniach
+      user_has_already_filled_in_work_time: 'Użytkownik %{parameter} już wypełnił czas pracy w dniach: '
       too_early: Nie można zaakceptować urlopu z wyprzedzeniem o miesiąc
       not_just_vacations: Użytkownik %{user} ma wpisy w czasie pracy nie tylko z urlopu w danym okresie urlopu
       vacation_sub_type_empty: Podtyp urlopu nie może być pusty
       canceled: Anulowany
       yearly_report: Raport roczny
-      sort_direction: Sortowanie
+      order_direction: Kierunek porządkowania
+      user: użytkownika
+      ok: OK
+      non_editable: Edycja jest możliwa tylko, gdy urlop jest niepotwierdzony lub zatwierdzony
     vacation_periods:
       vacation_days: Dni urlopu
       note: Notatka
       closed: Zamknięty
       generate_periods: Generuj okresy urlopowe
       edit: Edycja okresu urlopowego
-    birthday_templates:
-      new: Nowy szablon urodzinowy
-      edit: Edycja szablonu urodzinowego
-      email_content: Wprowadź treść maila
-      email_header: Wprowadź nagłówek maila
-      email_bottom: Wprowadź stopke maila
-      incoming_birthdays: 'Nadchodzące urodziny:'
-      last_used: Ostatnio użyte
-      set_as_last_used: Ustaw jako ostatnio użyte
-      save_and_preview: Zapisz i odśwież podgląd
-      days:
-        few: '%{count} dni'
-        many: '%{count} dni'
-        one: '%{count} dzień'
-        other: '%{count} dni'
     projects_distribution:
       add_resource: Dodaj zasoby
       resource_menu: Menu zasobów
@@ -336,7 +322,6 @@ pl:
       illness: Ch
       care: Op
     vacation_periods: Okresy urlopowe
-    birthday_templates: Szablony urodzinowe
     title: Tytuł
     user: Użytkownik
     projects_distribution: Obłożenie projektów
@@ -437,12 +422,6 @@ pl:
             serial_number:
               blank: Numer seryjny jest wymagany
               taken: Numer seryjny jest zajety
-        birthday_email_template:
-          attributes:
-            name:
-              blank: Nazwa jest wymagana
-            title:
-              blank: Tytuł jest wymagany
         vacation:
           basic: Nie udało się dodać podania o urlop
           attributes:

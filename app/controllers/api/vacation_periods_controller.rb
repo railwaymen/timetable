@@ -6,7 +6,7 @@ module Api
     before_action :find_period, only: %i[show update]
 
     def index
-      respond_with vacation_periods
+      respond_with @vacation_periods = vacation_periods.page(params[:page]).per(params[:per_page] || 24)
     end
 
     def show
@@ -14,11 +14,13 @@ module Api
     end
 
     def update
+      authorize(@vacation_period)
       @vacation_period.update(vacation_period_params)
       respond_with @vacation_period
     end
 
     def generate
+      authorize(VacationPeriod.new)
       VacationPeriodsGenerator.new.generate
       render json: vacation_periods
     end
@@ -26,11 +28,9 @@ module Api
     private
 
     def vacation_periods
-      @vacation_periods ||= begin
-        periods = current_user.admin? ? VacationPeriod.order(:created_at) : current_user.vacation_periods.order(:created_at)
-        periods.where!(user_id: params[:user_id]) if params[:user_id].present? && current_user.admin?
-        periods
-      end
+      periods = current_user.vacation_periods.order(:created_at)
+      periods = periods.rewhere(user_id: params[:user_id]) if params[:user_id].present?
+      policy_scope(periods)
     end
 
     def find_period

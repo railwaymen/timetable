@@ -3,8 +3,9 @@
 module Api
   class VacationsController < Api::BaseController
     before_action :authenticate_admin_or_manager_or_leader!, only: %i[vacation_applications show decline approve undone generate_csv generate_yearly_report]
-    before_action :find_vacation, only: %i[approve decline undone self_decline]
-    around_action :disable_paper_trail, only: %i[approve decline undone self_decline]
+    before_action :authenticate_admin!, only: %i[update_dates]
+    before_action :find_vacation, only: %i[approve decline undone self_decline update_dates]
+    around_action :disable_paper_trail, only: %i[approve decline undone self_decline update_dates]
 
     def index
       selected_user =
@@ -96,6 +97,12 @@ module Api
           send_data csv_generator.generate, filename: 'vacations_yearly_report.csv'
         end
       end
+    end
+
+    def update_dates
+      vacation_service = VacationService.new(vacation: @vacation, current_user: current_user, params: params)
+      @response = vacation_service.update_dates
+      respond_with @response
     end
 
     private

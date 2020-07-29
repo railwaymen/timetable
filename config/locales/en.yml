@@ -58,7 +58,7 @@ en:
       disable_import_milestones: Disable daily milestone import from JIRA
     milestone_reports:
       current_milestone: Current milestone
-      by_user: By users
+      by_users: By users
       by_type: By type
       type:
         progress: Time progress
@@ -147,7 +147,6 @@ en:
       phone: Phone
       button_disabled_tooltip: Account creation disabled. Automatic creation with LDAP login.
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
-      birthday: Birthday
       new: New account
       position: Position
       department: Department
@@ -192,7 +191,6 @@ en:
       fold_used_days: Fold used vacation days
     staff:
       general: General
-      by_person: By person
       filter: Filter
       csv_export: Export .csv
       accepted: Accepted
@@ -216,34 +214,22 @@ en:
       acceptable: Acceptable
       all: All
       available_vacation_days: Available vacation days
-      user_has_already_filled_in_work_time: User %{parameter} has already filled in the work time in days
+      user_has_already_filled_in_work_time: 'User %{parameter} has already filled in the work time in days: '
       too_early: Can not approve vacation that starts more than 1 month from now
       not_just_vacations: User %{user} has not only vacation entries in work time during vacation period
       vacation_sub_type_empty: Vacation Subtype can't be empty
       canceled: Canceled
       yearly_report: Yearly report
-      sort_direction: Sort direction
+      order_direction: Order direction
+      user: user
+      ok: OK
+      non_editable: Vacation is only editable when vaction is uncofirmed or approved
     vacation_periods:
       vacation_days: Vacation days
       note: Note
       closed: Closed
       generate_periods: Generate vacation periods
       edit: Edit vacation period
-    birthday_templates:
-      new: New birthday template
-      edit: Edit birthday template
-      email_content: Enter email content
-      email_header: Enter email header
-      email_bottom: Enter email bottom
-      incoming_birthdays: 'Incoming birthdays:'
-      last_used: Last used
-      set_as_last_used: Set as last used
-      save_and_preview: Save and refresh preview
-      days:
-        few: '%{count} days'
-        many: '%{count} days'
-        one: '%{count} day'
-        other: '%{count} days'
     projects_distribution:
       add_resource: Add resource
       resource_menu: Resource menu
@@ -336,7 +322,6 @@ en:
       illness: Ch
       care: Op
     vacation_periods: Vacation Periods
-    birthday_templates: Birthday Templates
     title: Title
     user: User
     projects_distribution: Projects distribution
@@ -386,12 +371,6 @@ en:
             serial_number:
               blank: Serial Number can't be blank
               taken: Serial Number is already in use
-        birthday_email_template:
-          attributes:
-            name:
-              blank: Name is required
-            title:
-              blank: Title is required
         vacation:
           basic: There was an error while trying to add application for vacation
           attributes:

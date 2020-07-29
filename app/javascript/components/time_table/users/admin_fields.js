@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import { NavLink } from 'react-router-dom';
 import Autocomplete from 'react-autocomplete';
 import { makeGetRequest } from '../../shared/api';
-
 
 function AdminFields(props) {
   const {
@@ -91,16 +89,6 @@ function AdminFields(props) {
           name="phone"
           placeholder={I18n.t('apps.users.phone')}
           value={user.phone || ''}
-          onChange={onChange}
-        />
-      </div>
-      <div className="form-group">
-        {errors.birthdate && <div className="error-description">{errors.birthdate.join(', ')}</div>}
-        <input
-          className={`${errors.birthdate ? 'error' : ''} form-control`}
-          value={user.birthdate ? moment(user.birthdate).format('YYYY-MM-DD') : ''}
-          type="date"
-          name="birthdate"
           onChange={onChange}
         />
       </div>

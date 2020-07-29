@@ -7,7 +7,7 @@ require 'uri'
 # rubocop:disable Metrics/ClassLength
 # :nocov:
 class ProjectReportGenerator
-  attr_reader :project_report
+  attr_reader :project_report, :wage_hash, :name_hash, :description_hash
 
   STRONG_GRAY = 'B6B6B6'
   LIGHT_GRAY = 'EFEFEF'
@@ -33,8 +33,6 @@ class ProjectReportGenerator
   end
 
   private
-
-  attr_reader :wage_hash, :name_hash, :description_hash
 
   def generate_pdf(file)
     Prawn::Document.generate(file) do |pdf|

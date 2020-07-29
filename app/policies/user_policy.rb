@@ -12,6 +12,6 @@ class UserPolicy < ApplicationPolicy
   end
 
   def admin_params
-    params + [:email, :phone, :contract_name, :active, :birthdate, :department, position_list: []]
+    params + [:email, :phone, :contract_name, :active, :department, position_list: []]
   end
 end

@@ -200,6 +200,22 @@ RSpec.describe Api::VacationsController do
                                                unconfirmed_vacations: [unconfirmed_vacation_response(unconfirmed_vacation).merge(available_vacation_days: nil)] }.to_json)
       end
     end
+
+    context 'for leader' do
+      it 'does not return description info' do
+        leader = create(:project, :with_leader).leader
+        sign_in(leader)
+        accepted_vacation = create(:vacation, user: user, description: 'Accepted', status: :accepted)
+        unconfirmed_vacation = create(:vacation, user: user, description: 'Unconfirmed')
+        expect(VacationApplicationsQuery).to receive(:new).with(leader, default_params.merge(action: 'vacation_applications')).and_return(vacation_applications_query)
+        expect(vacation_applications_query).to receive(:accepted_or_declined_vacations).and_return([accepted_vacation])
+        expect(vacation_applications_query).to receive(:unconfirmed_vacations).and_return([unconfirmed_vacation])
+        get :vacation_applications, format: :json
+        expect(response.code).to eql('200')
+        expect(response.body).to be_json_eql({ accepted_or_declined_vacations: [vacation_response_with_description(accepted_vacation).merge(full_name: nil).except('description')],
+                                               unconfirmed_vacations: [unconfirmed_vacation_response(unconfirmed_vacation).merge(available_vacation_days: nil).except('description')] }.to_json)
+      end
+    end
   end
 
   describe '#decline' do
@@ -227,6 +243,24 @@ RSpec.describe Api::VacationsController do
                                              previous_status: 'unconfirmed',
                                              warnings: [],
                                              user_available_vacation_days: nil }.to_json)
+    end
+
+    context 'for leader' do
+      it 'declines & does not return description info' do
+        leader = create(:project, :with_leader).leader
+        sign_in(leader)
+        vacation = create(:vacation, user: user, description: 'Declined')
+        expect(VacationService).to receive(:new).with(vacation: vacation, current_user: leader, params: default_params.merge(vacation_id: vacation.id.to_s, action: 'decline')).and_return(vacation_service)
+        expect(vacation_service).to receive(:decline).and_return(vacation_service_response(vacation, leader))
+        post :decline, params: { vacation_id: vacation.id }, format: :json
+        expect(response.code).to eql('200')
+        expect(response.body).to be_json_eql({ user_full_name: leader.to_s,
+                                               errors: [],
+                                               vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s).except('description'),
+                                               previous_status: 'unconfirmed',
+                                               warnings: [],
+                                               user_available_vacation_days: nil }.to_json)
+      end
     end
   end
 
@@ -377,6 +411,32 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('200')
       expect(response.header['Content-Type']).to eql('text/csv')
       expect(response.header['Content-Disposition']).to include('attachment; filename="vacations_yearly_report.csv"')
+    end
+  end
+
+  describe '#update"_dates' do
+    it 'authenticates user' do
+      post :update_dates, params: { vacation_id: 1 }, format: :json
+      expect(response.code).to eql('401')
+    end
+
+    it 'forbids regular user' do
+      sign_in(user)
+      post :update_dates, params: { vacation_id: 1 }, format: :json
+      expect(response.code).to eql('403')
+    end
+
+    it 'should update vacation dates' do
+      sign_in(staff_manager)
+      vacation = create(:vacation, user: user)
+      new_dates = {
+        start_date: (Time.current + 10.days).to_date,
+        end_date: (Time.current + 12.days).to_date
+      }
+
+      post :update_dates, params: { vacation_id: vacation.id, vacation: new_dates }, format: :json
+      expect(vacation.reload.start_date).to eql(new_dates[:start_date])
+      expect(vacation.end_date).to eql(new_dates[:end_date])
     end
   end
 end

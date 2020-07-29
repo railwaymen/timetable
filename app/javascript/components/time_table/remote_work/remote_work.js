@@ -109,7 +109,7 @@ function RemoteWork() {
             <th>{I18n.t('common.duration')}</th>
             <th>{I18n.t('common.from')}</th>
             <th>{I18n.t('common.to')}</th>
-            {currentUser.admin ? <th /> : null}
+            <th />
           </tr>
         </thead>
         <tbody>

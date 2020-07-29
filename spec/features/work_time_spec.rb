@@ -67,12 +67,6 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     page.execute_script("$('body').trigger('click')")
   end
 
-  def edit_task_project
-    find('.project-pill').click
-    find('.menu.transition.visible > .item:first-child').click
-    find('body').click
-  end
-
   def delete_task
     find('.time-entries-list-container .entry:first-child').hover
     accept_alert do
@@ -108,8 +102,6 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
     edit_task_hours(from, to)
     expect(page).not_to have_selector('.error-tooltip')
-
-    edit_task_project
 
     delete_task
 

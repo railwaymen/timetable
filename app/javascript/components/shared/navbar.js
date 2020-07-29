@@ -66,11 +66,6 @@ const Navbar = () => (
         <li className="nav-pills">
           <NavLink className="nav-link" to="/remote_work">{I18n.t('common.remote_work')}</NavLink>
         </li>
-        { currentUser.admin && (
-          <li className="nav-pills">
-            <NavLink className="nav-link" to="/birthday_templates">{I18n.t('common.birthday_templates')}</NavLink>
-          </li>
-        )}
       </ul>
     </div>
     <ul className="navbar-nav user-nav ml-auto">
@@ -91,30 +86,6 @@ const Navbar = () => (
         <a onClick={onLogout} className="sign_out ui button" to="/users/sign_out">{I18n.t('common.sign_out')}</a>
       </li>
     </ul>
-
-    {/* <div className="ui secondary menu">
-      { currentUser.admin && (
-        <NavLink className="item" to="/users">{I18n.t('common.people')}</NavLink>
-      )}
-      {currentUser.canManageStaff() && (
-        <NavLink className="item" to="/staff">{I18n.t('common.staff')}</NavLink>
-      )}
-      <NavLink className="item" to="/projects">{I18n.t('common.projects')}</NavLink>
-      <NavLink className="item" to={(currentUser.isSuperUser() || currentUser.is_leader) ? '/reports/work_times/by_projects' : '/reports/work_times/by_users'}>
-        {I18n.t('common.reports')}
-      </NavLink>
-      { currentUser.isManager()
-            && <NavLink className="item" to="/projects_distribution">{I18n.t('common.projects_distribution')}</NavLink>}
-      <NavLink className="item" to="/accounting_periods">{I18n.t('common.accounting_periods')}</NavLink>
-      <NavLink className="item" to="/vacation_periods">{I18n.t('common.vacation_periods')}</NavLink>
-      <NavLink className="item" to="/timesheet">{I18n.t('common.timesheet')}</NavLink>
-      <NavLink className="item" to="/vacations">{I18n.t('common.vacations')}</NavLink>
-
-      <NavLink className="item" to="/remote_work">{I18n.t('common.remote_work')}</NavLink>
-      { currentUser.admin && (
-        <NavLink className="item" to="/birthday_templates">{I18n.t('common.birthday_templates')}</NavLink>
-      )}
-    </div> */}
   </nav>
 );
 
