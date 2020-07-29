@@ -35,7 +35,7 @@ function Filters(props) {
   }
 
   useEffect(() => {
-    getUsers();
+    if (currentUser.isStaffManager()) getUsers();
   }, []);
 
   useEffect(() => {
@@ -177,7 +177,7 @@ function Filters(props) {
       <div className="row">
         <GeneralButton />
 
-        <Users />
+        {currentUser.isStaffManager() && (<Users />)}
 
         <DateRange />
         { currentUser.staff_manager && (

@@ -19,6 +19,9 @@ Object.assign(window.currentUser, {
   isHardwareManager() {
     return this.admin || this.hardware_manager;
   },
+  isStaffManager() {
+    return this.admin || this.staff_manager;
+  },
   fullName() {
     return `${this.first_name} ${this.last_name}`;
   },
