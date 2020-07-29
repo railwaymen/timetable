@@ -41,17 +41,18 @@ class ProjectsDistribution extends React.Component {
     moment.locale(currentUser.lang);
 
     const viewWidth = window.innerWidth;
-    let maxSchedulerWidth = '1600';
+    let maxSchedulerWidth = '1570';
     if (viewWidth <= 1600) {
       maxSchedulerWidth = '100%';
     }
+
     const schedulerData = new SchedulerData(
       moment().formatDate(),
       ViewTypes.Custom,
       false,
       false,
       {
-        customCellWidth: 20,
+        customCellWidth: 22,
         tableHeaderHeight: 60,
         schedulerWidth: maxSchedulerWidth,
         headerEnabled: true,
