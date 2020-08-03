@@ -429,6 +429,7 @@ pl:
           attributes:
             base:
               work_time_exists: Jest już czas pracy z tą samą datą
+              vacation_exists: Jest już urlop z tą samą datą
             start_date:
               greater_than_end_date: Nieprawidłowa data końcowa
         accounting_period:
