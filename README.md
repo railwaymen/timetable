@@ -19,7 +19,7 @@ System tracks and display all history for work time updates
 
 Manager has access to reports from all projects
 
-Project liders have acces to reports only from their projects
+Project leaders have acces to reports only from their projects
 
 * Simple roles system admin/manager/user
 
