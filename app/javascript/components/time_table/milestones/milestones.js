@@ -107,35 +107,35 @@ function Milestones() {
           </h1>
         </div>
         <div className="col-md-4 text-right">
-          {renderEnableImportButton()}
-          {renderImportButton()}
-          <NavLink to={`/projects/${projectId}/milestones/new`} className="btn btn-secondary">{I18n.t('apps.milestones.add')}</NavLink>
+          <div className="btn-group">
+            {renderEnableImportButton()}
+            {renderImportButton()}
+            <NavLink to={`/projects/${projectId}/milestones/new`} className="btn btn-secondary">{I18n.t('apps.milestones.add')}</NavLink>
+          </div>
         </div>
       </div>
 
-      <div className="row">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>{I18n.t('common.name')}</th>
-              <th>{I18n.t('common.from')}</th>
-              <th>{I18n.t('common.to')}</th>
-              <th>{I18n.t('common.state')}</th>
-              <th>{I18n.t('apps.milestones.estimate')}</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {milestones.map((milestone) => (
+      <table className="table">
+        <thead>
+          <tr>
+            <th>{I18n.t('common.name')}</th>
+            <th>{I18n.t('common.from')}</th>
+            <th>{I18n.t('common.to')}</th>
+            <th>{I18n.t('common.state')}</th>
+            <th>{I18n.t('apps.milestones.estimate')}</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {milestones.map((milestone) => (
 
-              <MilestoneEntry
-                key={milestone.id}
-                milestone={milestone}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
+            <MilestoneEntry
+              key={milestone.id}
+              milestone={milestone}
+            />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

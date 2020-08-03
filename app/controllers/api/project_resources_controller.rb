@@ -8,9 +8,9 @@ module Api
     def index
       if params[:selected_users].present?
         selected_users = params[:selected_users].split(',')
-        @project_resources = ProjectResource.kept.where('user_id IN (?) OR group_only = ?', selected_users, true)
+        @project_resources = ProjectResource.kept.where('user_id IN (?) OR group_only = ?', selected_users, true).order(:position)
       else
-        @project_resources = ProjectResource.kept
+        @project_resources = ProjectResource.kept.order(:position)
       end
       respond_with @project_resources
     end

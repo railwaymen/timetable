@@ -136,7 +136,7 @@ export default class ProjectWorkTimes extends React.Component {
             />
             {project.name}
             {currentUser.isSuperUser() && (
-              <>
+              <div className="btn-group ml-3">
                 <Link to={`/projects/${projectId}/reports`} className="btn btn-success">
                   {I18n.t('common.reports')}
                 </Link>
@@ -146,7 +146,7 @@ export default class ProjectWorkTimes extends React.Component {
                 <Link to={`/projects/${projectId}/milestones`} className="btn btn-success">
                   {I18n.t('common.project_milestones')}
                 </Link>
-              </>
+              </div>
             )}
           </h1>
           <HorizontalArrows className="row mx-0" onLeftClick={this.prevWeek} onRightClick={this.nextWeek}>
