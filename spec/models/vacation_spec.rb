@@ -41,9 +41,11 @@ RSpec.describe Vacation, type: :model do
   it 'validates entries in Timesheet' do
     user = create(:user)
     create(:work_time, user: user)
+    accepted_vacation = create(:vacation, user: user, status: :accepted)
+    create(:work_time, user: user, vacation: accepted_vacation)
     vacation = build(:vacation, user: user)
     expect(vacation.valid?).to be_falsey
-    expect(vacation.errors.details[:base]).to eql([{ error: :work_time_exists }])
+    expect(vacation.errors.details[:base]).to eql([{ error: :vacation_exists }, { error: :work_time_exists }])
   end
 
   it '#user_full_name returns joined last_name and first_name' do
