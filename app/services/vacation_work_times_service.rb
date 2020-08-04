@@ -22,8 +22,16 @@ class VacationWorkTimesService
   end
 
   def work_times
+<<<<<<< HEAD
     @work_times ||= @user.work_times.where('((starts_at BETWEEN :start_date AND :end_date) OR (ends_at BETWEEN :start_date AND :end_date)) AND work_times.discarded_at IS NULL',
                                            start_date: @vacation.start_date, end_date: @vacation.end_date)
+=======
+    @work_times ||= @user.work_times.where("((starts_at >= :start_date AND starts_at <= :end_date) OR
+                                            (ends_at >= :start_date AND ends_at <= :end_date) OR
+                                            ((starts_at, starts_at) OVERLAPS (:start_date, :end_date))) AND
+                                            work_times.discarded_at IS NULL",
+                                           start_date: @vacation.start_date.beginning_of_day, end_date: @vacation.end_date.end_of_day)
+>>>>>>> Changed how work times are queried in VacationWorkTimeService
   end
 
   private
