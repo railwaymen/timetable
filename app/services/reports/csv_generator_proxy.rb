@@ -6,7 +6,7 @@ module Reports
       project = (Project.find(params[:id]) if params.key?(:id))
       service_params = { params: params, user: user, project: project }
 
-      if project&.vacation? || project&.zks?
+      if project&.accounting?
         CsvDateRangeGeneratorService.new(**service_params)
       else
         CsvGeneratorService.new(**service_params)

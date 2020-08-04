@@ -34,15 +34,11 @@ class Project < ApplicationRecord
   end
 
   def taggable?
-    !(lunch || vacation? || zks? || name == 'Księgowość')
+    !(lunch || accounting?)
   end
 
-  def vacation?
-    name == 'Vacation'
-  end
-
-  def zks?
-    name == 'ZKS'
+  def accounting?
+    %w[Vacation ZKS Księgowość].include? name
   end
 
   def current_milestone

@@ -330,7 +330,13 @@ class WorkHours extends React.Component {
     return (
       <div className="edit-time">
         <div className="edit-date">
-          <DatePicker {...defaultDatePickerProps} value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
+          <DatePicker
+            {...defaultDatePickerProps}
+            disabled={this.state.workHours.project.accounting}
+            value={this.state.date}
+            onChange={this.onDateChange}
+            onSelect={this.onDateChange}
+          />
         </div>
         <input
           className="start-input form-control"
@@ -377,7 +383,7 @@ class WorkHours extends React.Component {
                 {this.descriptionText()}
                 {editing && this.renderBodyEditable()}
               </div>
-              <div className="project-container" onClick={this.toggleProjectEdit}>
+              <div className="project-container">
                 <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
                   {workHours.project.name}
                 </span>

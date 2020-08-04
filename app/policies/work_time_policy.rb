@@ -4,7 +4,36 @@ class WorkTimePolicy < ApplicationPolicy
   def update?
     return true if record.project.nil?
 
-    !record.project.vacation?
+    user.admin? || !record.project.accounting?
+  end
+
+  def permitted_attributes
+    record.persisted? ? permitted_update_attributes : permitted_create_attributes
+  end
+
+  private
+
+  def permitted_create_attributes
+    params = %i[
+      project_id
+      body
+      task
+      tag
+      starts_at
+      ends_at
+    ]
+    params = params.concat(%i[user_id]) if user.admin?
+    params
+  end
+
+  def permitted_update_attributes
+    %i[
+      body
+      task
+      tag
+      starts_at
+      ends_at
+    ]
   end
 
   alias destroy? update?
