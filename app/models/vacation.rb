@@ -33,11 +33,11 @@ class Vacation < ApplicationRecord
                                     (ends_at::timestamp::date >= :start_date AND ends_at::timestamp::date <= :end_date) OR
                                     ((starts_at::timestamp::date, starts_at::timestamp::date) OVERLAPS (:start_date, :end_date))) AND
                                     discarded_at IS NULL AND user_id = :user_id', start_date: start_date, end_date: end_date, user_id: user_id)
-    vacation_ids = work_times&.pluck(:vacation_id).uniq
-    if vacation_ids.present?
-      errors.add(:base, :vacation_exists) if vacation_ids.any? { |x| x.is_a?(Numeric) }
-      errors.add(:base, :work_time_exists) if vacation_ids.include?(nil)
-    end
+    return if work_times.blank?
+
+    vacation_ids = work_times.pluck(:vacation_id).uniq
+    errors.add(:base, :vacation_exists) if vacation_ids.any? { |x| x.is_a?(Numeric) }
+    errors.add(:base, :work_time_exists) if vacation_ids.include?(nil)
   end
 
   def accepting_other_vacation
