@@ -33,7 +33,7 @@ class Vacation < ApplicationRecord
                                     (ends_at >= :start_date AND ends_at <= :end_date) OR
                                     ((starts_at, starts_at) OVERLAPS (:start_date, :end_date))) AND
                                     discarded_at IS NULL AND user_id = :user_id',
-                                    start_date: start_date.beginning_of_day, end_date: end_date.end_of_day, user_id: user_id)
+                                start_date: start_date.beginning_of_day, end_date: end_date.end_of_day, user_id: user_id)
     return if work_times.blank?
 
     vacation_ids = work_times.pluck(:vacation_id).uniq
