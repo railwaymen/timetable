@@ -36,9 +36,11 @@ class Vacation < ApplicationRecord
                                 start_date: start_date.beginning_of_day, end_date: end_date.end_of_day, user_id: user_id)
     return if work_times.blank?
 
-    vacation_ids = work_times.pluck(:vacation_id).uniq
-    errors.add(:base, :vacation_exists) if vacation_ids.any? { |x| x.is_a?(Numeric) }
-    errors.add(:base, :work_time_exists) if vacation_ids.include?(nil)
+    if work_times.any?(&:vacation_id)
+      errors.add(:base, :vacation_exists)
+    else
+      errors.add(:base, :work_time_exists)
+    end
   end
 
   def accepting_other_vacation
