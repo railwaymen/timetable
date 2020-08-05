@@ -20,8 +20,10 @@ RSpec.describe CsvStaffGeneratorService do
       user = create(:user)
       staff_manager = create(:user, :staff_manager)
       admin = create(:user, :admin)
-      first_vacation = create(:vacation, user: user, description: 'Other', vacation_type: :others)
-      second_vacation = create(:vacation, user: user, description: 'Other', vacation_type: :others, vacation_sub_type: :parental, status: :accepted)
+      first_vacation = create(:vacation, user: user, description: 'Other', vacation_type: :others, start_date: Time.current.to_date, end_date: Time.current.to_date + 4.days)
+      second_vacation =
+        create(:vacation, user: user, description: 'Other', vacation_type: :others, vacation_sub_type: :parental,
+                          status: :accepted, start_date: Time.current.to_date + 7.days, end_date: Time.current.to_date + 12.days)
       create(:vacation_interaction, vacation: second_vacation, action: :approved, user: admin)
       create(:vacation_interaction, vacation: second_vacation, action: :accepted, user: staff_manager)
       expect(described_class.new({}).generate).to eql(response([first_vacation, second_vacation]))
