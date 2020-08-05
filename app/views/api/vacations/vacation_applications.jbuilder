@@ -24,6 +24,7 @@ json.unconfirmed_vacations do |unconfirmed_vacation_element|
     json.status vacation['status']
     json.description vacation['description'] if current_user.admin? || current_user.staff_manager?
     json.self_declined vacation['self_declined']
+    json.business_days_count vacation['business_days_count']
 
     json.approvers vacation['approvers']
     json.decliners vacation['decliners']

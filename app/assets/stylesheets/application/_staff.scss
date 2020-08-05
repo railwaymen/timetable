@@ -108,6 +108,9 @@
         &.declined {
           border-left: 5px solid $vacations-declined-color;
         }
+        &.warning {
+          border-left: 5px solid $vacations-warning-color;
+        }
         .simple-vacation-type {
           margin: auto;
         }

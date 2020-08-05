@@ -164,7 +164,8 @@ RSpec.describe VacationApplicationsQuery do
         user_id: vacation.user_id,
         vacation_type: vacation.vacation_type,
         vacation_sub_type: nil,
-        full_name: vacation.user.to_s
+        full_name: vacation.user.to_s,
+        business_days_count: vacation.business_days_count
       }.stringify_keys
 
       expect(described_class.new(admin, {}).accepted_or_declined_vacations.first).to eql(response)
@@ -187,7 +188,8 @@ RSpec.describe VacationApplicationsQuery do
         user_id: vacation.user_id,
         vacation_type: vacation.vacation_type,
         vacation_sub_type: nil,
-        full_name: vacation.user.to_s
+        full_name: vacation.user.to_s,
+        business_days_count: vacation.business_days_count
       }.stringify_keys
 
       expect(described_class.new(staff_manager, show_all: true).unconfirmed_vacations.first).to eql(response)

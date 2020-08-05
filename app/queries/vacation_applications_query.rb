@@ -79,6 +79,7 @@ class VacationApplicationsQuery
         v.description,
         v.status,
         v.self_declined,
+        v.business_days_count,
         ARRAY_TO_STRING(array_agg(us_apr.last_name || ' ' || us_apr.first_name), ',', '') AS approvers,
         ARRAY_TO_STRING(array_agg(us_dec.last_name || ' ' || us_dec.first_name), ',', '') AS decliners,
         (:current_user = ANY(array_agg(us.id))) AS interacted
@@ -110,6 +111,7 @@ class VacationApplicationsQuery
         v.description,
         v.status,
         v.self_declined,
+        v.business_days_count,
         ARRAY_TO_STRING(array_agg(us_apr.last_name || ' ' || us_apr.first_name), ',', '') AS approvers,
         ARRAY_TO_STRING(array_agg(us_dec.last_name || ' ' || us_dec.first_name), ',', '') AS decliners,
         (:current_user = ANY(array_agg(us.id))) AS interacted

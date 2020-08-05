@@ -214,6 +214,7 @@ pl:
       acceptable: Do zaakceptowania
       all: Wszystkie
       available_vacation_days: Pozostałe dni urlopu
+      available_vacation_days_after_accepting: Pozostałe dni urlopu po zaakceptowaniu
       user_has_already_filled_in_work_time: 'Użytkownik %{parameter} już wypełnił czas pracy w dniach: '
       too_early: Nie można zaakceptować urlopu z wyprzedzeniem o miesiąc
       not_just_vacations: Użytkownik %{user} ma wpisy w czasie pracy nie tylko z urlopu w danym okresie urlopu

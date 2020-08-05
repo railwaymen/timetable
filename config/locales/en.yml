@@ -214,6 +214,7 @@ en:
       acceptable: Acceptable
       all: All
       available_vacation_days: Available vacation days
+      available_vacation_days_after_accepting: Available vacation days after accepting
       user_has_already_filled_in_work_time: 'User %{parameter} has already filled in the work time in days: '
       too_early: Can not approve vacation that starts more than 1 month from now
       not_just_vacations: User %{user} has not only vacation entries in work time during vacation period

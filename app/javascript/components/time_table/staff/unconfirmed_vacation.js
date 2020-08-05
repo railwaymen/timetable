@@ -11,6 +11,8 @@ function UnconfirmedVacation(props) {
   const [errors, setErrors] = useState([]);
   const [vacation, setVacation] = useState(propsVacation);
   const [warnings, setWarnings] = useState([]);
+  const vacationPotential = vacation.available_vacation_days - vacation.business_days_count;
+  const cardClass = (vacationPotential < 0 && currentUser.isStaffManager()) ? 'warning' : vacation.status;
 
   function VacationType() {
     if (vacation.vacation_type === 'others') {
@@ -126,17 +128,28 @@ function UnconfirmedVacation(props) {
     setErrors([]);
   }, [vacation.vacation_sub_type]);
 
-  if (vacation.status === 'declined' && vacation.interacted === false) { return null; }
+  function VacationPotential() {
+    if (vacationPotential >= 0 || !currentUser.isStaffManager()) { return null; }
+    return (
+      <div>
+        {I18n.t('apps.staff.available_vacation_days_after_accepting')}
+        :
+        {` ${vacationPotential}`}
+      </div>
+    );
+  }
+
+  if (vacation.self_declined || (vacation.status === 'declined' && vacation.interacted === false)) { return null; }
 
   return (
-    <div className={`card p-0 unconfirmed-vacation ${vacation.status}`}>
+    <div className={`card p-0 unconfirmed-vacation ${cardClass}`}>
       <div className="card-header">
         <Errors errors={errors} />
         <Warnings warnings={warnings} />
         <div className="vacation-header">
           <div className="user-full-name">
             {vacation.full_name}
-            { window.currentUser.staff_manager && (
+            { currentUser.isStaffManager() && (
               <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
                 <i className="icon calendar" />
               </NavLink>
@@ -167,6 +180,7 @@ function UnconfirmedVacation(props) {
             <span className="vacation-days">
               {` ${vacation.available_vacation_days}`}
             </span>
+            <VacationPotential />
           </div>
         )}
       </div>
