@@ -90,6 +90,8 @@ TimeTable::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
+  config.lograge.enabled = true
+
   if [Rails.application.secrets.ses_address, Rails.application.secrets.ses_username, Rails.application.secrets.ses_password].all?(&:present?)
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {

@@ -13,7 +13,12 @@ module Api
     private
 
     def set_raven_context
-      Raven.user_context(id: current_user.id)
+      Raven.user_context(id: current_user&.id)
+    end
+
+    def append_info_to_payload(payload)
+      super
+      payload[:user_id] = current_user&.id
     end
   end
 end

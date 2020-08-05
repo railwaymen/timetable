@@ -193,6 +193,11 @@ GEM
       activerecord
       kaminari-core (= 1.2.0)
     kaminari-core (1.2.0)
+    lograge (0.11.2)
+      actionpack (>= 4)
+      activesupport (>= 4)
+      railties (>= 4)
+      request_store (~> 1.0)
     loofah (2.6.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -454,6 +459,7 @@ DEPENDENCIES
   json_spec
   jwt
   kaminari
+  lograge
   net-ldap
   paper_trail
   pg (~> 0.18.4)

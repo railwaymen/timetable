@@ -20,6 +20,7 @@ gem 'jira-ruby', require: false
 gem 'jquery-rails'
 gem 'jwt', require: false
 gem 'kaminari'
+gem 'lograge'
 gem 'net-ldap'
 gem 'paper_trail'
 gem 'pg', '~> 0.18.4'
