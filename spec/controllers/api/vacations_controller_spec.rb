@@ -256,7 +256,7 @@ RSpec.describe Api::VacationsController do
         expect(response.code).to eql('200')
         expect(response.body).to be_json_eql({ user_full_name: leader.to_s,
                                                errors: [],
-                                               vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s).except('description'),
+                                               vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s, user_id: vacation.user_id).except('description'),
                                                previous_status: 'unconfirmed',
                                                warnings: [],
                                                user_available_vacation_days: nil }.to_json)
