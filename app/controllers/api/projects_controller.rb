@@ -16,7 +16,7 @@ module Api
     end
 
     def simple
-      @projects = Project.order(:internal, :name).where('name NOT IN (?)', %w[Vacation ZKS])
+      @projects = Project.order(:internal, :name).where.not(name: %w[Vacation ZKS])
     end
 
     def tags
