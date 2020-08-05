@@ -132,7 +132,7 @@ export function VacationPeriod({ vacation, setVacation, setErrors }) {
       {moment(vacation.start_date).format('DD/MM/YYYY')}
       -
       {moment(vacation.end_date).format('DD/MM/YYYY')}
-      {(vacation.status === 'unconfirmed' || vacation.status === 'approved')
+      {((vacation.status === 'unconfirmed' || vacation.status === 'approved') && currentUser.isStaffManager())
         && <i className="icon pencil ml-2" style={{ cursor: 'pointer' }} onClick={() => setEditing(true)} />}
     </div>
   );

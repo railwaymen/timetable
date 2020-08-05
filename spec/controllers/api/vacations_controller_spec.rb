@@ -17,7 +17,7 @@ RSpec.describe Api::VacationsController do
   end
 
   def unconfirmed_vacation_response(vacation)
-    vacation.attributes.slice('id', 'user_id', 'start_date', 'end_date', 'vacation_type', 'vacation_sub_type', 'status', 'description')
+    vacation.attributes.slice('id', 'user_id', 'start_date', 'end_date', 'vacation_type', 'vacation_sub_type', 'status', 'description', 'business_days_count')
             .merge(approvers: nil, decliners: nil, full_name: nil, interacted: nil, self_declined: false)
   end
 
