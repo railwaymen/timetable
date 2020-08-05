@@ -10,7 +10,7 @@ RSpec.describe Api::ProjectsController do
   let(:tags_list) { WorkTime.tags.keys }
 
   def full_project_response(project)
-    project.attributes.slice('id', 'name', 'work_times_allows_task', 'milestones_import_enabled', 'external_integration_enabled', 'color', 'leader_id').merge(active: project.kept?, external_id: project.external_id)
+    project.attributes.slice('id', 'name', 'work_times_allows_task', 'milestones_import_enabled', 'tags_enabled', 'external_integration_enabled', 'color', 'leader_id').merge(active: project.kept?, external_id: project.external_id)
   end
 
   describe '#index' do
@@ -208,7 +208,7 @@ RSpec.describe Api::ProjectsController do
         'id', 'name', 'internal',
         'work_times_allows_task', 'color', 'autofill',
         'lunch', 'count_duration'
-      ).merge(active: project.kept?, taggable: project.taggable?)
+      ).merge(active: project.kept?, taggable: project.tags_enabled?)
     end
 
     it 'authenticates user' do
@@ -242,6 +242,7 @@ RSpec.describe Api::ProjectsController do
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
+        tags_enabled: project.tags_enabled?,
         milestones_import_enabled: project.milestones_import_enabled,
         external_id: project.external_id,
         color: project.color,
@@ -270,6 +271,7 @@ RSpec.describe Api::ProjectsController do
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
+        tags_enabled: project.tags_enabled?,
         milestones_import_enabled: project.milestones_import_enabled,
         external_id: project.external_id,
         color: project.color,
@@ -292,6 +294,7 @@ RSpec.describe Api::ProjectsController do
         name: project.name,
         work_times_allows_task: project.work_times_allows_task,
         external_integration_enabled: project.external_integration_enabled,
+        tags_enabled: project.tags_enabled?,
         milestones_import_enabled: project.milestones_import_enabled,
         external_id: project.external_id,
         color: project.color,
@@ -328,9 +331,10 @@ RSpec.describe Api::ProjectsController do
 
     it 'creates project as admin' do
       sign_in(admin)
-      post :create, params: { project: { name: project_name } }, format: :json
+      post :create, params: { project: { name: project_name, tags_enabled: false } }, format: :json
       expect(response.code).to eql('200')
       project = Project.find_by name: project_name
+      expect(project.tags_enabled).to be(false)
       expect(response.body).to be_json_eql(full_project_response(project).to_json)
     end
 

@@ -16,5 +16,5 @@ json.editable current_user.admin? || !work_time.project.accounting?
 json.project do
   json.extract! work_time.project, :id, :name, :color, :work_times_allows_task, :lunch, :count_duration
   json.accounting work_time.project.accounting?
-  json.set! :taggable, work_time.project.taggable?
+  json.set! :taggable, work_time.project.tags_enabled?
 end

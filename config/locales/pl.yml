@@ -38,6 +38,7 @@ pl:
       filter_all: Wszystkie
       filter_active_label: Pokaż tylko
       work_times_allows_task: Zezwalaj na dodawanie urli do zadań
+      tags_enabled: Zezwalaj na używanie tagów
       external_integration_enabled: Integracja z JIRA
       external_id: Zewnetrzne ID
       new: Nowy projekt

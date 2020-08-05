@@ -21,7 +21,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
                                lunch: work_time.project.lunch,
                                accounting: work_time.project.accounting?,
                                count_duration: work_time.project.count_duration,
-                               taggable: work_time.project.taggable?,
+                               taggable: work_time.project.tags_enabled?,
                                work_times_allows_task: work_time.project.work_times_allows_task })
   end
 
@@ -74,7 +74,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
               work_times_allows_task: work_time.project.work_times_allows_task,
               lunch: work_time.project.lunch,
               count_duration: work_time.project.count_duration,
-              taggable: work_time.project.taggable?
+              taggable: work_time.project.tags_enabled?
             },
             date: work_time.starts_at.to_date
           }
@@ -114,7 +114,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
               work_times_allows_task: work_time.project.work_times_allows_task,
               lunch: work_time.project.lunch,
               count_duration: work_time.project.count_duration,
-              taggable: work_time.project.taggable?
+              taggable: work_time.project.tags_enabled?
             },
             date: user_work_time.starts_at.to_date
           }

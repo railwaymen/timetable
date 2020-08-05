@@ -33,10 +33,6 @@ class Project < ApplicationRecord
     users.joins(:work_times).merge(WorkTime.kept).where(work_times: { starts_at: range })
   end
 
-  def taggable?
-    !(lunch || accounting?)
-  end
-
   def accounting?
     %w[Vacation ZKS Księgowość].include? name
   end
