@@ -57,6 +57,7 @@ class Timesheet extends React.Component {
 
   render() {
     const { projects, tags } = this.state;
+    const projectsForEntries = projects.filter((project) => !['Vacation', 'ZKS'].includes(project.name));
 
     if (projects.length > 0) {
       return (
@@ -64,7 +65,7 @@ class Timesheet extends React.Component {
           <Helmet>
             <title>{I18n.t('common.timesheet')}</title>
           </Helmet>
-          <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projects} tags={tags} />
+          <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projectsForEntries} tags={tags} />
           <EntryHistory
             ref={(entryHistory) => { this.entryHistory = entryHistory; }}
             onCopy={this.onCopy}
