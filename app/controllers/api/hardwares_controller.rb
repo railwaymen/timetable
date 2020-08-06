@@ -6,6 +6,7 @@ module Api
 
     def index
       @hardwares = policy_scope(Hardware)
+      @hardwares.where!(user_id: params[:user_id]) if params[:user_id]
       respond_with @hardwares
     end
 
