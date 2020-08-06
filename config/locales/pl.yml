@@ -454,6 +454,7 @@ pl:
             vacation_days:
               blank: Ilość dni urlopowych jest wymagana
               not_a_number: Ilość dni urlopowych musi byc liczbą
+              greater_than_or_equal_to: Ilość dni urlopowych musi być większa bądź równa 0
         milestone:
           attributes:
             starts_on:
