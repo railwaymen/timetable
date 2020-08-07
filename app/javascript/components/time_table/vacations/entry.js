@@ -66,19 +66,21 @@ function Entry(props) {
             onSelect={(date) => onVacationChange('startDate', date.format('DD/MM/YYYY'))}
           />
         </div>
-        <div className="date">
+        <div className="date end-date-container">
           {errors.endDate && <ErrorTooltip errors={errors.endDate} className="vacation-errors" />}
-          <DatePicker
-            {...defaultDatePickerProps}
-            name="end_date"
-            className="form-control"
-            selected={moment(endDate, 'DD/MM/YYYY')}
-            value={moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
-            format="DD/MM/YYYYs"
-            dateFormat="DD/MM/YYYY"
-            onChange={(date) => onVacationChange('endDate', date.format('DD/MM/YYYY'))}
-            onSelect={(date) => onVacationChange('endDate', date.format('DD/MM/YYYY'))}
-          />
+          <div className="end-date">
+            <DatePicker
+              {...defaultDatePickerProps}
+              name="end_date"
+              className="form-control"
+              selected={moment(endDate, 'DD/MM/YYYY')}
+              value={moment(endDate, 'DD/MM/YYYY').format('DD/MM/YYYY')}
+              format="DD/MM/YYYYs"
+              dateFormat="DD/MM/YYYY"
+              onChange={(date) => onVacationChange('endDate', date.format('DD/MM/YYYY'))}
+              onSelect={(date) => onVacationChange('endDate', date.format('DD/MM/YYYY'))}
+            />
+          </div>
         </div>
       </>
     );
@@ -213,7 +215,7 @@ function Entry(props) {
         />
       </div>
       <div className="row mx-0">
-        <div className="base-error">
+        <div className="base-error w-100 mb-3">
           {errors.base && <ErrorTooltip errors={errors.base} className="vacation-errors" />}
         </div>
       </div>

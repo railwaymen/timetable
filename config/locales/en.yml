@@ -379,7 +379,7 @@ en:
             base:
               work_time_exists: There is work time with same date
             start_date:
-              greater_than_end_date: Invalid end date
+              greater_than_end_date: Invalid start date
         vacation_interaction:
           base:
             already_interacted: This vacation is already %{action} by you

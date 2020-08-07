@@ -430,7 +430,7 @@ pl:
             base:
               work_time_exists: Jest już czas pracy z tą samą datą
             start_date:
-              greater_than_end_date: Nieprawidłowa data końcowa
+              greater_than_end_date: Nieprawidłowa data początkowa
         accounting_period:
           attributes:
             starts_at:

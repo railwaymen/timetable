@@ -12,15 +12,31 @@
     display: flex;
     flex-flow: row wrap;
     margin-bottom: 15px;
-    .date:first-child {
-      margin-right: 20px;
-    }
     .date {
       max-width: 200px;
+      &:first-child {
+        margin-right: 20px;
+      }
+      &.end-date-container {
+        width: 100%;
+        position: relative;
+        .end-date {
+          position: absolute;
+          bottom: 0;
+        }
+      }
+      .react-datepicker-popper {
+        z-index: 10;
+      }
     }
     .vacation-type {
       width: 240px;
       margin-left: auto;
+      position: relative;
+      select {
+        position: absolute;
+        bottom: 0;
+      }
     }
   }
   .description, .available-vacation-days {
@@ -29,7 +45,14 @@
   }
   .vacation-errors {
     position: initial;
-    margin: 2px auto 20px auto;
+    max-width: 100%;
+    margin-bottom: 2px;
+    ul {
+      margin:auto;
+      li {
+        text-align: center;
+      }
+    }
   }
   .available-vacation-days {
     font-size: 16px;
