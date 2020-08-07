@@ -5,6 +5,6 @@ class VacationPeriod < ApplicationRecord
 
   validates :user_id, :starts_at, :ends_at, :vacation_days, presence: true
   validates :closed, inclusion: { in: [true, false] }
-  validates :vacation_days, numericality: { only_integer: true }
+  validates :vacation_days, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :user_id, uniqueness: { scope: %i[starts_at ends_at], message: I18n.t('activerecord.errors.models.vacation_period.attributes.user_id.validates_uniqueness') } # rubocop:disable Rails/UniqueValidationWithoutIndex
 end

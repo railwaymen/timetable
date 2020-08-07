@@ -403,6 +403,7 @@ en:
             vacation_days:
               blank: Number of vacation days is required
               not_a_number: Number of vacation days must be a number
+              greater_than_or_equal_to: Number of vacation days must be greater or equal 0
         milestone:
           attributes:
             starts_on:
