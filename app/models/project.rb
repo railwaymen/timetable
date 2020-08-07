@@ -34,7 +34,7 @@ class Project < ApplicationRecord
   end
 
   def accounting?
-    %w[Vacation ZKS Księgowość].include? name
+    %w[Vacation ZKS].include? name
   end
 
   def current_milestone

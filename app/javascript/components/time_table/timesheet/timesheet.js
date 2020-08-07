@@ -57,7 +57,7 @@ class Timesheet extends React.Component {
 
   render() {
     const { projects, tags } = this.state;
-    const projectsForEntries = projects.filter((project) => !['Vacation', 'ZKS'].includes(project.name));
+    const projectsForEntries = projects.filter((project) => !project.accounting);
 
     if (projects.length > 0) {
       return (
