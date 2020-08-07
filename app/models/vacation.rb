@@ -29,11 +29,17 @@ class Vacation < ApplicationRecord
   def validates_work_time
     return unless user
 
-    any_work_time = WorkTime.where('((starts_at::timestamp::date >= :start_date AND starts_at::timestamp::date <= :end_date) OR
-                                    (ends_at::timestamp::date >= :start_date AND ends_at::timestamp::date <= :end_date) OR
-                                    ((starts_at::timestamp::date, starts_at::timestamp::date) OVERLAPS (:start_date, :end_date))) AND
-                                    discarded_at IS NULL AND user_id = :user_id', start_date: start_date, end_date: end_date, user_id: user_id).any?
-    errors.add(:base, :work_time_exists) if any_work_time
+    work_times = WorkTime.where('((starts_at BETWEEN :start_date AND :end_date) OR (ends_at BETWEEN :start_date AND :end_date)) AND
+                                  discarded_at IS NULL AND user_id = :user_id',
+                                start_date: start_date.beginning_of_day, end_date: end_date.end_of_day, user_id: user_id)
+
+    return if work_times.blank?
+
+    if work_times.any?(&:vacation_id)
+      errors.add(:base, :vacation_exists)
+    else
+      errors.add(:base, :work_time_exists)
+    end
   end
 
   def accepting_other_vacation

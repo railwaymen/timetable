@@ -378,6 +378,7 @@ en:
           attributes:
             base:
               work_time_exists: There is work time with same date
+              vacation_exists: There is vacation with same date
             start_date:
               greater_than_end_date: Invalid end date
         vacation_interaction:
