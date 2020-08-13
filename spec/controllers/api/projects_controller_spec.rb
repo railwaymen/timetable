@@ -208,7 +208,7 @@ RSpec.describe Api::ProjectsController do
         'id', 'name', 'internal',
         'work_times_allows_task', 'color', 'autofill',
         'lunch', 'count_duration'
-      ).merge(active: project.kept?, taggable: project.tags_enabled?)
+      ).merge(active: project.kept?, taggable: project.tags_enabled?, accounting: project.accounting?)
     end
 
     it 'authenticates user' do
