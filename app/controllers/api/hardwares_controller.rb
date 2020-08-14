@@ -6,7 +6,7 @@ module Api
 
     def index
       hardwares = Hardware.all
-      hardwares = hardwares.where(user_id: params[:user_id]) if params[:user_id]
+      hardwares = hardwares.where(user_id: params[:user_id]) if params[:user_id].present?
       @hardwares = policy_scope(hardwares)
       respond_with @hardwares
     end

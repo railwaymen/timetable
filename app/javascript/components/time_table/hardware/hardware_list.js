@@ -9,7 +9,7 @@ const HardwareList = () => {
   const [hardwareList, setHardwareList] = useState([]);
   const [users, setUsers] = useState([]);
   const emptyUser = {
-    first_name: I18n.t('apps.staff.user'), last_name: I18n.t('apps.staff.choose'), id: 0, active: true,
+    accounting_name: `${I18n.t('apps.staff.choose')} ${I18n.t('apps.staff.user')}`, id: 0, active: true,
   };
   const [selectedUser, setSelectedUser] = useState(emptyUser);
 
@@ -52,7 +52,7 @@ const HardwareList = () => {
     return (
       <div>
         <b>
-          {`${currentlySelectedUser.last_name} ${currentlySelectedUser.first_name}`}
+          {currentlySelectedUser.accounting_name}
         </b>
       </div>
     );
@@ -63,9 +63,9 @@ const HardwareList = () => {
       <div>
         {user.id === currentlySelectedUser.id ? (
           <b>
-            {`${user.last_name} ${user.first_name}`}
+            {user.accounting_name}
           </b>
-        ) : `${user.last_name} ${user.first_name}`}
+        ) : user.accounting_name}
       </div>
     );
   }
