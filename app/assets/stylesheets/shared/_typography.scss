@@ -1,0 +1,16 @@
+h3 {
+  text-align: left;
+  font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif;
+  line-height: 1.28571429em;
+  padding: 0em;
+  font-size: 1.28571429rem;
+  margin-bottom: 0.5em;
+  font-weight: 500;
+  &:first-child {
+    margin-top: 0em;
+  }
+}
+
+p {
+  margin-bottom: 0;
+}
