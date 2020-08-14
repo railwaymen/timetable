@@ -6,6 +6,7 @@ import Modal from '@components/shared/modal';
 import WorkHoursDay from './work_hours_day';
 import * as Api from '../../../shared/api';
 import { displayDuration } from '../../../shared/helpers';
+import SearchBox from './search_box';
 
 class EntryHistory extends React.Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class EntryHistory extends React.Component {
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
     this.translateTag = this.translateTag.bind(this);
     this.switchMonth = this.switchMonth.bind(this);
+    this.setWorkHoursAfterSearch = this.setWorkHoursAfterSearch.bind(this);
 
     this.state = {
       workHours: [],
@@ -59,27 +61,29 @@ class EntryHistory extends React.Component {
     });
 
     const linkParams = URI(window.location.href).search(true);
-    const filteredUserId = linkParams.user_id;
-    let {
-      from, to, project_id,
-    } = this.state;
-
-    if (linkParams.from && linkParams.to) {
-      from = linkParams.from.replace(' ', '+');
-      to = linkParams.to.replace(' ', '+');
-    }
-
-    // eslint-disable-next-line
-    if (linkParams.project_id) project_id = linkParams.project_id;
-
-    if (filteredUserId) {
-      this.filterWorkHoursByUser(filteredUserId, {
+    if (!linkParams.query) {
+      const filteredUserId = linkParams.user_id;
+      let {
         from, to, project_id,
-      });
-    } else {
-      this.getWorkHours({
-        from, to, project_id,
-      });
+      } = this.state;
+
+      if (linkParams.from && linkParams.to) {
+        from = linkParams.from.replace(' ', '+');
+        to = linkParams.to.replace(' ', '+');
+      }
+
+      // eslint-disable-next-line
+      if (linkParams.project_id) project_id = linkParams.project_id;
+
+      if (filteredUserId) {
+        this.filterWorkHoursByUser(filteredUserId, {
+          from, to, project_id,
+        });
+      } else {
+        this.getWorkHours({
+          from, to, project_id,
+        });
+      }
     }
   }
 
@@ -186,6 +190,7 @@ class EntryHistory extends React.Component {
                   .removeSearch('to')
                   .removeSearch('project_id')
                   .removeSearch('user_id')
+                  .removeSearch('query')
                   .addSearch(prepareParams);
 
                 window.history.pushState('Timetable', 'Reports', newPath);
@@ -204,6 +209,30 @@ class EntryHistory extends React.Component {
             });
           });
       });
+  }
+
+  setWorkHoursAfterSearch(workHours, params) {
+    this.setState({
+      workHours,
+      shouldWork: 0,
+      mandatoryHours: 0,
+      selectedProject: {},
+      project_id: undefined,
+      from: moment().startOf('month').format(),
+      to: moment().endOf('month').format(),
+    }, () => {
+      const newPath = URI(window.location.href)
+        .removeSearch('from')
+        .removeSearch('to')
+        .removeSearch('project_id')
+        .removeSearch('user_id')
+        .removeSearch('query')
+        .addSearch(params);
+
+      window.history.pushState('Timetable', 'Reports', newPath);
+      this.groupWorkHoursPerDay();
+      this.totalWorkHours();
+    });
   }
 
   pushEntry(object) {
@@ -488,6 +517,7 @@ class EntryHistory extends React.Component {
 
     return (
       <div className="float-right row mx-0">
+        <SearchBox setWorkHoursAfterSearch={this.setWorkHoursAfterSearch} from={from} selectedProject={selectedProject} getWorkHours={this.getWorkHours} />
         <div className="dropdown project-filters">
           <button
             className="btn btn-info btn-block dropdown-toggle"

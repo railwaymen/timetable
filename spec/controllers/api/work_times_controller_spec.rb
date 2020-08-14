@@ -422,4 +422,121 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       expect(work_time.reload.discarded?).to be false
     end
   end
+
+  describe 'GET #search' do
+    it 'authenticates user' do
+      get :search, params: { query: 'query' }, format: :json
+      expect(response.code).to eql('401')
+    end
+
+    it 'returns only work times with "Search query" in body' do
+      sign_in(user)
+      work_time = create(:work_time, user: user, body: 'Search query test')
+      create(:work_time, user: user)
+      get :search, params: { query: 'Search query' }, format: :json
+
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql([work_time_response(work_time)].to_json)
+    end
+
+    it 'returns only work times with "TIM-TEST" in task' do
+      sign_in(user)
+      work_time = create(:work_time, user: user, task: 'https://railwaymen.atlassian.net/browse/TIM-TEST')
+      create(:work_time, user: user)
+      get :search, params: { query: 'TIM-TEST' }, format: :json
+
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql([work_time_response(work_time)].to_json)
+    end
+
+    it 'correct filter data for leader' do
+      sign_in user
+
+      worker = FactoryBot.create :user
+      belonged_project = FactoryBot.create :project, leader_id: user.id
+      project = FactoryBot.create :project
+
+      work_time = FactoryBot.create :work_time, user: worker, project: belonged_project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes, body: 'query1'
+      user_work_time = FactoryBot.create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes, body: 'query2'
+      FactoryBot.create :work_time, user: worker, project: project, starts_at: Time.current - 25.minutes, ends_at: Time.current - 20.minutes, body: 'query3'
+
+      aggregate_failures 'display data for own project' do
+        expected_work_times_json = [
+          {
+            id: work_time.id,
+            updated_by_admin: work_time.updated_by_admin,
+            project_id: work_time.project_id,
+            starts_at: work_time.starts_at,
+            ends_at: work_time.ends_at,
+            duration: work_time.duration,
+            date: work_time.starts_at.to_date,
+            body: work_time.body,
+            task: work_time.task,
+            tag: work_time.tag,
+            task_preview: task_preview_helper(work_time.task),
+            user_id: work_time.user_id,
+            editable: !work_time.project.accounting?,
+            project: {
+              id: work_time.project.id,
+              name: work_time.project.name,
+              color: work_time.project.color,
+              work_times_allows_task: work_time.project.work_times_allows_task,
+              lunch: work_time.project.lunch,
+              count_duration: work_time.project.count_duration,
+              accounting: work_time.project.accounting?,
+              taggable: work_time.project.tags_enabled?
+            }
+          }
+        ].to_json
+
+        get :search, params: { user_id: worker.id, query: 'query' }, format: :json
+
+        expect(response.body).to be_json_eql expected_work_times_json
+      end
+
+      aggregate_failures 'correctly displays own data' do
+        expected_user_work_times_json = [
+          {
+            id: user_work_time.id,
+            updated_by_admin: user_work_time.updated_by_admin,
+            project_id: user_work_time.project_id,
+            starts_at: user_work_time.starts_at,
+            ends_at: user_work_time.ends_at,
+            duration: user_work_time.duration,
+            body: user_work_time.body,
+            task: user_work_time.task,
+            tag: work_time.tag,
+            task_preview: task_preview_helper(work_time.task),
+            user_id: user_work_time.user_id,
+            editable: !work_time.project.accounting?,
+            project: {
+              id: user_work_time.project.id,
+              name: user_work_time.project.name,
+              color: user_work_time.project.color,
+              accounting: work_time.project.accounting?,
+              work_times_allows_task: work_time.project.work_times_allows_task,
+              lunch: work_time.project.lunch,
+              count_duration: work_time.project.count_duration,
+              taggable: work_time.project.tags_enabled?
+            },
+            date: user_work_time.starts_at.to_date
+          }
+        ].to_json
+
+        get :search, params: { query: 'query' }, format: :json
+
+        expect(response.body).to be_json_eql expected_user_work_times_json
+      end
+    end
+
+    it 'filters by user_id when user is an admin' do
+      sign_in(admin)
+      work_time = create(:work_time, body: 'user id test')
+      create(:work_time, user_id: work_time.user_id)
+      get :search, params: { user_id: work_time.user_id, query: 'user id' }, format: :json
+
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql([work_time_response(work_time)].to_json)
+    end
+  end
 end
