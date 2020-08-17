@@ -37,7 +37,7 @@ class HardwarePolicy < ApplicationPolicy
       if user.admin? || user.hardware_manager?
         scope.all
       else
-        scope.where(user_id: user.id)
+        scope.rewhere(user_id: user.id)
       end
     end
   end
