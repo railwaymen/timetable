@@ -11,6 +11,7 @@ function InteractedVacation(props) {
     getVacations,
     removeFromInteractedVacations,
     addToInteractedVacations,
+    setUserVacationDays,
   } = props;
   const [state, setState] = useState({ vacation: propsVacation, folded: true, fetched: false });
   const { vacation, folded, fetched } = state;
@@ -95,6 +96,7 @@ function InteractedVacation(props) {
     Api.makePutRequest({
       url: `/api/vacations/${vacation.id}/undone`,
     }).then((response) => {
+      setUserVacationDays(response.data.vacation.user_id, response.data.user_available_vacation_days);
       if (response.data.previous_status === 'accepted' || response.data.vacation.status === 'accepted') {
         removeFromInteractedVacations(response.data.vacation, response.data.vacation.status.slice(0, -1));
       }
@@ -120,6 +122,7 @@ function InteractedVacation(props) {
       body: { vacation: { vacation_sub_type: '' } },
     }).then((response) => {
       if (!_.isEmpty(response.data.errors)) { setErrors(response.data.errors); return; }
+      setUserVacationDays(response.data.vacation.user_id, response.data.user_available_vacation_days);
       if (!_.isEmpty(response.data.warnings)) {
         setWarnings(response.data.warnings);
         setState({
@@ -140,6 +143,7 @@ function InteractedVacation(props) {
       url: `/api/vacations/${vacation.id}/decline`,
     }).then((response) => {
       if (!_.isEmpty(response.data.errors)) { setErrors(response.data.errors); return; }
+      setUserVacationDays(response.data.vacation.user_id, response.data.user_available_vacation_days);
       if (_.includes(['accepted', 'approved'], response.data.previous_status)) { removeFromInteractedVacations(response.data.vacation, 'decline'); }
       addToInteractedVacations(response.data.vacation, 'decline');
       if (response.data.previous_status === response.data.vacation.status) { updateVacation(vacation.id); }

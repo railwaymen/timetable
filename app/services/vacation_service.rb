@@ -14,7 +14,7 @@ class VacationService
 
   def approve
     work_times = vacation_work_times_service.work_times
-    work_time_warning(work_times.pluck(Arel.sql('date(work_times.starts_at)'), Arel.sql('date(work_times.ends_at)')).flatten.uniq) if work_times.any?
+    work_time_warning(work_times.pluck(:starts_at, :ends_at).map { |x| [x[0].strftime('%Y-%m-%d'), x[1].strftime('%Y-%m-%d')] }.flatten.uniq) if work_times.any?
 
     approve_transaction
     increase_work_times if @vacation_interaction && @vacation_interaction.action == 'accepted'
