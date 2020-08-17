@@ -21,20 +21,20 @@ class ProjectsList extends React.Component {
 
   render() {
     return (
-      <div className="menu transition visible" tabIndex="-1" style={{ display: 'block !important' }}>
+      <div className="dropdown-menu show p-0" tabIndex="-1" style={{ display: 'block !important' }}>
         { this.props.projects.map((project, index) => (
-          <div
+          <button
             style={{ background: index === this.props.currentIndex ? 'rgba(0, 0, 0, 0.05)' : '' }}
             key={project.id}
             data-value={project.id}
             tabIndex="-1"
-            className="item"
+            className="dropdown-item"
             onClick={this.onChangeProject}
             onKeyPress={this.handleKeyPress}
           >
-            <div className="circular empty label ui" style={{ background: `#${project.color}` }} />
+            <div className="circular-label" style={{ background: `#${project.color}` }} />
             {project.id === this.props.currentProject.id ? <b>{project.name}</b> : project.name}
-          </div>
+          </button>
         )) }
       </div>
     );
