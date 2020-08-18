@@ -487,3 +487,22 @@ table {
 button:disabled {
   cursor: not-allowed;
 }
+
+.milestone-summary {
+  .selected-border {
+    border: 1px solid #17a2b8;
+    border-radius: 0.25rem;
+  }
+  .progress-by-department{
+    .selected-border {
+      width: 105%;
+      top: -1px;
+    }
+    .milestone-progress {
+      margin-top: 2px;
+    }
+  }
+  .cursor-pointer {
+    cursor: pointer;
+  }
+}
