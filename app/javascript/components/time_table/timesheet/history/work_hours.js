@@ -7,7 +7,7 @@ import ErrorTooltip from '@components/shared/error_tooltip';
 import ModalButton from '@components/shared/modal_button';
 import * as Api from '../../../shared/api';
 import TagsDropdown from '../tags_dropdown';
-import { defaultDatePickerProps } from '../../../shared/helpers';
+import { defaultDatePickerProps, formattedHoursAndMinutes, inclusiveParse } from '../../../shared/helpers';
 import translateErrors from '../../../shared/translate_errors';
 import WorkTimeTask from '../../../shared/work_time_task';
 import WorkTimeDuration from '../../../shared/work_time_duration';
@@ -163,13 +163,12 @@ class WorkHours extends React.Component {
   recountTime() {
     const { starts_at_hours, ends_at_hours } = this.state;
 
-    // parse and reformat as starts_at_hours are input from user
-    const formattedStartsAtTime = moment(starts_at_hours, 'HH:mm').format('HH:mm');
-    const formattedEndsAtTime = moment(ends_at_hours, 'HH:mm').format('HH:mm');
+    const formattedStartsAtTime = inclusiveParse(starts_at_hours);
+    const formattedEndsAtTime = inclusiveParse(ends_at_hours);
 
     this.setState({
-      starts_at_hours: formattedStartsAtTime,
-      ends_at_hours: formattedEndsAtTime,
+      starts_at_hours: formattedHoursAndMinutes(formattedStartsAtTime),
+      ends_at_hours: formattedHoursAndMinutes(formattedEndsAtTime),
     });
   }
 
@@ -309,7 +308,7 @@ class WorkHours extends React.Component {
               className="form-control task-input"
               name="task"
               placeholder={I18n.t('apps.timesheet.task_url')}
-              value={this.state.workHours.task}
+              value={this.state.workHours.task ? this.state.workHours.task : ''}
               onChange={this.onChange}
             />
           </div>

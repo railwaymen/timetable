@@ -10,7 +10,7 @@ import TagsDropdown from './tags_dropdown';
 import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 import * as Validations from '../../shared/validations';
-import { defaultDatePickerProps } from '../../shared/helpers';
+import { defaultDatePickerProps, formattedHoursAndMinutes, inclusiveParse } from '../../shared/helpers';
 
 class Entry extends React.Component {
   constructor(props) {
@@ -208,12 +208,12 @@ class Entry extends React.Component {
 
     if (project.lunch) {
       autoSettings = {
-        ends_at: this.formattedHoursAndMinutes(moment(this.state.starts_at, 'HH:mm').add('30', 'minutes')),
+        ends_at: formattedHoursAndMinutes(moment(this.state.starts_at, 'HH:mm').add('30', 'minutes')),
       };
     } else if (project.autofill) {
       autoSettings = {
         starts_at: '09:00',
-        ends_at: this.formattedHoursAndMinutes(moment('09:00', 'HH:mm').add('8', 'hours')),
+        ends_at: formattedHoursAndMinutes(moment('09:00', 'HH:mm').add('8', 'hours')),
       };
     }
 
@@ -235,31 +235,17 @@ class Entry extends React.Component {
     current.setSelectionRange(0, current.value.length);
   }
 
-  formattedHoursAndMinutes(time) {
-    return moment(time).format('HH:mm');
-  }
-
-  inclusiveParse(time) {
-    const firstFormat = moment(time, 'HH:mm');
-    if (firstFormat.isValid()) {
-      return firstFormat;
-    }
-
-    // Properly handly input without '0' prefix, for example '830' -> 08:30
-    return moment(time, 'Hmm');
-  }
-
   recountTime(stateCallback) {
     this.setState((prevState) => {
-      const formattedStartsAt = this.inclusiveParse(prevState.starts_at);
-      const formattedEndsAt = this.inclusiveParse(prevState.ends_at);
+      const formattedStartsAt = inclusiveParse(prevState.starts_at);
+      const formattedEndsAt = inclusiveParse(prevState.ends_at);
       const duration = prevState.project.count_duration ? formattedEndsAt.diff(formattedStartsAt) : 0;
 
       return {
         duration,
         durationHours: moment.utc(duration).format('HH:mm'),
-        starts_at: this.formattedHoursAndMinutes(formattedStartsAt),
-        ends_at: this.formattedHoursAndMinutes(formattedEndsAt),
+        starts_at: formattedHoursAndMinutes(formattedStartsAt),
+        ends_at: formattedHoursAndMinutes(formattedEndsAt),
       };
     }, () => {
       this.removeErrorsFor('duration', stateCallback);
