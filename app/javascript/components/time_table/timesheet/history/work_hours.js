@@ -70,18 +70,24 @@ class WorkHours extends React.Component {
 
   onDelete() {
     if (window.confirm(I18n.t('common.confirm'))) {
-      Api.makeDeleteRequest({ url: `/api/work_times/${this.state.workHours.id}` })
-        .then((data) => {
-          if (data.status >= 400 && data.status < 500) {
-            data.json().then((response) => {
-              this.setState({
-                errors: translateErrors('work_time', response.errors),
+      const { lockRequests } = this.props;
+      lockRequests(true).then(() => {
+        Api.makeDeleteRequest({ url: `/api/work_times/${this.state.workHours.id}` })
+          .then((data) => {
+            if (data.status >= 400 && data.status < 500) {
+              data.json().then((response) => {
+                this.setState({
+                  errors: translateErrors('work_time', response.errors),
+                });
               });
-            });
-          } else if (parseInt(data.status, 10) === 204) {
-            this.props.removeWorkHours(this);
-          }
-        });
+            } else if (parseInt(data.status, 10) === 204) {
+              this.props.removeWorkHours(this);
+            }
+          })
+          .finally(() => {
+            lockRequests(false);
+          });
+      });
     }
   }
 
@@ -189,52 +195,57 @@ class WorkHours extends React.Component {
   }
 
   saveWorkHours() {
-    const {
-      workHours, ends_at_hours, starts_at_hours, date,
-    } = this.state;
+    const { lockRequests, updateWorkHours } = this.props;
+    lockRequests(true).then(() => {
+      const {
+        workHours, ends_at_hours, starts_at_hours, date,
+      } = this.state;
 
-    const formattedStartsAtTime = moment(workHours.starts_at).format('HH:mm');
-    const formattedEndsAtTime = moment(workHours.ends_at).format('HH:mm');
-    const starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
-    const ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
-    const oldDuration = workHours.duration;
+      const formattedStartsAtTime = moment(workHours.starts_at).format('HH:mm');
+      const formattedEndsAtTime = moment(workHours.ends_at).format('HH:mm');
+      const starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
+      const ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
+      const oldDuration = workHours.duration;
 
-    Api.makePutRequest({
-      url: `/api/work_times/${this.state.workHours.id}`,
-      body: {
-        work_time: {
-          ...this.workHoursJsonApi(), starts_at, ends_at,
+      Api.makePutRequest({
+        url: `/api/work_times/${this.state.workHours.id}`,
+        body: {
+          work_time: {
+            ...this.workHoursJsonApi(), starts_at, ends_at,
+          },
         },
-      },
-    }).then((response) => {
-      const { data } = response;
-      const durationDeviation = data.duration - oldDuration;
+      }).then((response) => {
+        const { data } = response;
+        const durationDeviation = data.duration - oldDuration;
 
-      this.setState({
-        workHours: data,
-        date: moment(data.starts_at).format('DD/MM/YYYY'),
-        errors: [],
-      }, () => {
-        this.props.updateWorkHours(this, durationDeviation);
-        const event = new CustomEvent(
-          'edit-entry',
-          { detail: { id: workHours.id, success: true } },
-        );
+        this.setState({
+          workHours: data,
+          date: moment(data.starts_at).format('DD/MM/YYYY'),
+          errors: [],
+        }, () => {
+          updateWorkHours(this, durationDeviation);
+          const event = new CustomEvent(
+            'edit-entry',
+            { detail: { id: workHours.id, success: true } },
+          );
 
-        document.dispatchEvent(event);
-      });
-    }).catch((e) => {
-      this.setState({
-        starts_at_hours: formattedStartsAtTime,
-        ends_at_hours: formattedEndsAtTime,
-        errors: translateErrors('work_time', e.errors),
-      }, () => {
-        const event = new CustomEvent(
-          'edit-entry',
-          { detail: { id: workHours.id, success: false } },
-        );
+          document.dispatchEvent(event);
+        });
+      }).catch((e) => {
+        this.setState({
+          starts_at_hours: formattedStartsAtTime,
+          ends_at_hours: formattedEndsAtTime,
+          errors: translateErrors('work_time', e.errors),
+        }, () => {
+          const event = new CustomEvent(
+            'edit-entry',
+            { detail: { id: workHours.id, success: false } },
+          );
 
-        document.dispatchEvent(event);
+          document.dispatchEvent(event);
+        });
+      }).finally(() => {
+        lockRequests(false);
       });
     });
   }
