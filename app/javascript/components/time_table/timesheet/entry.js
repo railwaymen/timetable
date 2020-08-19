@@ -45,6 +45,8 @@ class Entry extends React.Component {
       errors: [],
     };
 
+    this.bodyInputRef = React.createRef();
+    this.taskInputRef = React.createRef();
     this.startInputRef = React.createRef();
   }
 
@@ -203,7 +205,7 @@ class Entry extends React.Component {
     });
   }
 
-  updateProject(project) {
+  updateProject(project, focusPreviousInput) {
     let autoSettings = {};
 
     if (project.lunch) {
@@ -224,7 +226,12 @@ class Entry extends React.Component {
     }, () => {
       this.removeErrorsFor('project_id');
       this.recountTime();
-      this.focusOnStartInput();
+      if (focusPreviousInput) {
+        const { current } = project.work_times_allows_task ? this.taskInputRef : this.bodyInputRef;
+        current.focus();
+      } else {
+        this.focusOnStartInput();
+      }
     });
   }
 
@@ -294,6 +301,7 @@ class Entry extends React.Component {
                       placeholder={I18n.t('apps.timesheet.what_have_you_done')}
                       name="body"
                       value={body}
+                      ref={this.bodyInputRef}
                       onChange={this.onChange}
                       onKeyPress={this.onKeyPress}
                     />
@@ -308,6 +316,7 @@ class Entry extends React.Component {
                       type="text"
                       name="task"
                       value={task}
+                      ref={this.taskInputRef}
                       onChange={this.onChange}
                       onKeyPress={this.onKeyPress}
                     />

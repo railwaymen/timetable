@@ -49,7 +49,7 @@ class ProjectsDropdown extends React.Component {
         p.id === filteredProjects[0]
       )) || projects[currentIndex];
 
-      this.props.updateProject(selectedProject);
+      this.props.updateProject(selectedProject, e.shiftKey);
       this.setState({ currentIndex: 0 });
       this.hideDropdown();
     }
