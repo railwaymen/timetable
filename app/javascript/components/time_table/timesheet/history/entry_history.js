@@ -394,6 +394,8 @@ class EntryHistory extends React.Component {
             tags={this.props.tags}
             updateWorkHours={this.updateWorkHours}
             assignModalInfo={this.assignModalInfo}
+            lockRequests={this.props.lockRequests}
+            requestsLocked={this.props.requestsLocked}
           />
         );
         /* eslint-enable */

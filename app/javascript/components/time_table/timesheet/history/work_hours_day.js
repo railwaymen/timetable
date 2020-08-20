@@ -74,6 +74,8 @@ class WorkHoursDay extends React.Component {
                 removeWorkHours={this.props.removeWorkHours}
                 projects={this.props.projects}
                 tags={this.props.tags}
+                lockRequests={this.props.lockRequests}
+                requestsLocked={this.props.requestsLocked}
               />
             )) }
           </div>

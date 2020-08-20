@@ -31,6 +31,7 @@ class Entry extends React.Component {
     this.onTimeKeyPress = this.onTimeKeyPress.bind(this);
     this.onTimeFocus = this.onTimeFocus.bind(this);
     this.onTimeBlur = this.onTimeBlur.bind(this);
+    this.saveWorkTime = this.saveWorkTime.bind(this);
 
     this.state = {
       body: undefined,
@@ -89,51 +90,11 @@ class Entry extends React.Component {
 
   onSubmit(url) {
     const errors = this.validate();
-    const userId = URI(window.location.href).search(true).user_id || currentUser.id;
-
     if (!_.isEmpty(errors)) {
       this.setState({ errors });
     } else {
-      const {
-        body, task, tag, project, date, starts_at, ends_at,
-      } = this.state;
-
-      const entryData = {
-        user_id: userId,
-        body,
-        task,
-        tag: project.taggable ? tag : 'dev',
-        project_id: project.id,
-        starts_at: moment(`${date} ${starts_at}`, 'DD/MM/YYYY HH:mm'),
-        ends_at: moment(`${date} ${ends_at}`, 'DD/MM/YYYY HH:mm'),
-      };
-
-      Api.makePostRequest({
-        url,
-        body: { work_time: entryData },
-      }).then((response) => {
-        const data = _.castArray(response.data);
-        if (!data[0].id) {
-          throw new Error('Invalid response');
-        }
-        data.forEach(this.props.pushEntry);
-        const newState = {
-          body: '',
-          task: '',
-          tag: 'dev',
-        };
-        if (!this.state.project.autofill) {
-          Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' });
-        }
-        if (this.lastProject && this.state.project.lunch) {
-          newState.project = this.lastProject;
-          newState.project_id = this.lastProject.id;
-        }
-        if (!this.state.project.lunch) this.lastProject = this.state.project;
-        newState.errors = {};
-        this.setState(newState);
-      }).catch((e) => {
-        this.setState({ errors: translateErrors('work_time', e.errors) });
+      this.props.lockRequests(true).then(() => {
+        this.saveWorkTime(url);
       });
     }
   }
@@ -146,6 +107,53 @@ class Entry extends React.Component {
 
   onFocus(e) {
     e.target.setSelectionRange(0, e.target.value.length);
+  }
+
+  saveWorkTime(url) {
+    const userId = URI(window.location.href).search(true).user_id || currentUser.id;
+    const {
+      body, task, tag, project, date, starts_at, ends_at,
+    } = this.state;
+
+    const entryData = {
+      user_id: userId,
+      body,
+      task,
+      tag: project.taggable ? tag : 'dev',
+      project_id: project.id,
+      starts_at: moment(`${date} ${starts_at}`, 'DD/MM/YYYY HH:mm'),
+      ends_at: moment(`${date} ${ends_at}`, 'DD/MM/YYYY HH:mm'),
+    };
+
+    Api.makePostRequest({
+      url,
+      body: { work_time: entryData },
+    }).then((response) => {
+      const data = _.castArray(response.data);
+      if (!data[0].id) {
+        throw new Error('Invalid response');
+      }
+      data.forEach(this.props.pushEntry);
+      const newState = {
+        body: '',
+        task: '',
+        tag: 'dev',
+      };
+      if (!this.state.project.autofill) {
+        Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' });
+      }
+      if (this.lastProject && this.state.project.lunch) {
+        newState.project = this.lastProject;
+        newState.project_id = this.lastProject.id;
+      }
+      if (!this.state.project.lunch) this.lastProject = this.state.project;
+      newState.errors = {};
+      this.setState(newState);
+    }).catch((e) => {
+      this.setState({ errors: translateErrors('work_time', e.errors) });
+    }).finally(() => {
+      this.props.lockRequests(false);
+    });
   }
 
   preventScroll(e) {
@@ -270,6 +278,7 @@ class Entry extends React.Component {
     const {
       body, task, tag, starts_at, ends_at, durationHours, date, errors, project,
     } = this.state;
+    const { requestsLocked } = this.props;
 
     return (
       <div className="new-entry" id="content">
@@ -376,11 +385,15 @@ class Entry extends React.Component {
               </div>
             )}
             <div className="form-actions bg-white btn-group">
-              <button type="button" className="btn btn-outline-success btn-lg" onClick={() => this.onSubmit('/api/work_times/create_filling_gaps')}>
+              <button
+                type="button"
+                className="btn btn-outline-success btn-lg"
+                onClick={() => { if (!requestsLocked) this.onSubmit('/api/work_times/create_filling_gaps'); }}
+              >
                 <i className="fa fa-calendar-plus-o mr-2" />
                 {I18n.t('common.fill_save')}
               </button>
-              <button type="button" className="btn btn-success btn-lg" onClick={() => this.onSubmit('/api/work_times')}>
+              <button type="button" className="btn btn-success btn-lg" onClick={() => { if (!requestsLocked) this.onSubmit('/api/work_times'); }}>
                 <i className="fa fa-calendar-plus-o mr-2" />
                 {I18n.t('common.save')}
               </button>
