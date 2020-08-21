@@ -24,7 +24,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     within('#content') do
       fill_in 'What have you done ?', with: message
       find('.project-dropdown #search-input').click
-      find('.project-dropdown .item:nth-child(1)').click
+      find('.project-dropdown .dropdown-item:nth-child(1)').click
       find('#start').click
       fill_in 'start', with: from
       find('#end').click
@@ -33,8 +33,8 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
       find('input.tags:last-child').click
     end
 
-    find(:css, '.fluid div.text').click
-    find(:css, '.menu.visible > .item:last-child').click
+    find(:css, '.dropdown div.text').click
+    find(:css, '.dropdown-menu.show > .dropdown-item:last-child').click
     page.find('#content button.btn-success', text: 'Save').click
 
     expect(page).to have_content message
@@ -107,7 +107,7 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
     select_2_months_ago_tasks(work_time)
 
-    find('a.sign_out.ui.button').click
+    find('a.sign_out.nav-link').click
     expect(page).to have_content('Login')
   end
 

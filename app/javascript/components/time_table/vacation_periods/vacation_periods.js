@@ -129,7 +129,7 @@ function VacationPeriods() {
               <i className="ml-2 fa fa-calendar-plus-o" />
             </div>
           </div>
-          <div className="user-filter">
+          <div className="col-auto user-filter">
             <Dropdown
               objects={users}
               updateObject={(selectedUser) => getVacationPeriods(selectedUser.id)}

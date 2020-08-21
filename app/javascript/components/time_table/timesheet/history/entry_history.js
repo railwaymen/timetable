@@ -466,14 +466,10 @@ class EntryHistory extends React.Component {
           <span className="work-time">{total}</span>
           /
           {shouldWork}
-          <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_day')}>
-            <i className="circle help icon small" />
-          </span>
+          <span className="fa fa-question-circle" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_day')} />
           /
           {mandatoryHours}
-          <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_month')}>
-            <i className="circle help icon small" />
-          </span>
+          <span className="fa fa-question-circle" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_month')} />
         </div>
       );
     }
