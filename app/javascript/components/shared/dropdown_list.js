@@ -23,7 +23,15 @@ class DropdownList extends React.Component {
     return (
       <div className="dropdown-menu show p-0" tabIndex="-1" style={{ display: 'block !important' }}>
         { this.props.objects.map((object) => (
-          <button key={object.id} data-value={object.id} tabIndex="0" className="dropdown-item object" onClick={this.onChangeObject} onKeyPress={this.handleKeyPress}>
+          <button
+            key={object.id}
+            data-value={object.id}
+            tabIndex="0"
+            className="dropdown-item object"
+            onClick={this.onChangeObject}
+            onKeyPress={this.handleKeyPress}
+            type="button"
+          >
             {this.props.renderObjectsList(object, this.props.currentObject)}
           </button>
         )) }

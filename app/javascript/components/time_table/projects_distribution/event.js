@@ -224,7 +224,7 @@ class Event extends React.Component {
           <>
             {eventInstance && eventInstance.type !== 2 ? (
               <button className="btn btn-danger btn-with-icon" id="generate" type="button" onClick={this.onDeleteClick}>
-              <i className="fa fa fa-angle-double-right" />
+                <i className="fa fa fa-angle-double-right" />
                 {I18n.t('common.destroy')}
               </button>
             ) : null}

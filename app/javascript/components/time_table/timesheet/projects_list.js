@@ -31,6 +31,7 @@ class ProjectsList extends React.Component {
             className="dropdown-item"
             onClick={this.onChangeProject}
             onKeyPress={this.handleKeyPress}
+            type="button"
           >
             <div className="circular-label" style={{ background: `#${project.color}` }} />
             {project.id === this.props.currentProject.id ? <b>{project.name}</b> : project.name}
