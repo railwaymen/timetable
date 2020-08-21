@@ -1,15 +1,18 @@
 .dropdown-menu.show {
   max-height: 30vh;
   overflow: auto;
-
-  .circular-label {
-    border-radius: 50%;
-    display: inline-block;
-    vertical-align: baseline;
-    height: .75em;
-    width: .75em;
-    margin-right: 0.5em;
+  .dropdown-item {
+    border: 0 !important;
   }
+}
+.circular-label {
+  background-color: #E8E8E8;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: baseline;
+  height: .75em;
+  width: .75em;
+  margin-right: 0.5em;
 }
 
 .project-filters,

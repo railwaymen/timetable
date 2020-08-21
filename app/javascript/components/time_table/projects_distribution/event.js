@@ -137,7 +137,7 @@ class Event extends React.Component {
   renderSelectedProject(selectedObject) {
     return (
       <div>
-        <div className="circular empty label ui" style={{ background: `#${selectedObject.color}` }} />
+        <div className="circular-labeli" style={{ background: `#${selectedObject.color}` }} />
         {selectedObject.name}
       </div>
     );
@@ -146,7 +146,7 @@ class Event extends React.Component {
   renderProjectsList(object, currentObject) {
     return (
       <div>
-        <div className="circular empty label ui" style={{ background: `#${object.color}` }} />
+        <div className="circular-label" style={{ background: `#${object.color}` }} />
         {object.id === currentObject.id ? (
           <b>
             {object.name}
@@ -223,14 +223,14 @@ class Event extends React.Component {
         actions={(
           <>
             {eventInstance && eventInstance.type !== 2 ? (
-              <button className="button red icon labeled right ui" id="generate" type="button" onClick={this.onDeleteClick}>
+              <button className="btn btn-danger btn-with-icon" id="generate" type="button" onClick={this.onDeleteClick}>
+              <i className="fa fa fa-angle-double-right" />
                 {I18n.t('common.destroy')}
-                <i className="angle double icon right" />
               </button>
             ) : null}
-            <button className="button green icon labeled right ui" id="generate" type="button" onClick={this.onSubmit}>
+            <button className="btn btn-success btn-with-icon" id="generate" type="button" onClick={this.onSubmit}>
+              <i className="fa fa fa-angle-double-right" />
               {I18n.t(`${eventInstance ? 'common.edit' : 'common.add'}`)}
-              <i className="angle double icon right" />
             </button>
           </>
         )}

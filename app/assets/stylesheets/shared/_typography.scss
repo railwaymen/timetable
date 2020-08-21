@@ -1,13 +1,16 @@
-h1 {
+h1, h2, h3, h4, h5 {
+  color: rgba(0,0,0,0.85);
   font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif;
   line-height: 1.28571429em;
-  margin: calc(2rem -  0.14285714em) 0em 1rem;
   padding: 0em;
+  margin: calc(2rem -  0.14285714em) 0em 1rem;
+  margin-bottom: 0.5em;
+  font-weight: 500;
+}
+
+h1 {
   min-height: 1rem;
   font-size: 2rem;
-  margin-bottom: 0.5em;
-  color: rgba(0,0,0,0.85);
-  font-weight: 500;
   &:first-child {
     margin-top: 0em;
   }
@@ -15,16 +18,27 @@ h1 {
 
 
 h3 {
-  font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif;
-  line-height: 1.28571429em;
-  padding: 0em;
   font-size: 1.28571429rem;
-  margin-bottom: 0.5em;
-  font-weight: 500;
   &:first-child {
     margin-top: 0em;
   }
 }
+
+h4 {
+  font-size: 1.07142857rem;
+  &:first-child {
+    margin-top: 0em;
+  }
+}
+
+h5 {
+  font-size: 1rem;
+  &:first-child {
+    margin-top: 0em;
+  }
+}
+
+
 
 p {
   margin-bottom: 0;

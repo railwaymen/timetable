@@ -347,7 +347,7 @@ class ProjectsDistribution extends React.Component {
   eventItemPopoverTemplateResolver = (schedulerData, event) => (
     <>
       <h3 className="popover-event-title">
-        <div className="circular empty label ui" style={{ background: `${event.bgColor} none repeat scroll 0% 0%` }} />
+        <div className="circular-label" style={{ background: `${event.bgColor} none repeat scroll 0% 0%` }} />
         {event.title}
       </h3>
       <h4>{event.note}</h4>
