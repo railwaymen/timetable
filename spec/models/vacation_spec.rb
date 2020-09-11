@@ -55,6 +55,15 @@ RSpec.describe Vacation, type: :model do
       expect(vacation.valid?).to be_falsey
       expect(vacation.errors.details[:base]).to eql([{ error: :work_time_exists }])
     end
+
+    context 'when user has work time(excluded vacation_time beginning of day..+8 hours) on vacation days' do
+      it 'allow to create vacation' do
+        time_start = Time.zone.now.beginning_of_day
+        create(:work_time, user: user, starts_at: time_start + 8.hours, ends_at: time_start + 10.hours)
+        vacation = build(:vacation, user: user)
+        expect(vacation.valid?).to be_truthy
+      end
+    end
   end
 
   it '#user_full_name returns joined last_name and first_name' do
