@@ -21,7 +21,7 @@ RSpec.describe VacationService do
     it 'returns error when thera are work times entries in vacation range' do
       create(:project, :vacation)
       vacation = create(:vacation)
-      create(:work_time, user: vacation.user, starts_at: vacation.start_date.beginning_of_day + 8.hours, ends_at: vacation.start_date.beginning_of_day + 12.hours)
+      create(:work_time, user: vacation.user, starts_at: vacation.start_date.beginning_of_day, ends_at: vacation.start_date.beginning_of_day + 8.hours)
       warnings = [{ work_time: I18n.t('apps.staff.user_has_already_filled_in_work_time', parameter: vacation.user_full_name),
                     additional_info: vacation.start_date.strftime('%Y-%m-%d') }]
       expect(described_class.new(current_user: staff_manager, vacation: vacation).approve).to eql(response(vacation, staff_manager.to_s, 'unconfirmed', [], warnings))
