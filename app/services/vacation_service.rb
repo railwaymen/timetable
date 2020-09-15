@@ -54,7 +54,7 @@ class VacationService
       PaperTrail.request.disable_model(ProjectResourceAssignment)
       vacation_sub_type_error unless approve_vacation
       create_vacation_event if @vacation.accepted?
-      vacation_work_times_service.save
+      @errors = @warnings unless vacation_work_times_service.save
       @vacation_interaction = create_vacation_interaction(:approved)
       remove_previous_interaction(%w[declined])
 
@@ -197,7 +197,7 @@ class VacationService
 
   def response
     {
-      vacation: @vacation,
+      vacation: @vacation.reload,
       vacation_interaction: { user_full_name: @vacation_interaction ? @vacation_interaction.user.to_s : nil },
       previous_status: @previous_status,
       errors: @errors,
