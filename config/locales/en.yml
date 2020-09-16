@@ -351,6 +351,7 @@ en:
             task:
               invalid_uri: Task URL is not valid
               invalid_external: Task URL does not point to a valid external task
+              invalid_external_project: Task URL does not point to a valid external project
             starts_at:
               overlap: There is another task overlapping the specified time
               overlap_midnight: Can not create work times that ends in next day
