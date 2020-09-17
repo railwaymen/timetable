@@ -395,6 +395,7 @@ pl:
             task:
               invalid_uri: 'URL Taska nie jest poprawny'
               invalid_external: 'URL nie wskazuje na poprawny zewnętrzny task'
+              invalid_external_project: 'URL nie wskazuje na poprawny zewnętrzny projekt'
             starts_at:
               overlap: Istnieje inne zadanie o pokrywającym się czasie wykonania
               too_old: Nie można utworzyć lub edytować wpisu

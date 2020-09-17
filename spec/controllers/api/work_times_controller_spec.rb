@@ -225,10 +225,48 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       sign_in(user)
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
-      expect(strategy_double).to receive(:integration_payload) { { 'task_id' => 1 } }
+      expect(strategy_double).to receive(:integration_payload) { { task_id: 1 } }
       expect(UpdateExternalAuthWorker).to receive(:perform_async)
       post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('200')
+    end
+
+    context 'When external service is Jira' do
+      it 'does not create work time when task url doesn\'t belong to selected project' do
+        module ExternalAuthStrategy
+          class Sample < Base; def self.from_data(*args); end; end
+        end
+        jira_payload = {
+          task_id: 'TI-1'
+        }
+        project = create(:project, :external_integration_enabled)
+        project.update(external_payload: { 'id' => 'TO' })
+        create(:external_auth, user: user, provider: 'Sample')
+        sign_in(user)
+        strategy_double = double('strategy')
+        allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
+        expect(strategy_double).to receive(:integration_payload) { jira_payload }
+        post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com/TO-1' } }, format: :json
+        expect(response.code).to eql('422')
+      end
+
+      it 'create work time when task url belong to selected project' do
+        module ExternalAuthStrategy
+          class Sample < Base; def self.from_data(*args); end; end
+        end
+        jira_payload = {
+          task_id: 'TO-1'
+        }
+        project = create(:project, :external_integration_enabled)
+        project.update(external_payload: { 'id' => 'TO' })
+        create(:external_auth, user: user, provider: 'Sample')
+        sign_in(user)
+        strategy_double = double('strategy')
+        allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
+        expect(strategy_double).to receive(:integration_payload) { jira_payload }
+        post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com/TO-1' } }, format: :json
+        expect(response.code).to eql('200')
+      end
     end
   end
 
@@ -294,7 +332,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       sign_in(user)
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
-      expect(strategy_double).to receive(:integration_payload) { { 'task_id' => 1 } }
+      expect(strategy_double).to receive(:integration_payload) { { task_id: 1 } }
       expect(UpdateExternalAuthWorker).to receive(:perform_async)
       post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('200')
