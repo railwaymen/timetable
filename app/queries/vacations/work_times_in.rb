@@ -22,22 +22,23 @@ module Vacations
     def work_time_sql
       <<-SQL
         (
-          (starts_at::date BETWEEN :start_date::date AND :end_date::date) AND
           (
-            (extract(hour from "starts_at") BETWEEN (extract(hour from TIMESTAMP :start_date)) AND '24') OR 
-            (extract(hour from "starts_at") BETWEEN '0' AND (extract(hour from TIMESTAMP :end_date)))
-          )
-        ) OR
-        (
-          (ends_at::date BETWEEN :start_date::date AND :end_date::date) AND
+            (starts_at::date BETWEEN :start_date::date AND :end_date::date) AND
+            (
+              (extract(hour from "starts_at") BETWEEN (extract(hour from TIMESTAMP :start_date)) AND '24') OR
+              (extract(hour from "starts_at") BETWEEN '0' AND (extract(hour from TIMESTAMP :end_date)))
+            )
+          ) OR
           (
-            (extract(hour from "ends_at") BETWEEN (extract(hour from TIMESTAMP :start_date)) AND '24') OR
-            (extract(hour from "ends_at") BETWEEN '0' AND (extract(hour from TIMESTAMP :end_date)))
+            (ends_at::date BETWEEN :start_date::date AND :end_date::date) AND
+            (
+              (extract(hour from "ends_at") BETWEEN (extract(hour from TIMESTAMP :start_date)) AND '24') OR
+              (extract(hour from "ends_at") BETWEEN '0' AND (extract(hour from TIMESTAMP :end_date)))
+            )
           )
-        )
-        AND
-          discarded_at IS NULL AND
-          user_id = :user_id 
+        ) AND
+        discarded_at IS NULL AND
+        user_id = :user_id
       SQL
     end
   end
