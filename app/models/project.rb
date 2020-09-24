@@ -12,6 +12,7 @@ class Project < ApplicationRecord
   has_many :assignments, class_name: 'ProjectResourceAssignment', dependent: :destroy
   has_many :combined_reports, dependent: :nullify
   has_many :milestones, dependent: :nullify
+  has_many :tags, dependent: :nullify
   belongs_to :leader, class_name: 'User'
   belongs_to :milestones_import_user, class_name: 'User'
 

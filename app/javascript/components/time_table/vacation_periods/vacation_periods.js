@@ -94,7 +94,7 @@ function VacationPeriods() {
     ));
   }
 
-  function RenderSelectedUser(currentlySelectedUser) {
+  function renderSelectedUser(currentlySelectedUser) {
     return (
       <div>
         <b>

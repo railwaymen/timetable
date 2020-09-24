@@ -19,12 +19,12 @@ class Timesheet extends React.Component {
       projects: [],
       tags: [],
       requestsLocked: false,
+      globalTags: [],
     };
   }
 
   componentDidMount() {
     this.getProjects();
-    this.getTags();
   }
 
   onCopy(object) {
@@ -32,19 +32,11 @@ class Timesheet extends React.Component {
   }
 
   getProjects() {
-    Api.makeGetRequest({ url: '/api/projects/simple' })
+    Api.makeGetRequest({ url: '/api/projects/with_tags' })
       .then((response) => {
         this.setState({
-          projects: response.data,
-        });
-      });
-  }
-
-  getTags() {
-    Api.makeGetRequest({ url: '/api/projects/tags' })
-      .then((response) => {
-        this.setState({
-          tags: response.data,
+          projects: response.data.projects,
+          globalTags: response.data.global_tags,
         });
       });
   }
@@ -66,7 +58,7 @@ class Timesheet extends React.Component {
   }
 
   render() {
-    const { projects, tags, requestsLocked } = this.state;
+    const { projects, globalTags, tags, requestsLocked } = this.state;
     const projectsForEntries = projects.filter((project) => !project.accounting);
 
     if (projects.length > 0) {
@@ -82,6 +74,7 @@ class Timesheet extends React.Component {
             tags={tags}
             lockRequests={this.lockRequests}
             requestsLocked={requestsLocked}
+            globalTags={globalTags}
           />
           <EntryHistory
             ref={(entryHistory) => { this.entryHistory = entryHistory; }}
@@ -91,6 +84,7 @@ class Timesheet extends React.Component {
             tags={tags}
             lockRequests={this.lockRequests}
             requestsLocked={requestsLocked}
+            globalTags={globalTags}
           />
         </>
       );

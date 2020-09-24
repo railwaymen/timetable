@@ -11,9 +11,11 @@ import { defaultDatePickerProps, formattedHoursAndMinutes, inclusiveParse } from
 import translateErrors from '../../../shared/translate_errors';
 import WorkTimeTask from '../../../shared/work_time_task';
 import WorkTimeDuration from '../../../shared/work_time_duration';
-import WorkTimeTag from '../../../shared/work_time_tag';
+import Autocomplete from 'react-autocomplete';
+import ProjectsList from '../projects_list';
 import WorkTimeTime from '../../../shared/work_time_time';
 import WorkTimeDescription from '../../../shared/work_time_description';
+import Dropdown from '../../../shared/dropdown';
 
 class WorkHours extends React.Component {
   constructor(props) {
@@ -25,7 +27,6 @@ class WorkHours extends React.Component {
     this.toggleEdit = this.toggleEdit.bind(this);
     this.renderBodyEditable = this.renderBodyEditable.bind(this);
     this.renderDateEditable = this.renderDateEditable.bind(this);
-    this.renderTagEditable = this.renderTagEditable.bind(this);
     this.workHoursJsonApi = this.workHoursJsonApi.bind(this);
     this.saveWorkHours = this.saveWorkHours.bind(this);
     this.getInfo = this.getInfo.bind(this);
@@ -35,15 +36,22 @@ class WorkHours extends React.Component {
     this.onTimeFocus = this.onTimeFocus.bind(this);
     this.onTimeBlur = this.onTimeBlur.bind(this);
     this.recountTime = this.recountTime.bind(this);
+    this.selectTag = this.selectTag.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onTagChange = this.onTagChange.bind(this);
+    this.filterUsers = this.filterUsers.bind(this);
 
     this.state = {
       workHours: this.props.workHours,
       editing: false,
       tagEditable: false,
       errors: [],
+      filter: '',
+      tagFilter: '',
     };
+
+    this.searchRef = React.createRef();
+    this.tagRef = React.createRef();
   }
 
   componentDidMount() {
@@ -295,6 +303,25 @@ class WorkHours extends React.Component {
     }
   }
 
+  selectTag(e) {
+    const id = parseInt(e.target.attributes.getNamedItem('data-value').value, 10);
+
+    this.setState((prevState) => ({
+      workHours: {
+        ...prevState.workHours,
+        tag_id: id
+      },
+    }), this.saveWorkHours)
+  }
+
+  combinedTags() {
+    const {
+      workHours
+    } = this.state;
+
+    return this.props.globalTags.concat(this.props.projects.find((p) => p.id === workHours.project_id).tags)
+  }
+
   workHoursJsonApi() {
     const { workHours } = this.state;
 
@@ -302,10 +329,15 @@ class WorkHours extends React.Component {
       id: workHours.id,
       body: workHours.body,
       task: workHours.task,
-      tag: workHours.tag,
+      tag_id: workHours.tag_id,
       starts_at: workHours.starts_at,
       ends_at: workHours.ends_at,
     };
+  }
+
+  filterUsers(filter) {
+    const lowerFilter = filter.toLowerCase();
+    return _.filter(this.combinedTags(), (t) => (t.name.toLowerCase().match(lowerFilter)));
   }
 
   renderBodyEditable() {
@@ -324,14 +356,6 @@ class WorkHours extends React.Component {
             />
           </div>
         )}
-      </div>
-    );
-  }
-
-  renderTagEditable() {
-    return (
-      <div className="tag-container">
-        <TagsDropdown updateTag={this.onTagChange} selectedTag={this.state.workHours.tag} tags={this.props.tags} />
       </div>
     );
   }
@@ -375,8 +399,10 @@ class WorkHours extends React.Component {
 
   render() {
     const {
-      workHours, editing, errors, tagEditable,
+      workHours, editing, errors, tagEditable, filter, tagFilter,
     } = this.state;
+
+    const selectedTag = this.combinedTags().find((t) => t.id == workHours.tag_id)
 
     return (
       <div className={`time-entries-list-container ${!_.isEmpty(errors) ? 'has-error' : ''}`}>
@@ -399,9 +425,32 @@ class WorkHours extends React.Component {
                 </span>
               </div>
               { workHours.project.taggable && (
-              <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>
-                { tagEditable && this.renderTagEditable() }
-              </WorkTimeTag>
+                <div className="tag-container" onClick={this.toggleTagEdit}>
+                  <span>
+                    {workHours.tag}
+                  </span>
+                  { tagEditable && (
+                    <div>
+                      <div className="dropdown fluid search ui active visible">
+                        <input type="hidden" name="project" value="12" />
+                        <input
+                          className="search"
+                          style={{ width: '0' }}
+                          autoComplete="off"
+                          ref={this.tagRef}
+                          value={tagFilter}
+                          onKeyPress={this.onTagFilterKeyPress}
+                          onChange={this.onTagFilterChange}
+                        />
+                        <div className="text">
+                          <div className="circular empty label ui" style={{ background: `#${workHours.project.color}` }} />
+                          {workHours.tag}
+                        </div>
+                        <ProjectsList projects={this.combinedTags()} currentProject={selectedTag} onChangeProject={this.selectTag} />
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
             {editing ? (

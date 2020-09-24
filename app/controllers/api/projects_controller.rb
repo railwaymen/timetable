@@ -19,6 +19,12 @@ module Api
       @projects = Project.order(:internal, :name)
     end
 
+    def with_tags
+      @global_tags = Tag.where(project_id: nil)
+      @projects = Project.order(:internal, :name).left_joins(:tags).where.not(name: 'Vacation')
+      @projects = @projects.where.not(name: 'ZKS') unless current_user.admin?
+    end
+
     def tags
       @tags = WorkTime.tags
       respond_with @tags

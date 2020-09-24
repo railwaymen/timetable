@@ -8,16 +8,10 @@ class WorkTime < ApplicationRecord
   belongs_to :user
   belongs_to :creator, class_name: 'User'
   belongs_to :vacation
+  belongs_to :tag
 
   before_validation :assign_duration
   before_save :delete_spaces, :assign_date
-
-  enum tag: {
-    'dev': 'dev',
-    'im': 'im',
-    'cc': 'cc',
-    'res': 'res'
-  }
 
   validates :project_id, :starts_at, :ends_at, presence: true
   validates :duration, numericality: { greater_than: 0 }, unless: :project_zero?

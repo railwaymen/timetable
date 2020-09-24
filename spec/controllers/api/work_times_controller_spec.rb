@@ -8,14 +8,16 @@ RSpec.describe Api::WorkTimesController, type: :controller do
   let(:admin) { create(:user, :admin) }
   let(:manager) { create(:user, :manager) }
   let(:project) { create(:project) }
+  let(:tag) { create(:tag) }
   let(:body) { SecureRandom.hex }
   let(:starts_at) { Time.zone.now.beginning_of_day + 2.hours }
   let(:ends_at) { Time.zone.now.beginning_of_day + 4.hours }
 
-  def work_time_response(work_time)
-    work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'tag', 'user_id')
+  def work_time_response(work_time) # rubocop:disable Metrics/MethodLength
+    work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'tag_id', 'user_id')
              .merge(task_preview: task_preview_helper(work_time.task), editable: !work_time.project.accounting?)
              .merge(date: work_time.starts_at.to_date,
+                    tag: work_time.tag.name,
                     project: { name: work_time.project.name,
                                color: work_time.project.color,
                                lunch: work_time.project.lunch,
@@ -52,33 +54,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       FactoryBot.create :work_time, user: worker, project: project, starts_at: Time.current - 25.minutes, ends_at: Time.current - 20.minutes
 
       aggregate_failures 'display data for own project' do
-        expected_work_times_json = [
-          {
-            id: work_time.id,
-            updated_by_admin: work_time.updated_by_admin,
-            project_id: work_time.project_id,
-            starts_at: work_time.starts_at,
-            ends_at: work_time.ends_at,
-            duration: work_time.duration,
-            body: work_time.body,
-            task: work_time.task,
-            tag: work_time.tag,
-            task_preview: task_preview_helper(work_time.task),
-            user_id: work_time.user_id,
-            editable: !work_time.project.accounting?,
-            project: {
-              id: work_time.project.id,
-              name: work_time.project.name,
-              color: work_time.project.color,
-              accounting: work_time.project.accounting?,
-              work_times_allows_task: work_time.project.work_times_allows_task,
-              lunch: work_time.project.lunch,
-              count_duration: work_time.project.count_duration,
-              taggable: work_time.project.tags_enabled?
-            },
-            date: work_time.starts_at.to_date
-          }
-        ].to_json
+        expected_work_times_json = [work_time_response(work_time)].to_json
 
         get :index, params: { user_id: worker.id, project_id: belonged_project.id }, format: :json
 
@@ -92,33 +68,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       end
 
       aggregate_failures 'correctly displays own data' do
-        expected_user_work_times_json = [
-          {
-            id: user_work_time.id,
-            updated_by_admin: user_work_time.updated_by_admin,
-            project_id: user_work_time.project_id,
-            starts_at: user_work_time.starts_at,
-            ends_at: user_work_time.ends_at,
-            duration: user_work_time.duration,
-            body: user_work_time.body,
-            task: user_work_time.task,
-            tag: work_time.tag,
-            task_preview: task_preview_helper(work_time.task),
-            user_id: user_work_time.user_id,
-            editable: !work_time.project.accounting?,
-            project: {
-              id: user_work_time.project.id,
-              name: user_work_time.project.name,
-              color: user_work_time.project.color,
-              accounting: work_time.project.accounting?,
-              work_times_allows_task: work_time.project.work_times_allows_task,
-              lunch: work_time.project.lunch,
-              count_duration: work_time.project.count_duration,
-              taggable: work_time.project.tags_enabled?
-            },
-            date: user_work_time.starts_at.to_date
-          }
-        ].to_json
+        expected_user_work_times_json = [work_time_response(user_work_time)].to_json
 
         get :index, params: { project_id: project.id }, format: :json
 
@@ -158,7 +108,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
         work_time = create(:work_time, user: user)
         version1 = work_time_response(work_time).merge(updated_by_admin: false, event: :create, created_at: work_time.created_at,
                                                        updated_by: admin.accounting_name,
-                                                       changeset: %i[id user_id project_id starts_at ends_at duration body created_at updated_at creator_id date])
+                                                       changeset: %i[id user_id project_id starts_at ends_at duration body created_at updated_at creator_id date tag_id])
         work_time.update! body: 'New body'
         version2 = work_time_response(work_time).merge(updated_by_admin: false, event: :update, created_at: work_time.created_at, updated_by: admin.accounting_name, changeset: %i[body updated_at])
 
@@ -179,7 +129,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'creates work time' do
       sign_in(user)
       project = create(:project)
-      post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+      post :create, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at } }, format: :json
       expect(response.code).to eql('200')
       work_time = user.work_times.first!
       expect(work_time.body).to eql(body)
@@ -192,7 +142,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       sign_in(admin)
       other_user = create(:user)
       project = create(:project)
-      post :create, params: { work_time: { user_id: other_user.id, project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+      post :create, params: { work_time: { user_id: other_user.id, project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at } }, format: :json
       expect(response.code).to eql('200')
       work_time = other_user.work_times.first!
       expect(work_time.updated_by_admin).to be true
@@ -212,7 +162,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { nil }
-      post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      post :create, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('422')
     end
 
@@ -227,7 +177,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { { task_id: 1 } }
       expect(UpdateExternalAuthWorker).to receive(:perform_async)
-      post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, tag_id: tag.id, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('200')
     end
 
@@ -274,7 +224,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'creates correctly when no task in range' do
       sign_in(user)
       project = create(:project)
-      post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+      post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at } }, format: :json
       expect(response.code).to eql('200')
       work_time = user.work_times.first!
       expect(work_time.body).to eql(body)
@@ -288,7 +238,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       project = create(:project)
       create(:work_time, user: user, starts_at: starts_at + 30.minutes, ends_at: ends_at - 30.minutes)
       expect do
-        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at } }, format: :json
       end.to change(user.work_times, :count).by(2)
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql(WorkTime.last(2).map(&method(:work_time_response)).to_json)
@@ -301,7 +251,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       create(:work_time, user: user, starts_at: starts_at + 40.minutes, ends_at: starts_at + 50.minutes)
       create(:work_time, user: user, starts_at: starts_at + 50.minutes, ends_at: starts_at + 60.minutes) # there should be no gaps between second and third wt
       expect do
-        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at } }, format: :json
       end.to change(user.work_times, :count).by(3)
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql(WorkTime.last(3).map(&method(:work_time_response)).to_json)
@@ -318,7 +268,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { nil }
       expect do
-        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       end.not_to change(user.work_times, :count)
       expect(response.code).to eql('422')
     end
@@ -334,7 +284,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { { task_id: 1 } }
       expect(UpdateExternalAuthWorker).to receive(:perform_async)
-      post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('200')
     end
 
@@ -342,7 +292,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       sign_in(admin)
       other_user = create(:user)
       project = create(:project)
-      post :create_filling_gaps, params: { work_time: { user_id: other_user.id, project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+      post :create_filling_gaps, params: { work_time: { user_id: other_user.id, project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at } }, format: :json
       expect(response.code).to eql('200')
       work_time = other_user.work_times.first!
       expect(work_time.updated_by_admin).to be true
@@ -356,7 +306,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       sign_in(user)
       project = create(:project)
       expect do
-        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: starts_at } }, format: :json
+        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: starts_at } }, format: :json
       end.not_to change(user.work_times, :count)
       expect(response.code).to eql('422')
     end
@@ -366,7 +316,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       project = create(:project)
       create(:work_time, user: user, starts_at: starts_at, ends_at: ends_at)
       expect do
-        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at } }, format: :json
+        post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at } }, format: :json
       end.not_to change(user.work_times, :count)
       expect(response.code).to eql('422')
     end

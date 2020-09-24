@@ -8,6 +8,7 @@ import ErrorTooltip from '@components/shared/error_tooltip';
 import ProjectsDropdown from './projects_dropdown';
 import TagsDropdown from './tags_dropdown';
 import translateErrors from '../../shared/translate_errors';
+import Autocomplete from 'react-autocomplete';
 import * as Api from '../../shared/api';
 import * as Validations from '../../shared/validations';
 import { defaultDatePickerProps, formattedHoursAndMinutes, inclusiveParse } from '../../shared/helpers';
@@ -24,6 +25,7 @@ class Entry extends React.Component {
     this.recountTime = this.recountTime.bind(this);
     this.updateProject = this.updateProject.bind(this);
     this.updateTag = this.updateTag.bind(this);
+    this.selectTag = this.selectTag.bind(this);
     this.validate = this.validate.bind(this);
     this.removeErrorsFor = this.removeErrorsFor.bind(this);
     this.paste = this.paste.bind(this);
@@ -37,12 +39,13 @@ class Entry extends React.Component {
       body: undefined,
       duration: 0,
       task: '',
-      tag: 'dev',
       project: {},
       starts_at: moment().format('HH:mm'),
       ends_at: moment().format('HH:mm'),
       durationHours: '00:00',
       date: moment().format('DD/MM/YYYY'),
+      combinedTags: [],
+      tag: '',
       errors: [],
     };
 
@@ -119,7 +122,7 @@ class Entry extends React.Component {
       user_id: userId,
       body,
       task,
-      tag: project.taggable ? tag : 'dev',
+      tag_id: tag.id,
       project_id: project.id,
       starts_at: moment(`${date} ${starts_at}`, 'DD/MM/YYYY HH:mm'),
       ends_at: moment(`${date} ${ends_at}`, 'DD/MM/YYYY HH:mm'),
@@ -172,6 +175,7 @@ class Entry extends React.Component {
       project: object.project,
       project_id: object.project.id,
       task: object.task,
+      combinedTags: (object.project.tags || []).concat(this.props.globalTags),
       tag: object.tag || 'dev',
     });
   }
@@ -198,10 +202,13 @@ class Entry extends React.Component {
       ends_at: Validations.presence(ends_at),
       project_id: Validations.presence(project_id),
       duration: Validations.greaterThan(0, duration),
-      tag: Validations.presence(tag),
     };
     Object.keys(errors).forEach((key) => { if (errors[key] === undefined) { delete errors[key]; } });
     return errors;
+  }
+
+  findDefaultTag() {
+    return this.props.globalTags.find((t) => t.use_as_default === true) || this.props.globalTags[0];
   }
 
   updateTag(tag_obj) {
@@ -210,6 +217,12 @@ class Entry extends React.Component {
     }, () => {
       this.removeErrorsFor('tag');
       this.recountTime();
+    });
+  }
+
+  selectTag(value) {
+    this.setState({
+      tag: this.state.combinedTags.find((tag) => tag.name === value)
     });
   }
 
@@ -230,6 +243,9 @@ class Entry extends React.Component {
     this.setState({
       ...autoSettings,
       project,
+      combinedTags: project.tags.concat(this.props.globalTags),
+      tag_id: this.findDefaultTag().id,
+      tag: this.findDefaultTag(),
       project_id: project.id,
     }, () => {
       this.removeErrorsFor('project_id');
@@ -276,7 +292,7 @@ class Entry extends React.Component {
 
   render() {
     const {
-      body, task, tag, starts_at, ends_at, durationHours, date, errors, project,
+      body, task, tag, tag_id, starts_at, ends_at, durationHours, date, errors, project, combinedTags,
     } = this.state;
     const { requestsLocked } = this.props;
 
@@ -378,11 +394,23 @@ class Entry extends React.Component {
                 />
               </div>
             </div>
-            { project.taggable && (
-              <div className="tag-container">
-                {errors.tag && <ErrorTooltip errors={errors.tag} />}
-                <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />
-              </div>
+            { project.tags_enabled && (
+               <div className="form-group custom-tags">
+                 <Autocomplete
+                   inputProps={{ className: 'form-control', placeholder: I18n.t('apps.users.position') }}
+                   wrapperStyle={{ width: '100%' }}
+                   getItemValue={(item) => item.name}
+                   renderItem={(item, isHighlighted) => (
+                     <div key={item.id} style={{ background: isHighlighted ? 'lightgray' : 'white', padding: '10px' }}>
+                       {item.name}
+                     </div>
+                   )}
+                   name="tag"
+                   items={combinedTags}
+                   value={tag.name}
+                   onSelect={this.selectTag}
+                 />
+               </div>
             )}
             <div className="form-actions bg-white btn-group">
               <button

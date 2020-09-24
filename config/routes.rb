@@ -61,6 +61,7 @@ Rails.application.routes.draw do
       end
       get :list, on: :collection
       get :simple, on: :collection
+      get :with_tags, on: :collection
       get :tags, on: :collection
       get :work_times, on: :member
     end

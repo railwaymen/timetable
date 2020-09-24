@@ -271,7 +271,13 @@ ActiveRecord::Schema.define(version: 2020_08_05_093622) do
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "project_id"
+    t.datetime "discarded_at"
+    t.boolean "use_as_default", default: false, null: false
+    t.index ["discarded_at"], name: "index_tags_on_discarded_at"
+    t.index ["name", "project_id"], name: "index_tags_on_name_and_project_id", unique: true
     t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["project_id"], name: "index_tags_on_project_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -364,12 +370,14 @@ ActiveRecord::Schema.define(version: 2020_08_05_093622) do
     t.boolean "updated_by_admin", default: false, null: false
     t.string "task"
     t.jsonb "integration_payload"
-    t.string "tag", default: "dev", null: false
+    t.string "_tag", default: "dev", null: false
     t.integer "vacation_id"
     t.datetime "discarded_at"
     t.date "date", null: false
     t.string "department", null: false
+    t.bigint "tag_id"
     t.index ["discarded_at"], name: "index_work_times_on_discarded_at"
+    t.index ["tag_id"], name: "index_work_times_on_tag_id"
   end
 
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"
@@ -395,11 +403,13 @@ ActiveRecord::Schema.define(version: 2020_08_05_093622) do
   add_foreign_key "remote_works", "users"
   add_foreign_key "remote_works", "users", column: "creator_id"
   add_foreign_key "taggings", "tags"
+  add_foreign_key "tags", "projects"
   add_foreign_key "vacation_interactions", "users"
   add_foreign_key "vacation_interactions", "vacations"
   add_foreign_key "vacation_periods", "users"
   add_foreign_key "vacations", "users"
   add_foreign_key "work_times", "projects", name: "work_times_project_id_fk"
+  add_foreign_key "work_times", "tags"
   add_foreign_key "work_times", "users", column: "creator_id", name: "work_times_creator_id_fk"
   add_foreign_key "work_times", "users", name: "work_times_user_id_fk"
   add_foreign_key "work_times", "vacations", name: "work_times_vacation_id_fk"

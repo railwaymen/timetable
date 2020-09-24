@@ -45,7 +45,7 @@ class ProjectReportCreator
     user_id,
     CONCAT(users.first_name, ' ', users.last_name) AS owner,
     SUM(duration) AS duration,
-    tag,
+    tag_id,
     task,
     body,
     (array_agg(integration_payload))[1] as integration_payload
@@ -55,7 +55,7 @@ class ProjectReportCreator
     project_report.project.work_times.kept
                   .joins(:user)
                   .where('work_times.starts_at BETWEEN ? AND ?', project_report.starts_at, project_report.ends_at)
-                  .group('user_id, users.last_name, users.first_name, task, body, tag')
+                  .group('user_id, users.last_name, users.first_name, task, body, tag_id')
                   .select(SELECT_STATEMENT)
                   .order('users.last_name, users.first_name ASC')
   end
