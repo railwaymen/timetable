@@ -30,6 +30,7 @@ class EntryHistory extends React.Component {
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
     this.translateTag = this.translateTag.bind(this);
     this.switchMonth = this.switchMonth.bind(this);
+    this.filterWorkHours = this.filterWorkHours.bind(this);
 
     this.state = {
       workHours: [],
@@ -224,7 +225,7 @@ class EntryHistory extends React.Component {
         daysKeys,
         groupedWorkHours,
       }, () => {
-        this.increaseWorkHours(object.duration);
+        if (!moment().startOf('Day').isBefore(moment(object.date))) this.increaseWorkHours(object.duration);
         const event = new CustomEvent(
           'push-entry',
           { detail: { id: object.id } },
@@ -278,7 +279,7 @@ class EntryHistory extends React.Component {
       daysKeys,
     }, () => {
       if (callback) callback();
-      this.decreaseWorkHours(component.state.workHours.duration);
+      if (!moment().startOf('Day').isBefore(moment(component.state.workHours.date))) this.decreaseWorkHours(component.state.workHours.duration);
     });
   }
 
@@ -348,8 +349,19 @@ class EntryHistory extends React.Component {
 
   totalWorkHours() {
     this.setState((prevState) => ({
-      total: displayDuration(_.sumBy(prevState.workHours, (w) => w.duration)),
+      total: displayDuration(_.sumBy(this.filterWorkHours(prevState.workHours), (w) => w.duration)),
     }));
+  }
+
+  filterWorkHours(workHours) {
+    const todayDate = moment().startOf('Day');
+    let afterToday = false;
+    return workHours.filter((dayWorkHour) => {
+      if (afterToday) return true;
+
+      afterToday = !todayDate.isBefore(moment(dayWorkHour.date));
+      return afterToday;
+    });
   }
 
   switchMonth(value) {
