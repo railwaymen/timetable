@@ -45,7 +45,7 @@ class WorkHoursDay extends React.Component {
       this.props.removeWorkHours(component, () => { this.props.pushEntry(component.state.workHours); });
     } else {
       this.props.updateWorkHours(component);
-      this.increaseWorkHours(deviation);
+      if (!moment().startOf('Day').isBefore(moment(component.state.workHours.date))) this.increaseWorkHours(deviation);
     }
   }
 
