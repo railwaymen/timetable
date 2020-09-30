@@ -135,7 +135,7 @@ function VacationPeriods() {
               updateObject={(selectedUser) => getVacationPeriods(selectedUser.id)}
               selectedObject={user}
               filterObjects={FilterUsers}
-              renderSelectedObject={RenderSelectedUser}
+              renderSelectedObject={renderSelectedUser}
               renderObjectsList={RenderUsersList}
             />
           </div>

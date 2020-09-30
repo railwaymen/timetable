@@ -10,6 +10,8 @@ import EditProject from './time_table/projects/edit_project';
 import ExternalAuth from './time_table/users/external_auth';
 import Users from './time_table/users/users';
 import EditUser from './time_table/users/edit_user';
+import Tags from './time_table/tags/tags';
+import EditTag from './time_table/tags/edit_tag';
 import ByProjects from './time_table/reports/by_projects';
 import ByUsers from './time_table/reports/by_users';
 import Periods from './time_table/accounting_periods/periods';
@@ -68,6 +70,9 @@ class TimeTable extends React.Component {
             <Route path="/projects/:projectId/combined_reports/:id" component={CombinedReport} />
             <Route path="/projects/:projectId/new_combined_report" component={NewCombinedReport} />
             <Route path="/projects/new" component={EditProject} />
+            <Route path="/tags" exact component={Tags} />
+            <Route path="/tags/new" exact component={EditTag} />
+            <Route path="/tags/edit/:id" component={EditTag} />
             <Route path="/reports/work_times/by_projects" component={ByProjects} />
             <Route path="/reports/work_times/by_users" component={ByUsers} />
             <Route path="/accounting_periods" exact component={Periods} />

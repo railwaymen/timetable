@@ -26,7 +26,7 @@ module Api
     end
 
     def tags
-      @tags = WorkTime.tags
+      @tags = { 'dev': 'dev', 'im': 'im', 'cc': 'cc', 'res': 'res' }
       respond_with @tags
     end
 

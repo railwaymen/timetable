@@ -6,16 +6,13 @@ import DatePicker from 'react-datepicker';
 import ErrorTooltip from '@components/shared/error_tooltip';
 import ModalButton from '@components/shared/modal_button';
 import * as Api from '../../../shared/api';
-import TagsDropdown from '../tags_dropdown';
 import { defaultDatePickerProps, formattedHoursAndMinutes, inclusiveParse } from '../../../shared/helpers';
 import translateErrors from '../../../shared/translate_errors';
 import WorkTimeTask from '../../../shared/work_time_task';
 import WorkTimeDuration from '../../../shared/work_time_duration';
-import Autocomplete from 'react-autocomplete';
 import ProjectsList from '../projects_list';
 import WorkTimeTime from '../../../shared/work_time_time';
 import WorkTimeDescription from '../../../shared/work_time_description';
-import Dropdown from '../../../shared/dropdown';
 
 class WorkHours extends React.Component {
   constructor(props) {
@@ -46,7 +43,6 @@ class WorkHours extends React.Component {
       editing: false,
       tagEditable: false,
       errors: [],
-      filter: '',
       tagFilter: '',
     };
 
@@ -309,17 +305,20 @@ class WorkHours extends React.Component {
     this.setState((prevState) => ({
       workHours: {
         ...prevState.workHours,
-        tag_id: id
+        tag_id: id,
       },
-    }), this.saveWorkHours)
+    }), this.saveWorkHours);
   }
 
   combinedTags() {
     const {
-      workHours
+      workHours,
     } = this.state;
 
-    return this.props.globalTags.concat(this.props.projects.find((p) => p.id === workHours.project_id).tags)
+    const project = this.props.projects.find((p) => p.id === workHours.project);
+    if (project == null) { return this.props.globalTags; }
+
+    return this.props.globalTags.concat(project.tags);
   }
 
   workHoursJsonApi() {
@@ -399,10 +398,10 @@ class WorkHours extends React.Component {
 
   render() {
     const {
-      workHours, editing, errors, tagEditable, filter, tagFilter,
+      workHours, editing, errors, tagEditable, tagFilter,
     } = this.state;
 
-    const selectedTag = this.combinedTags().find((t) => t.id == workHours.tag_id)
+    const selectedTag = this.combinedTags().find((t) => t.id === workHours.tag_id);
 
     return (
       <div className={`time-entries-list-container ${!_.isEmpty(errors) ? 'has-error' : ''}`}>

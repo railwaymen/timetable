@@ -190,29 +190,4 @@ RSpec.describe Api::UsersController do
       expect(user.reload.discarded?).to eql(true)
     end
   end
-
-  describe '#positions' do
-    it 'authenticates user' do
-      get :positions, as: :json
-      expect(response.code).to eql('401')
-    end
-
-    it 'checks permissions' do
-      sign_in(user)
-      get :positions, as: :json
-      expect(response.code).to eql('403')
-    end
-
-    it 'returns correct values' do
-      sign_in(admin)
-
-      create(:tag, name: 'Senior')
-      create(:tag, name: 'Mid')
-      create(:tag, name: 'Junior')
-
-      get :positions, as: :json
-      expect(response.status).to eql(200)
-      expect(response.body).to be_json_eql(%w[Junior Mid Senior])
-    end
-  end
 end

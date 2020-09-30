@@ -5,10 +5,9 @@ import DatePicker from 'react-datepicker';
 import _ from 'lodash';
 import URI from 'urijs';
 import ErrorTooltip from '@components/shared/error_tooltip';
-import ProjectsDropdown from './projects_dropdown';
-import TagsDropdown from './tags_dropdown';
-import translateErrors from '../../shared/translate_errors';
 import Autocomplete from 'react-autocomplete';
+import ProjectsDropdown from './projects_dropdown';
+import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 import * as Validations from '../../shared/validations';
 import { defaultDatePickerProps, formattedHoursAndMinutes, inclusiveParse } from '../../shared/helpers';
@@ -190,7 +189,7 @@ class Entry extends React.Component {
   validate() {
     const { project } = this.state;
     const {
-      body, starts_at, ends_at, project_id, duration, task, tag,
+      body, starts_at, ends_at, project_id, duration, task,
     } = this.state;
 
     if (!project.taggable || project.autofill) {
@@ -221,9 +220,7 @@ class Entry extends React.Component {
   }
 
   selectTag(value) {
-    this.setState({
-      tag: this.state.combinedTags.find((tag) => tag.name === value)
-    });
+    this.setState((state) => ({ tag: state.combinedTags.find((tag) => tag.name === value) }));
   }
 
   updateProject(project, focusPreviousInput) {
@@ -244,7 +241,6 @@ class Entry extends React.Component {
       ...autoSettings,
       project,
       combinedTags: project.tags.concat(this.props.globalTags),
-      tag_id: this.findDefaultTag().id,
       tag: this.findDefaultTag(),
       project_id: project.id,
     }, () => {
@@ -292,7 +288,7 @@ class Entry extends React.Component {
 
   render() {
     const {
-      body, task, tag, tag_id, starts_at, ends_at, durationHours, date, errors, project, combinedTags,
+      body, task, tag, starts_at, ends_at, durationHours, date, errors, project, combinedTags,
     } = this.state;
     const { requestsLocked } = this.props;
 
@@ -395,22 +391,22 @@ class Entry extends React.Component {
               </div>
             </div>
             { project.tags_enabled && (
-               <div className="form-group custom-tags">
-                 <Autocomplete
-                   inputProps={{ className: 'form-control', placeholder: I18n.t('apps.users.position') }}
-                   wrapperStyle={{ width: '100%' }}
-                   getItemValue={(item) => item.name}
-                   renderItem={(item, isHighlighted) => (
-                     <div key={item.id} style={{ background: isHighlighted ? 'lightgray' : 'white', padding: '10px' }}>
-                       {item.name}
-                     </div>
-                   )}
-                   name="tag"
-                   items={combinedTags}
-                   value={tag.name}
-                   onSelect={this.selectTag}
-                 />
-               </div>
+            <div className="form-group custom-tags">
+              <Autocomplete
+                inputProps={{ className: 'form-control', placeholder: I18n.t('apps.users.position') }}
+                wrapperStyle={{ width: '100%' }}
+                getItemValue={(item) => item.name}
+                renderItem={(item, isHighlighted) => (
+                  <div key={item.id} style={{ background: isHighlighted ? 'lightgray' : 'white', padding: '10px' }}>
+                    {item.name}
+                  </div>
+                )}
+                name="tag"
+                items={combinedTags}
+                value={tag.name}
+                onSelect={this.selectTag}
+              />
+            </div>
             )}
             <div className="form-actions bg-white btn-group">
               <button

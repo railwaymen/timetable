@@ -58,7 +58,9 @@ class Timesheet extends React.Component {
   }
 
   render() {
-    const { projects, globalTags, tags, requestsLocked } = this.state;
+    const {
+      projects, globalTags, tags, requestsLocked,
+    } = this.state;
     const projectsForEntries = projects.filter((project) => !project.accounting);
 
     if (projects.length > 0) {

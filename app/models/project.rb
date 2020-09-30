@@ -2,6 +2,7 @@
 
 class Project < ApplicationRecord
   include Discard::Model
+  include FilterConcern
   store_accessor :external_payload, :id, prefix: :external
 
   has_many :metrics, dependent: :destroy
@@ -21,14 +22,6 @@ class Project < ApplicationRecord
   validates :external_id, presence: true, if: :external_integration_enabled?
 
   after_save :change_events_color_and_name, if: proc { |project| project.saved_change_to_color? || project.saved_change_to_name? }
-
-  def self.filter_by(action)
-    case action
-    when :active then kept
-    when :inactive then discarded
-    else all
-    end
-  end
 
   def users_participating(range)
     users.joins(:work_times).merge(WorkTime.kept).where(work_times: { starts_at: range })

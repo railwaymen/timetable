@@ -22,9 +22,7 @@ Rails.application.routes.draw do
         get :by_users, on: :collection
       end
     end
-    resources :users, only: %i[index show create update] do
-      get :positions, on: :collection
-    end
+    resources :users, only: %i[index show create update]
     resources :hardwares, only: %i[index create destroy update] do
       get :types, on: :collection
       resources :fields, controller: :hardware_fields, only: %i[create destroy update]
@@ -41,6 +39,7 @@ Rails.application.routes.draw do
     resources :work_times do
       post :create_filling_gaps, on: :collection
     end
+    resources :tags, only: %i[index show create update]
     resources :projects, only: %i[index show create update] do
       resources :milestones do
         get :work_times, on: :collection
