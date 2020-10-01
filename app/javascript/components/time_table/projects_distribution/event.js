@@ -170,6 +170,19 @@ class Event extends React.Component {
     );
   }
 
+  renderEditAddBtn() {
+    const { selectedProject } = this.state
+    const { eventInstance } = this.props
+    if(eventInstance && selectedProject && selectedProject.name === 'Vacation') return null;
+
+    return(
+      <button className="btn btn-success btn-with-icon" id="generate" type="button" onClick={this.onSubmit}>
+        <i className="fa fa fa-angle-double-right" />
+        {I18n.t(`${eventInstance ? 'common.edit' : 'common.add'}`)}
+      </button>
+    )
+  }
+
   render() {
     const { slotName, projects, eventInstance } = this.props;
     const { note, selectedProject, resizable } = this.state;
@@ -228,10 +241,7 @@ class Event extends React.Component {
                 {I18n.t('common.destroy')}
               </button>
             ) : null}
-            <button className="btn btn-success btn-with-icon" id="generate" type="button" onClick={this.onSubmit}>
-              <i className="fa fa fa-angle-double-right" />
-              {I18n.t(`${eventInstance ? 'common.edit' : 'common.add'}`)}
-            </button>
+            {this.renderEditAddBtn()}
           </>
         )}
       />
