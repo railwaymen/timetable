@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_05_093622) do
+ActiveRecord::Schema.define(version: 2020_09_20_124950) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,6 +138,7 @@ ActiveRecord::Schema.define(version: 2020_08_05_093622) do
     t.integer "external_estimate", default: 0, null: false
     t.integer "other_estimate", default: 0, null: false
     t.boolean "visible_on_reports", default: false, null: false
+    t.string "jira_issues", default: [], array: true
     t.index ["discarded_at"], name: "index_milestones_on_discarded_at"
     t.index ["project_id"], name: "index_milestones_on_project_id"
   end

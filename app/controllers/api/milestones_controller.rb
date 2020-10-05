@@ -35,8 +35,7 @@ module Api
       from_date = params[:from].presence || milestone.starts_on
       to_date = params[:to].presence || milestone.ends_on
 
-      work_times_query = project.work_times.kept.where('date >= ?', from_date).order(:starts_at)
-      work_times_query.where!('date <= ?', to_date) if to_date
+      work_times_query = WorkTimes::MilestoneWorkTimesQuery.new(milestone, project, from_date, to_date).perform
 
       @work_times = WorkTimePolicy::Scope.new(current_user, work_times_query)
                                          .resolve

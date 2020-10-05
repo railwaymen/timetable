@@ -11,7 +11,7 @@ function MilestoneTagBreakdownChart(props) {
 
   function updateChartWithData() {
     if (chart) {
-      const dates = Object.keys(_.groupBy(workTimes, 'date'));
+      const dates = Object.keys(_.groupBy(workTimes, 'date')).reverse();
 
       const datasets = Object.keys(tagColors).map((tag) => {
         const data = dates.map((date) => (_.chain(workTimes).filter({ date, tag }).sumBy('duration').value()));

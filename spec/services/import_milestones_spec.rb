@@ -15,7 +15,7 @@ RSpec.describe ImportMilestones do
 
       client = instance_double(ExternalAuthStrategy::Jira)
       versions = double(id: version_id, attrs: { 'name' => 'V1', 'startDate' => starts_on, 'releaseDate' => ends_on })
-      issue = double(timeoriginalestimate: 3600)
+      issue = double(timeoriginalestimate: 3600, key: 'test')
 
       expect(ExternalAuthStrategy::Jira).to receive(:from_data).with(user.external_auth.data).and_return(client)
       expect(client).to receive(:versions).with(project.external_id).and_return([versions])
@@ -40,7 +40,7 @@ RSpec.describe ImportMilestones do
 
       client = instance_double(ExternalAuthStrategy::Jira)
       versions = double(id: version_id, attrs: { 'name' => 'V1' })
-      issue = double(timeoriginalestimate: 15)
+      issue = double(timeoriginalestimate: 15, key: 'test')
 
       expect(ExternalAuthStrategy::Jira).to receive(:from_data).with(user.external_auth.data).and_return(client)
       expect(client).to receive(:versions).with(project.external_id).and_return([versions])
