@@ -193,7 +193,7 @@ class Entry extends React.Component {
       return [];
     }
     const errors = {
-      body: (!task ? Validations.presence(body) : undefined),
+      body: (!task && !project.lunch ? Validations.presence(body) : undefined),
       starts_at: Validations.presence(starts_at),
       ends_at: Validations.presence(ends_at),
       project_id: Validations.presence(project_id),
