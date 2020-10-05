@@ -38,12 +38,32 @@ RSpec.describe Vacation, type: :model do
     expect(vacation.errors.details[:start_date]).to eql([{ error: :greater_than_end_date }])
   end
 
-  it 'validates entries in Timesheet' do
-    user = create(:user)
-    create(:work_time, user: user)
-    vacation = build(:vacation, user: user)
-    expect(vacation.valid?).to be_falsey
-    expect(vacation.errors.details[:base]).to eql([{ error: :work_time_exists }])
+  context 'validates entries in Timesheet' do
+    let(:user) { create(:user) }
+
+    it 'returns vacation exists error' do
+      accepted_vacation = create(:vacation, user: user, status: :accepted)
+      create(:work_time, user: user, vacation: accepted_vacation)
+      vacation = build(:vacation, user: user)
+      expect(vacation.valid?).to be_falsey
+      expect(vacation.errors.details[:base]).to eql([{ error: :vacation_exists }])
+    end
+
+    it 'returns work time exists error' do
+      create(:work_time, user: user)
+      vacation = build(:vacation, user: user)
+      expect(vacation.valid?).to be_falsey
+      expect(vacation.errors.details[:base]).to eql([{ error: :work_time_exists }])
+    end
+
+    context 'when user has work time(excluded vacation_time beginning of day..+8 hours) on vacation days' do
+      it 'allow to create vacation' do
+        time_start = Time.zone.now.beginning_of_day
+        create(:work_time, user: user, starts_at: time_start + 8.hours, ends_at: time_start + 10.hours)
+        vacation = build(:vacation, user: user)
+        expect(vacation.valid?).to be_truthy
+      end
+    end
   end
 
   it '#user_full_name returns joined last_name and first_name' do

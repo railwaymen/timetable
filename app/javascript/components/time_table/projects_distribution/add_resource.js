@@ -109,7 +109,7 @@ class AddResource extends React.Component {
   renderSelectedUser(selectedObject) {
     return (
       <div>
-        <div className="circular empty label ui" style={{ background: `#${selectedObject.color}` }} />
+        <div className="circular-label" style={{ background: `#${selectedObject.color}` }} />
         {`${selectedObject.first_name} ${selectedObject.last_name}`}
       </div>
     );
@@ -118,7 +118,7 @@ class AddResource extends React.Component {
   renderUsersList(object, currentObject) {
     return (
       <div>
-        <div className="circular empty label ui" style={{ background: `#${object.color}` }} />
+        <div className="circular-label" style={{ background: `#${object.color}` }} />
         {object.id === currentObject.id ? (
           <b>
             {`${object.first_name} ${object.last_name}`}

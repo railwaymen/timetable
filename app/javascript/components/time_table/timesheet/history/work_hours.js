@@ -7,7 +7,7 @@ import ErrorTooltip from '@components/shared/error_tooltip';
 import ModalButton from '@components/shared/modal_button';
 import * as Api from '../../../shared/api';
 import TagsDropdown from '../tags_dropdown';
-import { defaultDatePickerProps } from '../../../shared/helpers';
+import { defaultDatePickerProps, formattedHoursAndMinutes, inclusiveParse } from '../../../shared/helpers';
 import translateErrors from '../../../shared/translate_errors';
 import WorkTimeTask from '../../../shared/work_time_task';
 import WorkTimeDuration from '../../../shared/work_time_duration';
@@ -70,18 +70,24 @@ class WorkHours extends React.Component {
 
   onDelete() {
     if (window.confirm(I18n.t('common.confirm'))) {
-      Api.makeDeleteRequest({ url: `/api/work_times/${this.state.workHours.id}` })
-        .then((data) => {
-          if (data.status >= 400 && data.status < 500) {
-            data.json().then((response) => {
-              this.setState({
-                errors: translateErrors('work_time', response.errors),
+      const { lockRequests } = this.props;
+      lockRequests(true).then(() => {
+        Api.makeDeleteRequest({ url: `/api/work_times/${this.state.workHours.id}` })
+          .then((data) => {
+            if (data.status >= 400 && data.status < 500) {
+              data.json().then((response) => {
+                this.setState({
+                  errors: translateErrors('work_time', response.errors),
+                });
               });
-            });
-          } else if (parseInt(data.status, 10) === 204) {
-            this.props.removeWorkHours(this);
-          }
-        });
+            } else if (parseInt(data.status, 10) === 204) {
+              this.props.removeWorkHours(this);
+            }
+          })
+          .finally(() => {
+            lockRequests(false);
+          });
+      });
     }
   }
 
@@ -163,13 +169,12 @@ class WorkHours extends React.Component {
   recountTime() {
     const { starts_at_hours, ends_at_hours } = this.state;
 
-    // parse and reformat as starts_at_hours are input from user
-    const formattedStartsAtTime = moment(starts_at_hours, 'HH:mm').format('HH:mm');
-    const formattedEndsAtTime = moment(ends_at_hours, 'HH:mm').format('HH:mm');
+    const formattedStartsAtTime = inclusiveParse(starts_at_hours);
+    const formattedEndsAtTime = inclusiveParse(ends_at_hours);
 
     this.setState({
-      starts_at_hours: formattedStartsAtTime,
-      ends_at_hours: formattedEndsAtTime,
+      starts_at_hours: formattedHoursAndMinutes(formattedStartsAtTime),
+      ends_at_hours: formattedHoursAndMinutes(formattedEndsAtTime),
     });
   }
 
@@ -190,52 +195,57 @@ class WorkHours extends React.Component {
   }
 
   saveWorkHours() {
-    const {
-      workHours, ends_at_hours, starts_at_hours, date,
-    } = this.state;
+    const { lockRequests, updateWorkHours } = this.props;
+    lockRequests(true).then(() => {
+      const {
+        workHours, ends_at_hours, starts_at_hours, date,
+      } = this.state;
 
-    const formattedStartsAtTime = moment(workHours.starts_at).format('HH:mm');
-    const formattedEndsAtTime = moment(workHours.ends_at).format('HH:mm');
-    const starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
-    const ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
-    const oldDuration = workHours.duration;
+      const formattedStartsAtTime = moment(workHours.starts_at).format('HH:mm');
+      const formattedEndsAtTime = moment(workHours.ends_at).format('HH:mm');
+      const starts_at = moment(`${date} ${starts_at_hours}`, 'DD/MM/YYYY HH:mm');
+      const ends_at = moment(`${date} ${ends_at_hours}`, 'DD/MM/YYYY HH:mm');
+      const oldDuration = workHours.duration;
 
-    Api.makePutRequest({
-      url: `/api/work_times/${this.state.workHours.id}`,
-      body: {
-        work_time: {
-          ...this.workHoursJsonApi(), starts_at, ends_at,
+      Api.makePutRequest({
+        url: `/api/work_times/${this.state.workHours.id}`,
+        body: {
+          work_time: {
+            ...this.workHoursJsonApi(), starts_at, ends_at,
+          },
         },
-      },
-    }).then((response) => {
-      const { data } = response;
-      const durationDeviation = data.duration - oldDuration;
+      }).then((response) => {
+        const { data } = response;
+        const durationDeviation = data.duration - oldDuration;
 
-      this.setState({
-        workHours: data,
-        date: moment(data.starts_at).format('DD/MM/YYYY'),
-        errors: [],
-      }, () => {
-        this.props.updateWorkHours(this, durationDeviation);
-        const event = new CustomEvent(
-          'edit-entry',
-          { detail: { id: workHours.id, success: true } },
-        );
+        this.setState({
+          workHours: data,
+          date: moment(data.starts_at).format('DD/MM/YYYY'),
+          errors: [],
+        }, () => {
+          updateWorkHours(this, durationDeviation);
+          const event = new CustomEvent(
+            'edit-entry',
+            { detail: { id: workHours.id, success: true } },
+          );
 
-        document.dispatchEvent(event);
-      });
-    }).catch((e) => {
-      this.setState({
-        starts_at_hours: formattedStartsAtTime,
-        ends_at_hours: formattedEndsAtTime,
-        errors: translateErrors('work_time', e.errors),
-      }, () => {
-        const event = new CustomEvent(
-          'edit-entry',
-          { detail: { id: workHours.id, success: false } },
-        );
+          document.dispatchEvent(event);
+        });
+      }).catch((e) => {
+        this.setState({
+          starts_at_hours: formattedStartsAtTime,
+          ends_at_hours: formattedEndsAtTime,
+          errors: translateErrors('work_time', e.errors),
+        }, () => {
+          const event = new CustomEvent(
+            'edit-entry',
+            { detail: { id: workHours.id, success: false } },
+          );
 
-        document.dispatchEvent(event);
+          document.dispatchEvent(event);
+        });
+      }).finally(() => {
+        lockRequests(false);
       });
     });
   }
@@ -309,7 +319,7 @@ class WorkHours extends React.Component {
               className="form-control task-input"
               name="task"
               placeholder={I18n.t('apps.timesheet.task_url')}
-              value={this.state.workHours.task}
+              value={this.state.workHours.task ? this.state.workHours.task : ''}
               onChange={this.onChange}
             />
           </div>
@@ -330,7 +340,13 @@ class WorkHours extends React.Component {
     return (
       <div className="edit-time">
         <div className="edit-date">
-          <DatePicker {...defaultDatePickerProps} value={this.state.date} onChange={this.onDateChange} onSelect={this.onDateChange} />
+          <DatePicker
+            {...defaultDatePickerProps}
+            disabled={this.state.workHours.project.accounting}
+            value={this.state.date}
+            onChange={this.onDateChange}
+            onSelect={this.onDateChange}
+          />
         </div>
         <input
           className="start-input form-control"
@@ -377,7 +393,7 @@ class WorkHours extends React.Component {
                 {this.descriptionText()}
                 {editing && this.renderBodyEditable()}
               </div>
-              <div className="project-container" onClick={this.toggleProjectEdit}>
+              <div className="project-container">
                 <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
                   {workHours.project.name}
                 </span>

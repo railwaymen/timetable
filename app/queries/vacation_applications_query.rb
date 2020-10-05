@@ -43,11 +43,11 @@ class VacationApplicationsQuery
 
   def date_filter
     if @start_date && @end_date
-      sanitize_array(['AND ((v.start_date >= :start_date AND v.start_date <= :end_date) OR (v.end_date >= :start_date AND v.end_date <= :end_date) OR ((v.start_date::timestamp::date, v.end_date) OVERLAPS (:start_date, :end_date)))', start_date: @start_date.to_date.iso8601, end_date: @end_date.to_date.iso8601])
+      sanitize_array(['AND ((v.start_date BETWEEN :start_date AND :end_date) OR (end_date BETWEEN :start_date AND :end_date) OR (start_date, end_date) OVERLAPS (:start_date, :end_date))', start_date: @start_date.to_date.iso8601, end_date: @end_date.to_date.iso8601])
     elsif @start_date
-      sanitize_array(['AND (v.start_date >= :start_date OR v.end_date >= :start_date OR ((v.start_date::timestamp::date, v.end_date) OVERLAPS (:start_date, :start_date)))', start_date: @start_date.to_date.iso8601])
+      sanitize_array(['AND (v.start_date >= :start_date OR v.end_date >= :start_date)', start_date: @start_date.to_date.iso8601])
     elsif @end_date
-      sanitize_array(['AND (v.start_date <= :end_date OR v.end_date <= :end_date OR ((v.start_date::timestamp::date, v.end_date) OVERLAPS (:end_date, :end_date)))', end_date: @end_date.to_date.iso8601])
+      sanitize_array(['AND (v.start_date <= :end_date OR v.end_date <= :end_date)', end_date: @end_date.to_date.iso8601])
     end
   end
 
@@ -79,6 +79,7 @@ class VacationApplicationsQuery
         v.description,
         v.status,
         v.self_declined,
+        v.business_days_count,
         ARRAY_TO_STRING(array_agg(us_apr.last_name || ' ' || us_apr.first_name), ',', '') AS approvers,
         ARRAY_TO_STRING(array_agg(us_dec.last_name || ' ' || us_dec.first_name), ',', '') AS decliners,
         (:current_user = ANY(array_agg(us.id))) AS interacted
@@ -110,6 +111,7 @@ class VacationApplicationsQuery
         v.description,
         v.status,
         v.self_declined,
+        v.business_days_count,
         ARRAY_TO_STRING(array_agg(us_apr.last_name || ' ' || us_apr.first_name), ',', '') AS approvers,
         ARRAY_TO_STRING(array_agg(us_dec.last_name || ' ' || us_dec.first_name), ',', '') AS decliners,
         (:current_user = ANY(array_agg(us.id))) AS interacted

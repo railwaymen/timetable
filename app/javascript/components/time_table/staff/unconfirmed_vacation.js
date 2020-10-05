@@ -7,10 +7,18 @@ import {
 } from './shared_functionalities';
 
 function UnconfirmedVacation(props) {
-  const { propsVacation, removeFromInteractedVacations, addToInteractedVacations } = props;
+  const {
+    propsVacation,
+    removeFromInteractedVacations,
+    addToInteractedVacations,
+    availableVacationDays,
+    setUserVacationDays,
+  } = props;
   const [errors, setErrors] = useState([]);
   const [vacation, setVacation] = useState(propsVacation);
   const [warnings, setWarnings] = useState([]);
+  const vacationPotential = vacation.available_vacation_days - vacation.business_days_count;
+  const cardClass = (vacationPotential < 0 && currentUser.isStaffManager()) ? 'warning' : vacation.status;
 
   function VacationType() {
     if (vacation.vacation_type === 'others') {
@@ -50,6 +58,7 @@ function UnconfirmedVacation(props) {
       url: `/api/vacations/${vacationId}`,
     }).then((response) => {
       setVacation(response.data);
+      setUserVacationDays(response.data.user_id, response.data.available_vacation_days);
     });
   }
 
@@ -69,11 +78,11 @@ function UnconfirmedVacation(props) {
       body: { vacation: { vacation_sub_type: vacationSubType } },
     }).then((response) => {
       if (!_.isEmpty(response.data.errors)) { setErrors(response.data.errors); return; }
+      setUserVacationDays(response.data.vacation.user_id, response.data.user_available_vacation_days);
       if (!_.isEmpty(response.data.warnings)) {
         setWarnings(response.data.warnings);
         setVacation({
           ...response.data.vacation,
-          available_vacation_days: response.data.user_available_vacation_days,
           interacted: true,
         });
         return;
@@ -126,17 +135,28 @@ function UnconfirmedVacation(props) {
     setErrors([]);
   }, [vacation.vacation_sub_type]);
 
-  if (vacation.status === 'declined' && vacation.interacted === false) { return null; }
+  function VacationPotential() {
+    if (vacationPotential >= 0 || !currentUser.isStaffManager()) { return null; }
+    return (
+      <div>
+        {I18n.t('apps.staff.available_vacation_days_after_accepting')}
+        :
+        {` ${vacationPotential}`}
+      </div>
+    );
+  }
+
+  if (vacation.self_declined || (vacation.status === 'declined' && vacation.interacted === false)) { return null; }
 
   return (
-    <div className={`card p-0 unconfirmed-vacation ${vacation.status}`}>
+    <div className={`card p-0 unconfirmed-vacation ${cardClass}`}>
       <div className="card-header">
         <Errors errors={errors} />
         <Warnings warnings={warnings} />
         <div className="vacation-header">
           <div className="user-full-name">
             {vacation.full_name}
-            { window.currentUser.staff_manager && (
+            { currentUser.isStaffManager() && (
               <NavLink to={`/timesheet?user_id=${vacation.user_id}`}>
                 <i className="icon calendar" />
               </NavLink>
@@ -165,8 +185,9 @@ function UnconfirmedVacation(props) {
             {I18n.t('apps.staff.available_vacation_days')}
             :
             <span className="vacation-days">
-              {` ${vacation.available_vacation_days}`}
+              {` ${availableVacationDays}`}
             </span>
+            <VacationPotential />
           </div>
         )}
       </div>

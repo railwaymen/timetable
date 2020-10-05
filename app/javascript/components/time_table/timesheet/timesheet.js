@@ -13,10 +13,12 @@ class Timesheet extends React.Component {
     this.onCopy = this.onCopy.bind(this);
     this.getProjects = this.getProjects.bind(this);
     this.setLastProject = this.setLastProject.bind(this);
+    this.lockRequests = this.lockRequests.bind(this);
 
     this.state = {
       projects: [],
       tags: [],
+      requestsLocked: false,
     };
   }
 
@@ -55,8 +57,17 @@ class Timesheet extends React.Component {
     this.entryHistory.pushEntry(object);
   }
 
+  lockRequests(requestsLocked) {
+    return new Promise((resolve) => {
+      this.setState({ requestsLocked }, () => {
+        resolve();
+      });
+    });
+  }
+
   render() {
-    const { projects, tags } = this.state;
+    const { projects, tags, requestsLocked } = this.state;
+    const projectsForEntries = projects.filter((project) => !project.accounting);
 
     if (projects.length > 0) {
       return (
@@ -64,13 +75,22 @@ class Timesheet extends React.Component {
           <Helmet>
             <title>{I18n.t('common.timesheet')}</title>
           </Helmet>
-          <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projects} tags={tags} />
+          <Entry
+            ref={(entry) => { this.entry = entry; }}
+            pushEntry={this.pushEntry}
+            projects={projectsForEntries}
+            tags={tags}
+            lockRequests={this.lockRequests}
+            requestsLocked={requestsLocked}
+          />
           <EntryHistory
             ref={(entryHistory) => { this.entryHistory = entryHistory; }}
             onCopy={this.onCopy}
             projects={projects}
             setLastProject={this.setLastProject}
             tags={tags}
+            lockRequests={this.lockRequests}
+            requestsLocked={requestsLocked}
           />
         </>
       );

@@ -7,7 +7,7 @@ function Project(props) {
     if (currentUser.canManageProject(props.project)) {
       return (
         <NavLink className="ui button icon basic blue" to={`/projects/${props.project.id}/edit`}>
-          <i className="icon pencil" />
+          <i className="fa fa-pencil" />
         </NavLink>
       );
     }

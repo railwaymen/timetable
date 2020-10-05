@@ -15,6 +15,7 @@ function EditProject(props) {
     leader_id: '',
     external_id: '',
     work_times_allows_task: true,
+    tags_enabled: true,
     external_integration_enabled: false,
     active: true,
   };
@@ -143,6 +144,19 @@ function EditProject(props) {
             />
             <label className="form-check-label" htmlFor="work_times_allows_task">
               {I18n.t('apps.projects.work_times_allows_task')}
+            </label>
+          </div>
+          <div className="form-group form-check">
+            <input
+              id="tags_enabled"
+              type="checkbox"
+              className="form-check-input"
+              name="tags_enabled"
+              checked={project.tags_enabled}
+              onChange={onChange}
+            />
+            <label className="form-check-label" htmlFor="tags_enabled">
+              {I18n.t('apps.projects.tags_enabled')}
             </label>
           </div>
           <div className="form-group form-check">

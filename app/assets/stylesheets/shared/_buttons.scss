@@ -182,3 +182,20 @@ $second-bt-color: $second-color;
   height: 35px;
   color: $white;
 }
+
+.btn-with-icon {
+  padding-left: 2.5rem;
+  position: relative;
+
+  .fa {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    background-color: rgba(#000, .1);
+  }
+}

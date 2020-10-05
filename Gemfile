@@ -20,6 +20,7 @@ gem 'jira-ruby', require: false
 gem 'jquery-rails'
 gem 'jwt', require: false
 gem 'kaminari'
+gem 'lograge'
 gem 'net-ldap'
 gem 'paper_trail'
 gem 'pg', '~> 0.18.4'
@@ -27,12 +28,11 @@ gem 'prawn', require: false
 gem 'prawn-table', require: false
 gem 'pundit'
 gem 'rack'
-gem 'rails', '6.0.2.1'
+gem 'rails', '6.0.3.2'
 gem 'rails-ujs'
 gem 'react-rails'
 gem 'redis-namespace'
 gem 'sass-rails'
-gem 'semantic-ui-sass', github: 'doabit/semantic-ui-sass'
 gem 'sentry-raven'
 gem 'sidekiq'
 gem 'sidekiq-status'

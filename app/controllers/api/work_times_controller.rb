@@ -38,7 +38,7 @@ module Api
     def update
       @work_time = find_work_time
       authorize @work_time
-      @work_time.assign_attributes(work_time_params.except(:project_id))
+      @work_time.assign_attributes(permitted_attributes(@work_time))
       duration_was = @work_time.duration
       if current_user.admin? && @work_time.changed?
         @work_time.updated_by_admin = true if @work_time.user_id != current_user.id
@@ -71,16 +71,10 @@ module Api
     end
 
     def build_new_work_time
-      if current_user.admin?
-        WorkTime.new(work_time_create_params).tap do |work_time|
-          work_time.updated_by_admin = true if work_time.user_id != current_user.id
-          work_time.user_id = work_time_create_params[:user_id] || current_user.id
-          work_time.creator = current_user
-        end
-      else
-        current_user.work_times.build(work_time_params).tap do |work_time|
-          work_time.creator = current_user
-        end
+      WorkTime.new(user_id: current_user.id).tap do |work_time|
+        work_time.assign_attributes(permitted_attributes(work_time))
+        work_time.updated_by_admin = true if work_time.user_id != current_user.id
+        work_time.creator = current_user
       end
     end
 
@@ -131,35 +125,6 @@ module Api
       else
         current_user.work_times.kept.find(params[:id])
       end
-    end
-
-    def work_time_create_params
-      params.require(:work_time)
-            .permit(
-              %i[
-                project_id
-                user_id
-                body
-                task
-                tag
-                starts_at
-                ends_at
-              ]
-            )
-    end
-
-    def work_time_params
-      params.require(:work_time)
-            .permit(
-              %i[
-                project_id
-                body
-                task
-                tag
-                starts_at
-                ends_at
-              ]
-            )
     end
   end
   # rubocop:enable Metrics/MethodLength

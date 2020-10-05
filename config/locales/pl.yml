@@ -38,6 +38,7 @@ pl:
       filter_all: Wszystkie
       filter_active_label: Pokaż tylko
       work_times_allows_task: Zezwalaj na dodawanie urli do zadań
+      tags_enabled: Zezwalaj na używanie tagów
       external_integration_enabled: Integracja z JIRA
       external_id: Zewnetrzne ID
       new: Nowy projekt
@@ -214,6 +215,7 @@ pl:
       acceptable: Do zaakceptowania
       all: Wszystkie
       available_vacation_days: Pozostałe dni urlopu
+      available_vacation_days_after_accepting: Pozostałe dni urlopu po zaakceptowaniu
       user_has_already_filled_in_work_time: 'Użytkownik %{parameter} już wypełnił czas pracy w dniach: '
       too_early: Nie można zaakceptować urlopu z wyprzedzeniem o miesiąc
       not_just_vacations: Użytkownik %{user} ma wpisy w czasie pracy nie tylko z urlopu w danym okresie urlopu
@@ -393,6 +395,7 @@ pl:
             task:
               invalid_uri: 'URL Taska nie jest poprawny'
               invalid_external: 'URL nie wskazuje na poprawny zewnętrzny task'
+              invalid_external_project: 'URL nie wskazuje na poprawny zewnętrzny projekt'
             starts_at:
               overlap: Istnieje inne zadanie o pokrywającym się czasie wykonania
               too_old: Nie można utworzyć lub edytować wpisu
@@ -427,6 +430,7 @@ pl:
           attributes:
             base:
               work_time_exists: Jest już czas pracy z tą samą datą
+              vacation_exists: Jest już urlop z tą samą datą
             start_date:
               greater_than_end_date: Nieprawidłowa data końcowa
         accounting_period:
@@ -452,6 +456,7 @@ pl:
             vacation_days:
               blank: Ilość dni urlopowych jest wymagana
               not_a_number: Ilość dni urlopowych musi byc liczbą
+              greater_than_or_equal_to: Ilość dni urlopowych musi być większa bądź równa 0
         milestone:
           attributes:
             starts_on:

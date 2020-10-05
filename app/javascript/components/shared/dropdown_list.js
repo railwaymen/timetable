@@ -21,11 +21,19 @@ class DropdownList extends React.Component {
 
   render() {
     return (
-      <div className="menu transition visible" tabIndex="-1" style={{ display: 'block !important' }}>
+      <div className="dropdown-menu show p-0" tabIndex="-1" style={{ display: 'block !important' }}>
         { this.props.objects.map((object) => (
-          <div key={object.id} data-value={object.id} tabIndex="0" className="item object" onClick={this.onChangeObject} onKeyPress={this.handleKeyPress}>
+          <button
+            key={object.id}
+            data-value={object.id}
+            tabIndex="0"
+            className="dropdown-item object"
+            onClick={this.onChangeObject}
+            onKeyPress={this.handleKeyPress}
+            type="button"
+          >
             {this.props.renderObjectsList(object, this.props.currentObject)}
-          </div>
+          </button>
         )) }
       </div>
     );

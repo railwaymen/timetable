@@ -14,13 +14,14 @@ RSpec.describe Api::WorkTimesController, type: :controller do
 
   def work_time_response(work_time)
     work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'tag', 'user_id')
-             .merge(task_preview: task_preview_helper(work_time.task), editable: !work_time.project.vacation?)
+             .merge(task_preview: task_preview_helper(work_time.task), editable: !work_time.project.accounting?)
              .merge(date: work_time.starts_at.to_date,
                     project: { name: work_time.project.name,
                                color: work_time.project.color,
                                lunch: work_time.project.lunch,
+                               accounting: work_time.project.accounting?,
                                count_duration: work_time.project.count_duration,
-                               taggable: work_time.project.taggable?,
+                               taggable: work_time.project.tags_enabled?,
                                work_times_allows_task: work_time.project.work_times_allows_task })
   end
 
@@ -64,15 +65,16 @@ RSpec.describe Api::WorkTimesController, type: :controller do
             tag: work_time.tag,
             task_preview: task_preview_helper(work_time.task),
             user_id: work_time.user_id,
-            editable: !work_time.project.vacation?,
+            editable: !work_time.project.accounting?,
             project: {
               id: work_time.project.id,
               name: work_time.project.name,
               color: work_time.project.color,
+              accounting: work_time.project.accounting?,
               work_times_allows_task: work_time.project.work_times_allows_task,
               lunch: work_time.project.lunch,
               count_duration: work_time.project.count_duration,
-              taggable: work_time.project.taggable?
+              taggable: work_time.project.tags_enabled?
             },
             date: work_time.starts_at.to_date
           }
@@ -103,15 +105,16 @@ RSpec.describe Api::WorkTimesController, type: :controller do
             tag: work_time.tag,
             task_preview: task_preview_helper(work_time.task),
             user_id: user_work_time.user_id,
-            editable: !work_time.project.vacation?,
+            editable: !work_time.project.accounting?,
             project: {
               id: user_work_time.project.id,
               name: user_work_time.project.name,
               color: user_work_time.project.color,
+              accounting: work_time.project.accounting?,
               work_times_allows_task: work_time.project.work_times_allows_task,
               lunch: work_time.project.lunch,
               count_duration: work_time.project.count_duration,
-              taggable: work_time.project.taggable?
+              taggable: work_time.project.tags_enabled?
             },
             date: user_work_time.starts_at.to_date
           }
@@ -222,10 +225,48 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       sign_in(user)
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
-      expect(strategy_double).to receive(:integration_payload) { { 'task_id' => 1 } }
+      expect(strategy_double).to receive(:integration_payload) { { task_id: 1 } }
       expect(UpdateExternalAuthWorker).to receive(:perform_async)
       post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('200')
+    end
+
+    context 'When external service is Jira' do
+      it 'does not create work time when task url doesn\'t belong to selected project' do
+        module ExternalAuthStrategy
+          class Sample < Base; def self.from_data(*args); end; end
+        end
+        jira_payload = {
+          task_id: 'TI-1'
+        }
+        project = create(:project, :external_integration_enabled)
+        project.update(external_payload: { 'id' => 'TO' })
+        create(:external_auth, user: user, provider: 'Sample')
+        sign_in(user)
+        strategy_double = double('strategy')
+        allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
+        expect(strategy_double).to receive(:integration_payload) { jira_payload }
+        post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com/TO-1' } }, format: :json
+        expect(response.code).to eql('422')
+      end
+
+      it 'create work time when task url belong to selected project' do
+        module ExternalAuthStrategy
+          class Sample < Base; def self.from_data(*args); end; end
+        end
+        jira_payload = {
+          task_id: 'TO-1'
+        }
+        project = create(:project, :external_integration_enabled)
+        project.update(external_payload: { 'id' => 'TO' })
+        create(:external_auth, user: user, provider: 'Sample')
+        sign_in(user)
+        strategy_double = double('strategy')
+        allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
+        expect(strategy_double).to receive(:integration_payload) { jira_payload }
+        post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com/TO-1' } }, format: :json
+        expect(response.code).to eql('200')
+      end
     end
   end
 
@@ -291,7 +332,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       sign_in(user)
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
-      expect(strategy_double).to receive(:integration_payload) { { 'task_id' => 1 } }
+      expect(strategy_double).to receive(:integration_payload) { { task_id: 1 } }
       expect(UpdateExternalAuthWorker).to receive(:perform_async)
       post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('200')
@@ -373,6 +414,15 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       expect(work_time.starts_at).to eql(starts_at)
       expect(work_time.ends_at).to eql(ends_at)
       expect(response.body).to be_json_eql(work_time_response(work_time).to_json)
+    end
+
+    it 'does not allow to update vacation project for regular user' do
+      sign_in(user)
+      vacation = create(:project, :vacation)
+      work_time = create(:work_time, project: vacation, user: user)
+      expect do
+        put :update, params: { id: work_time.id, work_time: { starts_at: starts_at } }, format: :json
+      end.to raise_error(Pundit::NotAuthorizedError)
     end
   end
 

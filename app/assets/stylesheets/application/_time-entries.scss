@@ -46,6 +46,9 @@
   
   .task-content {
     flex-basis: 100%;
+    p {
+      margin-bottom: 0;
+    }
   }
   
   .description-container {

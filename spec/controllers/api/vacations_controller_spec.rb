@@ -17,7 +17,7 @@ RSpec.describe Api::VacationsController do
   end
 
   def unconfirmed_vacation_response(vacation)
-    vacation.attributes.slice('id', 'user_id', 'start_date', 'end_date', 'vacation_type', 'vacation_sub_type', 'status', 'description')
+    vacation.attributes.slice('id', 'user_id', 'start_date', 'end_date', 'vacation_type', 'vacation_sub_type', 'status', 'description', 'business_days_count')
             .merge(approvers: nil, decliners: nil, full_name: nil, interacted: nil, self_declined: false)
   end
 
@@ -239,7 +239,7 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql({ user_full_name: staff_manager.to_s,
                                              errors: [],
-                                             vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
+                                             vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s, user_id: vacation.user_id),
                                              previous_status: 'unconfirmed',
                                              warnings: [],
                                              user_available_vacation_days: nil }.to_json)
@@ -256,7 +256,7 @@ RSpec.describe Api::VacationsController do
         expect(response.code).to eql('200')
         expect(response.body).to be_json_eql({ user_full_name: leader.to_s,
                                                errors: [],
-                                               vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s).except('description'),
+                                               vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s, user_id: vacation.user_id).except('description'),
                                                previous_status: 'unconfirmed',
                                                warnings: [],
                                                user_available_vacation_days: nil }.to_json)
@@ -285,7 +285,7 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql({ user_full_name: admin.to_s,
                                              errors: [],
-                                             vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
+                                             vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s, user_id: vacation.user_id),
                                              previous_status: 'unconfirmed',
                                              warnings: [],
                                              user_available_vacation_days: nil }.to_json)
@@ -313,7 +313,7 @@ RSpec.describe Api::VacationsController do
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql({ user_full_name: staff_manager.to_s,
                                              errors: [],
-                                             vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s),
+                                             vacation: vacation_response_with_description(vacation.reload).merge(full_name: user.to_s, user_id: vacation.user_id),
                                              previous_status: 'accepted',
                                              warnings: [],
                                              user_available_vacation_days: nil }.to_json)

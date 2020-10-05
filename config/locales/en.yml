@@ -38,6 +38,7 @@ en:
       filter_all: All
       filter_active_label: Show only
       work_times_allows_task: Allow for adding task urls
+      tags_enabled: Allow for adding tags
       external_integration_enabled: JIRA integration
       external_id: External ID
       new: New Project
@@ -214,6 +215,7 @@ en:
       acceptable: Acceptable
       all: All
       available_vacation_days: Available vacation days
+      available_vacation_days_after_accepting: Available vacation days after accepting
       user_has_already_filled_in_work_time: 'User %{parameter} has already filled in the work time in days: '
       too_early: Can not approve vacation that starts more than 1 month from now
       not_just_vacations: User %{user} has not only vacation entries in work time during vacation period
@@ -349,6 +351,7 @@ en:
             task:
               invalid_uri: Task URL is not valid
               invalid_external: Task URL does not point to a valid external task
+              invalid_external_project: Task URL does not point to a valid external project
             starts_at:
               overlap: There is another task overlapping the specified time
               overlap_midnight: Can not create work times that ends in next day
@@ -376,6 +379,7 @@ en:
           attributes:
             base:
               work_time_exists: There is work time with same date
+              vacation_exists: There is vacation with same date
             start_date:
               greater_than_end_date: Invalid end date
         vacation_interaction:
@@ -401,6 +405,7 @@ en:
             vacation_days:
               blank: Number of vacation days is required
               not_a_number: Number of vacation days must be a number
+              greater_than_or_equal_to: Number of vacation days must be greater or equal 0
         milestone:
           attributes:
             starts_on:

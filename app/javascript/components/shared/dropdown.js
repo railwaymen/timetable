@@ -101,7 +101,7 @@ class Dropdown extends React.Component {
     const { selectedObject } = this.props;
 
     return (
-      <div className="dropdown fluid search ui" style={{ minWidth: '90px' }}>
+      <div className="dropdown" style={{ minWidth: '90px' }}>
         <input type="hidden" name="object" value="12" />
         <input
           placeholder={this.props.placeholder}
