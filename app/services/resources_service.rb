@@ -27,7 +27,7 @@ class ResourcesService
   end
 
   def create_vacation_events(resource, user)
-    vacation_project = Project.find_by(name: 'Vacation')
+    vacation_project = Project.vacation.first!
     user.vacations.each do |vacation|
       starts_at = vacation.start_date.beginning_of_day
       ends_at = vacation.end_date.end_of_day

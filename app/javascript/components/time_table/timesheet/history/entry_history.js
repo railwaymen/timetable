@@ -196,7 +196,7 @@ class EntryHistory extends React.Component {
               this.totalWorkHours();
 
               let lastWorkTime = this.state.workHours[0];
-              if (lastWorkTime && lastWorkTime.project.name === 'Lunch') {
+              if (lastWorkTime && lastWorkTime.project.lunch === true) {
                 // eslint-disable-next-line
                 lastWorkTime = this.state.workHours[1];
               }
@@ -232,7 +232,7 @@ class EntryHistory extends React.Component {
         );
 
         let lastWorkTime = this.state.workHours[0];
-        if (lastWorkTime && lastWorkTime.project.name === 'Lunch') {
+        if (lastWorkTime && lastWorkTime.project.lunch === true) {
           // eslint-disable-next-line
           lastWorkTime = this.state.workHours[1];
           if (lastWorkTime) {

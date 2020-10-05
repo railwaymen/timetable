@@ -38,7 +38,7 @@ RSpec.describe VacationService do
 
     it 'returns error when user did not select vacation_sub_type for others vacations' do
       create(:project, :vacation)
-      create(:project, :zks)
+      create(:project, :booked)
       vacation = create(:vacation, description: 'Description', vacation_type: :others)
       errors = [{ vacation_sub_type: I18n.t('apps.staff.vacation_sub_type_empty') }]
       expect(described_class.new(current_user: staff_manager, vacation: vacation).approve).to eql(response(vacation, staff_manager.to_s, 'unconfirmed', errors))
@@ -50,7 +50,7 @@ RSpec.describe VacationService do
 
         vacation = create(:vacation, start_date: Time.current.to_date, end_date: Time.current.to_date + 7.days,
                                      status: :declined, description: 'Others', vacation_type: :others)
-        create(:project, :zks)
+        create(:project, :booked)
         vacation_interaction = create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :declined)
 
         expect(WorkTime.count).to eql(0)

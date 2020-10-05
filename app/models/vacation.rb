@@ -50,9 +50,9 @@ class Vacation < ApplicationRecord
 
   def vacation_project
     if planned? || requested? || compassionate? || unpaid? || care?
-      Project.find_by!(name: 'Vacation')
+      Project.vacation.first!
     else
-      Project.find_by!(name: 'ZKS')
+      Project.booked.first!
     end
   end
 end

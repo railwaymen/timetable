@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_20_124950) do
+ActiveRecord::Schema.define(version: 2020_10_05_103408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -235,6 +235,8 @@ ActiveRecord::Schema.define(version: 2020_09_20_124950) do
     t.boolean "milestones_import_enabled", default: false, null: false
     t.bigint "milestones_import_user_id"
     t.boolean "tags_enabled", default: true, null: false
+    t.boolean "vacation", default: false, null: false
+    t.boolean "booked", default: false, null: false
     t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["leader_id"], name: "index_projects_on_leader_id"
     t.index ["milestones_import_user_id"], name: "index_projects_on_milestones_import_user_id"

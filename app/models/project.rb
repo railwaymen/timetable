@@ -19,6 +19,9 @@ class Project < ApplicationRecord
   validates :name, uniqueness: true
   validates :external_id, presence: true, if: :external_integration_enabled?
 
+  scope :vacation, -> { where(vacation: true) }
+  scope :booked, -> { where(booked: true) }
+
   after_save :change_events_color_and_name, if: proc { |project| project.saved_change_to_color? || project.saved_change_to_name? }
 
   def self.filter_by(action)
@@ -34,7 +37,7 @@ class Project < ApplicationRecord
   end
 
   def accounting?
-    %w[Vacation ZKS].include? name
+    vacation? || booked?
   end
 
   def current_milestone
