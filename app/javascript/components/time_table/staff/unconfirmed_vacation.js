@@ -7,7 +7,13 @@ import {
 } from './shared_functionalities';
 
 function UnconfirmedVacation(props) {
-  const { propsVacation, removeFromInteractedVacations, addToInteractedVacations } = props;
+  const {
+    propsVacation,
+    removeFromInteractedVacations,
+    addToInteractedVacations,
+    availableVacationDays,
+    setUserVacationDays,
+  } = props;
   const [errors, setErrors] = useState([]);
   const [vacation, setVacation] = useState(propsVacation);
   const [warnings, setWarnings] = useState([]);
@@ -31,6 +37,7 @@ function UnconfirmedVacation(props) {
             <option value="parental">{I18n.t('common.parental')}</option>
             <option value="upbringing">{I18n.t('common.upbringing')}</option>
             <option value="unpaid">{I18n.t('common.unpaid')}</option>
+            <option value="overtime">{I18n.t('common.overtime')}</option>
             <option value="rehabilitation">{I18n.t('common.rehabilitation')}</option>
             <option value="illness">{I18n.t('common.illness')}</option>
             <option value="care">{I18n.t('common.care_definition')}</option>
@@ -52,6 +59,7 @@ function UnconfirmedVacation(props) {
       url: `/api/vacations/${vacationId}`,
     }).then((response) => {
       setVacation(response.data);
+      setUserVacationDays(response.data.user_id, response.data.available_vacation_days);
     });
   }
 
@@ -71,11 +79,11 @@ function UnconfirmedVacation(props) {
       body: { vacation: { vacation_sub_type: vacationSubType } },
     }).then((response) => {
       if (!_.isEmpty(response.data.errors)) { setErrors(response.data.errors); return; }
+      setUserVacationDays(response.data.vacation.user_id, response.data.user_available_vacation_days);
       if (!_.isEmpty(response.data.warnings)) {
         setWarnings(response.data.warnings);
         setVacation({
           ...response.data.vacation,
-          available_vacation_days: response.data.user_available_vacation_days,
           interacted: true,
         });
         return;
@@ -178,7 +186,7 @@ function UnconfirmedVacation(props) {
             {I18n.t('apps.staff.available_vacation_days')}
             :
             <span className="vacation-days">
-              {` ${vacation.available_vacation_days}`}
+              {` ${availableVacationDays}`}
             </span>
             <VacationPotential />
           </div>

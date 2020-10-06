@@ -94,7 +94,7 @@ function VacationPeriods() {
     ));
   }
 
-  function RenderSelectedUser(currentlySelectedUser) {
+  function renderSelectedUser(currentlySelectedUser) {
     return (
       <div>
         <b>
@@ -129,13 +129,13 @@ function VacationPeriods() {
               <i className="ml-2 fa fa-calendar-plus-o" />
             </div>
           </div>
-          <div className="user-filter">
+          <div className="col-auto user-filter">
             <Dropdown
               objects={users}
               updateObject={(selectedUser) => getVacationPeriods(selectedUser.id)}
               selectedObject={user}
               filterObjects={FilterUsers}
-              renderSelectedObject={RenderSelectedUser}
+              renderSelectedObject={renderSelectedUser}
               renderObjectsList={RenderUsersList}
             />
           </div>

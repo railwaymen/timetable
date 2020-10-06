@@ -19,12 +19,13 @@ class ReportProjectTagRecordQuery < RecordQuery
       SELECT DISTINCT
         projects.id AS project_id,
         projects.name AS project_name,
-        work_times.tag AS tag,
-        SUM(work_times.duration) OVER(PARTITION BY projects.id, work_times.tag) AS duration,
+        tags.name AS tag,
+        SUM(work_times.duration) OVER(PARTITION BY projects.id, tags.name) AS duration,
         SUM(work_times.duration) OVER(PARTITION BY projects.id) AS project_duration
       FROM projects
       INNER JOIN work_times ON projects.id = work_times.project_id
       INNER JOIN users ON users.id = work_times.user_id
+      INNER JOIN tags ON tags.id = work_times.tag_id
       WHERE work_times.starts_at >= ?
         AND work_times.ends_at <= ?
         AND work_times.discarded_at IS NULL

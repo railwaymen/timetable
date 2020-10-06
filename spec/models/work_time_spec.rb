@@ -90,14 +90,14 @@ RSpec.describe WorkTime, type: :model do
 
       it 'should not be required for lunch' do
         work_time = build_stubbed :work_time,
-                                  project: (create :project, name: 'Lunch', lunch: true),
+                                  project: (create :project, :lunch),
                                   body: ''
         expect(work_time).to be_valid
       end
 
       it 'should not require body for vacation' do
         work_time = build_stubbed :work_time,
-                                  project: (create :project, name: 'Vacation', autofill: true),
+                                  project: (create :project, :vacation, autofill: true),
                                   body: ''
         expect(work_time).to be_valid
       end

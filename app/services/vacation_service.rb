@@ -14,7 +14,7 @@ class VacationService
 
   def approve
     work_times = vacation_work_times_service.work_times
-    work_time_warning(work_times.pluck(Arel.sql('date(work_times.starts_at)'), Arel.sql('date(work_times.ends_at)')).flatten.uniq) if work_times.any?
+    work_time_warning(work_times.pluck(:starts_at, :ends_at).map { |x| [x[0].strftime('%Y-%m-%d'), x[1].strftime('%Y-%m-%d')] }.flatten.uniq) if work_times.any?
 
     approve_transaction
     increase_work_times if @vacation_interaction && @vacation_interaction.action == 'accepted'
@@ -54,7 +54,7 @@ class VacationService
       PaperTrail.request.disable_model(ProjectResourceAssignment)
       vacation_sub_type_error unless approve_vacation
       create_vacation_event if @vacation.accepted?
-      vacation_work_times_service.save
+      @errors = @warnings unless vacation_work_times_service.save
       @vacation_interaction = create_vacation_interaction(:approved)
       remove_previous_interaction(%w[declined])
 
@@ -82,7 +82,7 @@ class VacationService
   def create_vacation_event
     vacation_user = User.find(@vacation.user_id)
     user_resources_ids = vacation_user.project_resources.pluck(:id, :rid)
-    vacation_project = Project.find_by!(name: 'Vacation')
+    vacation_project = Project.vacation.first!
     starts_at = @vacation.start_date.beginning_of_day
     ends_at = @vacation.end_date.end_of_day
     user_resources_ids.each do |id, rid|
@@ -197,7 +197,7 @@ class VacationService
 
   def response
     {
-      vacation: @vacation,
+      vacation: @vacation.reload,
       vacation_interaction: { user_full_name: @vacation_interaction ? @vacation_interaction.user.to_s : nil },
       previous_status: @previous_status,
       errors: @errors,

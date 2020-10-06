@@ -12,21 +12,29 @@ class VacationWorkTimesService
   def save
     return unless @current_user.staff_manager?
 
-    work_time_dates = work_times.pluck(:starts_at).map(&:to_date)
     @vacation_range.each do |day|
-      next if work_time_dates.include?(day.to_date)
-
       work_time = WorkTimeForm.new(work_time: build_new_work_time(work_time_params(day)))
-      work_time.save
+      return false unless work_time.save
     end
   end
 
   def work_times
-    @work_times ||= @user.work_times.where('((starts_at BETWEEN :start_date AND :end_date) OR (ends_at BETWEEN :start_date AND :end_date)) AND work_times.discarded_at IS NULL',
-                                           start_date: @vacation.start_date, end_date: @vacation.end_date)
+    @work_times ||= @user.work_times.where(work_time_sql,
+                                           start_date: @vacation.start_date,
+                                           end_date: @vacation.end_date)
   end
 
   private
+
+  def work_time_sql
+    <<-SQL
+      (
+        (starts_at BETWEEN :start_date AND :end_date) OR
+        (ends_at BETWEEN :start_date AND :end_date)
+      ) AND
+      work_times.discarded_at IS NULL
+    SQL
+  end
 
   def work_time_params(day)
     {

@@ -55,7 +55,7 @@ function EditUser(props) {
   function renderFields() {
     if (user.id === userId || !userId) {
       return currentUser.admin
-        ? <AdminFields user={user} errors={errors} onChange={onChange} setUser={setUser} />
+        ? <AdminFields user={user} errors={errors} onChange={onChange} />
         : <UserFields user={user} errors={errors} onChange={onChange} />;
     }
 

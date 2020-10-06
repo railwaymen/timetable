@@ -49,7 +49,7 @@ class ProjectsDropdown extends React.Component {
         p.id === filteredProjects[0]
       )) || projects[currentIndex];
 
-      this.props.updateProject(selectedProject);
+      this.props.updateProject(selectedProject, e.shiftKey);
       this.setState({ currentIndex: 0 });
       this.hideDropdown();
     }
@@ -113,14 +113,12 @@ class ProjectsDropdown extends React.Component {
 
   renderProjectsList() {
     return (
-      <div style={{ marginTop: '15px' }}>
-        <ProjectsList
-          projects={this.state.filteredProjects}
-          currentIndex={this.state.currentIndex}
-          currentProject={this.props.selectedProject}
-          onChangeProject={this.onChangeProject}
-        />
-      </div>
+      <ProjectsList
+        projects={this.state.filteredProjects}
+        currentIndex={this.state.currentIndex}
+        currentProject={this.props.selectedProject}
+        onChangeProject={this.onChangeProject}
+      />
     );
   }
 
@@ -129,7 +127,7 @@ class ProjectsDropdown extends React.Component {
     const { selectedProject } = this.props;
 
     return (
-      <div className="dropdown fluid search ui" style={{ minWidth: '90px' }}>
+      <div className="dropdown" style={{ minWidth: '90px' }}>
         <input type="hidden" name="project" value="12" />
         <input
           placeholder="Project"

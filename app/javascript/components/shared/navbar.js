@@ -66,6 +66,9 @@ const Navbar = () => (
         <li className="nav-pills">
           <NavLink className="nav-link" to="/remote_work">{I18n.t('common.remote_work')}</NavLink>
         </li>
+        <li className="nav-pills">
+          <NavLink className="nav-link" to="/tags">{I18n.t('common.tags')}</NavLink>
+        </li>
       </ul>
     </div>
     <ul className="navbar-nav user-nav ml-auto">
@@ -82,8 +85,8 @@ const Navbar = () => (
           {currentUser.fullName()}
         </NavLink>
       </li>
-      <li className="nav-item ml-2">
-        <a onClick={onLogout} className="sign_out ui button" to="/users/sign_out">{I18n.t('common.sign_out')}</a>
+      <li className="nav-item nav-pills">
+        <a onClick={onLogout} className="sign_out nav-link active font-weight-bold" to="/users/sign_out">{I18n.t('common.sign_out')}</a>
       </li>
     </ul>
   </nav>

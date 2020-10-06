@@ -5,7 +5,7 @@ module Api
   # rubocop:disable Metrics/MethodLength
   class WorkTimesController < Api::BaseController
     def index
-      @work_times = WorkTime.kept.includes(:project).order(starts_at: :desc).where(permitted_search_params)
+      @work_times = WorkTime.kept.includes(:project, :tag).order(starts_at: :desc).where(permitted_search_params)
 
       respond_with @work_times
     end

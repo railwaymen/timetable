@@ -225,6 +225,17 @@ RSpec.describe Api::ProjectsController do
     end
   end
 
+  describe '#tags' do
+    it 'returns basic tags' do
+      sign_in(user)
+
+      get :tags, format: :json
+
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql(%w[dev im cc res].to_json)
+    end
+  end
+
   describe '#show' do
     it 'authenticates user' do
       get :show, params: { id: 1 }, format: :json

@@ -12,7 +12,7 @@ class VacationsYearlyReportGenerator
       headers = [
         'Contract ID', 'Developer', I18n.t('common.planned'), I18n.t('common.requested'), I18n.t('common.compassionate'),
         I18n.t('common.paternity'), I18n.t('common.parental'), I18n.t('common.upbringing'), I18n.t('common.unpaid'),
-        I18n.t('common.rehabilitation'), I18n.t('common.illness'), I18n.t('common.care'), I18n.t('common.sum')
+        I18n.t('common.rehabilitation'), I18n.t('common.illness'), I18n.t('common.care'), I18n.t('common.overtime'), I18n.t('common.sum')
       ]
 
       csv << headers

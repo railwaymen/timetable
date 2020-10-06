@@ -19,12 +19,13 @@ RSpec.describe ReportsController do
       expect(response.code).to eql('403')
     end
 
-    it 'returns vacations/zks report in csv' do
+    it 'returns vacations report in csv' do
       sign_in(manager)
       user = create(:user, contract_name: 'A/BC/123')
       vacation = create(
         :project,
         name: 'Vacation',
+        vacation: true,
         work_times_allows_task: true
       )
       work_time1 = create(:work_time, task: 'http://example.com/task/24', user: user, project: vacation, body: 'Mallorca', starts_at: '2016-01-05 08:00:00', ends_at: '2016-01-05 16:00:00')

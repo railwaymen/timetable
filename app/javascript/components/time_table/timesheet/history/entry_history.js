@@ -29,7 +29,6 @@ class EntryHistory extends React.Component {
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
-    this.translateTag = this.translateTag.bind(this);
     this.switchMonth = this.switchMonth.bind(this);
     this.setWorkHoursAfterSearch = this.setWorkHoursAfterSearch.bind(this);
 
@@ -200,7 +199,7 @@ class EntryHistory extends React.Component {
               this.totalWorkHours();
 
               let lastWorkTime = this.state.workHours[0];
-              if (lastWorkTime && lastWorkTime.project.name === 'Lunch') {
+              if (lastWorkTime && lastWorkTime.project.lunch === true) {
                 // eslint-disable-next-line
                 lastWorkTime = this.state.workHours[1];
               }
@@ -253,14 +252,14 @@ class EntryHistory extends React.Component {
         daysKeys,
         groupedWorkHours,
       }, () => {
-        this.increaseWorkHours(object.duration);
+        if (!moment().startOf('Day').isBefore(moment(object.date))) this.increaseWorkHours(object.duration);
         const event = new CustomEvent(
           'push-entry',
           { detail: { id: object.id } },
         );
 
         let lastWorkTime = this.state.workHours[0];
-        if (lastWorkTime && lastWorkTime.project.name === 'Lunch') {
+        if (lastWorkTime && lastWorkTime.project.lunch === true) {
           // eslint-disable-next-line
           lastWorkTime = this.state.workHours[1];
           if (lastWorkTime) {
@@ -307,7 +306,7 @@ class EntryHistory extends React.Component {
       daysKeys,
     }, () => {
       if (callback) callback();
-      this.decreaseWorkHours(component.state.workHours.duration);
+      if (!moment().startOf('Day').isBefore(moment(component.state.workHours.date))) this.decreaseWorkHours(component.state.workHours.duration);
     });
   }
 
@@ -377,8 +376,19 @@ class EntryHistory extends React.Component {
 
   totalWorkHours() {
     this.setState((prevState) => ({
-      total: displayDuration(_.sumBy(prevState.workHours, (w) => w.duration)),
+      total: displayDuration(_.sumBy(this.filterWorkHours(prevState.workHours), (w) => w.duration)),
     }));
+  }
+
+  filterWorkHours(workHours) {
+    const todayDate = moment().startOf('Day');
+    let afterToday = false;
+    return workHours.filter((dayWorkHour) => {
+      if (afterToday) return true;
+
+      afterToday = !todayDate.isBefore(moment(dayWorkHour.date));
+      return afterToday;
+    });
   }
 
   switchMonth(value) {
@@ -400,11 +410,6 @@ class EntryHistory extends React.Component {
     return displayDuration(value);
   }
 
-  translateTag(tag_key) {
-    if (tag_key === 'dev') return null;
-    return tag_key && I18n.t(`apps.tag.${tag_key}`);
-  }
-
   renderGroupedRecords() {
     return (
       this.state.daysKeys.map((key, index) => {
@@ -420,9 +425,11 @@ class EntryHistory extends React.Component {
             increaseWorkHours={this.increaseWorkHours}
             pushEntry={this.pushEntry}
             projects={this.props.projects}
-            tags={this.props.tags}
+            globalTags={this.props.globalTags}
             updateWorkHours={this.updateWorkHours}
             assignModalInfo={this.assignModalInfo}
+            lockRequests={this.props.lockRequests}
+            requestsLocked={this.props.requestsLocked}
           />
         );
         /* eslint-enable */
@@ -493,14 +500,10 @@ class EntryHistory extends React.Component {
           <span className="work-time">{total}</span>
           /
           {shouldWork}
-          <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_day')}>
-            <i className="circle help icon small" />
-          </span>
+          <span className="fa fa-question-circle" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_day')} />
           /
           {mandatoryHours}
-          <span className="icon ui" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_month')}>
-            <i className="circle help icon small" />
-          </span>
+          <span className="fa fa-question-circle" data-toggle="tooltip" title={I18n.t('apps.timesheet.required_duration_until_end_of_month')} />
         </div>
       );
     }

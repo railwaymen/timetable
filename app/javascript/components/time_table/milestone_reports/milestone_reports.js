@@ -27,8 +27,24 @@ function MilestoneReports() {
   const [fromDate, setFromDate] = useState(moment().startOf('isoWeek').formatDate());
   const [toDate, setToDate] = useState(moment().endOf('isoWeek').formatDate());
   const [selectedMilestone, setSelectedMilestone] = useState(null);
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [selectedTag, setSelectedTag] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
   const prevSelectedMilestoneId = usePrevious(selectedMilestoneId);
   const prevRangeType = usePrevious(rangeType);
+
+  function setChartDates(data) {
+    let newFromDate = selectedMilestone?.starts_on;
+    let newToDate = selectedMilestone?.ends_on;
+    if (data.length > 0) {
+      newFromDate = moment(data[0].starts_at);
+      newToDate = moment(data[data.length - 1].ends_at);
+      newFromDate = newFromDate.isBefore(selectedMilestone.starts_on) ? newFromDate.formatDate() : selectedMilestone.starts_on;
+      newToDate = newToDate.isAfter(selectedMilestone.ends_on) ? newToDate.formatDate() : selectedMilestone.ends_on;
+    }
+    setToDate(newToDate);
+    setFromDate(newFromDate);
+  }
 
   function getWorkTimes() {
     const params = rangeType === 'customDates' ? `?from=${fromDate}&to=${toDate}` : `?milestone_id=${selectedMilestoneId}`;
@@ -50,11 +66,40 @@ function MilestoneReports() {
           .mapValues((records) => _.sumBy(records, 'duration'))
           .value();
 
+        if (rangeType !== 'customDates') setChartDates(response.data);
+
         setReportData({
-          workTimes: response.data, workTimesSumByType, workTimesSumByTag, workTimesSumByUser,
+          workTimes: response.data.reverse(), workTimesSumByType, workTimesSumByTag, workTimesSumByUser,
         });
       });
   }
+
+  function filterResults() {
+    let filteredWorkTimes = reportData.workTimes;
+    if (selectedDepartment) filteredWorkTimes = filteredWorkTimes.filter((wt) => wt.department === selectedDepartment);
+    if (selectedTag) filteredWorkTimes = filteredWorkTimes.filter((wt) => wt.tag === selectedTag);
+    if (selectedUser) filteredWorkTimes = filteredWorkTimes.filter((wt) => wt.user_name === selectedUser);
+
+    const workTimesSumByType = _(filteredWorkTimes)
+      .groupBy('department')
+      .mapValues((records) => _.sumBy(records, 'duration'))
+      .value();
+
+    const workTimesSumByTag = _(filteredWorkTimes)
+      .groupBy('tag')
+      .mapValues((records) => _.sumBy(records, 'duration'))
+      .value();
+
+    const workTimesSumByUser = _(filteredWorkTimes)
+      .groupBy('user_name')
+      .mapValues((records) => _.sumBy(records, 'duration'))
+      .value();
+    return {
+      workTimes: filteredWorkTimes, workTimesSumByType, workTimesSumByTag, workTimesSumByUser,
+    };
+  }
+
+  const data = (selectedUser || selectedDepartment || selectedTag) ? filterResults() : reportData;
 
   function getInitialData() {
     const projectPromise = makeGetRequest({ url: `/api/projects/${projectId}` });
@@ -144,6 +189,16 @@ function MilestoneReports() {
     );
   }
 
+  function handleChartClick(element) {
+    /* eslint no-underscore-dangle: 0 */
+    const chart = element._chart;
+    if (chart.config.data.labels.length === 1) {
+      setSelectedTag(null);
+    } else {
+      setSelectedTag(element._model.label);
+    }
+  }
+
   return (
     <div>
       <Helmet>
@@ -186,33 +241,43 @@ function MilestoneReports() {
         <div className="col-md-8">
           {mainChartType === 'tagBreakdown' && (
             <MilestoneTagBreakdownChart
-              workTimesSumByTag={reportData.workTimesSumByTag}
-              workTimes={reportData.workTimes}
+              workTimesSumByTag={data.workTimesSumByTag}
+              workTimes={data.workTimes}
             />
           )}
           {mainChartType === 'progress' && (
             <MilestoneProgressChart
               estimateTotal={rangeType === 'customDates' ? null : selectedMilestone?.total_estimate}
-              fromDate={rangeType === 'customDates' ? fromDate : selectedMilestone?.starts_on}
-              toDate={rangeType === 'customDates' ? toDate : selectedMilestone?.ends_on}
-              workTimes={reportData.workTimes}
+              fromDate={fromDate}
+              toDate={toDate}
+              workTimes={data.workTimes}
             />
           )}
           <div className="mt-2">
             <WorkTimesReportTable
-              workTimes={reportData.workTimes.reverse()}
+              workTimes={data.workTimes}
             />
           </div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-4 milestone-summary">
           <div className="sticky-record">
             <MilestoneSummary
               milestone={rangeType === 'customDates' ? null : selectedMilestone}
-              workTimes={reportData.workTimes}
-              workTimesSumByType={reportData.workTimesSumByType}
+              workTimes={data.workTimes}
+              workTimesSumByType={data.workTimesSumByType}
+              selectedDepartment={selectedDepartment}
+              setSelectedDepartment={setSelectedDepartment}
             />
-            <MilestonePieChart workTimesSumByTag={reportData.workTimesSumByTag} workTimes={reportData.workTimes} />
-            <MilestoneSummaryByPeople workTimesSumByUser={reportData.workTimesSumByUser} />
+            <MilestonePieChart
+              workTimesSumByTag={data.workTimesSumByTag}
+              workTimes={data.workTimes}
+              handleChartClick={handleChartClick}
+            />
+            <MilestoneSummaryByPeople
+              workTimesSumByUser={data.workTimesSumByUser}
+              selectedUser={selectedUser}
+              setSelectedUser={setSelectedUser}
+            />
           </div>
         </div>
       </div>

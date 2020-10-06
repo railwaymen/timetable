@@ -6,6 +6,6 @@ User.where(email: 'staffmanager@example.com').first_or_create! first_name: 'Staf
 User.where(email: 'hardwaremanager@example.com').first_or_create! first_name: "Hardware", last_name: "Manager", password: "password", lang: :en, department: :other, hardware_manager: true
 
 Project.where(name: 'Lunch').first_or_create! internal: true, lunch: true
-Project.where(name: 'Vacation').first_or_create! internal: true, autofill: true
-Project.where(name: 'ZKS').first_or_create! internal: true, autofill: true
+Project.where(name: 'Vacation').first_or_create! internal: true, vacation: true, autofill: true
+Project.where(name: 'ZKS').first_or_create! internal: true, booked: true, autofill: true
 

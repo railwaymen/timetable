@@ -2,6 +2,7 @@
 
 class Project < ApplicationRecord
   include Discard::Model
+  include FilterConcern
   store_accessor :external_payload, :id, prefix: :external
 
   has_many :metrics, dependent: :destroy
@@ -12,6 +13,7 @@ class Project < ApplicationRecord
   has_many :assignments, class_name: 'ProjectResourceAssignment', dependent: :destroy
   has_many :combined_reports, dependent: :nullify
   has_many :milestones, dependent: :nullify
+  has_many :tags, dependent: :nullify
   belongs_to :leader, class_name: 'User'
   belongs_to :milestones_import_user, class_name: 'User'
 
@@ -19,22 +21,17 @@ class Project < ApplicationRecord
   validates :name, uniqueness: true
   validates :external_id, presence: true, if: :external_integration_enabled?
 
-  after_save :change_events_color_and_name, if: proc { |project| project.saved_change_to_color? || project.saved_change_to_name? }
+  scope :vacation, -> { where(vacation: true) }
+  scope :booked, -> { where(booked: true) }
 
-  def self.filter_by(action)
-    case action
-    when :active then kept
-    when :inactive then discarded
-    else all
-    end
-  end
+  after_save :change_events_color_and_name, if: proc { |project| project.saved_change_to_color? || project.saved_change_to_name? }
 
   def users_participating(range)
     users.joins(:work_times).merge(WorkTime.kept).where(work_times: { starts_at: range })
   end
 
   def accounting?
-    %w[Vacation ZKS].include? name
+    vacation? || booked?
   end
 
   def current_milestone

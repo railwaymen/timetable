@@ -5,7 +5,9 @@ module Api
     respond_to :json
 
     def index
-      @hardwares = policy_scope(Hardware)
+      hardwares = Hardware.all
+      hardwares = hardwares.where(user_id: params[:user_id]) if params[:user_id].present?
+      @hardwares = policy_scope(hardwares)
       respond_with @hardwares
     end
 

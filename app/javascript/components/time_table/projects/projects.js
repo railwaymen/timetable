@@ -38,19 +38,17 @@ function Projects() {
         <title>{I18n.t('common.projects')}</title>
       </Helmet>
       <header className="page-header">
-        <div className="ui grid">
-          <div className="sixteen wide column">
-            <div className="btn-group pull-right">
-              <NavLink className="btn btn-secondary active" exact to="/projects">{I18n.t('common.rank')}</NavLink>
-              <NavLink className="btn btn-secondary" to="/projects/list">{I18n.t('common.all')}</NavLink>
-            </div>
-            <div className="btn-group pull-left">
-              <select id="range" value={range} className="form-control" onChange={(e) => setRange(e.target.value)}>
-                {renderOption(30)}
-                {renderOption(60)}
-                {renderOption(90)}
-              </select>
-            </div>
+        <div className="clearfix mb-3">
+          <div className="btn-group pull-right">
+            <NavLink className="btn btn-secondary active" exact to="/projects">{I18n.t('common.rank')}</NavLink>
+            <NavLink className="btn btn-secondary" to="/projects/list">{I18n.t('common.all')}</NavLink>
+          </div>
+          <div className="btn-group pull-left">
+            <select id="range" value={range} className="form-control" onChange={(e) => setRange(e.target.value)}>
+              {renderOption(30)}
+              {renderOption(60)}
+              {renderOption(90)}
+            </select>
           </div>
         </div>
       </header>

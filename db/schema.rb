@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_05_093622) do
+ActiveRecord::Schema.define(version: 2020_10_05_103408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,6 +138,7 @@ ActiveRecord::Schema.define(version: 2020_08_05_093622) do
     t.integer "external_estimate", default: 0, null: false
     t.integer "other_estimate", default: 0, null: false
     t.boolean "visible_on_reports", default: false, null: false
+    t.string "jira_issues", default: [], array: true
     t.index ["discarded_at"], name: "index_milestones_on_discarded_at"
     t.index ["project_id"], name: "index_milestones_on_project_id"
   end
@@ -234,6 +235,8 @@ ActiveRecord::Schema.define(version: 2020_08_05_093622) do
     t.boolean "milestones_import_enabled", default: false, null: false
     t.bigint "milestones_import_user_id"
     t.boolean "tags_enabled", default: true, null: false
+    t.boolean "vacation", default: false, null: false
+    t.boolean "booked", default: false, null: false
     t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["leader_id"], name: "index_projects_on_leader_id"
     t.index ["milestones_import_user_id"], name: "index_projects_on_milestones_import_user_id"
@@ -271,7 +274,13 @@ ActiveRecord::Schema.define(version: 2020_08_05_093622) do
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "project_id"
+    t.datetime "discarded_at"
+    t.boolean "use_as_default", default: false, null: false
+    t.index ["discarded_at"], name: "index_tags_on_discarded_at"
+    t.index ["name", "project_id"], name: "index_tags_on_name_and_project_id", unique: true
     t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["project_id"], name: "index_tags_on_project_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -364,12 +373,14 @@ ActiveRecord::Schema.define(version: 2020_08_05_093622) do
     t.boolean "updated_by_admin", default: false, null: false
     t.string "task"
     t.jsonb "integration_payload"
-    t.string "tag", default: "dev", null: false
+    t.string "_tag", default: "dev", null: false
     t.integer "vacation_id"
     t.datetime "discarded_at"
     t.date "date", null: false
     t.string "department", null: false
+    t.bigint "tag_id"
     t.index ["discarded_at"], name: "index_work_times_on_discarded_at"
+    t.index ["tag_id"], name: "index_work_times_on_tag_id"
   end
 
   add_foreign_key "accounting_periods", "users", name: "accounting_periods_user_id_fk"
@@ -395,11 +406,13 @@ ActiveRecord::Schema.define(version: 2020_08_05_093622) do
   add_foreign_key "remote_works", "users"
   add_foreign_key "remote_works", "users", column: "creator_id"
   add_foreign_key "taggings", "tags"
+  add_foreign_key "tags", "projects"
   add_foreign_key "vacation_interactions", "users"
   add_foreign_key "vacation_interactions", "vacations"
   add_foreign_key "vacation_periods", "users"
   add_foreign_key "vacations", "users"
   add_foreign_key "work_times", "projects", name: "work_times_project_id_fk"
+  add_foreign_key "work_times", "tags"
   add_foreign_key "work_times", "users", column: "creator_id", name: "work_times_creator_id_fk"
   add_foreign_key "work_times", "users", name: "work_times_user_id_fk"
   add_foreign_key "work_times", "vacations", name: "work_times_vacation_id_fk"

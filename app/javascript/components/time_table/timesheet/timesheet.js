@@ -13,16 +13,18 @@ class Timesheet extends React.Component {
     this.onCopy = this.onCopy.bind(this);
     this.getProjects = this.getProjects.bind(this);
     this.setLastProject = this.setLastProject.bind(this);
+    this.lockRequests = this.lockRequests.bind(this);
 
     this.state = {
       projects: [],
       tags: [],
+      requestsLocked: false,
+      globalTags: [],
     };
   }
 
   componentDidMount() {
     this.getProjects();
-    this.getTags();
   }
 
   onCopy(object) {
@@ -30,19 +32,11 @@ class Timesheet extends React.Component {
   }
 
   getProjects() {
-    Api.makeGetRequest({ url: '/api/projects/simple' })
+    Api.makeGetRequest({ url: '/api/projects/with_tags' })
       .then((response) => {
         this.setState({
-          projects: response.data,
-        });
-      });
-  }
-
-  getTags() {
-    Api.makeGetRequest({ url: '/api/projects/tags' })
-      .then((response) => {
-        this.setState({
-          tags: response.data,
+          projects: response.data.projects,
+          globalTags: response.data.global_tags,
         });
       });
   }
@@ -55,8 +49,18 @@ class Timesheet extends React.Component {
     this.entryHistory.pushEntry(object);
   }
 
+  lockRequests(requestsLocked) {
+    return new Promise((resolve) => {
+      this.setState({ requestsLocked }, () => {
+        resolve();
+      });
+    });
+  }
+
   render() {
-    const { projects, tags } = this.state;
+    const {
+      projects, globalTags, tags, requestsLocked,
+    } = this.state;
     const projectsForEntries = projects.filter((project) => !project.accounting);
 
     if (projects.length > 0) {
@@ -65,13 +69,24 @@ class Timesheet extends React.Component {
           <Helmet>
             <title>{I18n.t('common.timesheet')}</title>
           </Helmet>
-          <Entry ref={(entry) => { this.entry = entry; }} pushEntry={this.pushEntry} projects={projectsForEntries} tags={tags} />
+          <Entry
+            ref={(entry) => { this.entry = entry; }}
+            pushEntry={this.pushEntry}
+            projects={projectsForEntries}
+            tags={tags}
+            lockRequests={this.lockRequests}
+            requestsLocked={requestsLocked}
+            globalTags={globalTags}
+          />
           <EntryHistory
             ref={(entryHistory) => { this.entryHistory = entryHistory; }}
             onCopy={this.onCopy}
             projects={projects}
             setLastProject={this.setLastProject}
             tags={tags}
+            lockRequests={this.lockRequests}
+            requestsLocked={requestsLocked}
+            globalTags={globalTags}
           />
         </>
       );

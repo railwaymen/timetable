@@ -9,10 +9,17 @@ FactoryBot.define do
     end
 
     trait :vacation do
+      vacation { true }
       name { 'Vacation' }
     end
 
-    trait :zks do
+    trait :lunch do
+      lunch { true }
+      name { 'Lunch' }
+    end
+
+    trait :booked do
+      booked { true }
       name { 'ZKS' }
     end
 

@@ -4,9 +4,6 @@
     background-color: white;
   }
 }
-.time-entry {
-  
-}
 
 .time-entries-list > .entry {
   display: flex;
@@ -46,6 +43,9 @@
   
   .task-content {
     flex-basis: 100%;
+    p {
+      margin-bottom: 0;
+    }
   }
   
   .description-container {
@@ -57,6 +57,9 @@
     .tags {
       margin: 4px 0;
       display: block;
+    }
+    input + div {
+      z-index: 1000;
     }
   }
   .actions-container {

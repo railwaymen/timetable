@@ -5,12 +5,12 @@ import DatePicker from 'react-datepicker';
 import _ from 'lodash';
 import URI from 'urijs';
 import ErrorTooltip from '@components/shared/error_tooltip';
+import Autocomplete from 'react-autocomplete';
 import ProjectsDropdown from './projects_dropdown';
-import TagsDropdown from './tags_dropdown';
 import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 import * as Validations from '../../shared/validations';
-import { defaultDatePickerProps } from '../../shared/helpers';
+import { defaultDatePickerProps, formattedHoursAndMinutes, inclusiveParse } from '../../shared/helpers';
 
 class Entry extends React.Component {
   constructor(props) {
@@ -24,6 +24,7 @@ class Entry extends React.Component {
     this.recountTime = this.recountTime.bind(this);
     this.updateProject = this.updateProject.bind(this);
     this.updateTag = this.updateTag.bind(this);
+    this.selectTag = this.selectTag.bind(this);
     this.validate = this.validate.bind(this);
     this.removeErrorsFor = this.removeErrorsFor.bind(this);
     this.paste = this.paste.bind(this);
@@ -31,20 +32,24 @@ class Entry extends React.Component {
     this.onTimeKeyPress = this.onTimeKeyPress.bind(this);
     this.onTimeFocus = this.onTimeFocus.bind(this);
     this.onTimeBlur = this.onTimeBlur.bind(this);
+    this.saveWorkTime = this.saveWorkTime.bind(this);
 
     this.state = {
       body: undefined,
       duration: 0,
       task: '',
-      tag: 'dev',
       project: {},
       starts_at: moment().format('HH:mm'),
       ends_at: moment().format('HH:mm'),
       durationHours: '00:00',
       date: moment().format('DD/MM/YYYY'),
+      combinedTags: [],
+      tag: '',
       errors: [],
     };
 
+    this.bodyInputRef = React.createRef();
+    this.taskInputRef = React.createRef();
     this.startInputRef = React.createRef();
   }
 
@@ -87,51 +92,11 @@ class Entry extends React.Component {
 
   onSubmit(url) {
     const errors = this.validate();
-    const userId = URI(window.location.href).search(true).user_id || currentUser.id;
-
     if (!_.isEmpty(errors)) {
       this.setState({ errors });
     } else {
-      const {
-        body, task, tag, project, date, starts_at, ends_at,
-      } = this.state;
-
-      const entryData = {
-        user_id: userId,
-        body,
-        task,
-        tag: project.taggable ? tag : 'dev',
-        project_id: project.id,
-        starts_at: moment(`${date} ${starts_at}`, 'DD/MM/YYYY HH:mm'),
-        ends_at: moment(`${date} ${ends_at}`, 'DD/MM/YYYY HH:mm'),
-      };
-
-      Api.makePostRequest({
-        url,
-        body: { work_time: entryData },
-      }).then((response) => {
-        const data = _.castArray(response.data);
-        if (!data[0].id) {
-          throw new Error('Invalid response');
-        }
-        data.forEach(this.props.pushEntry);
-        const newState = {
-          body: '',
-          task: '',
-          tag: 'dev',
-        };
-        if (!this.state.project.autofill) {
-          Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' });
-        }
-        if (this.lastProject && this.state.project.lunch) {
-          newState.project = this.lastProject;
-          newState.project_id = this.lastProject.id;
-        }
-        if (!this.state.project.lunch) this.lastProject = this.state.project;
-        newState.errors = {};
-        this.setState(newState);
-      }).catch((e) => {
-        this.setState({ errors: translateErrors('work_time', e.errors) });
+      this.props.lockRequests(true).then(() => {
+        this.saveWorkTime(url);
       });
     }
   }
@@ -144,6 +109,53 @@ class Entry extends React.Component {
 
   onFocus(e) {
     e.target.setSelectionRange(0, e.target.value.length);
+  }
+
+  saveWorkTime(url) {
+    const userId = URI(window.location.href).search(true).user_id || currentUser.id;
+    const {
+      body, task, tag, project, date, starts_at, ends_at,
+    } = this.state;
+
+    const entryData = {
+      user_id: userId,
+      body,
+      task,
+      tag_id: tag.id,
+      project_id: project.id,
+      starts_at: moment(`${date} ${starts_at}`, 'DD/MM/YYYY HH:mm'),
+      ends_at: moment(`${date} ${ends_at}`, 'DD/MM/YYYY HH:mm'),
+    };
+
+    Api.makePostRequest({
+      url,
+      body: { work_time: entryData },
+    }).then((response) => {
+      const data = _.castArray(response.data);
+      if (!data[0].id) {
+        throw new Error('Invalid response');
+      }
+      data.forEach(this.props.pushEntry);
+      const newState = {
+        body: '',
+        task: '',
+        tag: 'dev',
+      };
+      if (!this.state.project.autofill) {
+        Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' });
+      }
+      if (this.lastProject && this.state.project.lunch) {
+        newState.project = this.lastProject;
+        newState.project_id = this.lastProject.id;
+      }
+      if (!this.state.project.lunch) this.lastProject = this.state.project;
+      newState.errors = {};
+      this.setState(newState);
+    }).catch((e) => {
+      this.setState({ errors: translateErrors('work_time', e.errors) });
+    }).finally(() => {
+      this.props.lockRequests(false);
+    });
   }
 
   preventScroll(e) {
@@ -162,6 +174,7 @@ class Entry extends React.Component {
       project: object.project,
       project_id: object.project.id,
       task: object.task,
+      combinedTags: (object.project.tags || []).concat(this.props.globalTags),
       tag: object.tag || 'dev',
     });
   }
@@ -176,22 +189,25 @@ class Entry extends React.Component {
   validate() {
     const { project } = this.state;
     const {
-      body, starts_at, ends_at, project_id, duration, task, tag,
+      body, starts_at, ends_at, project_id, duration, task,
     } = this.state;
 
     if (!project.taggable || project.autofill) {
       return [];
     }
     const errors = {
-      body: (!task ? Validations.presence(body) : undefined),
+      body: (!task && !project.lunch ? Validations.presence(body) : undefined),
       starts_at: Validations.presence(starts_at),
       ends_at: Validations.presence(ends_at),
       project_id: Validations.presence(project_id),
       duration: Validations.greaterThan(0, duration),
-      tag: Validations.presence(tag),
     };
     Object.keys(errors).forEach((key) => { if (errors[key] === undefined) { delete errors[key]; } });
     return errors;
+  }
+
+  findDefaultTag() {
+    return this.props.globalTags.find((t) => t.use_as_default === true) || this.props.globalTags[0];
   }
 
   updateTag(tag_obj) {
@@ -203,28 +219,39 @@ class Entry extends React.Component {
     });
   }
 
-  updateProject(project) {
+  selectTag(value) {
+    this.setState((state) => ({ tag: state.combinedTags.find((tag) => tag.name === value) }));
+  }
+
+  updateProject(project, focusPreviousInput) {
     let autoSettings = {};
 
     if (project.lunch) {
       autoSettings = {
-        ends_at: this.formattedHoursAndMinutes(moment(this.state.starts_at, 'HH:mm').add('30', 'minutes')),
+        ends_at: formattedHoursAndMinutes(moment(this.state.starts_at, 'HH:mm').add('30', 'minutes')),
       };
     } else if (project.autofill) {
       autoSettings = {
         starts_at: '09:00',
-        ends_at: this.formattedHoursAndMinutes(moment('09:00', 'HH:mm').add('8', 'hours')),
+        ends_at: formattedHoursAndMinutes(moment('09:00', 'HH:mm').add('8', 'hours')),
       };
     }
 
     this.setState({
       ...autoSettings,
       project,
+      combinedTags: project.tags.concat(this.props.globalTags),
+      tag: this.findDefaultTag(),
       project_id: project.id,
     }, () => {
       this.removeErrorsFor('project_id');
       this.recountTime();
-      this.focusOnStartInput();
+      if (focusPreviousInput) {
+        const { current } = project.work_times_allows_task ? this.taskInputRef : this.bodyInputRef;
+        current.focus();
+      } else {
+        this.focusOnStartInput();
+      }
     });
   }
 
@@ -235,31 +262,17 @@ class Entry extends React.Component {
     current.setSelectionRange(0, current.value.length);
   }
 
-  formattedHoursAndMinutes(time) {
-    return moment(time).format('HH:mm');
-  }
-
-  inclusiveParse(time) {
-    const firstFormat = moment(time, 'HH:mm');
-    if (firstFormat.isValid()) {
-      return firstFormat;
-    }
-
-    // Properly handly input without '0' prefix, for example '830' -> 08:30
-    return moment(time, 'Hmm');
-  }
-
   recountTime(stateCallback) {
     this.setState((prevState) => {
-      const formattedStartsAt = this.inclusiveParse(prevState.starts_at);
-      const formattedEndsAt = this.inclusiveParse(prevState.ends_at);
+      const formattedStartsAt = inclusiveParse(prevState.starts_at);
+      const formattedEndsAt = inclusiveParse(prevState.ends_at);
       const duration = prevState.project.count_duration ? formattedEndsAt.diff(formattedStartsAt) : 0;
 
       return {
         duration,
         durationHours: moment.utc(duration).format('HH:mm'),
-        starts_at: this.formattedHoursAndMinutes(formattedStartsAt),
-        ends_at: this.formattedHoursAndMinutes(formattedEndsAt),
+        starts_at: formattedHoursAndMinutes(formattedStartsAt),
+        ends_at: formattedHoursAndMinutes(formattedEndsAt),
       };
     }, () => {
       this.removeErrorsFor('duration', stateCallback);
@@ -275,8 +288,9 @@ class Entry extends React.Component {
 
   render() {
     const {
-      body, task, tag, starts_at, ends_at, durationHours, date, errors, project,
+      body, task, tag, starts_at, ends_at, durationHours, date, errors, project, combinedTags,
     } = this.state;
+    const { requestsLocked } = this.props;
 
     return (
       <div className="new-entry" id="content">
@@ -294,6 +308,7 @@ class Entry extends React.Component {
                       placeholder={I18n.t('apps.timesheet.what_have_you_done')}
                       name="body"
                       value={body}
+                      ref={this.bodyInputRef}
                       onChange={this.onChange}
                       onKeyPress={this.onKeyPress}
                     />
@@ -308,6 +323,7 @@ class Entry extends React.Component {
                       type="text"
                       name="task"
                       value={task}
+                      ref={this.taskInputRef}
                       onChange={this.onChange}
                       onKeyPress={this.onKeyPress}
                     />
@@ -374,18 +390,34 @@ class Entry extends React.Component {
                 />
               </div>
             </div>
-            { project.taggable && (
-              <div className="tag-container">
-                {errors.tag && <ErrorTooltip errors={errors.tag} />}
-                <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />
-              </div>
+            { project.tags_enabled && (
+            <div className="form-group custom-tags">
+              <Autocomplete
+                inputProps={{ className: 'form-control', placeholder: I18n.t('apps.users.position') }}
+                wrapperStyle={{ width: '100%' }}
+                getItemValue={(item) => item.name}
+                renderItem={(item, isHighlighted) => (
+                  <div key={item.id} style={{ background: isHighlighted ? 'lightgray' : 'white', padding: '10px' }}>
+                    {item.name}
+                  </div>
+                )}
+                name="tag"
+                items={combinedTags}
+                value={tag.name}
+                onSelect={this.selectTag}
+              />
+            </div>
             )}
             <div className="form-actions bg-white btn-group">
-              <button type="button" className="btn btn-outline-success btn-lg" onClick={() => this.onSubmit('/api/work_times/create_filling_gaps')}>
+              <button
+                type="button"
+                className="btn btn-outline-success btn-lg"
+                onClick={() => { if (!requestsLocked) this.onSubmit('/api/work_times/create_filling_gaps'); }}
+              >
                 <i className="fa fa-calendar-plus-o mr-2" />
                 {I18n.t('common.fill_save')}
               </button>
-              <button type="button" className="btn btn-success btn-lg" onClick={() => this.onSubmit('/api/work_times')}>
+              <button type="button" className="btn btn-success btn-lg" onClick={() => { if (!requestsLocked) this.onSubmit('/api/work_times'); }}>
                 <i className="fa fa-calendar-plus-o mr-2" />
                 {I18n.t('common.save')}
               </button>

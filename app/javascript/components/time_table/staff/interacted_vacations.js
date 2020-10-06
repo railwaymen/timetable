@@ -11,6 +11,7 @@ function InteractedVacations(props) {
     getVacations,
     removeFromInteractedVacations,
     addToInteractedVacations,
+    setUserVacationDays,
   } = props;
   const { interactedOrder } = filters;
 
@@ -48,6 +49,7 @@ function InteractedVacations(props) {
           getVacations={getVacations}
           removeFromInteractedVacations={removeFromInteractedVacations}
           addToInteractedVacations={addToInteractedVacations}
+          setUserVacationDays={setUserVacationDays}
         />
       ))}
     </div>

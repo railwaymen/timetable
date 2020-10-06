@@ -81,3 +81,15 @@ export const extractIntegrationPayload = (payload) => {
 
   return { type: '', labels: [] };
 };
+
+export const formattedHoursAndMinutes = (time) => moment(time).format('HH:mm');
+
+export const inclusiveParse = (time) => {
+  const firstFormat = moment(time, 'HH:mm');
+  if (firstFormat.isValid()) {
+    return firstFormat;
+  }
+
+  // Properly handly input without '0' prefix, for example '830' -> 08:30
+  return moment(time, 'Hmm');
+};

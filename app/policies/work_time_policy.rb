@@ -18,7 +18,7 @@ class WorkTimePolicy < ApplicationPolicy
       project_id
       body
       task
-      tag
+      tag_id
       starts_at
       ends_at
     ]
@@ -30,7 +30,7 @@ class WorkTimePolicy < ApplicationPolicy
     %i[
       body
       task
-      tag
+      tag_id
       starts_at
       ends_at
     ]

@@ -138,9 +138,6 @@ pl:
         duration: Czas trwania
     users:
       user_active: Aktywny
-      active: Aktywne
-      all: Wszystkie
-      inactive: Nieaktywne
       add: Dodaj nowe konto
       first_name: Imię
       last_name: Nazwisko
@@ -309,6 +306,7 @@ pl:
     unpaid: Urlop bezpłatny
     rehabilitation: Urlop rehabilitacyjny
     illness: Urlop chorobowy
+    overtime: Odbiór nadgodzin
     care: Urlop opiekuńczy
     care_definition: Opieka zg. z art. 188 Kp.
     vacation_code:
@@ -322,6 +320,7 @@ pl:
       unpaid: Ub
       rehabilitation: R
       illness: Ch
+      overtime: Inne
       care: Op
     vacation_periods: Okresy urlopowe
     title: Tytuł
@@ -339,6 +338,9 @@ pl:
     refresh_error: Wystąpił błąd podczas odświeżania
     project_milestones: Etapy projektu
     milestone_reports: Raporty etapów
+    tags: Tagi
+    active: Aktywne
+    inactive: Nieaktywne
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -395,6 +397,7 @@ pl:
             task:
               invalid_uri: 'URL Taska nie jest poprawny'
               invalid_external: 'URL nie wskazuje na poprawny zewnętrzny task'
+              invalid_external_project: 'URL nie wskazuje na poprawny zewnętrzny projekt'
             starts_at:
               overlap: Istnieje inne zadanie o pokrywającym się czasie wykonania
               too_old: Nie można utworzyć lub edytować wpisu

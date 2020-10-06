@@ -377,6 +377,7 @@ class Periods extends React.Component {
                     value={generatePeriods.periods_count || 1}
                     name="periods_count"
                     placeholder="periods count"
+                    className="d-inline-block form-control w-auto ml-2"
                   />
                 </div>
                 <div className="field">
@@ -384,7 +385,7 @@ class Periods extends React.Component {
                   <select
                     onChange={this.onGeneratePeriodsChange}
                     value={parseInt(generatePeriods.month, 10)}
-                    className="dropdown ui"
+                    className="d-inline-block form-control w-auto ml-2"
                     id="month"
                     type="text"
                     name="month"
@@ -396,7 +397,7 @@ class Periods extends React.Component {
                   <select
                     onChange={this.onGeneratePeriodsChange}
                     value={parseInt(generatePeriods.year, 10)}
-                    className="dropdown ui"
+                    className="d-inline-block form-control w-auto"
                     id="year"
                     type="text"
                     name="year"

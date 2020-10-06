@@ -18,14 +18,16 @@ class ImportMilestones
     client.versions(@project.external_id).each do |version|
       values = { external_id: version.id, name: version.attrs['name'], starts_on: version.attrs['startDate'], ends_on: version.attrs['releaseDate'] }
       milestone = @project.milestones.where("external_payload->>'id' = ?", version.id).first_or_initialize
-      milestone.external_estimate = fetch_milestone_estimate(version.id)
+      update_milestone(milestone, version.id)
       create_estimate(milestone) if milestone.persisted? && milestone.external_estimate_changed?
       milestone.update!(values)
     end
   end
 
-  def fetch_milestone_estimate(version_id)
-    client.version_issues(@project.external_id, version_id).map(&:timeoriginalestimate).compact.sum
+  def update_milestone(milestone, version_id)
+    version_issues = client.version_issues(@project.external_id, version_id)
+    milestone.external_estimate = version_issues.map(&:timeoriginalestimate).compact.sum
+    milestone.jira_issues = version_issues.map(&:key)
   end
 
   def create_estimate(milestone)

@@ -11,14 +11,14 @@ class Vacation < ApplicationRecord
   validates :start_date, :end_date, :vacation_type, :status, :user_id, presence: true
   validates :status, inclusion: { in: %w[unconfirmed declined approved accepted] }
   validates :vacation_type, inclusion: { in: %w[planned requested compassionate others] }
-  validates :vacation_sub_type, inclusion: { in: %w[paternity parental upbringing unpaid rehabilitation illness care] }, allow_nil: true
+  validates :vacation_sub_type, inclusion: { in: %w[paternity parental upbringing unpaid rehabilitation illness care overtime] }, allow_nil: true
   validate :validates_start_date_less_than_end_date
   validate :validates_work_time, if: :unconfirmed?, on: :create
 
   enum status: { unconfirmed: 'unconfirmed', declined: 'declined', approved: 'approved', accepted: 'accepted' }
   enum vacation_type: { planned: 'planned', requested: 'requested', compassionate: 'compassionate', others: 'others' }
   enum vacation_sub_type: { paternity: 'paternity', parental: 'parental', upbringing: 'upbringing', unpaid: 'unpaid',
-                            rehabilitation: 'rehabilitation', illness: 'illness', care: 'care' }
+                            rehabilitation: 'rehabilitation', illness: 'illness', care: 'care', overtime: 'overtime' }
 
   scope :current_year, -> { where("date_part('year', start_date) = ?", Time.current.year) }
 
@@ -29,9 +29,7 @@ class Vacation < ApplicationRecord
   def validates_work_time
     return unless user
 
-    work_times = WorkTime.where('((starts_at BETWEEN :start_date AND :end_date) OR (ends_at BETWEEN :start_date AND :end_date)) AND
-                                  discarded_at IS NULL AND user_id = :user_id',
-                                start_date: start_date.beginning_of_day, end_date: end_date.end_of_day, user_id: user_id)
+    work_times = Vacations::WorkTimesIn.new(start_date, end_date, user_id).perform
 
     return if work_times.blank?
 
@@ -51,10 +49,10 @@ class Vacation < ApplicationRecord
   end
 
   def vacation_project
-    if planned? || requested? || compassionate? || unpaid? || care?
-      Project.find_by!(name: 'Vacation')
+    if planned? || requested? || compassionate? || unpaid? || care? || overtime?
+      Project.vacation.first!
     else
-      Project.find_by!(name: 'ZKS')
+      Project.booked.first!
     end
   end
 end
