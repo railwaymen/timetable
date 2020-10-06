@@ -1,38 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import Autocomplete from 'react-autocomplete';
-import { makeGetRequest } from '../../shared/api';
 
 function AdminFields(props) {
   const {
     user,
     errors,
     onChange,
-    setUser,
   } = props;
-
-  const [availablePositions, setAvailablePositions] = useState([]);
-
-  function getAvailablePositions() {
-    makeGetRequest({ url: '/api/users/positions' })
-      .then((response) => {
-        const positions = response.data.map((position) => ({ label: position }));
-        setAvailablePositions(positions);
-      });
-  }
-
-  function setPosition(e) {
-    setUser({ ...user, position_list: [e.target.value] });
-  }
-
-  function selectPosition(value) {
-    setUser({ ...user, position_list: [value] });
-  }
-
-  useEffect(() => {
-    getAvailablePositions();
-  }, []);
 
   return (
     <div>
@@ -122,29 +97,6 @@ function AdminFields(props) {
           <option value="other">{I18n.t('apps.department.other')}</option>
         </select>
       </div>
-
-      <div className="form-group">
-        <Autocomplete
-          inputProps={{ className: 'form-control', placeholder: I18n.t('apps.users.position') }}
-          wrapperStyle={{ width: '100%' }}
-          getItemValue={(item) => item.label}
-          shouldItemRender={(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) > -1}
-          renderItem={(item, isHighlighted) => (
-            <div key={item.label} style={{ background: isHighlighted ? 'lightgray' : 'white', padding: '10px' }}>
-              {item.label}
-            </div>
-          )}
-          name="position_list"
-          items={availablePositions}
-          value={user.position_list[0] || ''}
-          onChange={setPosition}
-          onSelect={selectPosition}
-          menuStyle={{
-            maxHeight: '200px',
-            overflowY: 'auto',
-          }}
-        />
-      </div>
     </div>
   );
 }
@@ -153,7 +105,6 @@ AdminFields.propTypes = {
   user: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  setUser: PropTypes.func.isRequired,
 };
 
 export default AdminFields;

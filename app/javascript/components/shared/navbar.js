@@ -66,6 +66,9 @@ const Navbar = () => (
         <li className="nav-pills">
           <NavLink className="nav-link" to="/remote_work">{I18n.t('common.remote_work')}</NavLink>
         </li>
+        <li className="nav-pills">
+          <NavLink className="nav-link" to="/tags">{I18n.t('common.tags')}</NavLink>
+        </li>
       </ul>
     </div>
     <ul className="navbar-nav user-nav ml-auto">

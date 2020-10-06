@@ -76,6 +76,7 @@ class WorkHoursDay extends React.Component {
                 tags={this.props.tags}
                 lockRequests={this.props.lockRequests}
                 requestsLocked={this.props.requestsLocked}
+                globalTags={this.props.globalTags}
               />
             )) }
           </div>

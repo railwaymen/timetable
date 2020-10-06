@@ -17,7 +17,7 @@ const ReportProjectTagRecord = ({ reportRows }) => {
         <ul className="list-group">
           { reportRows.map((row, index) => (
             <li className="list-group-item record align-items-baseline" key={index}> {/* eslint-disable-line */}
-              <input type="button" disabled className={`tags selected ${row.tag}`} value={I18n.t(`apps.tag.${row.tag}`).toUpperCase()} />
+              <input type="button" disabled className={`tags selected ${row.tag}`} value={row.tag.toUpperCase()} />
               {countDurationPercentage(row.duration, row.project_duration)}
               <span className="badge badge-dark ml-auto">{formattedDuration(row.duration)}</span>
             </li>

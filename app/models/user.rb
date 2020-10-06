@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   include Discard::Model
+  include FilterConcern
   PHONE_REGEX = /\A[0-9()\-+\s]*\z/.freeze
 
   # Include default devise modules. Others available are:
@@ -42,14 +43,6 @@ class User < ApplicationRecord
         ORDER BY contract_name::bytea ASC
       ) users
     ))
-  end
-
-  def self.filter_by(action)
-    case action
-    when :active then kept
-    when :inactive then discarded
-    else all
-    end
   end
 
   def active_for_authentication?

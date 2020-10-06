@@ -28,7 +28,6 @@ class EntryHistory extends React.Component {
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
-    this.translateTag = this.translateTag.bind(this);
     this.switchMonth = this.switchMonth.bind(this);
     this.filterWorkHours = this.filterWorkHours.bind(this);
 
@@ -383,11 +382,6 @@ class EntryHistory extends React.Component {
     return displayDuration(value);
   }
 
-  translateTag(tag_key) {
-    if (tag_key === 'dev') return null;
-    return tag_key && I18n.t(`apps.tag.${tag_key}`);
-  }
-
   renderGroupedRecords() {
     return (
       this.state.daysKeys.map((key, index) => {
@@ -403,7 +397,7 @@ class EntryHistory extends React.Component {
             increaseWorkHours={this.increaseWorkHours}
             pushEntry={this.pushEntry}
             projects={this.props.projects}
-            tags={this.props.tags}
+            globalTags={this.props.globalTags}
             updateWorkHours={this.updateWorkHours}
             assignModalInfo={this.assignModalInfo}
             lockRequests={this.props.lockRequests}
