@@ -7,6 +7,7 @@
   <%= stylesheet_link_tag    "application", media: "all" %>
   <%= stylesheet_link_tag    "//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", media: "all" %>
   <%= stylesheet_link_tag   "https://fonts.googleapis.com/css?family=Hind+Vadodara:400,500,600&display=swap&subset=latin-ext", media: "all" %> 
+  <script>window.currentUser = JSON.parse('<%= raw current_user.to_json %>')</script>
   <%= javascript_include_tag "application" %>
   <%= javascript_pack_tag 'application' %>
 
@@ -18,7 +19,6 @@
   <% end %>
 </head>
 <body>
-  <script>window.currentUser = JSON.parse('<%= raw current_user.to_json %>')</script>
   <%= yield %>
 </body>
 </html>

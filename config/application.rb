@@ -32,7 +32,6 @@ module TimeTable
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'Warsaw'
-    config.react.addons = true
     config.webpacker.check_yarn_integrity = false
 
     config.assets.precompile += %w( i18n.js )

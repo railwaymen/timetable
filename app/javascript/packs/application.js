@@ -9,18 +9,16 @@
 
 // Support component names relative to this directory:
 import jquery from 'jquery';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import 'popper.js';
 import 'bootstrap';
 import moment from 'moment';
+import Timetable from '../components/time_table';
 
 window.$ = jquery;
 window.jquery = jquery;
-
-const componentRequireContext = require.context('components', true);
-const ReactRailsUJS = require('react_ujs');
-
-ReactRailsUJS.useContext(componentRequireContext);
 
 // Used to hide dropdown for month/project selection on timesheet when clicking outside of it
 $(document).on('click', (e) => {
@@ -29,6 +27,10 @@ $(document).on('click', (e) => {
   if (!(klass.match('dropdown') || klass.match('menu') || parent.match('dropdown'))) {
     $('.dropdown .menu').hide();
   }
+});
+
+$(document).ready(() => {
+  ReactDOM.render(<Timetable />, $('#timetable')[0]);
 });
 
 // Used to open dropdown for month/project selection on timesheet

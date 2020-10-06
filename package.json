@@ -25,7 +25,6 @@
     "react-helmet": "^5.2.1",
     "react-router-dom": "^5.1.2",
     "react-useinterval": "^1.0.1",
-    "react_ujs": "^2.6.1",
     "tinycolor2": "^1.4.1",
     "urijs": "^1.19.1"
   },

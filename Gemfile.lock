@@ -64,10 +64,6 @@ GEM
     autoprefixer-rails (9.7.6)
       execjs
     awesome_print (1.8.0)
-    babel-source (5.8.35)
-    babel-transpiler (0.7.0)
-      babel-source (>= 4.0, < 6)
-      execjs (~> 2.0)
     bcrypt (3.1.13)
     better_errors (2.7.1)
       coderay (>= 1.0.0)
@@ -281,12 +277,6 @@ GEM
       thor (>= 0.20.3, < 2.0)
     rainbow (3.0.0)
     rake (13.0.1)
-    react-rails (2.6.1)
-      babel-transpiler (>= 0.7.0)
-      connection_pool
-      execjs
-      railties (>= 3.2)
-      tilt
     redis (4.2.1)
     redis-namespace (1.7.0)
       redis (>= 3.0.4)
@@ -457,7 +447,6 @@ DEPENDENCIES
   rails (= 6.0.3.2)
   rails-controller-testing
   rails-ujs
-  react-rails
   redis-namespace
   rspec-rails
   rubocop (~> 0.87.0)
