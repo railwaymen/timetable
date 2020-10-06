@@ -309,6 +309,7 @@ en:
     unpaid: Unpaid leave
     rehabilitation: Rehabilitation leave
     illness: Illness
+    overtime: Time off in exchange for overtime
     care: Care
     care_definition: Care according to Article 188 of the Code of .
     vacation_code:
@@ -322,6 +323,7 @@ en:
       unpaid: Ub
       rehabilitation: R
       illness: Ch
+      overtime: Other
       care: Op
     vacation_periods: Vacation Periods
     title: Title

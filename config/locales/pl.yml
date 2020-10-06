@@ -309,6 +309,7 @@ pl:
     unpaid: Urlop bezpłatny
     rehabilitation: Urlop rehabilitacyjny
     illness: Urlop chorobowy
+    overtime: Odbiór nadgodzin
     care: Urlop opiekuńczy
     care_definition: Opieka zg. z art. 188 Kp.
     vacation_code:
@@ -322,6 +323,7 @@ pl:
       unpaid: Ub
       rehabilitation: R
       illness: Ch
+      overtime: Inne
       care: Op
     vacation_periods: Okresy urlopowe
     title: Tytuł
