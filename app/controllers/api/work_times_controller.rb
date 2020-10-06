@@ -61,7 +61,7 @@ module Api
     end
 
     def search
-      @work_times = WorkTime.kept.includes(:project).order(starts_at: :desc)
+      @work_times = WorkTime.kept.includes(:project, :tag).order(starts_at: :desc)
                             .where(permitted_search_query_params)
                             .where('body ILIKE :query OR task ILIKE :query', query: "%#{params[:query]}%")
 
