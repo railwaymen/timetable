@@ -32,7 +32,7 @@ function WorkTimesReportTable(props) {
               disabled
               className={`tags selected ${workTime.tag}`}
               type="button"
-              value={workTime.tag.toUpperCase()}
+              value={workTime.tag.name.toUpperCase()}
             />
           </div>
         )}
