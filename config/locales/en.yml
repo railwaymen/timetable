@@ -138,9 +138,6 @@ en:
         duration: Duration
     users:
       user_active: 'Active'
-      active: Active
-      all: All
-      inactive: Inactive
       add: Add new account
       first_name: First name
       last_name: Last name
@@ -341,6 +338,9 @@ en:
     refresh_error: An error occurred while refreshing
     project_milestones: Project milestones
     milestone_reports: Milestone reports
+    tags: Tags
+    active: Active
+    inactive: Inactive
   activerecord:
     errors:
       models:
