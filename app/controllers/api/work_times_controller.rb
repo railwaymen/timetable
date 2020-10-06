@@ -40,9 +40,7 @@ module Api
       authorize @work_time
       @work_time.assign_attributes(permitted_attributes(@work_time))
       duration_was = @work_time.duration
-      if current_user.admin? && @work_time.changed?
-        @work_time.updated_by_admin = true if @work_time.user_id != current_user.id
-      end
+      @work_time.updated_by_admin = true if @work_time.user_id != current_user.id && @work_time.changed?
       @work_time = WorkTimeForm.new(work_time: @work_time)
       @work_time.save(work_hours_save_params)
       increase_or_decrease_work_time(@work_time, duration_was) if @work_time.valid?(context)
@@ -145,11 +143,7 @@ module Api
     end
 
     def find_work_time
-      if current_user.admin?
-        WorkTime.kept.find(params[:id])
-      else
-        current_user.work_times.kept.find(params[:id])
-      end
+      policy_scope(WorkTime.kept).find(params[:id])
     end
   end
   # rubocop:enable Metrics/MethodLength
