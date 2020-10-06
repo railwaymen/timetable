@@ -390,10 +390,10 @@ class Entry extends React.Component {
                 />
               </div>
             </div>
-            { project.tags_enabled && (
+            { (project.taggable || project.tags_enabled) && (
             <div className="form-group custom-tags">
               <Autocomplete
-                inputProps={{ className: 'form-control', placeholder: I18n.t('apps.users.position') }}
+                inputProps={{ className: 'form-control', placeholder: I18n.t('common.tags') }}
                 wrapperStyle={{ width: '100%' }}
                 getItemValue={(item) => item.name}
                 renderItem={(item, isHighlighted) => (

@@ -34,7 +34,7 @@ class ProjectsList extends React.Component {
             type="button"
           >
             <div className="circular-label" style={{ background: `#${project.color}` }} />
-            {project.id === this.props.currentProject.id ? <b>{project.name}</b> : project.name}
+            {(this.props.currentProject && (project.id === this.props.currentProject.id)) ? <b>{project.name}</b> : project.name}
           </button>
         )) }
       </div>
