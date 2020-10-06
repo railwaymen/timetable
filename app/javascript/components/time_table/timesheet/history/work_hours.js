@@ -315,7 +315,7 @@ class WorkHours extends React.Component {
       workHours,
     } = this.state;
 
-    const project = this.props.projects.find((p) => p.id === workHours.project);
+    const project = this.props.projects.find((p) => p.id === workHours.project_id);
     if (project == null) { return this.props.globalTags; }
 
     return this.props.globalTags.concat(project.tags);
