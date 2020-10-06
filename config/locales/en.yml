@@ -122,10 +122,7 @@ en:
       select_project: Select project
       required_duration_until_end_of_day: Required work duration until end of day (only applies to full time employees)
       required_duration_until_end_of_month: Required work duration until end of month (only applies to full time employees)
-      use_timer: Use timer
-      add_manually: Add manually
       work_time: Worktime
-      unsaved_changes: You have unsaved changes!
       history:
         date: Date
         when: When
@@ -156,13 +153,6 @@ en:
       new: New auth
       domain: Domain
       token: Token
-    tag:
-      dev: Others
-      ui: Internal Meeting
-      im: Internal Meeting
-      cc: Client Communication
-      res: Research
-      various: Various
     project_report_roles:
       developer: Development
       qa: Quality Assurance
@@ -196,7 +186,6 @@ en:
       declined: Declined
       unconfirmed: Unconfirmed
       approved: Approved
-      person: Person
       vacation_type: Vacation Type
       time_period: Time Period
       choose: Choose
@@ -211,7 +200,6 @@ en:
       show_declined: Show declined
       show_acceptable: Show acceptable
       acceptable: Acceptable
-      all: All
       available_vacation_days: Available vacation days
       available_vacation_days_after_accepting: Available vacation days after accepting
       user_has_already_filled_in_work_time: 'User %{parameter} has already filled in the work time in days: '

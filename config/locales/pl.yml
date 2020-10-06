@@ -122,10 +122,7 @@ pl:
       select_project: Wybierz projekt
       required_duration_until_end_of_day: Wymagany czas pracy do końca dnia (dotyczy tylko pracowników etatowych)
       required_duration_until_end_of_month: Wymagany czas pracy do końca miesiąca (dotyczy tylko pracowników etatowych)
-      use_timer: Użyj stopera
-      add_manually: Dodaj ręcznie
       work_time: Czas pracy
-      unsaved_changes: Masz niezapisane zmiany!
       history:
         date: Data
         when: Kiedy
@@ -156,13 +153,6 @@ pl:
       new: Nowe uwierzytelnienie
       domain: Domena
       token: Token
-    tag:
-      dev: Inne
-      im: Spotkanie wewnętrzne
-      ui: Spotkanie wewnętrzne
-      cc: Rozmowa z klientem
-      res: Poszukiwanie informacji
-      various: Różne
     project_report_roles:
       developer: Development
       qa: Quality Assurance
@@ -196,7 +186,6 @@ pl:
       declined: Odrzucone
       unconfirmed: Niepotwierdzone
       approved: Zatwierdzony
-      person: Osoba
       vacation_type: Rodzaj Urlopu
       time_period: Czas Trwania
       choose: Wybierz
@@ -211,7 +200,6 @@ pl:
       show_declined: Pokaż odrzucone
       show_acceptable: Pokaż do zaakceptowania
       acceptable: Do zaakceptowania
-      all: Wszystkie
       available_vacation_days: Pozostałe dni urlopu
       available_vacation_days_after_accepting: Pozostałe dni urlopu po zaakceptowaniu
       user_has_already_filled_in_work_time: 'Użytkownik %{parameter} już wypełnił czas pracy w dniach: '
