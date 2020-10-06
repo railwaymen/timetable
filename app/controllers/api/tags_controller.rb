@@ -14,7 +14,7 @@ module Api
     end
 
     def create
-      @tag = Tag.new(name: tags_params[:name], project_id: project.id).tap(&:save)
+      @tag = Tag.create(name: tags_params[:name], project_id: project.id)
       respond_with :api, @tag
     end
 
