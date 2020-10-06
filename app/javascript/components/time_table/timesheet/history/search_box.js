@@ -79,7 +79,7 @@ function SearchBox(props) {
       <input
         className="h-100"
         name="search-input"
-        placeholder="Search among work times"
+        placeholder={I18n.t('apps.timesheet.search_placeholder')}
         onKeyPress={onKeyPress}
         onChange={onInputChange}
         value={searchQuery}
