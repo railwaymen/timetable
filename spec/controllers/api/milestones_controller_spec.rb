@@ -132,8 +132,9 @@ RSpec.describe Api::MilestonesController do
       sign_in(admin)
       milestone = create(:milestone, starts_on: 5.days.ago, ends_on: 5.days.from_now)
       work_time = create(:work_time, project: milestone.project)
-      work_time_response = work_time.slice(:id, :starts_at, :ends_at, :duration, :tag, :date, :department)
+      work_time_response = work_time.slice(:id, :starts_at, :ends_at, :duration, :date, :department)
                                     .merge({
+                                             tag: work_time.tag.name,
                                              body: work_time.body,
                                              task: work_time.task,
                                              task_preview: work_time.task,
@@ -153,8 +154,9 @@ RSpec.describe Api::MilestonesController do
         work_time = create(:work_time,
                            project: milestone.project,
                            integration_payload: { 'Jira' => { 'task_id' => 'test' } })
-        work_time_response = work_time.slice(:id, :starts_at, :ends_at, :duration, :tag, :date, :department)
+        work_time_response = work_time.slice(:id, :starts_at, :ends_at, :duration, :date, :department)
                                       .merge({
+                                               tag: work_time.tag.name,
                                                body: work_time.body,
                                                task: work_time.task,
                                                task_preview: work_time.task,
