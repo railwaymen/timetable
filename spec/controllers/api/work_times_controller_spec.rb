@@ -410,4 +410,65 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       expect(work_time.reload.discarded?).to be false
     end
   end
+
+  describe '#search' do
+    it 'authenticates user' do
+      get :search, params: { query: 'query' }, format: :json
+      expect(response.code).to eql('401')
+    end
+
+    it 'returns only work times with "Search query" in body' do
+      sign_in(user)
+      work_time = create(:work_time, user: user, body: 'Search query test')
+      create(:work_time, user: user)
+      get :search, params: { query: 'Search query' }, format: :json
+
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql([work_time_response(work_time)].to_json)
+    end
+
+    it 'returns only work times with "TIM-TEST" in task' do
+      sign_in(user)
+      work_time = create(:work_time, user: user, task: 'https://railwaymen.atlassian.net/browse/TIM-TEST')
+      create(:work_time, user: user)
+      get :search, params: { query: 'TIM-TEST' }, format: :json
+
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql([work_time_response(work_time)].to_json)
+    end
+
+    it 'correct filter data for leader' do
+      sign_in user
+
+      worker = create :user
+      belonged_project = create :project, leader_id: user.id
+      project = create :project
+
+      work_time = create :work_time, user: worker, project: belonged_project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes, body: 'query1'
+      user_work_time = create :work_time, user: user, project: project, starts_at: Time.current - 30.minutes, ends_at: Time.current - 25.minutes, body: 'query2'
+      create :work_time, user: worker, project: project, starts_at: Time.current - 25.minutes, ends_at: Time.current - 20.minutes, body: 'query3'
+
+      aggregate_failures 'display data for own project' do
+        get :search, params: { user_id: worker.id, query: 'query' }, format: :json
+
+        expect(response.body).to be_json_eql [work_time_response(work_time)].to_json
+      end
+
+      aggregate_failures 'correctly displays own data' do
+        get :search, params: { query: 'query' }, format: :json
+
+        expect(response.body).to be_json_eql [work_time_response(user_work_time)].to_json
+      end
+    end
+
+    it 'filters by user_id when user is an admin' do
+      sign_in(admin)
+      work_time = create(:work_time, body: 'user id test')
+      create(:work_time, user_id: work_time.user_id)
+      get :search, params: { user_id: work_time.user_id, query: 'user id' }, format: :json
+
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql([work_time_response(work_time)].to_json)
+    end
+  end
 end

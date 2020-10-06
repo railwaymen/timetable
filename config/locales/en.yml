@@ -114,6 +114,7 @@ en:
       periods_count: periods count
       recounting: Recounting...
     timesheet:
+      search_placeholder: Search among work times
       overall_work_time: Total worktime in selected period
       what_have_you_done: What have you done ?
       task_url: Task url

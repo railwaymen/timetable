@@ -114,6 +114,7 @@ pl:
       periods_count: liczbę okresów
       recounting: Przeliczam...
     timesheet:
+      search_placeholder: Szukaj wśród wpisów
       overall_work_time: Łączny czas pracy w wybranym okresie
       what_have_you_done: Nad czym pracowałeś ?
       task_url: Url taska

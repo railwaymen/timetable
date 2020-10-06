@@ -38,6 +38,7 @@ Rails.application.routes.draw do
     end
     resources :work_times do
       post :create_filling_gaps, on: :collection
+      get :search, on: :collection
     end
     resources :tags, only: %i[index show create update]
     resources :projects, only: %i[index show create update] do

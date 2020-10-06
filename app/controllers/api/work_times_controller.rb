@@ -60,6 +60,14 @@ module Api
       respond_with @work_time
     end
 
+    def search
+      @work_times = WorkTime.kept.includes(:project, :tag).order(starts_at: :desc)
+                            .where(permitted_search_query_params)
+                            .where('body ILIKE :query OR task ILIKE :query', query: "%#{params[:query]}%")
+
+      respond_with @work_times
+    end
+
     private
 
     def context
@@ -99,6 +107,23 @@ module Api
           project_id: params[:project_id].presence,
           starts_at: (Time.zone.parse(params[:from])..Time.zone.parse(params[:to]) if params[:from].present? && params[:to].present?),
           user_id: current_user.id
+        }
+      end.delete_if { |_key, value| value.nil? }
+    end
+
+    def permitted_search_query_params
+      if current_user.admin? || current_user.manager?
+        {
+          user_id: params[:user_id].presence || current_user.id
+        }
+      elsif current_user.leader?
+        {
+          user_id: params[:user_id].presence || current_user.id,
+          project_id: params[:user_id].presence ? current_user.projects.pluck(:id) : nil
+        }
+      else
+        {
+          user_id: params[:user_id].presence
         }
       end.delete_if { |_key, value| value.nil? }
     end
