@@ -11,7 +11,7 @@ import TagFields from './tag_fields';
 function EditTag(props) {
   const tagId = parseInt(props.match.params.id, 10);
 
-  const [tag, setTag, onChange] = useFormHandler({ project_name: '', name: '' });
+  const [tag, setTag, onChange] = useFormHandler({ name: '', active: true, global: false });
   const [errors, setErrors] = useState({});
   const [redirectToReferer, setRedirectToReferer] = useState();
 
@@ -48,7 +48,7 @@ function EditTag(props) {
   function renderFields() {
     if (tagId === tag.id || !tagId) {
       return (
-        <TagFields tag={tag} errors={errors} onChange={onChange} setTag={setTag} />
+        <TagFields tag={tag} errors={errors} onChange={onChange} />
       );
     }
 

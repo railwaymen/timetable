@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-json.extract! tag, :id, :name
+json.extract! tag, :id, :name, :project_id
 json.active tag.kept?
+json.global tag.project_id.nil?
 json.edit tag.work_times.kept.exists?
-json.project do
-  json.name tag.project.name
-  json.id tag.project.id
-end
+json.project_name tag.project&.name

@@ -218,6 +218,9 @@ en:
       closed: Closed
       generate_periods: Generate vacation periods
       edit: Edit vacation period
+    tags:
+      new: New tag
+      global: Global
     projects_distribution:
       add_resource: Add resource
       resource_menu: Resource menu

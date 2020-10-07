@@ -218,6 +218,9 @@ pl:
       closed: Zamknięty
       generate_periods: Generuj okresy urlopowe
       edit: Edycja okresu urlopowego
+    tags:
+      new: Nowy tag
+      global: Globany
     projects_distribution:
       add_resource: Dodaj zasoby
       resource_menu: Menu zasobów

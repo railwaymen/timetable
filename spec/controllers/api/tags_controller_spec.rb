@@ -8,13 +8,10 @@ RSpec.describe Api::TagsController do
   let(:manager) { create(:user, :manager) }
 
   def tag_response(tag)
-    tag.attributes.slice('id', 'name')
-       .merge(active: tag.kept?,
+    tag.attributes.slice('id', 'name', 'project_id')
+       .merge(active: tag.kept?, global: tag.project_id.nil?,
               edit: tag.work_times.kept.exists?,
-              project: {
-                name: tag.project.name,
-                id: tag.project.id
-              })
+              project_name: tag.project&.name)
   end
 
   describe '#index' do
@@ -40,7 +37,7 @@ RSpec.describe Api::TagsController do
           tag1 = create(:tag, :with_project, :discarded)
           tag2 = create(:tag, :with_project)
 
-          expected_json = [tag1, tag2].map do |tag|
+          expected_json = [tag2, tag1].map do |tag|
             tag_response(tag)
           end
 
@@ -85,12 +82,11 @@ RSpec.describe Api::TagsController do
     it 'returns tag' do
       sign_in(manager)
       tag = create(:tag, :with_project)
-      tag_response = tag.slice(:id, :name).merge(active: tag.kept?, project_name: tag.project.name)
 
       get :show, params: { id: tag.id }, as: :json
 
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql(tag_response.to_json)
+      expect(response.body).to be_json_eql(tag_response(tag).to_json)
     end
   end
 
@@ -110,13 +106,26 @@ RSpec.describe Api::TagsController do
       sign_in(manager)
       name = 'test'
       project = create(:project)
-      tag_params = { name: name, project_name: project.name }
+      tag_params = { name: name, project_id: project.id }
 
       post :create, params: { tag: tag_params }, as: :json
 
       expect(response.code).to eql('201')
       tag = Tag.find_by name: name
       expect(tag.project).to eq(project)
+    end
+
+    it 'creates global tag' do
+      sign_in(manager)
+      name = 'test'
+      project = create(:project)
+      tag_params = { name: name, global: true, project_id: project.id }
+
+      post :create, params: { tag: tag_params }, as: :json
+
+      expect(response.code).to eql('201')
+      tag = Tag.find_by name: name
+      expect(tag.project_id).to eq(nil)
     end
   end
 
@@ -136,7 +145,7 @@ RSpec.describe Api::TagsController do
       sign_in(manager)
       tag = create(:tag, :with_project)
       new_name = 'new name'
-      tag_params = { name: new_name, project_name: tag.project.name }
+      tag_params = { name: new_name, project_id: tag.project_id }
 
       put :update, params: { id: tag.id, tag: tag_params }, as: :json
 
@@ -148,12 +157,23 @@ RSpec.describe Api::TagsController do
     it 'changes active' do
       sign_in(manager)
       tag = create(:tag, :with_project)
-      tag_params = { name: tag.name, project_name: tag.project.name, active: false }
+      tag_params = { name: tag.name, project_id: tag.project_id, active: false }
 
       put :update, params: { id: tag.id, tag: tag_params }, as: :json
 
       expect(response.code).to eql('204')
       expect(tag.reload.discarded?).to eql(true)
+    end
+
+    it 'changes global' do
+      sign_in(manager)
+      tag = create(:tag, :with_project)
+      tag_params = { name: tag.name, global: true, project_id: tag.project_id }
+
+      put :update, params: { id: tag.id, tag: tag_params }, as: :json
+
+      expect(response.code).to eql('204')
+      expect(tag.reload.project_id).to eql(nil)
     end
   end
 end

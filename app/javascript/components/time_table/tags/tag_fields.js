@@ -7,7 +7,6 @@ function TagFields(props) {
     tag,
     errors,
     onChange,
-    setTag,
   } = props;
 
   const [availableProjects, setAvailableProjects] = useState([]);
@@ -15,9 +14,7 @@ function TagFields(props) {
   function getAvailableProjects() {
     makeGetRequest({ url: '/api/projects/list' })
       .then((response) => {
-        const projects = response.data.map((project) => (project.name));
-        if (tag.project_name.length < 1) setTag({ ...tag, project_name: projects[0] });
-        setAvailableProjects(projects);
+        setAvailableProjects(response.data);
       });
   }
 
@@ -27,7 +24,7 @@ function TagFields(props) {
 
   function renderProjects() {
     return (
-      availableProjects.map((project) => (<option key={project} value={project}>{project}</option>))
+      availableProjects.map((project) => (<option key={project.id} value={project.id}>{project.name}</option>))
     );
   }
 
@@ -47,11 +44,17 @@ function TagFields(props) {
       <div className="form-group">
         <label>
           {I18n.t('apps.users.user_active')}
-          <input type="checkbox" name="active" checked={tag.active || false} onChange={onChange} />
+          <input type="checkbox" name="active" checked={tag.active} onChange={onChange} />
         </label>
       </div>
       <div className="form-group">
-        <select className="form-control" name="project_name" onChange={onChange} value={tag.project_name || ''}>
+        <label>
+          {I18n.t('apps.tags.global')}
+          <input type="checkbox" name="global" checked={tag.global} onChange={onChange} />
+        </label>
+      </div>
+      <div className="form-group">
+        <select className="form-control" name="project_id" disabled={tag.global} onChange={onChange} value={tag.project_id}>
           {renderProjects()}
         </select>
       </div>
@@ -63,7 +66,6 @@ TagFields.propTypes = {
   tag: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  setTag: PropTypes.func.isRequired,
 };
 
 export default TagFields;

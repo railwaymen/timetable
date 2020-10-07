@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 function Tag(props) {
   const {
-    name, project, id, active, edit,
+    name, project_name, id, active, edit,
   } = props.tag;
 
   function getIconClass() {
@@ -14,7 +14,7 @@ function Tag(props) {
     <tr>
       <td><div className={`circle ${getIconClass()}`} /></td>
       <td>{name}</td>
-      <td>{project.name}</td>
+      <td>{project_name}</td>
       <td>
         {!edit
           && (
