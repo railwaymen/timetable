@@ -21,8 +21,7 @@ module Api
       work_time = build_new_work_time
       authorize work_time
       @work_time = WorkTimeForm.new(work_time: work_time)
-      @work_time.save(work_hours_save_params)
-      increase_work_time(@work_time, @work_time.duration) if @work_time.valid?(context)
+      increase_work_time(@work_time, @work_time.duration) if @work_time.save(work_hours_save_params)
       respond_with @work_time
     end
 
@@ -30,8 +29,7 @@ module Api
       work_time = build_new_work_time
       authorize work_time
       @work_time = WorkTimeFillGapsForm.new(work_time: work_time)
-      saved = @work_time.save(work_hours_save_params)
-      increase_work_time(@work_time, @work_time.saved.sum(&:duration)) if saved
+      increase_work_time(@work_time, @work_time.saved.sum(&:duration)) if @work_time.save(work_hours_save_params)
       respond_with @work_time
     end
 
@@ -42,8 +40,7 @@ module Api
       duration_was = @work_time.duration
       @work_time.updated_by_admin = true if @work_time.user_id != current_user.id && @work_time.changed?
       @work_time = WorkTimeForm.new(work_time: @work_time)
-      @work_time.save(work_hours_save_params)
-      increase_or_decrease_work_time(@work_time, duration_was) if @work_time.valid?(context)
+      increase_or_decrease_work_time(@work_time, duration_was) if @work_time.save(work_hours_save_params)
       respond_with @work_time
     end
 
@@ -52,9 +49,8 @@ module Api
       authorize @work_time
       @work_time.assign_attributes(updated_by_admin: true) if @work_time.user_id != current_user.id
       @work_time.assign_attributes(discarded_at: Time.zone.now)
-      @work_time.save(work_hours_save_params)
+      decrease_work_time(@work_time, @work_time.duration) if @work_time.save(work_hours_save_params)
       UpdateExternalAuthWorker.perform_async(@work_time.project_id, @work_time.external(:task_id), @work_time.id) if @work_time.external(:task_id)
-      decrease_work_time(@work_time, @work_time.duration)
       respond_with @work_time
     end
 
@@ -67,10 +63,6 @@ module Api
     end
 
     private
-
-    def context
-      :user unless current_user.admin?
-    end
 
     def work_hours_save_params
       current_user.admin? ? {} : { context: :user }

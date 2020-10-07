@@ -129,6 +129,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'creates work time' do
       sign_in(user)
       project = create(:project)
+      expect(IncreaseWorkTimeWorker).to receive(:perform_async).with(user_id: user.id, duration: ends_at - starts_at, starts_at: starts_at, ends_at: ends_at, date: starts_at.to_date)
       post :create, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at } }, format: :json
       expect(response.code).to eql('200')
       work_time = user.work_times.first!
@@ -142,6 +143,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       sign_in(admin)
       other_user = create(:user)
       project = create(:project)
+      expect(IncreaseWorkTimeWorker).to receive(:perform_async).with(user_id: other_user.id, duration: ends_at - starts_at, starts_at: starts_at, ends_at: ends_at, date: starts_at.to_date)
       post :create, params: { work_time: { user_id: other_user.id, project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at } }, format: :json
       expect(response.code).to eql('200')
       work_time = other_user.work_times.first!
@@ -162,6 +164,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { nil }
+      expect(IncreaseWorkTimeWorker).not_to receive(:perform_async)
       post :create, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('422')
     end
@@ -177,6 +180,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
       expect(strategy_double).to receive(:integration_payload) { { task_id: 1 } }
       expect(UpdateExternalAuthWorker).to receive(:perform_async)
+      expect(IncreaseWorkTimeWorker).to receive(:perform_async).with(user_id: user.id, duration: ends_at - starts_at, starts_at: starts_at, ends_at: ends_at, date: starts_at.to_date)
       post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, tag_id: tag.id, ends_at: ends_at, task: 'http://example.com' } }, format: :json
       expect(response.code).to eql('200')
     end
@@ -224,6 +228,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'creates correctly when no task in range' do
       sign_in(user)
       project = create(:project)
+      expect(IncreaseWorkTimeWorker).to receive(:perform_async).with(user_id: user.id, duration: ends_at - starts_at, starts_at: starts_at, ends_at: ends_at, date: starts_at.to_date)
       post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at } }, format: :json
       expect(response.code).to eql('200')
       work_time = user.work_times.first!
@@ -236,7 +241,8 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'creates correctly when one task in range' do
       sign_in(user)
       project = create(:project)
-      create(:work_time, user: user, starts_at: starts_at + 30.minutes, ends_at: ends_at - 30.minutes)
+      existing_work_time = create(:work_time, user: user, starts_at: starts_at + 30.minutes, ends_at: ends_at - 30.minutes)
+      expect(IncreaseWorkTimeWorker).to receive(:perform_async).with(user_id: user.id, duration: (ends_at - starts_at) - existing_work_time.duration, starts_at: starts_at, ends_at: ends_at, date: starts_at.to_date)
       expect do
         post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at } }, format: :json
       end.to change(user.work_times, :count).by(2)
@@ -385,6 +391,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'destroys work time' do
       sign_in(user)
       work_time = create(:work_time, user: user)
+      expect(DecreaseWorkTimeWorker).to receive(:perform_async).with(duration: work_time.duration, date: work_time.starts_at.to_date, user_id: work_time.user_id)
       delete :destroy, params: { id: work_time.id }, format: :json
       expect(response.code).to eql('204')
       expect(work_time.reload.discarded?).to be true
@@ -394,6 +401,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'destroys work time as admin' do
       sign_in(admin)
       work_time = create(:work_time)
+      expect(DecreaseWorkTimeWorker).to receive(:perform_async).with(duration: work_time.duration, date: work_time.starts_at.to_date, user_id: work_time.user_id)
       delete :destroy, params: { id: work_time.id }, format: :json
       expect(response.code).to eql('204')
       expect(work_time.reload.discarded?).to be true
@@ -404,6 +412,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     it 'does not allow to destroy work time older that 3 business days for regular user' do
       sign_in(user)
       work_time = create(:work_time, starts_at: 10.days.ago.beginning_of_day + 8.hours, ends_at: 10.days.ago.beginning_of_day + 10.hours, user: user)
+      expect(DecreaseWorkTimeWorker).not_to receive(:perform_async)
       delete :destroy, params: { id: work_time.id }, format: :json
       expect(response.code).to eql('422')
       expect(response.body).to include_json({ error: :too_old }.to_json).at_path('errors/starts_at')
