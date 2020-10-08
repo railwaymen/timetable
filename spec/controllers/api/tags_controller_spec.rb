@@ -27,7 +27,7 @@ RSpec.describe Api::TagsController do
       get :index, as: :json
 
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql([tag_response(tag)].to_json)
+      expect(response.body).to be_json_eql({ total_pages: 1, records: [tag_response(tag)] }.to_json)
     end
 
     describe 'filters' do
@@ -37,9 +37,12 @@ RSpec.describe Api::TagsController do
           tag1 = create(:tag, :with_project, :discarded)
           tag2 = create(:tag, :with_project)
 
-          expected_json = [tag2, tag1].map do |tag|
-            tag_response(tag)
-          end
+          expected_json = {
+            total_pages: 1,
+            records: [tag2, tag1].map do |tag|
+              tag_response(tag)
+            end
+          }
 
           get :index, params: { filter: 'all' }, as: :json
 
@@ -55,7 +58,7 @@ RSpec.describe Api::TagsController do
 
           get :index, params: { filter: 'active' }, as: :json
 
-          expect(response.body).to be_json_eql([tag_response(tag)].to_json)
+          expect(response.body).to be_json_eql({ total_pages: 1, records: [tag_response(tag)] }.to_json)
         end
       end
 
@@ -67,7 +70,19 @@ RSpec.describe Api::TagsController do
 
           get :index, params: { filter: 'inactive' }, as: :json
 
-          expect(response.body).to be_json_eql([tag_response(tag)].to_json)
+          expect(response.body).to be_json_eql({ total_pages: 1, records: [tag_response(tag)] }.to_json)
+        end
+      end
+
+      context 'query' do
+        it 'return all matching records by name' do
+          sign_in admin
+          tag = create(:tag, name: 'Foo')
+          create(:tag, name: 'Bar')
+
+          get :index, params: { query: 'Fo' }, as: :json
+
+          expect(response.body).to be_json_eql({ total_pages: 1, records: [tag_response(tag)] }.to_json)
         end
       end
     end

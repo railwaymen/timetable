@@ -7,6 +7,7 @@ function TagFields(props) {
     tag,
     errors,
     onChange,
+    setTag,
   } = props;
 
   const [availableProjects, setAvailableProjects] = useState([]);
@@ -14,6 +15,7 @@ function TagFields(props) {
   function getAvailableProjects() {
     makeGetRequest({ url: '/api/projects/list' })
       .then((response) => {
+        setTag({ ...tag, project_id: response.data[0].id });
         setAvailableProjects(response.data);
       });
   }
@@ -66,6 +68,7 @@ TagFields.propTypes = {
   tag: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
+  setTag: PropTypes.func.isRequired,
 };
 
 export default TagFields;

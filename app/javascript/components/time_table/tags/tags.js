@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import Pagination from '@components/shared/pagination';
+import { locationParams, replaceLocationParams } from '@components/shared/helpers';
 import { Helmet } from 'react-helmet';
 import { NavLink } from 'react-router-dom';
 import Tag from './tag';
 
 function Tags() {
-  const [tags, setTags] = useState([]);
+  const params = locationParams();
+  const currentPage = parseInt(params.page, 10) || 1;
+  const [page, setPage] = useState(currentPage);
+  const [query, setQuery] = useState('');
+
+  const [tags, setTags] = useState({ total_pages: 0, records: [] });
   const [visibility, setVisibility] = useState('active');
 
-  function getUsers() {
-    fetch(`/api/tags?filter=${visibility}`)
+  function getTags() {
+    fetch(`/api/tags?page=${page}&filter=${visibility}&query=${query}`)
       .then((response) => response.json())
       .then((data) => {
         setTags(data);
@@ -16,8 +23,9 @@ function Tags() {
   }
 
   useEffect(() => {
-    getUsers();
-  }, [visibility]);
+    getTags();
+    replaceLocationParams({ page });
+  }, [page, visibility, query]);
 
   return (
     <>
@@ -39,6 +47,14 @@ function Tags() {
           <option value="inactive">{I18n.t('common.inactive')}</option>
           <option value="all">{I18n.t('common.all')}</option>
         </select>
+        <input
+          type="text"
+          className="form-control"
+          placeholder={I18n.t('apps.tags.search')}
+          name="query"
+          onChange={(e) => setQuery(e.target.value)}
+          value={query}
+        />
       </div>
       <table className="table table-striped">
         <thead>
@@ -50,9 +66,10 @@ function Tags() {
           </tr>
         </thead>
         <tbody>
-          { tags.map((tag) => <Tag key={tag.id} tag={tag} />) }
+          { tags.records.map((tag) => <Tag key={tag.id} tag={tag} />) }
         </tbody>
       </table>
+      <Pagination page={page} setPage={setPage} totalPages={tags.total_pages} />
     </>
   );
 }

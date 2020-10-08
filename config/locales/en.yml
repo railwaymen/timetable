@@ -221,6 +221,7 @@ en:
     tags:
       new: New tag
       global: Global
+      search: Search by name
     projects_distribution:
       add_resource: Add resource
       resource_menu: Resource menu
@@ -451,6 +452,10 @@ en:
               combined_reports_exist: Report cannot be deleted because is used in a combined report
             name:
               blank: Name is required
+        tag:
+          attributes:
+            name:
+              taken: Name is already taken
   activemodel:
     errors:
       models:

@@ -1,3 +1,6 @@
 # frozen_string_literal: true
 
-json.partial! 'tag', collection: @tags, as: :tag
+json.call(@tags, :total_pages)
+json.records do
+  json.partial! 'tag', collection: @tags, as: :tag
+end

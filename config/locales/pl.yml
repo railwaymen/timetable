@@ -221,6 +221,7 @@ pl:
     tags:
       new: Nowy tag
       global: Globany
+      search: Szukaj po nazwie
     projects_distribution:
       add_resource: Dodaj zasoby
       resource_menu: Menu zasobów
@@ -502,6 +503,10 @@ pl:
               combined_reports_exist: Nie można usunąć raportu, ponieważ jest użyty w raporcie łączonym
             name:
               blank: Nazwa jest wymagana
+        tag:
+          attributes:
+            name:
+              taken: Ta nazwa jest już zajęta
   activemodel:
     errors:
       models:

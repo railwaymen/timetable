@@ -48,7 +48,7 @@ function EditTag(props) {
   function renderFields() {
     if (tagId === tag.id || !tagId) {
       return (
-        <TagFields tag={tag} errors={errors} onChange={onChange} />
+        <TagFields tag={tag} errors={errors} onChange={onChange} setTag={setTag} />
       );
     }
 
