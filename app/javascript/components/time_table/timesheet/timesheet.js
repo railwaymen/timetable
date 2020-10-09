@@ -1,6 +1,5 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import _ from 'lodash';
 import Entry from './entry';
 import EntryHistory from './history/entry_history';
 import * as Api from '../../shared/api';
@@ -17,6 +16,7 @@ class Timesheet extends React.Component {
 
     this.state = {
       projects: [],
+      lastProject: null,
       tags: [],
       requestsLocked: false,
       globalTags: [],
@@ -42,7 +42,10 @@ class Timesheet extends React.Component {
   }
 
   setLastProject(project) {
-    if (!_.isEmpty(project)) this.entry.paste({ project });
+    if (!this.state.lastProject) {
+      this.setState({ lastProject: project });
+      this.entry.paste({ project });
+    }
   }
 
   pushEntry(object) {

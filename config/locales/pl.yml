@@ -29,8 +29,6 @@ pl:
       project: Projekt
       note: Notatka
       update: Aktualizacja
-      developers: Deweloperzy
-      testers: Testerzy
       color: Kolor
       active: Aktywny
       filter_active: Aktywne
@@ -144,7 +142,6 @@ pl:
       button_disabled_tooltip: Tworzenie kont zablokowane. Automatyczne tworzenie poprzez logowanie LDAP.
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
       new: Nowe konto
-      position: Pozycja
       department: Dział
     external_auths:
       authorized: Zewnętrzne autoryzacje

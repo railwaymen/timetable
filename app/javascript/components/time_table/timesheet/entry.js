@@ -144,7 +144,7 @@ class Entry extends React.Component {
       if (!this.state.project.autofill) {
         Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' });
       }
-      if (this.lastProject && this.state.project.lunch) {
+      if (this.lastProject && (this.state.project.lunch || this.state.project.accounting)) {
         newState.project = this.lastProject;
         newState.project_id = this.lastProject.id;
       }

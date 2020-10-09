@@ -29,8 +29,6 @@ en:
       project: Project
       note: Note
       update: Update
-      developers: Developers
-      testers: Testers
       color: Color
       active: Active
       filter_active: Active
@@ -144,7 +142,6 @@ en:
       button_disabled_tooltip: Account creation disabled. Automatic creation with LDAP login.
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
       new: New account
-      position: Position
       department: Department
     external_auths:
       authorized: External authorizations
