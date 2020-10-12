@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import moment from 'moment';
+import { locationParams, replaceLocationParams } from '@components/shared/helpers';
 import Entry from './entry';
 import EntryHistory from './entry_history';
+import { makeGetRequest } from '../../shared/api';
 import * as Api from '../../shared/api';
 
 function Vacations() {
   const [vacationsInfo, setVacationsInfo] = useState({ vacations: [], availableVacationDays: 0, usedVacationDays: {} });
   const [selectedYear, setSelectedYear] = useState(parseInt(moment().year(), 10));
-  const [selectedUser, setSelectedUser] = useState(window.currentUser);
+  const params = locationParams();
+  const userId = parseInt(params.user_id, 10) || currentUser.id;
+  const [user, setUser] = useState({ id: userId });
 
   function getVacations() {
-    let url = `/api/vacations?year=${selectedYear}`;
-    if (window.currentUser.staff_manager) { url += `&user_id=${selectedUser.id}`; }
+    const url = `/api/vacations?year=${selectedYear}&user_id=${user.id}`;
     Api.makeGetRequest({ url })
       .then((response) => {
         const vacationsInfoResponse = {
@@ -24,9 +27,21 @@ function Vacations() {
       });
   }
 
+  function getUser() {
+    makeGetRequest({ url: `/api/users/${user.id}` })
+      .then((userResponse) => {
+        setUser(userResponse.data);
+      });
+  }
+
+  useEffect(() => {
+    getUser();
+  }, [user.id]);
+
   useEffect(() => {
     getVacations();
-  }, [selectedYear, selectedUser]);
+    replaceLocationParams({ user_id: user.id });
+  }, [selectedYear, user]);
 
   return (
     <div className="container-fluid vacation-entry">
@@ -34,8 +49,15 @@ function Vacations() {
         <title>{I18n.t('common.vacations')}</title>
       </Helmet>
       <div className="row">
-        <Entry selectedUser={selectedUser} setSelectedUser={setSelectedUser} getVacations={getVacations} />
-        <EntryHistory vacationsInfo={vacationsInfo} selectedYear={selectedYear} setSelectedYear={setSelectedYear} getVacations={getVacations} />
+        <Entry user={user} setUser={setUser} getVacations={getVacations} />
+        <EntryHistory
+          vacationsInfo={vacationsInfo}
+          user={user}
+          setUser={setUser}
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+          getVacations={getVacations}
+        />
       </div>
     </div>
   );

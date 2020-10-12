@@ -453,6 +453,7 @@ en:
           attributes:
             name:
               taken: Name is already taken
+              blank: Name is required
   activemodel:
     errors:
       models:

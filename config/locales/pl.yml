@@ -504,6 +504,7 @@ pl:
           attributes:
             name:
               taken: Ta nazwa jest już zajęta
+              blank: Nazwa jest wymagana
   activemodel:
     errors:
       models:

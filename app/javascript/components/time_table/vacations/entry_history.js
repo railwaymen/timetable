@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import UserSlider from '@components/shared/user_slider';
 import PropTypes from 'prop-types';
+
 import * as Api from '../../shared/api';
 
 function EntryHistory(props) {
   const {
-    vacationsInfo, selectedYear, setSelectedYear, getVacations,
+    vacationsInfo, selectedYear, setSelectedYear, getVacations, user, setUser,
   } = props;
   const { vacations, availableVacationDays, usedVacationDays } = vacationsInfo;
   const [usedVacationsExpanded] = useState(false);
@@ -125,6 +127,9 @@ function EntryHistory(props) {
       <div className="row mx-0 my-3">
         <UsedVacationDays />
       </div>
+      {currentUser.admin && (
+        <UserSlider user={user} setUserId={(id) => setUser({ id })} />
+      )}
       <div className="row mx-0">
         <div className="vacations w-100">
           <table>
@@ -143,6 +148,8 @@ EntryHistory.propTypes = {
   selectedYear: PropTypes.number.isRequired,
   setSelectedYear: PropTypes.func.isRequired,
   getVacations: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  setUser: PropTypes.func.isRequired,
 };
 
 export default EntryHistory;
