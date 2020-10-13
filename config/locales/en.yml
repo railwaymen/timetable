@@ -45,6 +45,7 @@ en:
       external_integration_help: Enable JIRA integration which logs work time in tickets
       external_id_help: This value can be found on projects list in column 'key' i.e. SH
     milestones:
+      progress: Progress
       add: New Milestone
       import_from_jira: Import from JIRA
       import_in_progress: Import from JIRA in progress ...

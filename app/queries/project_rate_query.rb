@@ -4,7 +4,7 @@ require_relative 'querable'
 
 class ProjectRateQuery
   UserStats = Struct.new(:id, :first_name, :last_name, :total, keyword_init: true)
-  ProjectStats = Struct.new(:project_id, :name, :users, :color, :total, :leader_first_name, :leader_last_name, keyword_init: true)
+  ProjectStats = Struct.new(:project_id, :name, :users, :color, :total, :leader_first_name, :leader_last_name, :leader_id, :discarded_at, keyword_init: true)
   include Querable
 
   def initialize(starts_at: 30.days.ago, ends_at: Time.zone.now.end_of_day)
@@ -24,7 +24,8 @@ class ProjectRateQuery
   private
 
   def project_stats(record)
-    ProjectStats.new(record.slice('project_id', 'name', 'color', 'leader_first_name', 'leader_last_name').merge(total: record['total_for_project'], users: []))
+    ProjectStats.new(record.slice('project_id', 'name', 'color', 'leader_first_name', 'leader_last_name', 'leader_id', 'discarded_at')
+                .merge(total: record['total_for_project'], users: []))
   end
 
   def sanitized_sql
@@ -37,6 +38,7 @@ class ProjectRateQuery
       SELECT DISTINCT ON (projects.id, work_times.user_id, total_for_user, total_for_project)
         work_times.id AS id,
         projects.id AS project_id,
+        projects.discarded_at AS discarded_at,
         projects.color,
         projects.name,
         SUM(work_times.duration) OVER(PARTITION BY work_times.user_id, projects) AS total_for_user,
@@ -45,6 +47,7 @@ class ProjectRateQuery
         users.first_name AS user_first_name,
         users.last_name AS user_last_name,
         leaders.first_name AS leader_first_name,
+        leaders.id as leader_id,
         leaders.last_name AS leader_last_name
       FROM projects
       LEFT JOIN work_times ON projects.id = work_times.project_id

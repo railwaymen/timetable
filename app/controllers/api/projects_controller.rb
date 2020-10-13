@@ -11,12 +11,20 @@ module Api
     end
 
     def list
+      range = params[:range].presence_in(valid_days) || 30
       action = params[:display].presence_in(visiblity_list) || 'active'
-      @projects = projects_scope.filter_by action.to_sym
+      @project_stats = ProjectRateQuery.new(starts_at: range.to_i.days.ago,
+                                            ends_at: Time.zone.now.end_of_day)
+                                        .results
     end
 
     def simple
       @projects = Project.order(:internal, :name)
+    end
+
+    def current_milestones
+      @milestones = Milestones::CurrentQuery.new(project_ids: params[:projects]).results
+      respond_with @milestones
     end
 
     def with_tags

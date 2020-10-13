@@ -7,6 +7,7 @@ import Project from './project';
 function ProjectsList() {
   const [projects, setProjects] = useState([]);
   const [visibility, setVisibility] = useState('active');
+  const [milestones, setMilestones] = useState([]);
 
   function getProjects() {
     Api.makeGetRequest({ url: `/api/projects/list?display=${visibility}` })
@@ -15,9 +16,25 @@ function ProjectsList() {
       });
   }
 
+  function getCurrentMilestones() {
+    const projectIds = projects.map(p => p.id)
+    Api.makeGetRequest({ url: `/api/projects/current_milestones?projects=${projectIds}` })
+      .then((response) => {
+        setMilestones(response.data);
+      });
+  }
+
+  useEffect(() => {
+    if (projects.length > 0) getCurrentMilestones();
+  }, [projects]);
+
   useEffect(() => {
     getProjects();
   }, [visibility]);
+
+  function findMilestone(project_id) {
+    return milestones.find(a => a.project_id === project_id);
+  }
 
   return (
     <>
@@ -46,18 +63,20 @@ function ProjectsList() {
           </select>
         </div>
       </div>
-      <table className="table table-striped">
+      <table className="table">
         <thead>
           <tr>
             <th />
             <th>{I18n.t('apps.projects.name')}</th>
             <th>{I18n.t('apps.projects.leader')}</th>
+            <th>{I18n.t('common.people')}</th>
+            <th>{I18n.t('apps.milestones.progress')}</th>
             <th />
           </tr>
         </thead>
         <tbody>
           { projects.map((project) => (
-            <Project key={project.id} project={project} />
+            <Project key={project.id} project={project} milestone={findMilestone(project.id)} />
           )) }
         </tbody>
       </table>

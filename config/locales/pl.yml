@@ -45,6 +45,7 @@ pl:
       external_integration_help: Włącza integracje z JIRA która loguje czas pracy w zadaniach
       external_id_help: Wartość tą można znaleźć na liście projektów JIRA w kolumnie "key" np. SH
     milestones:
+      progress: Postęp
       add: Nowy etap
       import_from_jira: Importuj z JIRA
       import_in_progress: Trwa import z JIRA ...
