@@ -140,22 +140,20 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
     click_link('Projects')
     expect(page).to have_content('Rank')
-    expect(page).to have_selector('select')
-    expect(page).to have_selector('select > option', count: 3)
     expect(page).to have_selector('.projects-cards > .project-card', count: 1)
 
     aggregate_failures 'properly filter' do
-      find('select > option', text: 'Last 60 days').click
+      find('select[name=range] > option', text: 'Last 60 days').click
       expect(page).to have_selector('.projects-cards > .project-card', count: 2)
     end
 
     aggregate_failures 'properly filter' do
-      find('select > option', text: 'Last 90 days').click
+      find('select[name=range] > option', text: 'Last 90 days').click
       expect(page).to have_selector('.projects-cards > .project-card', count: 3)
     end
 
     aggregate_failures 'properly filter' do
-      find('select > option', text: 'Last 30 days').click
+      find('select[name=range] > option', text: 'Last 30 days').click
       expect(page).to have_selector('.projects-cards > .project-card', count: 1)
     end
 
@@ -165,12 +163,12 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     end
 
     aggregate_failures 'projects listing - inactive' do
-      find('select > option', text: 'Inactive').click
+      find('select[name=visibility] > option', text: 'Inactive').click
       expect(page).to have_selector('tbody > tr', count: 1)
     end
 
     aggregate_failures 'projects listing - all' do
-      find('select > option', text: 'All').click
+      find('select[name=visibility] > option', text: 'All').click
       expect(page).to have_selector('tbody > tr', count: 4)
     end
   end

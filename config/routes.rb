@@ -59,6 +59,7 @@ Rails.application.routes.draw do
         get :synchronize, on: :member
         get :file, on: :member
       end
+      get :current_milestones, on: :collection
       get :list, on: :collection
       get :simple, on: :collection
       get :with_tags, on: :collection

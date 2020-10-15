@@ -6,17 +6,20 @@ module Api
     before_action :authenticate_admin_or_manager_or_leader!, only: %i[show create update]
 
     def index
-      range = params[:range].presence_in(valid_days) || 30
-      @project_stats = ProjectRateQuery.new(starts_at: range.to_i.days.ago, ends_at: Time.zone.now.end_of_day).results
+      @project_stats = ProjectRateQuery.new(project_query_params).results
     end
 
     def list
-      action = params[:display].presence_in(visiblity_list) || 'active'
-      @projects = projects_scope.filter_by action.to_sym
+      @project_stats = ProjectRateQuery.new(project_query_params).results
     end
 
     def simple
       @projects = Project.order(:internal, :name)
+    end
+
+    def current_milestones
+      @milestones = Milestones::CurrentQuery.new(project_ids: params[:projects]).results
+      respond_with @milestones
     end
 
     def with_tags
@@ -69,12 +72,14 @@ module Api
 
     private
 
-    def visiblity_list
-      %w[all inactive active]
-    end
-
-    def valid_days
-      %w[30 60 90]
+    def project_query_params
+      range = params[:range].presence_in(%w[30 60 90])
+      visibility = params[:display].presence_in(%w[all inactive active]) || 'active'
+      type = params[:type].presence_in(%w[commercial internal all]) || 'all'
+      sort = params[:sort].presence_in(%w[hours alphabetical]) || 'hours'
+      base_params = { visibility: visibility, type: type, sort: sort }
+      return base_params.merge(starts_at: nil, ends_at: nil) if range.nil?
+      return base_params.merge(starts_at: range.to_i.days.ago, ends_at: Time.zone.now.end_of_day) if range.present?
     end
 
     def resolve_from_to_dates
@@ -97,10 +102,6 @@ module Api
           current_user.projects.find(params[:id])
         end
       end
-    end
-
-    def projects_scope
-      @projects_scope ||= Project.includes(:leader).order(name: :asc)
     end
   end
 end

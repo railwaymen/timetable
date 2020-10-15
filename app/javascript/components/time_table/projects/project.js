@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import { formattedDuration } from '../../shared/helpers';
 
 function Project(props) {
+  const [showUsers, setShowUsers] = useState(false);
+
   function renderButtons() {
     if (currentUser.canManageProject(props.project)) {
       return (
@@ -25,6 +28,25 @@ function Project(props) {
     return project.name;
   }
 
+  function renderMilestoneBar() {
+    const { milestone } = props;
+    if (milestone == null) return null;
+
+    const estimatedValue = milestone.total_estimate ? milestone.total_estimate : 1;
+    const percentage = !milestone.work_times_duration ? 0 : (milestone.work_times_duration / estimatedValue) * 100;
+    return (
+      <div className="row">
+        <div className="col-2">{formattedDuration(milestone.work_times_duration)}</div>
+        <div className="col-8">
+          <div className="progress">
+            <div className="progress-bar" role="progressbar" style={{ width: `${percentage}%` }} />
+          </div>
+        </div>
+        <div className="col-2">{formattedDuration(milestone.total_estimate)}</div>
+      </div>
+    );
+  }
+
   const { project } = props;
 
   return (
@@ -32,6 +54,17 @@ function Project(props) {
       <td />
       <td>{renderProjectName()}</td>
       <td>{project.leader ? `${project.leader.first_name} ${project.leader.last_name}` : ''}</td>
+      <td onMouseEnter={() => setShowUsers(true)} onMouseLeave={() => setShowUsers(false)}>
+        {project.users.length}
+        {showUsers && (
+          <div className="project-users">
+            {project.users.map((user) => <p className="m-2" key={user.id}>{`${user.first_name} ${user.last_name}`}</p>)}
+          </div>
+        )}
+      </td>
+      <td>
+        {renderMilestoneBar()}
+      </td>
       <td>
         <div className="ui buttons">
           {renderButtons()}
