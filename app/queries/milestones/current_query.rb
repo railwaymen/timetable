@@ -20,7 +20,7 @@ module Milestones
       sanitize_array [raw, { q: @project_ids.split(',') }]
     end
 
-    def raw # rubocop:disable Metrics/MethodLength
+    def raw
       <<~SQL
         SELECT DISTINCT ON(milestones.project_id) milestones.*,
           sum(work_times.duration) as work_times_duration

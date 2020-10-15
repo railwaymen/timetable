@@ -44,6 +44,13 @@ pl:
       new: Nowy projekt
       external_integration_help: Włącza integracje z JIRA która loguje czas pracy w zadaniach
       external_id_help: Wartość tą można znaleźć na liście projektów JIRA w kolumnie "key" np. SH
+      sort:
+        hours: Sortuj według godzin
+        alphabetical: Sortuj alfabetycznie
+      type:
+        commercial: Komercyjne
+        internal: Wewnętrzne
+        all: Wszystkie
     milestones:
       progress: Postęp
       add: Nowy etap

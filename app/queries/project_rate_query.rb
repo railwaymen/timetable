@@ -7,15 +7,20 @@ class ProjectRateQuery
   ProjectStats = Struct.new(:project_id, :name, :users, :color, :total, :leader_first_name, :leader_last_name, :leader_id, :discarded_at, keyword_init: true)
   include Querable
 
-  def initialize(starts_at: 30.days.ago, ends_at: Time.zone.now.end_of_day)
+  def initialize(starts_at: nil, ends_at: nil, visibility: 'all', type: 'all', sort: 'hours')
     @starts_at = starts_at
     @ends_at   = ends_at
+    @type = type
+    @visibility = visibility
+    @sort = sort
   end
 
   def results
     project_stats = []
     execute_sql(sanitized_sql).each do |record|
       project_stat = project_stats.find { |p| p.project_id == record['project_id'] } || project_stats.push(project_stats(record)).last
+      next if record['user_id'].nil?
+
       project_stat.users.push UserStats.new(id: record['user_id'], first_name: record['user_first_name'], last_name: record['user_last_name'], total: record['total_for_user'])
     end
     project_stats
@@ -32,10 +37,34 @@ class ProjectRateQuery
     sanitize_array [raw, @starts_at, @ends_at]
   end
 
+  def range_condition
+    sanitize_array ['AND starts_at >= ? AND ends_at <= ?', @starts_at, @ends_at] if @starts_at.present? && @ends_at.present?
+  end
+
+  def type_condition
+    return "AND projects.internal = 'f'" if @type == 'commercial'
+    return "AND projects.internal = 't'" if @type == 'internal'
+  end
+
+  def visibility_condition
+    return 'AND projects.discarded_at IS NULL' if @visibility == 'active'
+    return 'AND projects.discarded_at IS NOT NULL' if @visibility == 'inactive'
+  end
+
+  def distinct_phrase
+    return 'DISTINCT ON (projects.id, work_times.user_id, total_for_user, total_for_project)' if @sort == 'hours'
+    return 'DISTINCT ON (projects.name)' if @sort == 'alphabetical'
+  end
+
+  def sort_phrase
+    return 'ORDER BY total_for_project DESC NULLS LAST, total_for_user DESC' if @sort == 'hours'
+    return 'ORDER BY projects.name ASC' if @sort == 'alphabetical'
+  end
+
   # rubocop:disable Metrics/MethodLength
   def raw
     %(
-      SELECT DISTINCT ON (projects.id, work_times.user_id, total_for_user, total_for_project)
+      SELECT #{distinct_phrase}
         work_times.id AS id,
         projects.id AS project_id,
         projects.discarded_at AS discarded_at,
@@ -51,13 +80,14 @@ class ProjectRateQuery
         leaders.last_name AS leader_last_name
       FROM projects
       LEFT JOIN work_times ON projects.id = work_times.project_id
-      INNER JOIN users ON users.id = work_times.user_id
-      LEFT  JOIN users leaders ON leaders.id = projects.leader_id
-      WHERE projects.discarded_at IS NULL
-        AND starts_at >= ? AND ends_at <= ?
-        AND projects.internal = 'f'
-        AND work_times.discarded_at IS NULL
-      ORDER BY total_for_project DESC, total_for_user DESC
+      LEFT JOIN users ON users.id = work_times.user_id
+      LEFT JOIN users leaders ON leaders.id = projects.leader_id
+      WHERE
+        work_times.discarded_at IS NULL
+        #{visibility_condition}
+        #{range_condition}
+        #{type_condition}
+      #{sort_phrase}
     )
   end
   # rubocop:enable Metrics/MethodLength

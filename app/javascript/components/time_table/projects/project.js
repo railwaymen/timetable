@@ -29,12 +29,12 @@ function Project(props) {
   }
 
   function renderMilestoneBar() {
-    const { milestone } = props
-    if(milestone == null) return null
+    const { milestone } = props;
+    if (milestone == null) return null;
 
     const estimatedValue = milestone.total_estimate ? milestone.total_estimate : 1;
     const percentage = !milestone.work_times_duration ? 0 : (milestone.work_times_duration / estimatedValue) * 100;
-    return(
+    return (
       <div className="row">
         <div className="col-2">{formattedDuration(milestone.work_times_duration)}</div>
         <div className="col-8">
@@ -44,7 +44,7 @@ function Project(props) {
         </div>
         <div className="col-2">{formattedDuration(milestone.total_estimate)}</div>
       </div>
-    )
+    );
   }
 
   const { project } = props;
@@ -54,12 +54,13 @@ function Project(props) {
       <td />
       <td>{renderProjectName()}</td>
       <td>{project.leader ? `${project.leader.first_name} ${project.leader.last_name}` : ''}</td>
-      <td onMouseEnter={() => setShowUsers(true)} onMouseLeave={()=> setShowUsers(false)}>{project.users.length}
-        {showUsers &&
+      <td onMouseEnter={() => setShowUsers(true)} onMouseLeave={() => setShowUsers(false)}>
+        {project.users.length}
+        {showUsers && (
           <div className="project-users">
-            {project.users.map((user) => <p className='m-2' key={user.id}>{`${user.first_name} ${user.last_name}`}</p>)}
+            {project.users.map((user) => <p className="m-2" key={user.id}>{`${user.first_name} ${user.last_name}`}</p>)}
           </div>
-        }
+        )}
       </td>
       <td>
         {renderMilestoneBar()}

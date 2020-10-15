@@ -3,21 +3,27 @@ import { NavLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import * as Api from '../../shared/api';
 import Project from './project';
+import RangeFilter from './range_filter';
+import TypeFilter from './type_filter';
+import SortOptions from './sort_options';
 
 function ProjectsList() {
   const [projects, setProjects] = useState([]);
   const [visibility, setVisibility] = useState('active');
   const [milestones, setMilestones] = useState([]);
+  const [range, setRange] = useState('');
+  const [sort, setSort] = useState('hours');
+  const [type, setType] = useState('all');
 
   function getProjects() {
-    Api.makeGetRequest({ url: `/api/projects/list?display=${visibility}` })
+    Api.makeGetRequest({ url: `/api/projects/list?display=${visibility}&range=${range}&type=${type}&sort=${sort}` })
       .then((response) => {
         setProjects(response.data);
       });
   }
 
   function getCurrentMilestones() {
-    const projectIds = projects.map(p => p.id)
+    const projectIds = projects.map((p) => p.id);
     Api.makeGetRequest({ url: `/api/projects/current_milestones?projects=${projectIds}` })
       .then((response) => {
         setMilestones(response.data);
@@ -30,10 +36,10 @@ function ProjectsList() {
 
   useEffect(() => {
     getProjects();
-  }, [visibility]);
+  }, [visibility, range, type, sort]);
 
   function findMilestone(project_id) {
-    return milestones.find(a => a.project_id === project_id);
+    return milestones.find((a) => a.project_id === project_id);
   }
 
   return (
@@ -61,6 +67,15 @@ function ProjectsList() {
             <option value="inactive">{I18n.t('apps.projects.filter_inactive')}</option>
             <option value="all">{I18n.t('apps.projects.filter_all')}</option>
           </select>
+        </div>
+        <div className="btn-group pull-left">
+          <RangeFilter range={range} setRange={setRange} />
+        </div>
+        <div className="btn-group pull-left">
+          <TypeFilter type={type} setType={setType} />
+        </div>
+        <div className="btn-group pull-left">
+          <SortOptions sort={sort} setSort={setSort} />
         </div>
       </div>
       <table className="table">
