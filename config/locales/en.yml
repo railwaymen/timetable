@@ -8,6 +8,7 @@ en:
       manufacturer: Manufacturer
       model: Model
       serial_number: Serial Number
+      no_user: Without user
       field:
         add_new: Add field
         name: Name

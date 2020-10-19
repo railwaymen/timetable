@@ -6,7 +6,7 @@ import Errors from './errors';
 import translateErrors from '../../shared/translate_errors';
 import useFormHandler from '../../../hooks/use_form_handler';
 
-const CreateHardware = ({ updateHardwareList }) => {
+const CreateHardware = ({ updateHardwareList, selectedUser }) => {
   const [hardware, setHardware, onChange] = useFormHandler({
     type: '',
     manufacturer: '',
@@ -17,7 +17,7 @@ const CreateHardware = ({ updateHardwareList }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const hardwareWithId = { ...hardware, user_id: currentUser.id };
+    const hardwareWithId = { ...hardware, user_id: selectedUser.id };
     makePostRequest({ url: '/api/hardwares', body: { hardware: hardwareWithId } }).then((response) => {
       updateHardwareList(response.data);
       setHardware({
@@ -104,5 +104,6 @@ const CreateHardware = ({ updateHardwareList }) => {
 
 CreateHardware.propTypes = {
   updateHardwareList: PropTypes.func.isRequired,
+  selectedUser: PropTypes.object.isRequired,
 };
 export default CreateHardware;

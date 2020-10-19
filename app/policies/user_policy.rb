@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class UserPolicy < ApplicationPolicy
+  def index?
+    user.admin? || user.manager? || user.hardware_manager?
+  end
+
   def permitted_attributes
     user.admin? ? admin_params : params
   end

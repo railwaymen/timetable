@@ -18,7 +18,7 @@
   <% end %>
 </head>
 <body>
-  <script>window.currentUser = JSON.parse('<%= raw current_user.to_json %>')</script>
+  <script>window.currentUser = JSON.parse('<%= raw render(template: "api/users/_app_user") if current_user %>')</script>
   <%= yield %>
 </body>
 </html>

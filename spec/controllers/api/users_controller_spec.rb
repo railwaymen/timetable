@@ -28,8 +28,9 @@ RSpec.describe Api::UsersController do
 
     it 'authenticates user' do
       sign_in(user)
-      get :index, as: :json
-      expect(response.code).to eql('403')
+      expect do
+        get :index, as: :json
+      end.to raise_error(Pundit::NotAuthorizedError)
     end
 
     it 'returns users' do

@@ -8,6 +8,7 @@ pl:
       manufacturer: Producent
       model: Model
       serial_number: Numer seryjny
+      no_user: Bez użytkownika
       field:
         add_new: Dodaj pole
         name: Nazwa
