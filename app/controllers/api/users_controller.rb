@@ -4,9 +4,9 @@ module Api
   class UsersController < Api::BaseController
     before_action :authenticate_notself, only: [:update]
     before_action :authenticate_admin!, except: %i[index show update]
-    before_action :authenticate_admin_or_manager!, only: %i[index]
 
     def index
+      authorize User
       action = params[:filter].presence_in(visiblity_list) || 'active'
       @users = User.includes(:tags).order(Arel.sql('contract_name::bytea ASC')).filter_by(action.to_sym)
       @users = @users.reorder(:last_name) if params.key?(:staff)

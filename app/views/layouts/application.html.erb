@@ -19,6 +19,7 @@
   <% end %>
 </head>
 <body>
+  <script>window.currentUser = JSON.parse('<%= raw render(template: "api/users/_app_user") %>')</script>
   <%= yield %>
 </body>
 </html>

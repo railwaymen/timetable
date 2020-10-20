@@ -9,9 +9,9 @@ const HardwareList = () => {
   const [hardwareList, setHardwareList] = useState([]);
   const [users, setUsers] = useState([]);
   const emptyUser = {
-    accounting_name: `${I18n.t('apps.staff.choose')} ${I18n.t('apps.staff.user')}`, id: 0, active: true,
+    accounting_name: I18n.t('apps.hardware.no_user'), id: '', active: true,
   };
-  const [selectedUser, setSelectedUser] = useState(emptyUser);
+  const [selectedUser, setSelectedUser] = useState(currentUser);
 
   useEffect(() => {
     if (currentUser.isHardwareManager()) {
@@ -25,7 +25,7 @@ const HardwareList = () => {
   }, []);
 
   useEffect(() => {
-    const url = selectedUser.id === 0 ? '/api/hardwares' : `/api/hardwares?user_id=${selectedUser.id}`;
+    const url = selectedUser.id === '' ? '/api/hardwares' : `/api/hardwares?user_id=${selectedUser.id}`;
     makeGetRequest({ url }).then((response) => {
       setHardwareList(response.data);
     });
@@ -43,9 +43,7 @@ const HardwareList = () => {
 
   function FilterUsers(filter) {
     const lowerFilter = filter.toLowerCase();
-    return _.filter(users, (u) => (
-      u.active && (`${u.first_name} ${u.last_name}`.toLowerCase().match(lowerFilter) || `${u.last_name} ${u.first_name}`.toLowerCase().match(lowerFilter))
-    ));
+    return _.filter(users, (u) => u.accounting_name.toLowerCase().match(lowerFilter));
   }
 
   function RenderSelectedUser(currentlySelectedUser) {
@@ -93,7 +91,7 @@ const HardwareList = () => {
 
   return (
     <>
-      <CreateHardware updateHardwareList={updateHardwareList} />
+      <CreateHardware updateHardwareList={updateHardwareList} selectedUser={selectedUser} />
       <UserFilter />
       <div className="row">
         {hardwareList.map((hardware) => (
@@ -102,6 +100,7 @@ const HardwareList = () => {
             user_name={hardware.user_name}
             onDelete={onDelete}
             hardware={hardware}
+            users={users}
             fields={hardware.fields || []}
           />
         ))}
