@@ -111,12 +111,6 @@ RSpec.describe Api::TagsController do
       expect(response.code).to eql('401')
     end
 
-    it 'authorizes admin' do
-      sign_in(user)
-      post :create, as: :json
-      expect(response.code).to eql('403')
-    end
-
     it 'creates tag as manager' do
       sign_in(manager)
       name = 'test'
@@ -148,12 +142,6 @@ RSpec.describe Api::TagsController do
     it 'authenticates user' do
       put :update, params: { id: 1 }, as: :json
       expect(response.code).to eql('401')
-    end
-
-    it 'authorizes admin' do
-      sign_in(user)
-      put :update, params: { id: 1 }, as: :json
-      expect(response.code).to eql('403')
     end
 
     it 'updates user as manager' do

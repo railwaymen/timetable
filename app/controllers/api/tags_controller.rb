@@ -2,9 +2,8 @@
 
 module Api
   class TagsController < Api::BaseController
-    before_action :authenticate_admin_or_manager!
-
     def index
+      authorize Tag
       action = params[:filter].presence_in(visiblity_list) || 'active'
       @tags = Tag.filter_by(action.to_sym)
                  .left_joins(:project)
@@ -14,6 +13,7 @@ module Api
     end
 
     def create
+      authorize Tag
       @tag = Tag.new(name: tag_params[:name], project_id: tag_params[:project_id])
       @tag.project_id = nil if tag_params[:global]
       @tag.save
@@ -21,6 +21,7 @@ module Api
     end
 
     def show
+      authorize Tag
       respond_with tag
     end
 
