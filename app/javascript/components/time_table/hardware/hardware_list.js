@@ -43,9 +43,7 @@ const HardwareList = () => {
 
   function FilterUsers(filter) {
     const lowerFilter = filter.toLowerCase();
-    return _.filter(users, (u) => (
-      u.active && (`${u.first_name} ${u.last_name}`.toLowerCase().match(lowerFilter) || `${u.last_name} ${u.first_name}`.toLowerCase().match(lowerFilter))
-    ));
+    return _.filter(users, (u) => u.accounting_name.toLowerCase().match(lowerFilter));
   }
 
   function RenderSelectedUser(currentlySelectedUser) {
@@ -102,6 +100,7 @@ const HardwareList = () => {
             user_name={hardware.user_name}
             onDelete={onDelete}
             hardware={hardware}
+            users={users}
             fields={hardware.fields || []}
           />
         ))}

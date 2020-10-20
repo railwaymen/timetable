@@ -1,17 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
+import Dropdown from '../../shared/dropdown';
 import TypesSelect from './types_select';
 import Errors from './errors';
 import useFormHandler from '../../../hooks/use_form_handler';
 
 const EditHardware = ({
-  errors, onEdit, onSave, hardware,
+  errors, onEdit, onSave, hardware, users,
 }) => {
   const [stateHardware, , onChange] = useFormHandler(hardware);
+  const [selectedUser, setSelectedUser] = useState(users.find((u) => u.id === hardware.user_id));
+
+  function FilterUsers(filter) {
+    const lowerFilter = filter.toLowerCase();
+    return _.filter(users, (u) => u.accounting_name.toLowerCase().match(lowerFilter));
+  }
+
+  function RenderSelectedUser(currentlySelectedUser) {
+    return (
+      <div>
+        <b>
+          {currentlySelectedUser.accounting_name}
+        </b>
+      </div>
+    );
+  }
+
+  function RenderUsersList(user, currentlySelectedUser) {
+    return (
+      <div>
+        {user.id === currentlySelectedUser.id ? (
+          <b>
+            {user.accounting_name}
+          </b>
+        ) : user.accounting_name}
+      </div>
+    );
+  }
 
   const onSubmit = (e) => {
     e.preventDefault();
-    onSave(stateHardware);
+    return currentUser.isHardwareManager() ? onSave({ ...stateHardware, user_id: selectedUser.id }) : onSave(stateHardware);
   };
   return (
     <div className="col-md-6">
@@ -72,6 +102,21 @@ const EditHardware = ({
               {errors.serialNumber
               && <Errors errors={errors.serialNumber} />}
             </div>
+            {currentUser.isHardwareManager() && (
+              <div className="form-group">
+                <label className="font-weight-bold">
+                  {I18n.t('common.user')}
+                </label>
+                <Dropdown
+                  objects={users}
+                  updateObject={(currentlySelectedUser) => setSelectedUser(currentlySelectedUser)}
+                  selectedObject={selectedUser}
+                  filterObjects={FilterUsers}
+                  renderSelectedObject={RenderSelectedUser}
+                  renderObjectsList={RenderUsersList}
+                />
+              </div>
+            )}
             <hr />
             <div className="btn-group">
               <button

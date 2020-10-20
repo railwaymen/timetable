@@ -6,7 +6,9 @@ import { makePutRequest } from '../../shared/api';
 import translateErrors from '../../shared/translate_errors';
 import Errors from './errors';
 
-const Hardware = ({ hardware, onDelete, fields }) => {
+const Hardware = ({
+  hardware, onDelete, fields, users,
+}) => {
   const [edit, setEdit] = useState(false);
   const [errors, setErrors] = useState({});
   const [stateHardware, setStateHardware] = useState(hardware);
@@ -113,6 +115,7 @@ const Hardware = ({ hardware, onDelete, fields }) => {
         onEdit={onEdit}
         errors={errors}
         onSave={onSave}
+        users={users}
         hardware={stateHardware}
       />
     );
