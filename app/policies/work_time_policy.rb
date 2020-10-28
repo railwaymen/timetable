@@ -27,13 +27,15 @@ class WorkTimePolicy < ApplicationPolicy
   end
 
   def permitted_update_attributes
-    %i[
+    params = %i[
       body
       task
       tag_id
       starts_at
       ends_at
     ]
+    params = params.concat(%i[project_id]) if user.admin?
+    params
   end
 
   alias destroy? update?

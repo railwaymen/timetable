@@ -22,6 +22,9 @@ Object.assign(window.currentUser, {
   isStaffManager() {
     return this.admin || this.staff_manager;
   },
+  isAdmin() {
+    return this.admin;
+  },
   fullName() {
     return `${this.first_name} ${this.last_name}`;
   },
