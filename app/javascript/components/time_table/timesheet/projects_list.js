@@ -33,7 +33,7 @@ class ProjectsList extends React.Component {
             onKeyPress={this.handleKeyPress}
             type="button"
           >
-            <div className="circular-label" style={{ background: `#${project.color}` }} />
+            {this.props.includeColors && (<div className="circular-label" style={{ background: `#${project.color}` }} />)}
             {(this.props.currentProject && (project.id === this.props.currentProject.id)) ? <b>{project.name}</b> : project.name}
           </button>
         )) }
@@ -45,6 +45,7 @@ class ProjectsList extends React.Component {
 ProjectsList.propTypes = {
   projects: PropTypes.array,
   currentProject: PropTypes.object,
+  includeColors: PropTypes.bool,
 };
 
 export default ProjectsList;

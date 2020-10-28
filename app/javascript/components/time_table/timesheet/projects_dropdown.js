@@ -93,7 +93,7 @@ class ProjectsDropdown extends React.Component {
   filterProjects(filter = this.state.filter) {
     const lowerFilter = filter.toLowerCase();
     return _.filter(this.props.projects, (p) => (
-      p.active && p.name.toLowerCase().match(escape(lowerFilter))
+      p.name.toLowerCase().match(escape(lowerFilter))
     ));
   }
 
@@ -118,19 +118,20 @@ class ProjectsDropdown extends React.Component {
         currentIndex={this.state.currentIndex}
         currentProject={this.props.selectedProject}
         onChangeProject={this.onChangeProject}
+        includeColors={this.props.includeColors}
       />
     );
   }
 
   render() {
     const { isExpanded, filter } = this.state;
-    const { selectedProject } = this.props;
+    const { selectedProject, placeholder, includeColors } = this.props;
 
     return (
       <div className="dropdown" style={{ minWidth: '90px' }}>
         <input type="hidden" name="project" value="12" />
         <input
-          placeholder="Project"
+          placeholder={placeholder}
           onFocus={this.expandDropdown}
           ref={this.searchRef}
           className="form-control input-search"
@@ -139,11 +140,10 @@ class ProjectsDropdown extends React.Component {
           autoComplete="off"
           tabIndex="0"
           onChange={this.onFilterChange}
-          id="search-input"
           onKeyDown={this.onKeyDown}
         />
         <div className={`text active ${(isExpanded ? 'hidden' : '')}`} style={{ background: `#${selectedProject.color}` }} onClick={this.expandDropdown}>
-          <div className="circular empty label ui" style={{ background: `#${selectedProject.color}` }} />
+          {includeColors && (<div className="circular empty label ui" style={{ background: `#${selectedProject.color}` }} />)}
           {selectedProject.name}
         </div>
         {isExpanded && this.renderProjectsList()}
@@ -155,6 +155,12 @@ class ProjectsDropdown extends React.Component {
 ProjectsDropdown.propTypes = {
   projects: PropTypes.array,
   selectedProject: PropTypes.object,
+  placeholder: PropTypes.string,
+  includeColors: PropTypes.bool,
+};
+
+ProjectsDropdown.defaultProps = {
+  includeColors: false,
 };
 
 export default ProjectsDropdown;

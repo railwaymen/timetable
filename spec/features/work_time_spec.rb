@@ -23,19 +23,19 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   def create_task(message, from, to)
     within('#content') do
       fill_in 'What have you done ?', with: message
-      find('.project-dropdown #search-input').click
+      find('.project-dropdown input').click
       find('.project-dropdown .dropdown-item:nth-child(1)').click
       find('#start').click
       fill_in 'start', with: from
       find('#end').click
       fill_in 'end', with: to
       fill_in 'task', with: 'www.example.com/task1'
-      find('.custom-tags input').click
-      find('.custom-tags input + div:last-child').click
+      find('.tag-container input').click
+      find('.tag-container .dropdown-item:nth-child(1)').click
     end
 
-    find(:css, '.dropdown div.text').click
-    find(:css, '.dropdown-menu.show > .dropdown-item:last-child').click
+    find(:css, '.project-dropdown div.text').click
+    find(:css, '.project-dropdown .dropdown-menu.show > .dropdown-item:last-child').click
     page.find('#content button.btn-success', text: 'Save').click
 
     expect(page).to have_content message

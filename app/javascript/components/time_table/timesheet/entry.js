@@ -5,7 +5,6 @@ import DatePicker from 'react-datepicker';
 import _ from 'lodash';
 import URI from 'urijs';
 import ErrorTooltip from '@components/shared/error_tooltip';
-import Autocomplete from 'react-autocomplete';
 import ProjectsDropdown from './projects_dropdown';
 import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
@@ -44,7 +43,7 @@ class Entry extends React.Component {
       durationHours: '00:00',
       date: moment().format('DD/MM/YYYY'),
       combinedTags: [],
-      tag: '',
+      tag: {},
       errors: [],
     };
 
@@ -139,7 +138,7 @@ class Entry extends React.Component {
       const newState = {
         body: '',
         task: '',
-        tag: 'dev',
+        tag: {},
       };
       if (!this.state.project.autofill) {
         Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' });
@@ -175,7 +174,7 @@ class Entry extends React.Component {
       project_id: object.project.id,
       task: object.task,
       combinedTags: (object.project.tags || []).concat(this.props.globalTags),
-      tag: object.tag || 'dev',
+      tag: object.tag || {},
     });
   }
 
@@ -219,8 +218,8 @@ class Entry extends React.Component {
     });
   }
 
-  selectTag(value) {
-    this.setState((state) => ({ tag: state.combinedTags.find((tag) => tag.name === value) }));
+  selectTag(tag) {
+    this.setState({ tag });
   }
 
   updateProject(project, focusPreviousInput) {
@@ -330,11 +329,17 @@ class Entry extends React.Component {
                   </div>
                 )}
               </div>
-              <div className="col-sm-4 col-md-2 project">
+              <div className="col-sm-4 col-md-2 project-container">
                 <div className="project-dropdown">
                   {errors.projectId && <ErrorTooltip errors={errors.projectId} />}
                   <div>
-                    <ProjectsDropdown updateProject={this.updateProject} selectedProject={this.state.project} projects={this.props.projects} />
+                    <ProjectsDropdown
+                      includeColors
+                      placeholder={I18n.t('apps.timesheet.select_project')}
+                      updateProject={this.updateProject}
+                      selectedProject={this.state.project}
+                      projects={this.props.projects}
+                    />
                   </div>
                 </div>
               </div>
@@ -391,22 +396,14 @@ class Entry extends React.Component {
               </div>
             </div>
             { (project.taggable || project.tags_enabled) && (
-            <div className="form-group custom-tags">
-              <Autocomplete
-                inputProps={{ className: 'form-control', placeholder: I18n.t('common.tags') }}
-                wrapperStyle={{ width: '100%' }}
-                getItemValue={(item) => item.name}
-                renderItem={(item, isHighlighted) => (
-                  <div key={item.id} style={{ background: isHighlighted ? 'lightgray' : 'white', padding: '10px' }}>
-                    {item.name}
-                  </div>
-                )}
-                name="tag"
-                items={combinedTags}
-                value={tag.name}
-                onSelect={this.selectTag}
-              />
-            </div>
+              <div className="col-sm-4 col-md-2 tag-container">
+                <ProjectsDropdown
+                  placeholder={I18n.t('apps.timesheet.select_tag')}
+                  updateProject={this.selectTag}
+                  selectedProject={tag}
+                  projects={combinedTags}
+                />
+              </div>
             )}
             <div className="form-actions bg-white btn-group">
               <button

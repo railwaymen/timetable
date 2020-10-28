@@ -16,7 +16,6 @@
     "popper.js": "^1.16.1",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
-    "react-autocomplete": "^1.8.1",
     "react-big-scheduler": "0.2.6",
     "react-datepicker": "^1.7.0",
     "react-dnd": "5.0.0",

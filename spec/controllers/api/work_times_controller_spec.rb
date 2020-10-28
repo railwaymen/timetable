@@ -13,18 +13,15 @@ RSpec.describe Api::WorkTimesController, type: :controller do
   let(:starts_at) { Time.zone.now.beginning_of_day + 2.hours }
   let(:ends_at) { Time.zone.now.beginning_of_day + 4.hours }
 
-  def work_time_response(work_time) # rubocop:disable Metrics/MethodLength
+  def work_time_response(work_time)
     work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'tag_id', 'user_id')
              .merge(task_preview: task_preview_helper(work_time.task), editable: !work_time.project.accounting?)
              .merge(date: work_time.starts_at.to_date,
                     tag: work_time.tag.name,
-                    project: { name: work_time.project.name,
-                               color: work_time.project.color,
-                               lunch: work_time.project.lunch,
-                               accounting: work_time.project.accounting?,
-                               count_duration: work_time.project.count_duration,
-                               taggable: work_time.project.tags_enabled?,
-                               work_times_allows_task: work_time.project.work_times_allows_task })
+                    project: work_time.project.attributes.slice('name', 'color', 'lunch', 'internal', 'count_duration', 'work_times_allows_task').merge(
+                      accounting: work_time.project.accounting?,
+                      taggable: work_time.project.tags_enabled?
+                    ))
   end
 
   describe '#index' do

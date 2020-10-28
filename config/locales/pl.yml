@@ -127,6 +127,7 @@ pl:
       task_url: Url taska
       select_month: Wybierz miesiąc
       select_project: Wybierz projekt
+      select_tag: Wybierz tag
       required_duration_until_end_of_day: Wymagany czas pracy do końca dnia (dotyczy tylko pracowników etatowych)
       required_duration_until_end_of_month: Wymagany czas pracy do końca miesiąca (dotyczy tylko pracowników etatowych)
       work_time: Czas pracy
