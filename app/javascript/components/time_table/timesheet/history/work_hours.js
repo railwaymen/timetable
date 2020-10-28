@@ -410,7 +410,7 @@ class WorkHours extends React.Component {
                 {editing && this.renderBodyEditable()}
               </div>
               <div className="project-container">
-                {editing && currentUser.isAdmin() && workHours.project.internal ? (
+                {editing && currentUser.isAdmin() && workHours.project.internal && !workHours.project.accounting ? (
                   <div className="project-dropdown">
                     <ProjectsDropdown updateProject={this.updateProject} selectedProject={workHours.project} projects={internalProjects} />
                   </div>

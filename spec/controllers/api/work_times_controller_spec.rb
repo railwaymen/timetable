@@ -16,13 +16,10 @@ RSpec.describe Api::WorkTimesController, type: :controller do
     work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'tag', 'user_id')
              .merge(task_preview: task_preview_helper(work_time.task), editable: !work_time.project.accounting?)
              .merge(date: work_time.starts_at.to_date,
-                    project: { name: work_time.project.name,
-                               color: work_time.project.color,
-                               lunch: work_time.project.lunch,
-                               accounting: work_time.project.accounting?,
-                               count_duration: work_time.project.count_duration,
-                               taggable: work_time.project.tags_enabled?,
-                               work_times_allows_task: work_time.project.work_times_allows_task })
+                    project: work_time.project.attributes.slice('name', 'color', 'lunch', 'internal', 'count_duration', 'work_times_allows_task').merge(
+                      accounting: work_time.project.accounting?,
+                      taggable: work_time.project.tags_enabled?
+                    ))
   end
 
   describe '#index' do
@@ -53,31 +50,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
 
       aggregate_failures 'display data for own project' do
         expected_work_times_json = [
-          {
-            id: work_time.id,
-            updated_by_admin: work_time.updated_by_admin,
-            project_id: work_time.project_id,
-            starts_at: work_time.starts_at,
-            ends_at: work_time.ends_at,
-            duration: work_time.duration,
-            body: work_time.body,
-            task: work_time.task,
-            tag: work_time.tag,
-            task_preview: task_preview_helper(work_time.task),
-            user_id: work_time.user_id,
-            editable: !work_time.project.accounting?,
-            project: {
-              id: work_time.project.id,
-              name: work_time.project.name,
-              color: work_time.project.color,
-              accounting: work_time.project.accounting?,
-              work_times_allows_task: work_time.project.work_times_allows_task,
-              lunch: work_time.project.lunch,
-              count_duration: work_time.project.count_duration,
-              taggable: work_time.project.tags_enabled?
-            },
-            date: work_time.starts_at.to_date
-          }
+          work_time_response(work_time)
         ].to_json
 
         get :index, params: { user_id: worker.id, project_id: belonged_project.id }, format: :json
@@ -93,31 +66,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
 
       aggregate_failures 'correctly displays own data' do
         expected_user_work_times_json = [
-          {
-            id: user_work_time.id,
-            updated_by_admin: user_work_time.updated_by_admin,
-            project_id: user_work_time.project_id,
-            starts_at: user_work_time.starts_at,
-            ends_at: user_work_time.ends_at,
-            duration: user_work_time.duration,
-            body: user_work_time.body,
-            task: user_work_time.task,
-            tag: work_time.tag,
-            task_preview: task_preview_helper(work_time.task),
-            user_id: user_work_time.user_id,
-            editable: !work_time.project.accounting?,
-            project: {
-              id: user_work_time.project.id,
-              name: user_work_time.project.name,
-              color: user_work_time.project.color,
-              accounting: work_time.project.accounting?,
-              work_times_allows_task: work_time.project.work_times_allows_task,
-              lunch: work_time.project.lunch,
-              count_duration: work_time.project.count_duration,
-              taggable: work_time.project.tags_enabled?
-            },
-            date: user_work_time.starts_at.to_date
-          }
+          work_time_response(user_work_time)
         ].to_json
 
         get :index, params: { project_id: project.id }, format: :json
