@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import ErrorTooltip from '@components/shared/error_tooltip';
 import ModalButton from '@components/shared/modal_button';
+import ProjectsDropdown from '../projects_dropdown';
 import * as Api from '../../../shared/api';
 import TagsDropdown from '../tags_dropdown';
 import { defaultDatePickerProps, formattedHoursAndMinutes, inclusiveParse } from '../../../shared/helpers';
@@ -37,6 +38,7 @@ class WorkHours extends React.Component {
     this.recountTime = this.recountTime.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onTagChange = this.onTagChange.bind(this);
+    this.updateProject = this.updateProject.bind(this);
 
     this.state = {
       workHours: this.props.workHours,
@@ -262,6 +264,17 @@ class WorkHours extends React.Component {
     }
   }
 
+  updateProject(project) {
+    this.setState((prevState) => ({
+      workHours: {
+        ...prevState.workHours,
+        project,
+      },
+    }), () => {
+      this.saveWorkHours();
+    });
+  }
+
   toggleTagEdit() {
     const { tagEditable } = this.state;
 
@@ -303,6 +316,7 @@ class WorkHours extends React.Component {
       body: workHours.body,
       task: workHours.task,
       tag: workHours.tag,
+      project_id: workHours.project.id,
       starts_at: workHours.starts_at,
       ends_at: workHours.ends_at,
     };
@@ -378,6 +392,8 @@ class WorkHours extends React.Component {
       workHours, editing, errors, tagEditable,
     } = this.state;
 
+    const internalProjects = this.props.projects.filter((p) => p.internal === true && !p.accounting);
+
     return (
       <div className={`time-entries-list-container ${!_.isEmpty(errors) ? 'has-error' : ''}`}>
         { Object.values(errors).map((error) => (<ErrorTooltip key={error} errors={error} />)) }
@@ -394,9 +410,15 @@ class WorkHours extends React.Component {
                 {editing && this.renderBodyEditable()}
               </div>
               <div className="project-container">
-                <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
-                  {workHours.project.name}
-                </span>
+                {editing && currentUser.isAdmin() ? (
+                  <div className="project-dropdown">
+                    <ProjectsDropdown updateProject={this.updateProject} selectedProject={workHours.project} projects={internalProjects} />
+                  </div>
+                ) : (
+                  <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
+                    {workHours.project.name}
+                  </span>
+                )}
               </div>
               { workHours.project.taggable && (
               <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>
