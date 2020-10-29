@@ -186,6 +186,7 @@ pl:
       expand_used_days: Rozwiń użyte dni urlopu
       fold_used_days: Zwiń użyte dni urlopu
     staff:
+      all: Wszystkie
       general: Ogólne
       filter: Filtruj
       csv_export: Export .csv

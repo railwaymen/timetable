@@ -186,6 +186,7 @@ en:
       expand_used_days: Expand used vacation days
       fold_used_days: Fold used vacation days
     staff:
+      all: Wszystkie
       general: General
       filter: Filter
       csv_export: Export .csv
