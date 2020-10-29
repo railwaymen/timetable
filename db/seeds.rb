@@ -9,3 +9,5 @@ Project.where(name: 'Lunch').first_or_create! internal: true, lunch: true
 Project.where(name: 'Vacation').first_or_create! internal: true, vacation: true, autofill: true
 Project.where(name: 'ZKS').first_or_create! internal: true, booked: true, autofill: true
 
+Tag.where(name: 'dev').first_or_initialize.update!(use_as_default: true)
+

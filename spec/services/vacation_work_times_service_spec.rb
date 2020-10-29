@@ -14,6 +14,7 @@ RSpec.describe VacationWorkTimesService do
     end
 
     it 'returns nil when there are work times in vacation range' do
+      create(:tag, :default)
       vacation = create(:vacation)
       create(:project, :vacation)
       create(:work_time, user: vacation.user, starts_at: vacation.start_date + 8.hours, ends_at: vacation.start_date + 12.hours)
@@ -22,6 +23,7 @@ RSpec.describe VacationWorkTimesService do
     end
 
     it 'creates work times for given vacation' do
+      create(:tag, :default)
       vacation = create(:vacation, start_date: Time.current.beginning_of_day, end_date: Time.current.beginning_of_day + 7.days)
       create(:project, :vacation)
       work_times_count = vacation.start_date.business_days_until(vacation.end_date + 1.day)

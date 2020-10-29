@@ -174,7 +174,7 @@ class Entry extends React.Component {
       project_id: object.project.id,
       task: object.task,
       combinedTags: (object.project.tags || []).concat(this.props.globalTags),
-      tag: object.tag || {},
+      tag: object.tag || this.findDefaultTag(),
     });
   }
 

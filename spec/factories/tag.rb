@@ -11,5 +11,9 @@ FactoryBot.define do
     trait :discarded do
       discarded_at { Time.zone.now }
     end
+
+    trait :default do
+      use_as_default { true }
+    end
   end
 end

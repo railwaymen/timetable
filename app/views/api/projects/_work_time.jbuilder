@@ -7,7 +7,7 @@ json.ends_at work_time.ends_at
 json.duration work_time.duration
 json.body sanitize(work_time.body)
 json.task sanitize(work_time.task)
-json.tag work_time.tag&.name
+json.tag work_time.tag.name
 json.task_preview sanitize(task_preview_helper(work_time.task))
 json.user_name work_time.user.name
 json.date work_time.starts_at.to_date

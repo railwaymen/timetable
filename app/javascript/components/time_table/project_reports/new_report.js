@@ -163,8 +163,7 @@ export default class NewReport extends React.Component {
               {this.state.userRoles.map((user) => (
                 <tr key={user.id}>
                   <td>
-                    {user.first_name}
-                    {user.last_name}
+                    {`${user.first_name} ${user.last_name}`}
                   </td>
                   <td>
                     <select className="form-control" value={user.role || ''} onChange={(e) => this.onFieldChange(e, 'role', user.id)}>

@@ -9,7 +9,7 @@ json.duration work_time.duration
 json.date work_time.date
 json.body sanitize(work_time.body)
 json.task sanitize(work_time.task)
-json.tag work_time.tag&.name
+json.tag work_time.tag.name
 json.task_preview sanitize(task_preview_helper(work_time.task))
 json.user_id work_time.user_id
 json.editable current_user.admin? || !work_time.project.accounting?

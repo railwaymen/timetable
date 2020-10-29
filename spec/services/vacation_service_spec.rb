@@ -19,6 +19,7 @@ RSpec.describe VacationService do
 
   describe '#approve' do
     it 'returns error when thera are work times entries in vacation range' do
+      create(:tag, :default)
       create(:project, :vacation)
       vacation = create(:vacation)
       create(:work_time, user: vacation.user, starts_at: vacation.start_date.beginning_of_day, ends_at: vacation.start_date.beginning_of_day + 8.hours)
@@ -29,6 +30,7 @@ RSpec.describe VacationService do
     end
 
     it 'returns error when there is already vacation interaction' do
+      create(:tag, :default)
       create(:project, :vacation)
       vacation = create(:vacation)
       create(:vacation_interaction, user: staff_manager, vacation: vacation, action: :accepted)
@@ -37,6 +39,7 @@ RSpec.describe VacationService do
     end
 
     it 'returns error when user did not select vacation_sub_type for others vacations' do
+      create(:tag, :default)
       create(:project, :vacation)
       create(:project, :booked)
       vacation = create(:vacation, description: 'Description', vacation_type: :others)
@@ -46,6 +49,7 @@ RSpec.describe VacationService do
 
     context 'when current user can manage staff and is staff manager' do
       it 'accepts vacation, creates vacation work times, creates vacation interaction, creates event, deletes previous opposite vacation interaction' do
+        create(:tag, :default)
         create(:project, :vacation)
 
         vacation = create(:vacation, start_date: Time.current.to_date, end_date: Time.current.to_date + 7.days,
@@ -228,6 +232,7 @@ RSpec.describe VacationService do
       end
 
       it 'when vacation is declined, user declines vacation, vacation has been accepted by other staff manager' do
+        create(:tag, :default)
         vacation = create(:vacation, status: :declined)
         create(:project, :vacation)
         staff_manager1 = create(:user, :staff_manager)

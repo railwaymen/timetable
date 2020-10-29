@@ -215,7 +215,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
         strategy_double = double('strategy')
         allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
         expect(strategy_double).to receive(:integration_payload) { jira_payload }
-        post :create, params: { work_time: { project_id: project.id, body: body, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com/TO-1' } }, format: :json
+        post :create, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com/TO-1' } }, format: :json
         expect(response.code).to eql('200')
       end
     end

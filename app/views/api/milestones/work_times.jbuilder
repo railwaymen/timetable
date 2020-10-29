@@ -2,7 +2,7 @@
 
 json.array! @work_times do |work_time|
   json.extract! work_time, :id, :starts_at, :ends_at, :duration, :date
-  json.tag work_time.tag&.name
+  json.tag work_time.tag.name
   json.body sanitize(work_time.body)
   json.task sanitize(work_time.task)
   json.department work_time.user.department
