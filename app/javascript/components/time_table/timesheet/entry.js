@@ -138,7 +138,7 @@ class Entry extends React.Component {
       const newState = {
         body: '',
         task: '',
-        tag: {},
+        tag: this.findDefaultTag(),
       };
       if (!this.state.project.autofill) {
         Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' });

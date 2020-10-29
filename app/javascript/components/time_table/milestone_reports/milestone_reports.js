@@ -34,16 +34,18 @@ function MilestoneReports() {
   const prevRangeType = usePrevious(rangeType);
 
   function setChartDates(data) {
-    let newFromDate = selectedMilestone?.starts_on;
-    let newToDate = selectedMilestone?.ends_on;
-    if (data.length > 0) {
-      newFromDate = moment(data[0].starts_at);
-      newToDate = moment(data[data.length - 1].ends_at);
-      newFromDate = newFromDate.isBefore(selectedMilestone.starts_on) ? newFromDate.formatDate() : selectedMilestone.starts_on;
-      newToDate = newToDate.isAfter(selectedMilestone.ends_on) ? newToDate.formatDate() : selectedMilestone.ends_on;
+    if (selectedMilestone !== null) {
+      let newFromDate = selectedMilestone?.starts_on;
+      let newToDate = selectedMilestone?.ends_on;
+      if (data.length > 0) {
+        newFromDate = moment(data[0].starts_at);
+        newToDate = moment(data[data.length - 1].ends_at);
+        newFromDate = newFromDate.isBefore(selectedMilestone.starts_on) ? newFromDate.formatDate() : selectedMilestone.starts_on;
+        newToDate = newToDate.isAfter(selectedMilestone.ends_on) ? newToDate.formatDate() : selectedMilestone.ends_on;
+      }
+      setToDate(newToDate);
+      setFromDate(newFromDate);
     }
-    setToDate(newToDate);
-    setFromDate(newFromDate);
   }
 
   function getWorkTimes() {

@@ -13,7 +13,7 @@ class WorkTime < ApplicationRecord
   before_validation :assign_duration
   before_save :delete_spaces, :assign_date
 
-  validates :project_id, :starts_at, :ends_at, presence: true
+  validates :project_id, :tag_id, :starts_at, :ends_at, presence: true
   validates :duration, numericality: { greater_than: 0 }, unless: :project_zero?
   validates :starts_at, :ends_at, overlap: { scope: 'user_id', query_options: { kept: nil }, exclude_edges: %i[starts_at ends_at] }
   validate :validates_time, on: :user

@@ -24,7 +24,7 @@ module Api
 
     def with_tags
       @global_tags = Tag.where(project_id: nil)
-      @projects = Project.kept.order(:internal, :name).left_joins(:tags).where.not(name: 'Vacation')
+      @projects = Project.kept.order(:internal, :name).includes(:tags).where.not(name: 'Vacation')
       @projects = @projects.where.not(name: 'ZKS') unless current_user.admin?
     end
 
