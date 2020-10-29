@@ -422,7 +422,9 @@ export default class EditReport extends React.Component {
           <table className="table">
             <thead>
               <tr>
-                <th>Tag</th>
+                <th>
+                  {I18n.t('common.tag')}
+                </th>
                 <th>
                   {I18n.t('common.task')}
                 </th>
@@ -532,7 +534,16 @@ export default class EditReport extends React.Component {
             <thead>
               <tr>
                 <th>
+                  {I18n.t('common.tag')}
+                </th>
+                <th>
                   {I18n.t('common.task')}
+                </th>
+                <th>
+                  {I18n.t('common.type')}
+                </th>
+                <th>
+                  {I18n.t('common.labels')}
                 </th>
                 <th>
                   {I18n.t('common.description')}
@@ -550,11 +561,20 @@ export default class EditReport extends React.Component {
             </thead>
             <tbody>
               {times.map(({
-                id, task, duration, owner, description, cost,
+                id, task, duration, owner, description, tag, integration_payload, cost,
               }) => (
                 <tr key={id}>
+                  <td><TagPill tag={tag} bold={false} /></td>
                   <td>
                     {task && <a href={task} target="_blank" rel="noopener noreferrer">{task}</a>}
+                  </td>
+                  <td>
+                    {extractIntegrationPayload(integration_payload).type}
+                  </td>
+                  <td>
+                    {(extractIntegrationPayload(integration_payload).labels || []).map((label) => (
+                      <span key={label} className="badge badge-pill badge-primary">{label}</span>
+                    ))}
                   </td>
                   <td>{description}</td>
                   <td>{owner}</td>

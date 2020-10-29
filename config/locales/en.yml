@@ -247,6 +247,7 @@ en:
         update_assignment: '{{user}} updated assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
         delete_assignment: '{{user}} deleted assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
   common:
+    tag: Tag
     back: Back
     expand: Expand
     lock: "Lock"

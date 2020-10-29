@@ -13,29 +13,8 @@
   padding: 5px 9px;
   margin-right: 10px;
   border-radius: 15px;
-  border: 3px solid currentColor;
-  background-color: #519EC3;
   &.bolded {
     font-weight: 700;
-  }
-  &.ui, &.im {
-    @include tag-color( #AA913A );
-  }
-  &.cc {
-    @include tag-color( #75105F );
-  }
-  &.res {
-    @include tag-color( #589930 );
-  }
-  &.dev {
-    @include tag-color( #519EC3 );
-  }
-  &.various {
-    @include tag-color( black );
-  }
-  &:hover, &.selected {
-    color: white;
-    border-color: transparent;
   }
 }
   

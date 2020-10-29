@@ -247,6 +247,7 @@ pl:
         update_assignment: '{{user}} zaktualizował zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
         delete_assignment: '{{user}} usunął zasób {{resource}} przypisany do projektu {{project}} od {{start}} do {{end}}'
   common:
+    tag: Tag
     back: Wróć
     expand: "Rozwiń"
     lock: "Zablokuj"
