@@ -23,14 +23,14 @@ module Vacations
       <<-SQL
         (
           (
-            (starts_at::date BETWEEN :start_date::date AND :end_date::date) AND
+            (starts_at BETWEEN :start_date AND :end_date) AND
             (
               (extract(hour from "starts_at") BETWEEN (extract(hour from TIMESTAMP :start_date)) AND '24') OR
               (extract(hour from "starts_at") BETWEEN '0' AND (extract(hour from TIMESTAMP :end_date)))
             )
           ) OR
           (
-            (ends_at::date BETWEEN :start_date::date AND :end_date::date) AND
+            (ends_at BETWEEN :start_date AND :end_date) AND
             (
               (extract(hour from "ends_at") BETWEEN (extract(hour from TIMESTAMP :start_date)) AND '24') OR
               (extract(hour from "ends_at") BETWEEN '0' AND (extract(hour from TIMESTAMP :end_date)))
