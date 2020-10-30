@@ -9,6 +9,7 @@ module Api
                  .left_joins(:project)
                  .order(created_at: :desc).page(params[:page]).per(params[:per_page] || 24)
       @tags.where!('tags.name ILIKE ?', "%#{params[:query]}%") if params[:query].present?
+      @tags.where!(project_id: params[:project_id]) if params[:project_id].present?
       respond_with @tags
     end
 

@@ -13,9 +13,19 @@ function Tags() {
 
   const [tags, setTags] = useState({ total_pages: 0, records: [] });
   const [visibility, setVisibility] = useState('active');
+  const [projectId, setProjectId] = useState('');
+  const [projects, setProjects] = useState([]);
+
+  function getProjects() {
+    fetch('/api/projects/simple')
+      .then((response) => response.json())
+      .then((data) => {
+        setProjects(data);
+      });
+  }
 
   function getTags() {
-    fetch(`/api/tags?page=${page}&filter=${visibility}&query=${query}`)
+    fetch(`/api/tags?page=${page}&filter=${visibility}&query=${query}&project_id=${projectId}`)
       .then((response) => response.json())
       .then((data) => {
         setTags(data);
@@ -23,16 +33,20 @@ function Tags() {
   }
 
   useEffect(() => {
+    getProjects();
+  }, []);
+
+  useEffect(() => {
     getTags();
     replaceLocationParams({ page });
-  }, [page, visibility, query]);
+  }, [page, visibility, projectId, query]);
 
   return (
     <>
       <Helmet>
         <title>{I18n.t('common.tags')}</title>
       </Helmet>
-      <div className="input-group mb-3 w-25">
+      <div className="input-group mb-3 w-50">
         <div className="input-group-prepend">
           <NavLink className="btn btn-secondary" to="/tags/new">{I18n.t('common.add')}</NavLink>
         </div>
@@ -46,6 +60,16 @@ function Tags() {
           <option value="active">{I18n.t('common.active')}</option>
           <option value="inactive">{I18n.t('common.inactive')}</option>
           <option value="all">{I18n.t('common.all')}</option>
+        </select>
+        <select
+          name="project"
+          id="project"
+          className="custom-select"
+          onChange={(e) => setProjectId(e.target.value)}
+          value={projectId}
+        >
+          <option value="">{I18n.t('common.all')}</option>
+          {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
         <input
           type="text"

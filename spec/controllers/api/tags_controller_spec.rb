@@ -10,8 +10,11 @@ RSpec.describe Api::TagsController do
   def tag_response(tag)
     tag.attributes.slice('id', 'name', 'project_id')
        .merge(active: tag.kept?, global: tag.project_id.nil?,
-              edit: tag.work_times.kept.exists?,
               project_name: tag.project&.name)
+  end
+
+  def tag_show_response(tag)
+    tag_response(tag).merge(edit: tag.work_times.kept.empty?)
   end
 
   describe '#index' do
@@ -101,7 +104,7 @@ RSpec.describe Api::TagsController do
       get :show, params: { id: tag.id }, as: :json
 
       expect(response.code).to eql('200')
-      expect(response.body).to be_json_eql(tag_response(tag).to_json)
+      expect(response.body).to be_json_eql(tag_show_response(tag).to_json)
     end
   end
 

@@ -6,7 +6,7 @@ class TagPolicy < ApplicationPolicy
   end
 
   def update?
-    (user.admin? || user.manager?) && !record.work_times.kept.exists?
+    user.admin? || user.manager?
   end
 
   alias show? index?
