@@ -38,17 +38,22 @@ class ProjectRateQuery
   end
 
   def range_condition
-    sanitize_array ['AND starts_at >= ? AND ends_at <= ?', @starts_at, @ends_at] if @starts_at.present? && @ends_at.present?
+    sanitize_array ['starts_at >= ? AND ends_at <= ?', @starts_at, @ends_at] if @starts_at.present? && @ends_at.present?
   end
 
   def type_condition
-    return "AND projects.internal = 'f'" if @type == 'commercial'
-    return "AND projects.internal = 't'" if @type == 'internal'
+    return "projects.internal = 'f'" if @type == 'commercial'
+    return "projects.internal = 't'" if @type == 'internal'
   end
 
   def visibility_condition
-    return 'AND projects.discarded_at IS NULL' if @visibility == 'active'
-    return 'AND projects.discarded_at IS NOT NULL' if @visibility == 'inactive'
+    return 'projects.discarded_at IS NULL' if @visibility == 'active'
+    return 'projects.discarded_at IS NOT NULL' if @visibility == 'inactive'
+  end
+
+  def where_conditions
+    conditions = [visibility_condition, range_condition, type_condition].compact
+    "WHERE #{conditions.join(' AND ')}" if conditions.present?
   end
 
   def distinct_phrase
@@ -79,14 +84,10 @@ class ProjectRateQuery
         leaders.id as leader_id,
         leaders.last_name AS leader_last_name
       FROM projects
-      LEFT JOIN work_times ON projects.id = work_times.project_id
+      LEFT JOIN work_times ON projects.id = work_times.project_id AND work_times.discarded_at IS NULL
       LEFT JOIN users ON users.id = work_times.user_id
       LEFT JOIN users leaders ON leaders.id = projects.leader_id
-      WHERE
-        work_times.discarded_at IS NULL
-        #{visibility_condition}
-        #{range_condition}
-        #{type_condition}
+      #{where_conditions}
       #{sort_phrase}
     )
   end
