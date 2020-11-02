@@ -1,5 +1,5 @@
-.react-datepicker-popper {
-  z-index: 100;
+div.react-datepicker-popper {
+  z-index: 1000;
   .react-datepicker__triangle {
     border-bottom-color: white !important;
     &::before {
