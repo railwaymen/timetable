@@ -17,6 +17,8 @@ pl:
         screen: Monitor
         pc: Komputer
         laptop: Laptop
+        tablet: Tablet
+        smartphone: Smartphone
     header:
       login: Logowanie
       username: Użytkownik
