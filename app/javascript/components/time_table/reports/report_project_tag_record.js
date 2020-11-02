@@ -2,7 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { formattedDuration, countDurationPercentage } from '../../shared/helpers';
 
-const ReportProjectTagRecord = ({ reportRows }) => {
+const ReportProjectTagRecord = ({
+  reportRows, redirectTo, from, to, user_id,
+}) => {
+  function onRedirect(e) {
+    e.preventDefault();
+    redirectTo(e.target.href);
+  }
+
   const overallData = reportRows[0];
   return (
     <div className="card p-0 w-100">
@@ -14,10 +21,16 @@ const ReportProjectTagRecord = ({ reportRows }) => {
         </h4>
       </div>
       <div className="card-body">
-        <ul className="list-group">
+        <ul className="list-group-flush">
           { reportRows.map((row, index) => (
-            <li className="list-group-item record align-items-baseline" key={index}> {/* eslint-disable-line */}
-              <input type="button" disabled className={`tags selected ${row.tag}`} value={row.tag.toUpperCase()} />
+            <li className="list-group-item align-items-baseline" key={index}> {/* eslint-disable-line */}
+              <a
+                href={`/timesheet?project_id=${row.project_id}&user_id=${user_id}&from=${from}&to=${to}&tag_id=${row.tag_id}`}
+                onClick={onRedirect}
+                className="tags selected"
+              >
+                {row.tag}
+              </a>
               {countDurationPercentage(row.duration, row.project_duration)}
               <span className="badge badge-dark ml-auto">{formattedDuration(row.duration)}</span>
             </li>

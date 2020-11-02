@@ -5,10 +5,11 @@ require_relative 'querable'
 class ReportUserRecordQuery
   include Querable
 
-  def initialize(from:, to:, user:, action: :self)
+  def initialize(from:, to:, user:, tag_id:, action: :self)
     @from   = from
     @to     = to
     @user   = user
+    @tag_id = tag_id
     @action = (action || :self).to_sym
   end
 

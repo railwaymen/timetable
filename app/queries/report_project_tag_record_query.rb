@@ -20,6 +20,7 @@ class ReportProjectTagRecordQuery < RecordQuery
         projects.id AS project_id,
         projects.name AS project_name,
         tags.name AS tag,
+        tags.id AS tag_id,
         SUM(work_times.duration) OVER(PARTITION BY projects.id, tags.name) AS duration,
         SUM(work_times.duration) OVER(PARTITION BY projects.id) AS project_duration
       FROM projects
@@ -31,6 +32,7 @@ class ReportProjectTagRecordQuery < RecordQuery
         AND work_times.discarded_at IS NULL
         #{projects_access}
         #{user_filter}
+        #{tag_filter}
       ORDER BY project_name ASC, #{assign_sort}
     )
   end

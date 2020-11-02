@@ -24,18 +24,16 @@ function ReportProjectRecord(props) {
         </h4>
       </div>
       <div className="card-body">
-        <ul className="list-group">
+        <ul className="list-group-flush">
           {reportRows.map((row) => (
-            <li className="list-group-item record" key={row.user_id}>
+            <li className="list-group-item" key={row.user_id}>
               <a
                 href={`/timesheet?project_id=${row.project_id}&user_id=${row.user_id}&from=${from}&to=${to}`}
                 onClick={onRedirect}
               >
                 {row.user_name}
               </a>
-              (
               {countDurationPercentage(row.duration, row.project_duration)}
-              )
               <span className="badge badge-dark ml-auto">{formattedDuration(row.duration)}</span>
             </li>
           ))}
