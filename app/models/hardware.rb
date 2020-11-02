@@ -7,7 +7,9 @@ class Hardware < ApplicationRecord
   enum type: {
     screen: 'screen',
     laptop: 'laptop',
-    pc: 'pc'
+    pc: 'pc',
+    tablet: 'tablet',
+    smartphone: 'smartphone'
   }
   validates :serial_number, presence: true, uniqueness: true
   validates :model, :type, :manufacturer, presence: true
