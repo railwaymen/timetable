@@ -38,7 +38,7 @@ function TagFields(props) {
           className={`${errors.name ? 'error' : ''} form-control`}
           type="text"
           name="name"
-          disabled={!tag.edit}
+          disabled={tag.id && !tag.edit}
           placeholder="Name"
           onChange={onChange}
           value={tag.name || ''}
@@ -53,11 +53,11 @@ function TagFields(props) {
       <div className="form-group">
         <label>
           {I18n.t('apps.tags.global')}
-          <input type="checkbox" name="global" disabled={!tag.edit} checked={tag.global} onChange={onChange} />
+          <input type="checkbox" name="global" disabled={tag.id && !tag.edit} checked={tag.global} onChange={onChange} />
         </label>
       </div>
       <div className="form-group">
-        <select className="form-control" name="project_id" disabled={tag.global || !tag.edit} onChange={onChange} value={tag.project_id}>
+        <select className="form-control" name="project_id" disabled={tag.global || (tag.id && !tag.edit)} onChange={onChange} value={tag.project_id}>
           {renderProjects()}
         </select>
       </div>
