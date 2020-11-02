@@ -99,7 +99,7 @@ en:
       restore_previous: Restore a previous version
       restore_first: Restore the first version
       collision: Collision with following reports
-      all_users: All users
+      clear_filters: Clear filters
     combined_reports:
       combined_report: Combined report
       combine_reports: Combine reports

@@ -32,8 +32,9 @@ export default class ProjectWorkTimes extends React.Component {
     };
 
     this.filterByUser = this.filterByUser.bind(this);
+    this.filterByTag = this.filterByTag.bind(this);
 
-    _.bindAll(this, ['getWorkTimes', 'nextWeek', 'prevWeek', 'replaceUrl', 'pushUrl', 'onFromChange', 'onToChange', 'allUsers']);
+    _.bindAll(this, ['getWorkTimes', 'nextWeek', 'prevWeek', 'replaceUrl', 'pushUrl', 'onFromChange', 'onToChange', 'clearFilters']);
   }
 
   componentDidMount() {
@@ -52,8 +53,12 @@ export default class ProjectWorkTimes extends React.Component {
     });
   }
 
-  getWorkTimes({ from, to, user_id }, stateCallback = this.pushUrl) {
-    const url = URI(`/api/projects/${this.state.projectId}/work_times`).addSearch({ from, to, user_id });
+  getWorkTimes({
+    from, to, user_id, tag_id,
+  }, stateCallback = this.pushUrl) {
+    const url = URI(`/api/projects/${this.state.projectId}/work_times`).addSearch({
+      from, to, user_id, tag_id,
+    });
     this.setState({ sync: true });
     Api.makeGetRequest({ url })
       .then((response) => {
@@ -61,7 +66,7 @@ export default class ProjectWorkTimes extends React.Component {
           project, work_times, reports, tag_reports,
         } = response.data;
         this.setState({
-          project, reports, tag_reports, work_times, from, to, user_id, sync: false,
+          project, reports, tag_reports, work_times, from, to, user_id, tag_id, sync: false,
         }, stateCallback);
       });
   }
@@ -80,14 +85,24 @@ export default class ProjectWorkTimes extends React.Component {
     this.getWorkTimes({ ...this.state, user_id });
   }
 
-  allUsers() {
-    this.getWorkTimes({ ...this.state, user_id: undefined });
+  filterByTag(location) {
+    const url = URI(location);
+    const { tag_id } = url.search(true);
+    this.getWorkTimes({ ...this.state, tag_id });
+  }
+
+  clearFilters() {
+    this.getWorkTimes({ ...this.state, user_id: undefined, tag_id: undefined });
   }
 
   newHistoryState() {
-    const { from, to, user_id } = this.state;
+    const {
+      from, to, user_id, tag_id,
+    } = this.state;
     const url = URI(window.location.href);
-    const newUrl = url.removeSearch('from').removeSearch('to').removeSearch('user_id').addSearch({ from, to, user_id });
+    const newUrl = url.removeSearch(['tag_id', 'from', 'to', 'user_id']).addSearch({
+      from, to, user_id, tag_id,
+    });
     return ['TimeTable', 'TimeTable', newUrl];
   }
 
@@ -118,7 +133,7 @@ export default class ProjectWorkTimes extends React.Component {
 
   render() {
     const {
-      work_times, from, to, project, reports, tag_reports, user_id, sync, projectId,
+      work_times, from, to, project, reports, tag_reports, user_id, tag_id, sync, projectId,
     } = this.state;
 
     return (
@@ -158,9 +173,9 @@ export default class ProjectWorkTimes extends React.Component {
               onToChange={this.onToChange}
               onFilter={() => this.getWorkTimes(this.state)}
             >
-              {user_id && (
-                <button type="button" className="btn btn-secondary" onClick={this.allUsers}>
-                  {I18n.t('apps.reports.all_users')}
+              {(user_id || tag_id) && (
+                <button type="button" className="btn btn-secondary" onClick={this.clearFilters}>
+                  {I18n.t('apps.reports.clear_filters')}
                 </button>
               )}
             </DateRangeFilter>
@@ -177,7 +192,7 @@ export default class ProjectWorkTimes extends React.Component {
             <div className="sticky-record">
               { tag_reports.length > 0 && (
                 <div className="row mx-0">
-                  <ReportProjectTagRecord reportRows={tag_reports} />
+                  <ReportProjectTagRecord reportRows={tag_reports} from={from} to={to} user_id={user_id} redirectTo={this.filterByTag} />
                 </div>
               )}
               { reports.length > 0 && (

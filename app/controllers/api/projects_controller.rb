@@ -41,13 +41,15 @@ module Api
     def work_times
       @project = project_scope
       from, to = resolve_from_to_dates
-      report_params = { from: from, to: to, project_ids: params[:id], sort: params[:sort] }
+      report_params = { from: from, to: to, tag_id: params[:tag_id], project_ids: params[:id], sort: params[:sort] }
       work_times_query = @project.work_times.kept.where(starts_at: from..to)
 
       if params[:user_id]
         report_params[:user_ids] = [params[:user_id]]
         work_times_query = work_times_query.joins(:user).where('users.id = ?', params[:user_id])
       end
+
+      work_times_query = work_times_query.where(tag_id: params[:tag_id]) if params[:tag_id]
 
       @report = ReportProjectRecordQuery.new(**report_params).results
       @tag_report = ReportProjectTagRecordQuery.new(**report_params).results

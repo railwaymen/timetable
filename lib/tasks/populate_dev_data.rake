@@ -10,7 +10,7 @@ task populate_dev_data: :environment do
 
   10.times do |i|
     index = i + 1
-    User.where(id: index).first_or_create! email: "user#{index}@example.com", first_name: FFaker::Name.first_name, last_name: FFaker::Name.last_name, password: 'password'
+    User.where(email: "user#{index}@example.com").first_or_create! first_name: FFaker::Name.first_name, last_name: FFaker::Name.last_name, password: 'password'
   end
 
   10.times do |i|

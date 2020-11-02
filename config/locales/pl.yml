@@ -99,7 +99,7 @@ pl:
       restore_previous: Przywróć poprzednią wersję
       restore_first: Przywróć pierwszą wersję
       collision: Kolizja z następującymi raportami
-      all_users: Wszyscy użytkownicy
+      clear_filters: Wyszyść filtry
     combined_reports:
       combined_report: Raport łączony
       combine_reports: Połącz raporty

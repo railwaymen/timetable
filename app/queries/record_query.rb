@@ -5,12 +5,13 @@ require_relative 'querable'
 class RecordQuery
   include Querable
 
-  def initialize(from:, to:, project_ids:, sort:, user_ids: [])
+  def initialize(from:, to:, tag_id:, project_ids:, sort:, user_ids: []) # rubocop:disable Metrics/ParameterLists
     @from        = from
     @to          = to
     @project_ids = project_ids
     @sort        = sort
     @user_ids    = user_ids
+    @tag_id      = tag_id
   end
 
   def results
@@ -33,6 +34,10 @@ class RecordQuery
 
   def user_filter
     sanitize_array(['AND users.id IN (?)', @user_ids]) unless @user_ids.empty?
+  end
+
+  def tag_filter
+    sanitize_array(['AND tag_id = ?', @tag_id]) if @tag_id.present?
   end
 
   def raw; end
