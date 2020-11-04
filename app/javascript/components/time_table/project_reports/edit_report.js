@@ -111,11 +111,11 @@ export default class EditReport extends React.Component {
     });
   }
 
-  onIgnore(event, category, id) {
+  onIgnore(event, category, ids) {
     event.preventDefault();
     if (window.confirm(I18n.t('common.confirm'))) {
       this.setState(({ currentBody }) => {
-        const [removedWorkedTime, rest] = partition(currentBody[category], (wt) => wt.id === id);
+        const [removedWorkedTime, rest] = partition(currentBody[category], (wt) => ids.includes(wt.id));
         const ignored = removedWorkedTime.concat(currentBody.ignored || []);
         const newBody = { ...currentBody, [category]: rest, ignored };
         return { currentBody: newBody, workTimeModalCategory: null, workTimeModalId: null };
@@ -234,6 +234,35 @@ export default class EditReport extends React.Component {
     });
   }
 
+  renderIgnoreButton(category, id) {
+    return (
+      <button
+        key="ignore"
+        type="button"
+        className="btn btn-outline-danger destroy"
+        onClick={(e) => this.onIgnore(e, category, [id])}
+        data-tooltip-bottom={I18n.t('apps.reports.ignore')}
+      >
+        <i className="fa fa-trash-o" />
+      </button>
+    );
+  }
+
+  renderIgnoreMultipleButton(category, ids) {
+    return (
+      <button
+        key="ignore"
+        type="button"
+        className="btn btn-outline-danger destroy"
+        onClick={(e) => this.onIgnore(e, category, ids)}
+        data-tooltip-bottom={I18n.t('apps.reports.ignore')}
+      >
+        <i className="fa fa-trash-o" />
+        <i className="fa fa-trash-o" />
+      </button>
+    );
+  }
+
   renderMergeButton(category) {
     return (
       <button
@@ -304,15 +333,13 @@ export default class EditReport extends React.Component {
             this.renderEditOrMergeButton(category, id, willBeAddedToMerge)
           )}
         </React.Fragment>,
-        <button
-          key="ignore"
-          type="button"
-          className="btn btn-outline-danger destroy"
-          onClick={(e) => this.onIgnore(e, category, id)}
-          data-tooltip-bottom={I18n.t('apps.reports.ignore')}
-        >
-          <i className="fa fa-trash-o" />
-        </button>,
+        <React.Fragment key="ignore">
+          {toMerge && toMergeTasks.length >= 2 ? (
+            this.renderIgnoreMultipleButton(category, toMergeTasks.map((t) => t.id))
+          ) : (
+            this.renderIgnoreButton(category, id)
+          )}
+        </React.Fragment>,
       );
     }
     return result;
