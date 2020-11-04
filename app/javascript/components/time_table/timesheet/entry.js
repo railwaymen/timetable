@@ -168,13 +168,16 @@ class Entry extends React.Component {
   }
 
   paste(object) {
+    const project = this.props.projects.find((p) => p.id === object.project.id);
+    const combinedTags = (project.tags || []).concat(this.props.globalTags);
+    const tag = combinedTags.find((t) => t.id === object.tag_id);
     this.setState({
       body: _.unescape(object.body),
-      project: object.project,
-      project_id: object.project.id,
+      project,
+      project_id: project.id,
       task: object.task,
-      combinedTags: (object.project.tags || []).concat(this.props.globalTags),
-      tag: object.tag || this.findDefaultTag(),
+      combinedTags,
+      tag: tag || this.findDefaultTag(),
     });
   }
 

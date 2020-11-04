@@ -430,7 +430,7 @@ class WorkHours extends React.Component {
                 )}
               </div>
               <div className="tag-container">
-                {editing && workHours.project.taggable && currentUser.isAdmin() ? (
+                {editing && workHours.project.taggable ? (
                   <div className="project-dropdown">
                     <ProjectsDropdown
                       placeholder={I18n.t('apps.timesheet.select_tag')}
