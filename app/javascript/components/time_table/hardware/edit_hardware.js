@@ -21,7 +21,7 @@ const EditHardware = ({
     return (
       <div>
         <b>
-          {currentlySelectedUser.accounting_name}
+          {currentlySelectedUser?.accounting_name}
         </b>
       </div>
     );
@@ -30,7 +30,7 @@ const EditHardware = ({
   function RenderUsersList(user, currentlySelectedUser) {
     return (
       <div>
-        {user.id === currentlySelectedUser.id ? (
+        {user.id === currentlySelectedUser?.id ? (
           <b>
             {user.accounting_name}
           </b>
