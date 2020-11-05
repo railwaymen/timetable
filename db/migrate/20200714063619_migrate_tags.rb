@@ -1,4 +1,7 @@
 class MigrateTags < ActiveRecord::Migration[6.0]
+  class WorkTime < ApplicationRecord
+  end
+  
   def change
     dev = Tag.where(name: 'dev').first_or_create! use_as_default: true
     im = Tag.where(name: 'internal meeting').first_or_create!
