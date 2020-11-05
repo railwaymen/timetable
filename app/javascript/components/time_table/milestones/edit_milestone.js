@@ -140,20 +140,21 @@ const EditMilestone = () => {
   }, []);
 
   useEffect(() => {
-    if (project.name) {
-      const newCrumbs = [
+    if (project.name && milestone.name) {
+      setCrumbs([
         { href: '/projects', label: I18n.t('common.projects') },
         { href: `/projects/${projectId}/work_times`, label: project.name },
         { href: `/projects/${projectId}/milestones`, label: I18n.t('common.project_milestones') },
-      ];
-
-      if (milestone) {
-        newCrumbs.push({ label: milestone.name });
-      } else {
-        newCrumbs.push({ label: I18n.t('apps.milestones.add') });
-      }
-
-      setCrumbs(newCrumbs);
+        { label: milestone.name },
+      ]);
+    }
+    if (project.name && id === undefined) {
+      setCrumbs([
+        { href: '/projects', label: I18n.t('common.projects') },
+        { href: `/projects/${projectId}/work_times`, label: project.name },
+        { href: `/projects/${projectId}/milestones`, label: I18n.t('common.project_milestones') },
+        { label: I18n.t('apps.milestones.add') },
+      ]);
     }
   }, [project, milestone]);
 

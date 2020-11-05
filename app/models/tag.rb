@@ -9,11 +9,11 @@ class Tag < ApplicationRecord
   belongs_to :project
 
   validates :name, presence: true
-  validates :name, uniqueness: { scope: :project_id, conditions: -> { where(discarded_at: nil) } }
+  validate :validates_name_uniqueness
 
-  validate :validates_global_name
-
-  def validates_global_name
-    errors.add(:name, :taken) if Tag.kept.where.not(id: id).where(project_id: nil, name: name).exists?
+  def validates_name_uniqueness
+    errors.add(:name, :taken) if project_id.nil? && Tag.kept.where.not(id: id).where(name: name).exists?
+    errors.add(:name, :taken) if project_id.present? &&
+                                 (Tag.kept.where.not(id: id).where(project_id: nil, name: name).exists? || Tag.kept.where.not(id: id).where(project_id: project_id, name: name).exists?)
   end
 end
