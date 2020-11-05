@@ -456,7 +456,7 @@ class EntryHistory extends React.Component {
             </span>
           </td>
           <td>
-            <span className={this.changedClassName(version, 'tag')}>
+            <span className={this.changedClassName(version, 'tag_id')}>
               {version.tag}
             </span>
           </td>
