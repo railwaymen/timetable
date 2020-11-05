@@ -11,6 +11,7 @@ import ReportProjectRecord from '../reports/report_project_record';
 import WorkTimesReportTable from '../../shared/work_times_report_table';
 import ReportProjectTagRecord from '../reports/report_project_tag_record';
 import Preloader from '../../shared/preloader';
+import Breadcrumb from '../../shared/breadcrumb';
 
 export default class ProjectWorkTimes extends React.Component {
   constructor(props) {
@@ -27,6 +28,7 @@ export default class ProjectWorkTimes extends React.Component {
       projectId: parseInt(this.props.match.params.id, 10),
       work_times: [],
       reports: [],
+      crumbs: [],
       tag_reports: [],
       sync: false,
     };
@@ -56,7 +58,8 @@ export default class ProjectWorkTimes extends React.Component {
   getWorkTimes({
     from, to, user_id, tag_id,
   }, stateCallback = this.pushUrl) {
-    const url = URI(`/api/projects/${this.state.projectId}/work_times`).addSearch({
+    const { projectId } = this.state;
+    const url = URI(`/api/projects/${projectId}/work_times`).addSearch({
       from, to, user_id, tag_id,
     });
     this.setState({ sync: true });
@@ -65,8 +68,13 @@ export default class ProjectWorkTimes extends React.Component {
         const {
           project, work_times, reports, tag_reports,
         } = response.data;
+
+        const crumbs = [
+          { href: '/projects', label: I18n.t('common.projects') },
+          { href: `/projects/${projectId}/work_times`, label: project.name },
+        ];
         this.setState({
-          project, reports, tag_reports, work_times, from, to, user_id, tag_id, sync: false,
+          project, crumbs, reports, tag_reports, work_times, from, to, user_id, tag_id, sync: false,
         }, stateCallback);
       });
   }
@@ -133,7 +141,7 @@ export default class ProjectWorkTimes extends React.Component {
 
   render() {
     const {
-      work_times, from, to, project, reports, tag_reports, user_id, tag_id, sync, projectId,
+      work_times, from, to, project, crumbs, reports, tag_reports, user_id, tag_id, sync, projectId,
     } = this.state;
 
     return (
@@ -141,15 +149,9 @@ export default class ProjectWorkTimes extends React.Component {
         <Helmet>
           <title>{project.name}</title>
         </Helmet>
+        <Breadcrumb crumbs={crumbs} />
         <header className="page-header projects-header text-center">
           <h1 className="project-title">
-            <span
-              className="badge badge-secondary project-badge"
-              style={{
-                backgroundColor: `#${project.color}`,
-              }}
-            />
-            {project.name}
             {currentUser.isSuperUser() && (
               <div className="btn-group ml-3">
                 <Link to={`/projects/${projectId}/reports`} className="btn btn-success">

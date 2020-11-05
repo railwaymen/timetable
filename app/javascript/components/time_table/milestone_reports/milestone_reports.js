@@ -13,6 +13,7 @@ import MilestoneSummary from './milestone_summary';
 import MilestoneSummaryByPeople from './milestone_summary_by_people';
 import MilestoneTagBreakdownChart from './milestone_tag_breakdown_chart';
 import MilestoneProgressChart from './milestone_progress_chart';
+import Breadcrumb from '../../shared/breadcrumb';
 
 function MilestoneReports() {
   const { projectId } = useParams();
@@ -30,6 +31,7 @@ function MilestoneReports() {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [crumbs, setCrumbs] = useState([]);
   const prevSelectedMilestoneId = usePrevious(selectedMilestoneId);
   const prevRangeType = usePrevious(rangeType);
 
@@ -143,6 +145,16 @@ function MilestoneReports() {
   }, []);
 
   useEffect(() => {
+    if (project.name) {
+      setCrumbs([
+        { href: '/projects', label: I18n.t('common.projects') },
+        { href: `/projects/${projectId}/work_times`, label: project.name },
+        { label: I18n.t('common.milestone_reports') },
+      ]);
+    }
+  }, [project]);
+
+  useEffect(() => {
     if (prevSelectedMilestoneId) getWorkTimes();
   }, [selectedMilestoneId]);
 
@@ -208,20 +220,7 @@ function MilestoneReports() {
           {[project.name, I18n.t('common.milestone_reports')].join(' - ')}
         </title>
       </Helmet>
-      <div className="row mb-3">
-        <div className="col-md-8">
-          <h1 className="project-title">
-            <span
-              className="badge badge-secondary project-badge"
-              style={{
-                backgroundColor: `#${project.color}`,
-              }}
-            />
-            {project.name}
-          </h1>
-        </div>
-      </div>
-
+      <Breadcrumb crumbs={crumbs} />
       <div className="row">
         <div className="col-2">
           <select className="form-control" value={rangeType} name="rangeType" onChange={onRangeTypeChange}>

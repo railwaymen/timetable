@@ -8,6 +8,7 @@ import ErrorTooltip from '@components/shared/error_tooltip';
 import * as Api from '../../shared/api';
 import DateRangeFilter from '../../shared/date_range_filter';
 import Preloader from '../../shared/preloader';
+import Breadcrumb from '../../shared/breadcrumb';
 
 export default class NewReport extends React.Component {
   // eslint-disable-next-line react/sort-comp
@@ -23,6 +24,7 @@ export default class NewReport extends React.Component {
       startsAt: moment().startOf('month'),
       endsAt: moment().endOf('month'),
       userRoles: [],
+      crumbs: [],
       currency: '',
       name: '',
       collisions: [],
@@ -34,6 +36,7 @@ export default class NewReport extends React.Component {
 
   componentDidMount() {
     this.getRoles();
+    this.getProject();
   }
 
   onRangeStartChange(time) {
@@ -71,12 +74,7 @@ export default class NewReport extends React.Component {
         name,
       },
     }).then(({ data }) => {
-      this.setState({
-        redirectTo: {
-          pathname: `/projects/${projectId}/edit_report/${data.id}`,
-          state: { report: data },
-        },
-      });
+      this.props.history.push(`/projects/${projectId}/edit_report/${data.id}`);
     }).catch((results) => {
       if (results.errors) {
         const errors = translateErrors('project_report', results.errors);
@@ -85,6 +83,20 @@ export default class NewReport extends React.Component {
         alert('Failed to create report');
       }
     });
+  }
+
+  getProject() {
+    const { projectId } = this.state;
+    Api.makeGetRequest({ url: `/api/projects/${projectId}` })
+      .then((response) => {
+        const crumbs = [
+          { href: '/projects', label: I18n.t('common.projects') },
+          { href: `/projects/${projectId}/work_times`, label: response.data.name },
+          { href: `/projects/${projectId}/reports`, label: I18n.t('common.reports') },
+          { label: I18n.t('apps.reports.new') },
+        ];
+        this.setState({ crumbs });
+      });
   }
 
   getRoles() {
@@ -127,6 +139,7 @@ export default class NewReport extends React.Component {
         <Helmet>
           <title>{I18n.t('apps.reports.new')}</title>
         </Helmet>
+        <Breadcrumb crumbs={this.state.crumbs} />
         <div className="row">
           <div className="col-md-6 form-group">
             {this.state.errors.name && <ErrorTooltip errors={this.state.errors.name} />}

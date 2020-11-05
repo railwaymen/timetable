@@ -8,6 +8,7 @@ import ModalButton from '@components/shared/modal_button';
 import Modal from '@components/shared/modal';
 import * as Api from '../../shared/api';
 import { displayDuration, extractIntegrationPayload } from '../../shared/helpers';
+import Breadcrumb from '../../shared/breadcrumb';
 import TagPill from '../timesheet/tag_pill';
 
 export default class EditReport extends React.Component {
@@ -16,6 +17,7 @@ export default class EditReport extends React.Component {
 
     bindAll(this, [
       'getReport',
+      'getProject',
       'renderCategory',
       'onMergeOwnerChange',
       'onMergeTaskChange',
@@ -38,6 +40,7 @@ export default class EditReport extends React.Component {
       mergeTask: '',
       mergeOwner: '',
       mergeDescription: '',
+      crumbs: [],
       workTimeModalCategory: null,
       workTimeModalId: null,
     };
@@ -46,7 +49,7 @@ export default class EditReport extends React.Component {
   componentDidMount() {
     this.props.history.replace({ pathname: this.props.location.pathname, state: {} });
     if (this.state.currentBody) return;
-    this.getReport();
+    this.getReport().then(this.getProject);
   }
 
   onHardReset() {
@@ -180,9 +183,23 @@ export default class EditReport extends React.Component {
 
   getReport() {
     const { projectId, reportId } = this.state;
-    Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports/${reportId}/edit` })
+    return Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports/${reportId}/edit` })
       .then(({ data }) => {
         this.setState({ report: data, currentBody: this.prepareBody(data.last_body) });
+      });
+  }
+
+  getProject() {
+    const { report, projectId } = this.state;
+    Api.makeGetRequest({ url: `/api/projects/${projectId}` })
+      .then((response) => {
+        const crumbs = [
+          { href: '/projects', label: I18n.t('common.projects') },
+          { href: `/projects/${projectId}/work_times`, label: response.data.name },
+          { href: `/projects/${projectId}/reports`, label: I18n.t('common.reports') },
+          { label: report.name },
+        ];
+        this.setState({ crumbs });
       });
   }
 
@@ -744,6 +761,7 @@ export default class EditReport extends React.Component {
             <title>{`${I18n.t('common.edit')} ${report.name} - ${report.project_name}`}</title>
           )}
         </Helmet>
+        <Breadcrumb crumbs={this.state.crumbs} />
         {without(Object.keys(currentBody), 'ignored').sort().map(this.renderCategory)}
         {this.renderWorkTimeModal()}
         {this.renderIgnored()}
