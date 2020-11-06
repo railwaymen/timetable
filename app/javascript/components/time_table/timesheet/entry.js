@@ -332,7 +332,7 @@ class Entry extends React.Component {
                   </div>
                 )}
               </div>
-              <div className="col-sm-4 col-md-2 project-container">
+              <div className={`col-sm-4  project-container ${(project.taggable || project.tags_enabled) ? 'col-md-2' : 'col-md-3'}`}>
                 <div className="project-dropdown">
                   {errors.projectId && <ErrorTooltip errors={errors.projectId} />}
                   <div>
@@ -346,7 +346,17 @@ class Entry extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="col-sm-12 col-md-4 date">
+              { (project.taggable || project.tags_enabled) && (
+                <div className="col-sm-4 col-md-1 tag-container">
+                  <ProjectsDropdown
+                    placeholder={I18n.t('apps.timesheet.select_tag')}
+                    updateProject={this.selectTag}
+                    selectedProject={tag}
+                    projects={combinedTags}
+                  />
+                </div>
+              )}
+              <div className="col-sm-12 col-md-3 date">
                 <div className="time">
                   <div className="form-group">
                     <input
@@ -398,16 +408,6 @@ class Entry extends React.Component {
                 />
               </div>
             </div>
-            { (project.taggable || project.tags_enabled) && (
-              <div className="col-sm-4 col-md-2 tag-container">
-                <ProjectsDropdown
-                  placeholder={I18n.t('apps.timesheet.select_tag')}
-                  updateProject={this.selectTag}
-                  selectedProject={tag}
-                  projects={combinedTags}
-                />
-              </div>
-            )}
             <div className="form-actions bg-white btn-group">
               <button
                 type="button"
