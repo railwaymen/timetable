@@ -7,9 +7,9 @@ function ProjectStats(props) {
   function projectLabel() {
     const { stats } = props;
 
-    if (currentUser.canManageProject({ id: stats.project_id })) {
+    if (currentUser.canManageProject({ id: stats.id })) {
       return (
-        <Link to={`/projects/${stats.project_id}/work_times`}>
+        <Link to={`/projects/${stats.id}/work_times`}>
           {stats.name}
         </Link>
       );
@@ -37,9 +37,9 @@ function ProjectStats(props) {
             />
           </h3>
         </div>
-        {stats.leader_first_name && (
+        {stats.leader_name && (
           <p className="font-weight-bold text-center">
-            {renderName(stats.leader_first_name, stats.leader_last_name)}
+            {stats.leader_name}
           </p>
         )}
         <div className="card-body">

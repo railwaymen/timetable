@@ -7,15 +7,25 @@ RSpec.describe Api::ProjectsController do
   let(:admin) { create(:user, :admin) }
   let(:manager) { create(:user, :manager) }
   let(:project_name) { SecureRandom.hex }
-  let(:tags_list) { WorkTime.tags.keys }
+
+  def milestone_response(milestone)
+    milestone.attributes.slice('id', 'name', 'closed', 'starts_on', 'ends_on', 'project_id',
+                               'dev_estimate', 'qa_estimate', 'ux_estimate', 'pm_estimate', 'other_estimate', 'external_estimate', 'total_estimate').merge(external_id: milestone.external_id)
+  end
+
+  def stats_response(project, work_times)
+    project.attributes.slice('color', 'name', 'id').merge(
+      leader_name: project.leader&.name,
+      users: work_times.map do |work_time|
+        { id: work_time.user.id, first_name: work_time.user.first_name, last_name: work_time.user.last_name }
+      end
+    )
+  end
 
   def index_response(project)
-    result = project.attributes.slice('id', 'name', 'color').merge({
-                                                                     active: project.kept?,
-                                                                     users: []
-                                                                   })
-    result[:leader] = { id: project.leader_id, leader_first_name: project.leader.first_name, leader_last_name: project.leader.last_name } if project.leader.present?
-    result
+    project.attributes.slice(
+      'id', 'name', 'color', 'leader_id'
+    ).merge(leader_name: project.leader&.name)
   end
 
   def full_project_response(project)
@@ -28,27 +38,28 @@ RSpec.describe Api::ProjectsController do
       expect(response.code).to eql('401')
     end
 
+    it 'returns only basic project information' do
+      sign_in(user)
+      project = create(:project)
+      get :index, format: :json
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql([index_response(project)].to_json)
+    end
+  end
+
+  describe '#stats' do
+    it 'authenticates user' do
+      get :stats, format: :json
+      expect(response.code).to eql('401')
+    end
+
     it 'returns projects' do
       sign_in(user)
       project = create(:project, :with_leader)
-      FactoryBot.create :work_time, project: project, user: user, starts_at: Time.current - 40.minutes, ends_at: Time.current - 30.minutes
-      project_rate = ProjectRateQuery.new.results.first
-      get :index, format: :json
-      project_user = project_rate.users.first
+      work_time = FactoryBot.create :work_time, project: project, user: user
+      expected_json = [stats_response(project, [work_time])].to_json
 
-      expected_json = [
-        {
-          color: project_rate.color,
-          name: project_rate.name,
-          project_id: project_rate.project_id,
-          leader_first_name: project.leader.first_name,
-          leader_last_name: project.leader.last_name,
-          users: [
-            { id: project_user.id, first_name: project_user.first_name, last_name: project_user.last_name }
-          ]
-        }
-      ].to_json
-
+      get :stats, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql(expected_json)
     end
@@ -56,29 +67,27 @@ RSpec.describe Api::ProjectsController do
     it 'filters by active' do
       sign_in(user)
       active_project = create(:project, :with_leader)
+      create(:project, :discarded)
 
-      FactoryBot.create :work_time, project: active_project, user: user, starts_at: Time.current - 40.minutes, ends_at: Time.current - 30.minutes
+      work_time = FactoryBot.create :work_time, project: active_project, user: user
 
-      active_project_rate = ProjectRateQuery.new.results.first
-      project_user = active_project_rate.users.first
+      expected_active_json = [stats_response(active_project, [work_time])].to_json
 
-      expected_active_json = [
-        {
-          color: active_project_rate.color,
-          name: active_project_rate.name,
-          project_id: active_project_rate.project_id,
-          leader_first_name: active_project.leader.first_name,
-          leader_last_name: active_project.leader.last_name,
-          users: [
-            { id: project_user.id, first_name: project_user.first_name, last_name: project_user.last_name }
-          ]
-        }
-      ].to_json
-
-      get :index, format: :json
+      get :stats, params: { display: 'active' }, format: :json
 
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql(expected_active_json)
+    end
+
+    it 'sorts alphabetically by type' do
+      sign_in(user)
+      project1 = create(:project, name: 'XXX')
+      project2 = create(:project, name: 'AAA')
+
+      get :stats, params: { sort: 'alphabetical' }, format: :json
+
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql([stats_response(project2, []), stats_response(project1, [])].to_json)
     end
 
     it 'filters by type' do
@@ -87,96 +96,28 @@ RSpec.describe Api::ProjectsController do
 
       FactoryBot.create :work_time, project: internal_project, starts_at: Time.current - 40.minutes, ends_at: Time.current - 30.minutes, user: user
 
-      get :index, params: { type: 'commercial' }, format: :json
+      get :stats, params: { type: 'commercial' }, format: :json
 
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql([].to_json)
     end
   end
 
-  describe 'list' do
-    it 'correctly display active projects' do
-      sign_in user
-      project = FactoryBot.create :project
-      FactoryBot.create :project, :discarded
+  describe '#current_milestones' do
+    it 'returns milestones with estimates' do
+      sign_in(user)
 
-      get :list, format: :json
+      milestone1 = create(:milestone, starts_on: 10.days.ago, ends_on: 20.days.from_now)
+      milestone2 = create(:milestone)
+      work_time = create(:work_time, project: milestone1.project)
 
-      expect(response.body).to be_json_eql([index_response(project)].to_json)
-    end
+      expected_response = [
+        milestone_response(milestone1).merge(work_times_duration: work_time.duration),
+        milestone_response(milestone2).merge(work_times_duration: nil)
+      ]
 
-    it 'correctly display all projects' do
-      sign_in user
-      project = FactoryBot.create :project
-      inactive_project = FactoryBot.create :project, :discarded
-
-      projects_json = [index_response(project), index_response(inactive_project)].to_json
-
-      get :list, params: { display: 'all' }, format: :json
-
-      expect(response.body).to be_json_eql(projects_json)
-    end
-
-    describe 'filters' do
-      it 'sorts alphabeticaly' do
-        sign_in user
-        project1 = FactoryBot.create :project, name: 'Zoo'
-        project2 = FactoryBot.create :project, name: 'Alpha'
-
-        projects_json = [index_response(project2), index_response(project1)].to_json
-
-        get :list, params: { sort: 'alphabetical' }, format: :json
-
-        expect(response.body).to be_json_eql(projects_json)
-      end
-
-      context 'all' do
-        it 'return all possible records' do
-          sign_in admin
-          FactoryBot.create :project, :discarded
-          FactoryBot.create :project
-
-          get :list, params: { display: 'all' }, format: :json
-
-          expected_json = Project.all.map do |project|
-            index_response(project)
-          end.to_json
-
-          expect(response.body).to be_json_eql(expected_json)
-        end
-      end
-
-      context 'active' do
-        it 'return all possible records' do
-          sign_in admin
-          FactoryBot.create :project, :discarded
-          FactoryBot.create :project
-
-          get :list, params: { display: 'active' }, format: :json
-
-          expected_json = Project.kept.map do |project|
-            index_response(project)
-          end.to_json
-
-          expect(response.body).to be_json_eql(expected_json)
-        end
-      end
-
-      context 'inactive' do
-        it 'return all possible records' do
-          sign_in admin
-          FactoryBot.create :project, :discarded
-          FactoryBot.create :project
-
-          get :list, params: { display: 'inactive' }, format: :json
-
-          expected_json = Project.discarded.map do |project|
-            index_response(project)
-          end.to_json
-
-          expect(response.body).to be_json_eql(expected_json)
-        end
-      end
+      get :current_milestones, params: { project_ids: [milestone1.project_id, milestone2.project_id].join(',') }, format: :json
+      expect(response.body).to be_json_eql(expected_response.to_json)
     end
   end
 

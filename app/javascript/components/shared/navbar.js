@@ -35,7 +35,7 @@ const Navbar = () => (
           </li>
         )}
         <li className="nav-pills">
-          <NavLink className="nav-link" to="/projects">{I18n.t('common.projects')}</NavLink>
+          <NavLink className="nav-link" to="/projects/ranking">{I18n.t('common.projects')}</NavLink>
         </li>
         <li className="nav-pills">
           <NavLink

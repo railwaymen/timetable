@@ -7,16 +7,16 @@ import RangeFilter from './range_filter';
 import TypeFilter from './type_filter';
 import SortOptions from './sort_options';
 
-function ProjectsList() {
+function ProjectsProgress() {
   const [projects, setProjects] = useState([]);
   const [visibility, setVisibility] = useState('active');
   const [milestones, setMilestones] = useState([]);
-  const [range, setRange] = useState('');
+  const [range, setRange] = useState('30');
   const [sort, setSort] = useState('hours');
   const [type, setType] = useState('all');
 
   function getProjects() {
-    Api.makeGetRequest({ url: `/api/projects/list?display=${visibility}&range=${range}&type=${type}&sort=${sort}` })
+    Api.makeGetRequest({ url: `/api/projects/stats?display=${visibility}&range=${range}&type=${type}&sort=${sort}` })
       .then((response) => {
         setProjects(response.data);
       });
@@ -24,7 +24,7 @@ function ProjectsList() {
 
   function getCurrentMilestones() {
     const projectIds = projects.map((p) => p.id);
-    Api.makeGetRequest({ url: `/api/projects/current_milestones?projects=${projectIds}` })
+    Api.makeGetRequest({ url: `/api/projects/current_milestones?project_ids=${projectIds}` })
       .then((response) => {
         setMilestones(response.data);
       });
@@ -49,8 +49,9 @@ function ProjectsList() {
       </Helmet>
       <div className="clearfix mb-3">
         <div className="btn-group pull-right">
-          <NavLink className="btn btn-secondary" exact to="/projects">{I18n.t('common.rank')}</NavLink>
-          <NavLink className="btn btn-secondary active" to="/projects/list">{I18n.t('common.all')}</NavLink>
+          <NavLink className="btn btn-secondary" exact to="/projects/ranking">{I18n.t('common.rank')}</NavLink>
+          <NavLink className="btn btn-secondary active" exact to="/projects/progress">{I18n.t('apps.milestones.progress')}</NavLink>
+          <NavLink className="btn btn-secondary" exact to="/projects">{I18n.t('common.all')}</NavLink>
         </div>
         { currentUser.isSuperUser() && (
           <NavLink to="/projects/new" className="btn btn-secondary pull-left">{I18n.t('common.add')}</NavLink>
@@ -81,7 +82,6 @@ function ProjectsList() {
       <table className="table">
         <thead>
           <tr>
-            <th />
             <th>{I18n.t('apps.projects.name')}</th>
             <th>{I18n.t('apps.projects.leader')}</th>
             <th>{I18n.t('common.people')}</th>
@@ -99,4 +99,4 @@ function ProjectsList() {
   );
 }
 
-export default ProjectsList;
+export default ProjectsProgress;

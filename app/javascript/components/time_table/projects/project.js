@@ -51,9 +51,8 @@ function Project(props) {
 
   return (
     <tr>
-      <td />
       <td>{renderProjectName()}</td>
-      <td>{project.leader ? `${project.leader.first_name} ${project.leader.last_name}` : ''}</td>
+      <td>{project.leader_name}</td>
       <td onMouseEnter={() => setShowUsers(true)} onMouseLeave={() => setShowUsers(false)}>
         {project.users.length}
         {showUsers && (

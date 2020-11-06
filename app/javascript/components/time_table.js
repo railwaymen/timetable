@@ -4,7 +4,8 @@ import '../models/currentUser';
 import Navbar from './shared/navbar';
 
 import Projects from './time_table/projects/projects';
-import ProjectsList from './time_table/projects/projects_list';
+import ProjectsProgress from './time_table/projects/projects_progress';
+import ProjectsRanking from './time_table/projects/projects_ranking';
 import ProjectWorkTimes from './time_table/projects/project_work_times';
 import EditProject from './time_table/projects/edit_project';
 import ExternalAuth from './time_table/users/external_auth';
@@ -55,7 +56,8 @@ class TimeTable extends React.Component {
             <Route path="/users/:id/external_authorization" component={ExternalAuth} />
             <Route path="/staff" exact component={Staff} />
             <Route path="/projects" exact component={Projects} />
-            <Route path="/projects/list" exact component={ProjectsList} />
+            <Route path="/projects/progress" exact component={ProjectsProgress} />
+            <Route path="/projects/ranking" exact component={ProjectsRanking} />
             <Route path="/projects/:id/work_times" component={ProjectWorkTimes} />
             <Route path="/projects/:id/edit" component={EditProject} />
             <Route path="/projects/:projectId/milestones" exact component={Milestones} />
