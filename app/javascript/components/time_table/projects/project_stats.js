@@ -17,10 +17,6 @@ function ProjectStats(props) {
     return stats.name;
   }
 
-  function renderName(first_name, last_name) {
-    return [first_name, last_name].join(' ');
-  }
-
   const { stats } = props;
 
   return (
@@ -46,7 +42,7 @@ function ProjectStats(props) {
           <ul>
             { stats.users.map((user) => (
               <li className="person" key={user.id}>
-                {renderName(user.first_name, user.last_name)}
+                {user.name}
               </li>
             )) }
           </ul>

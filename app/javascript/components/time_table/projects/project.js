@@ -57,7 +57,7 @@ function Project(props) {
         {project.users.length}
         {showUsers && (
           <div className="project-users">
-            {project.users.map((user) => <p className="m-2" key={user.id}>{`${user.first_name} ${user.last_name}`}</p>)}
+            {project.users.map((user) => <p className="m-2" key={user.id}>{user.name}</p>)}
           </div>
         )}
       </td>

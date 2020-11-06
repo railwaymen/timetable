@@ -17,7 +17,7 @@ RSpec.describe Api::ProjectsController do
     project.attributes.slice('color', 'name', 'id').merge(
       leader_name: project.leader&.name,
       users: work_times.map do |work_time|
-        { id: work_time.user.id, first_name: work_time.user.first_name, last_name: work_time.user.last_name }
+        { id: work_time.user.id, name: work_time.user.name }
       end
     )
   end

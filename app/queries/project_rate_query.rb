@@ -3,7 +3,7 @@
 require_relative 'querable'
 
 class ProjectRateQuery
-  UserStats = Struct.new(:id, :first_name, :last_name, :total, keyword_init: true)
+  UserStats = Struct.new(:id, :name, :total, keyword_init: true)
   ProjectStats = Struct.new(:project_id, :name, :users, :color, :total, :leader_name, :leader_id, :discarded_at, keyword_init: true)
   include Querable
 
@@ -21,7 +21,7 @@ class ProjectRateQuery
       project_stat = project_stats.find { |p| p.project_id == record['project_id'] } || project_stats.push(project_stats(record)).last
       next if record['user_id'].nil?
 
-      project_stat.users.push UserStats.new(id: record['user_id'], first_name: record['user_first_name'], last_name: record['user_last_name'], total: record['total_for_user'])
+      project_stat.users.push UserStats.new(id: record['user_id'], name: record['user_name'], total: record['total_for_user'])
     end
     project_stats
   end
@@ -78,8 +78,7 @@ class ProjectRateQuery
         SUM(work_times.duration) OVER(PARTITION BY work_times.user_id, projects) AS total_for_user,
         SUM(work_times.duration) OVER(PARTITION BY projects) AS total_for_project,
         users.id AS user_id,
-        users.first_name AS user_first_name,
-        users.last_name AS user_last_name,
+        users.first_name || ' ' || users.last_name as user_name,
         leaders.id as leader_id,
         leaders.first_name || ' ' || leaders.last_name as leader_name
       FROM projects
