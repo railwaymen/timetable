@@ -44,7 +44,7 @@ class ReportUserRecord extends React.Component {
                     {row.project_name}
                   </a>
                   (
-                  {countDurationPercentage(row.time_worked, row.user_work_time)}
+                  <span className="ml-2">{countDurationPercentage(row.time_worked, row.user_work_time)}</span>
                   )
                   <span className="badge badge-dark ml-auto">{formattedDuration(row.time_worked)}</span>
                 </li>

@@ -27,11 +27,10 @@ const ReportProjectTagRecord = ({
               <a
                 href={`/timesheet?project_id=${row.project_id}&user_id=${user_id}&from=${from}&to=${to}&tag_id=${row.tag_id}`}
                 onClick={onRedirect}
-                className="tags selected"
               >
                 {row.tag}
               </a>
-              {countDurationPercentage(row.duration, row.project_duration)}
+              <span className="ml-2">{countDurationPercentage(row.duration, row.project_duration)}</span>
               <span className="badge badge-dark ml-auto">{formattedDuration(row.duration)}</span>
             </li>
           )) }
