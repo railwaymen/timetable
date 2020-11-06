@@ -13,7 +13,8 @@ test:
 
 security_audit:
   script:
-    - bundle exec bundle-audit check --update --quiet
+    - bundle exec bundle-audit update
+    - bundle exec bundle-audit check
   allow_failure: true
 
 production:
