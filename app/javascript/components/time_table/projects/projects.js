@@ -38,6 +38,11 @@ function Projects() {
             <NavLink className="btn btn-secondary active" exact to="/projects">{I18n.t('common.rank')}</NavLink>
             <NavLink className="btn btn-secondary" to="/projects/list">{I18n.t('common.all')}</NavLink>
           </div>
+          { currentUser.isSuperUser() && (
+            <div className="btn-group pull-left">
+              <NavLink to="/projects/new" className="btn btn-secondary pull-left">{I18n.t('common.add')}</NavLink>
+            </div>
+          )}
           <div className="btn-group pull-left">
             <RangeFilter range={range} setRange={setRange} />
           </div>
