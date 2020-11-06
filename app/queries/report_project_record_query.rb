@@ -32,6 +32,7 @@ class ReportProjectRecordQuery < RecordQuery
         AND work_times.discarded_at IS NULL
         #{projects_access}
         #{user_filter}
+        #{tag_filter}
       ORDER BY project_name ASC, #{assign_sort}
     )
   end

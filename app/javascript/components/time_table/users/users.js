@@ -35,9 +35,9 @@ function Users() {
           onChange={(e) => setVisibility(e.target.value)}
           value={visibility}
         >
-          <option value="active">{I18n.t('apps.users.active')}</option>
-          <option value="inactive">{I18n.t('apps.users.inactive')}</option>
-          <option value="all">{I18n.t('apps.users.all')}</option>
+          <option value="active">{I18n.t('common.active')}</option>
+          <option value="inactive">{I18n.t('common.inactive')}</option>
+          <option value="all">{I18n.t('common.all')}</option>
         </select>
       </div>
       <table className="table table-striped">

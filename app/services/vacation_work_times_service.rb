@@ -19,22 +19,10 @@ class VacationWorkTimesService
   end
 
   def work_times
-    @work_times ||= @user.work_times.where(work_time_sql,
-                                           start_date: @vacation.start_date,
-                                           end_date: @vacation.end_date)
+    @work_times ||= Vacations::WorkTimesIn.new(@vacation.start_date, @vacation.end_date, @user).perform
   end
 
   private
-
-  def work_time_sql
-    <<-SQL
-      (
-        (starts_at BETWEEN :start_date AND :end_date) OR
-        (ends_at BETWEEN :start_date AND :end_date)
-      ) AND
-      work_times.discarded_at IS NULL
-    SQL
-  end
 
   def work_time_params(day)
     {
@@ -42,8 +30,13 @@ class VacationWorkTimesService
       user_id: @user.id,
       body: I18n.t("common.vacation_code.#{@vacation.vacation_sub_type || @vacation.vacation_type}"),
       starts_at: day.to_date.beginning_of_day,
-      ends_at: day.to_date.beginning_of_day + 8.hours
+      ends_at: day.to_date.beginning_of_day + 8.hours,
+      tag: default_tag
     }
+  end
+
+  def default_tag
+    @default_tag ||= Tag.where(use_as_default: true).first!
   end
 
   def build_new_work_time(params)

@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   include Discard::Model
+  include FilterConcern
   PHONE_REGEX = /\A[0-9()\-+\s]*\z/.freeze
 
   # Include default devise modules. Others available are:
@@ -42,14 +43,6 @@ class User < ApplicationRecord
         ORDER BY contract_name::bytea ASC
       ) users
     ))
-  end
-
-  def self.filter_by(action)
-    case action
-    when :active then kept
-    when :inactive then discarded
-    else all
-    end
   end
 
   def active_for_authentication?
@@ -109,7 +102,7 @@ class User < ApplicationRecord
 
   def used_vacation_days(selected_vacations = vacations.current_year)
     hash = { planned: 0, requested: 0, compassionate: 0, paternity: 0, parental: 0, upbringing: 0,
-             unpaid: 0, rehabilitation: 0, illness: 0, care: 0 }
+             unpaid: 0, rehabilitation: 0, illness: 0, care: 0, overtime: 0 }
     selected_vacations.accepted.find_each do |vacation|
       if vacation.vacation_type == 'others'
         hash[vacation.vacation_sub_type.to_sym] += vacation.start_date.business_days_until(vacation.end_date + 1.day)

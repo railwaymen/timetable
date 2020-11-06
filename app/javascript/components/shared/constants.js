@@ -1,4 +1,4 @@
-export const departmentColors = {
+const departmentColors = {
   ux: 'rgb(255, 205, 86)',
   qa: 'rgb(75, 192, 192)',
   dev: 'rgb(242, 113, 115)',
@@ -7,9 +7,4 @@ export const departmentColors = {
   jira: 'rgb(54, 162, 235)',
 };
 
-export const tagColors = {
-  dev: 'rgb(81, 158, 195)',
-  im: 'rgb(170, 145, 58)',
-  cc: 'rgb(117, 16, 95)',
-  res: 'rgb(88, 153, 48)',
-};
+export default departmentColors;

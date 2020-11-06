@@ -6,7 +6,7 @@ RSpec.describe VacationsYearlyReportGenerator do
   def response(users)
     result = "Contract ID,Developer,#{I18n.t('common.planned')},#{I18n.t('common.requested')},#{I18n.t('common.compassionate')},"\
              "#{I18n.t('common.paternity')},#{I18n.t('common.parental')},#{I18n.t('common.upbringing')},#{I18n.t('common.unpaid')},"\
-             "#{I18n.t('common.rehabilitation')},#{I18n.t('common.illness')},#{I18n.t('common.care')},#{I18n.t('common.sum')}\n"
+             "#{I18n.t('common.rehabilitation')},#{I18n.t('common.illness')},#{I18n.t('common.care')},#{I18n.t('common.overtime')},#{I18n.t('common.sum')}\n"
     users.each do |u|
       result += get_user_used_vacation_days(u)
     end
@@ -19,7 +19,7 @@ RSpec.describe VacationsYearlyReportGenerator do
     used_days.each { |ud| sum += ud[1] }
     "#{user.contract_name},#{user},#{used_days[:planned]},#{used_days[:requested]},#{used_days[:compassionate]},"\
     "#{used_days[:paternity]},#{used_days[:parental]},#{used_days[:upbringing]},#{used_days[:unpaid]},"\
-    "#{used_days[:rehabilitation]},#{used_days[:illness]},#{used_days[:care]},#{sum}\n"
+    "#{used_days[:rehabilitation]},#{used_days[:illness]},#{used_days[:care]},#{used_days[:overtime]},#{sum}\n"
   end
 
   describe '#generate' do

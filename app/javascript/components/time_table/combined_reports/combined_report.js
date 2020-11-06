@@ -4,15 +4,36 @@ import { Helmet } from 'react-helmet';
 import SynchronizeReport from '@components/time_table/project_reports/synchronize_report';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
+import Breadcrumb from '../../shared/breadcrumb';
 
 function CombinedReport(props) {
   const reportId = parseInt(props.match.params.id, 10);
   const [report, setReport] = useState({ project_reports: [] });
+  const [crumbs, setCrumbs] = useState([]);
+  const [project, setProject] = useState({});
 
   function getReport() {
     Api.makeGetRequest({ url: `/api/combined_reports/${reportId}` })
       .then(({ data }) => setReport(data));
   }
+
+  function getProject() {
+    Api.makeGetRequest({ url: `/api/projects/${report.project_id}` })
+      .then((response) => {
+        setProject(response.data);
+      });
+  }
+
+  useEffect(() => {
+    if (project.name) {
+      setCrumbs([
+        { href: '/projects', label: I18n.t('common.projects') },
+        { href: `/projects/${report.project_id}/work_times`, label: project.name },
+        { href: `/projects/${report.project_id}/combined_reports`, label: I18n.t('common.combined_reports') },
+        { label: report.name },
+      ]);
+    }
+  }, [project]);
 
   function refresh() {
     getReport();
@@ -22,11 +43,16 @@ function CombinedReport(props) {
     getReport();
   }, []);
 
+  useEffect(() => {
+    if (report.project_id) { getProject(); }
+  }, [report]);
+
   return (
     <div className="list-of-reports">
       <Helmet>
         <title>{`${I18n.t('apps.combined_reports.combined_report')} - ${report.name}`}</title>
       </Helmet>
+      <Breadcrumb crumbs={crumbs} />
       <div className="reports-nav">
         <h1>{report.name}</h1>
         {report.generated ? (

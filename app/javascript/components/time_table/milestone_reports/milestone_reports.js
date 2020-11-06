@@ -13,6 +13,7 @@ import MilestoneSummary from './milestone_summary';
 import MilestoneSummaryByPeople from './milestone_summary_by_people';
 import MilestoneTagBreakdownChart from './milestone_tag_breakdown_chart';
 import MilestoneProgressChart from './milestone_progress_chart';
+import Breadcrumb from '../../shared/breadcrumb';
 
 function MilestoneReports() {
   const { projectId } = useParams();
@@ -30,8 +31,24 @@ function MilestoneReports() {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [crumbs, setCrumbs] = useState([]);
   const prevSelectedMilestoneId = usePrevious(selectedMilestoneId);
   const prevRangeType = usePrevious(rangeType);
+
+  function setChartDates(data) {
+    if (selectedMilestone !== null) {
+      let newFromDate = selectedMilestone?.starts_on;
+      let newToDate = selectedMilestone?.ends_on;
+      if (data.length > 0) {
+        newFromDate = moment(data[0].starts_at);
+        newToDate = moment(data[data.length - 1].ends_at);
+        newFromDate = newFromDate.isBefore(selectedMilestone.starts_on) ? newFromDate.formatDate() : selectedMilestone.starts_on;
+        newToDate = newToDate.isAfter(selectedMilestone.ends_on) ? newToDate.formatDate() : selectedMilestone.ends_on;
+      }
+      setToDate(newToDate);
+      setFromDate(newFromDate);
+    }
+  }
 
   function getWorkTimes() {
     const params = rangeType === 'customDates' ? `?from=${fromDate}&to=${toDate}` : `?milestone_id=${selectedMilestoneId}`;
@@ -52,6 +69,8 @@ function MilestoneReports() {
           .groupBy('user_name')
           .mapValues((records) => _.sumBy(records, 'duration'))
           .value();
+
+        if (rangeType !== 'customDates') setChartDates(response.data);
 
         setReportData({
           workTimes: response.data.reverse(), workTimesSumByType, workTimesSumByTag, workTimesSumByUser,
@@ -126,6 +145,16 @@ function MilestoneReports() {
   }, []);
 
   useEffect(() => {
+    if (project.name) {
+      setCrumbs([
+        { href: '/projects', label: I18n.t('common.projects') },
+        { href: `/projects/${projectId}/work_times`, label: project.name },
+        { label: I18n.t('common.milestone_reports') },
+      ]);
+    }
+  }, [project]);
+
+  useEffect(() => {
     if (prevSelectedMilestoneId) getWorkTimes();
   }, [selectedMilestoneId]);
 
@@ -191,20 +220,7 @@ function MilestoneReports() {
           {[project.name, I18n.t('common.milestone_reports')].join(' - ')}
         </title>
       </Helmet>
-      <div className="row mb-3">
-        <div className="col-md-8">
-          <h1 className="project-title">
-            <span
-              className="badge badge-secondary project-badge"
-              style={{
-                backgroundColor: `#${project.color}`,
-              }}
-            />
-            {project.name}
-          </h1>
-        </div>
-      </div>
-
+      <Breadcrumb crumbs={crumbs} />
       <div className="row">
         <div className="col-2">
           <select className="form-control" value={rangeType} name="rangeType" onChange={onRangeTypeChange}>
@@ -233,8 +249,8 @@ function MilestoneReports() {
           {mainChartType === 'progress' && (
             <MilestoneProgressChart
               estimateTotal={rangeType === 'customDates' ? null : selectedMilestone?.total_estimate}
-              fromDate={rangeType === 'customDates' ? fromDate : selectedMilestone?.starts_on}
-              toDate={rangeType === 'customDates' ? toDate : selectedMilestone?.ends_on}
+              fromDate={fromDate}
+              toDate={toDate}
               workTimes={data.workTimes}
             />
           )}

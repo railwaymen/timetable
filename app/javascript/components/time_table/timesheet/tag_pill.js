@@ -7,14 +7,14 @@ const TagPill = ({
   tag, selected, onClick, bold = true,
 }) => (
   <input
-    className={classNames(tag, {
+    className={classNames({
       tags: true, clickable: true, selected, bolded: bold,
     })}
     onClick={onClick}
     name="tag-item"
     type="button"
     key={tag}
-    value={I18n.t(`apps.tag.${tag}`).toUpperCase()}
+    value={tag}
   />
 );
 

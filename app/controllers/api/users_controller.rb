@@ -30,11 +30,6 @@ module Api
       respond_with @user
     end
 
-    def positions
-      tags = Tag.order(:name).pluck(:name)
-      render json: tags
-    end
-
     private
 
     def visiblity_list

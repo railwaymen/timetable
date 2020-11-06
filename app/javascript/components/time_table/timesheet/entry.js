@@ -6,7 +6,6 @@ import _ from 'lodash';
 import URI from 'urijs';
 import ErrorTooltip from '@components/shared/error_tooltip';
 import ProjectsDropdown from './projects_dropdown';
-import TagsDropdown from './tags_dropdown';
 import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 import * as Validations from '../../shared/validations';
@@ -24,6 +23,7 @@ class Entry extends React.Component {
     this.recountTime = this.recountTime.bind(this);
     this.updateProject = this.updateProject.bind(this);
     this.updateTag = this.updateTag.bind(this);
+    this.selectTag = this.selectTag.bind(this);
     this.validate = this.validate.bind(this);
     this.removeErrorsFor = this.removeErrorsFor.bind(this);
     this.paste = this.paste.bind(this);
@@ -37,12 +37,13 @@ class Entry extends React.Component {
       body: undefined,
       duration: 0,
       task: '',
-      tag: 'dev',
       project: {},
       starts_at: moment().format('HH:mm'),
       ends_at: moment().format('HH:mm'),
       durationHours: '00:00',
       date: moment().format('DD/MM/YYYY'),
+      combinedTags: [],
+      tag: {},
       errors: [],
     };
 
@@ -119,7 +120,7 @@ class Entry extends React.Component {
       user_id: userId,
       body,
       task,
-      tag: project.taggable ? tag : 'dev',
+      tag_id: tag.id,
       project_id: project.id,
       starts_at: moment(`${date} ${starts_at}`, 'DD/MM/YYYY HH:mm'),
       ends_at: moment(`${date} ${ends_at}`, 'DD/MM/YYYY HH:mm'),
@@ -137,12 +138,12 @@ class Entry extends React.Component {
       const newState = {
         body: '',
         task: '',
-        tag: 'dev',
+        tag: this.findDefaultTag(),
       };
       if (!this.state.project.autofill) {
         Object.assign(newState, { starts_at: this.state.ends_at, duration: 0, durationHours: '00:00' });
       }
-      if (this.lastProject && this.state.project.lunch) {
+      if (this.lastProject && (this.state.project.lunch || this.state.project.accounting)) {
         newState.project = this.lastProject;
         newState.project_id = this.lastProject.id;
       }
@@ -167,12 +168,16 @@ class Entry extends React.Component {
   }
 
   paste(object) {
+    const project = this.props.projects.find((p) => p.id === object.project.id);
+    const combinedTags = (project.tags || []).concat(this.props.globalTags);
+    const tag = combinedTags.find((t) => t.id === object.tag_id);
     this.setState({
       body: _.unescape(object.body),
-      project: object.project,
-      project_id: object.project.id,
+      project,
+      project_id: project.id,
       task: object.task,
-      tag: object.tag || 'dev',
+      combinedTags,
+      tag: tag || this.findDefaultTag(),
     });
   }
 
@@ -186,7 +191,7 @@ class Entry extends React.Component {
   validate() {
     const { project } = this.state;
     const {
-      body, starts_at, ends_at, project_id, duration, task, tag,
+      body, starts_at, ends_at, project_id, duration, task,
     } = this.state;
 
     if (!project.taggable || project.autofill) {
@@ -198,10 +203,13 @@ class Entry extends React.Component {
       ends_at: Validations.presence(ends_at),
       project_id: Validations.presence(project_id),
       duration: Validations.greaterThan(0, duration),
-      tag: Validations.presence(tag),
     };
     Object.keys(errors).forEach((key) => { if (errors[key] === undefined) { delete errors[key]; } });
     return errors;
+  }
+
+  findDefaultTag() {
+    return this.props.globalTags.find((t) => t.use_as_default === true) || this.props.globalTags[0];
   }
 
   updateTag(tag_obj) {
@@ -211,6 +219,10 @@ class Entry extends React.Component {
       this.removeErrorsFor('tag');
       this.recountTime();
     });
+  }
+
+  selectTag(tag) {
+    this.setState({ tag });
   }
 
   updateProject(project, focusPreviousInput) {
@@ -230,6 +242,8 @@ class Entry extends React.Component {
     this.setState({
       ...autoSettings,
       project,
+      combinedTags: project.tags.concat(this.props.globalTags),
+      tag: this.findDefaultTag(),
       project_id: project.id,
     }, () => {
       this.removeErrorsFor('project_id');
@@ -276,7 +290,7 @@ class Entry extends React.Component {
 
   render() {
     const {
-      body, task, tag, starts_at, ends_at, durationHours, date, errors, project,
+      body, task, tag, starts_at, ends_at, durationHours, date, errors, project, combinedTags,
     } = this.state;
     const { requestsLocked } = this.props;
 
@@ -318,15 +332,31 @@ class Entry extends React.Component {
                   </div>
                 )}
               </div>
-              <div className="col-sm-4 col-md-2 project">
+              <div className={`col-sm-4  project-container ${(project.taggable || project.tags_enabled) ? 'col-md-2' : 'col-md-3'}`}>
                 <div className="project-dropdown">
                   {errors.projectId && <ErrorTooltip errors={errors.projectId} />}
                   <div>
-                    <ProjectsDropdown updateProject={this.updateProject} selectedProject={this.state.project} projects={this.props.projects} />
+                    <ProjectsDropdown
+                      includeColors
+                      placeholder={I18n.t('apps.timesheet.select_project')}
+                      updateProject={this.updateProject}
+                      selectedProject={this.state.project}
+                      projects={this.props.projects}
+                    />
                   </div>
                 </div>
               </div>
-              <div className="col-sm-12 col-md-4 date">
+              { (project.taggable || project.tags_enabled) && (
+                <div className="col-sm-4 col-md-1 tag-container">
+                  <ProjectsDropdown
+                    placeholder={I18n.t('apps.timesheet.select_tag')}
+                    updateProject={this.selectTag}
+                    selectedProject={tag}
+                    projects={combinedTags}
+                  />
+                </div>
+              )}
+              <div className="col-sm-12 col-md-3 date">
                 <div className="time">
                   <div className="form-group">
                     <input
@@ -378,12 +408,6 @@ class Entry extends React.Component {
                 />
               </div>
             </div>
-            { project.taggable && (
-              <div className="tag-container">
-                {errors.tag && <ErrorTooltip errors={errors.tag} />}
-                <TagsDropdown updateTag={this.updateTag} selectedTag={tag} tags={this.props.tags} />
-              </div>
-            )}
             <div className="form-actions bg-white btn-group">
               <button
                 type="button"

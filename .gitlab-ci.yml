@@ -11,6 +11,12 @@ test:
   script:
     - bundle exec rake
 
+security_audit:
+  script:
+    - bundle exec bundle-audit update
+    - bundle exec bundle-audit check
+  allow_failure: true
+
 production:
   stage: deploy
   only:
@@ -26,7 +32,7 @@ staging:
   script:
     - bundle exec cap staging deploy
 
-demo:
+.demo:
   stage: deploy
   only:
     - master

@@ -82,7 +82,7 @@ class VacationService
   def create_vacation_event
     vacation_user = User.find(@vacation.user_id)
     user_resources_ids = vacation_user.project_resources.pluck(:id, :rid)
-    vacation_project = Project.find_by!(name: 'Vacation')
+    vacation_project = Project.vacation.first!
     starts_at = @vacation.start_date.beginning_of_day
     ends_at = @vacation.end_date.end_of_day
     user_resources_ids.each do |id, rid|

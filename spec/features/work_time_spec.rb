@@ -23,18 +23,19 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
   def create_task(message, from, to)
     within('#content') do
       fill_in 'What have you done ?', with: message
-      find('.project-dropdown #search-input').click
+      find('.project-dropdown input').click
       find('.project-dropdown .dropdown-item:nth-child(1)').click
       find('#start').click
       fill_in 'start', with: from
       find('#end').click
       fill_in 'end', with: to
       fill_in 'task', with: 'www.example.com/task1'
-      find('input.tags:last-child').click
+      find('.tag-container input').click
+      find('.tag-container .dropdown-item:nth-child(1)').click
     end
 
-    find(:css, '.dropdown div.text').click
-    find(:css, '.dropdown-menu.show > .dropdown-item:last-child').click
+    find(:css, '.project-dropdown div.text').click
+    find(:css, '.project-dropdown .dropdown-menu.show > .dropdown-item:last-child').click
     page.find('#content button.btn-success', text: 'Save').click
 
     expect(page).to have_content message
@@ -139,22 +140,20 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
 
     click_link('Projects')
     expect(page).to have_content('Rank')
-    expect(page).to have_selector('select')
-    expect(page).to have_selector('select > option', count: 3)
     expect(page).to have_selector('.projects-cards > .project-card', count: 1)
 
     aggregate_failures 'properly filter' do
-      find('select > option', text: 'Last 60 days').click
+      find('select[name=range] > option', text: 'Last 60 days').click
       expect(page).to have_selector('.projects-cards > .project-card', count: 2)
     end
 
     aggregate_failures 'properly filter' do
-      find('select > option', text: 'Last 90 days').click
+      find('select[name=range] > option', text: 'Last 90 days').click
       expect(page).to have_selector('.projects-cards > .project-card', count: 3)
     end
 
     aggregate_failures 'properly filter' do
-      find('select > option', text: 'Last 30 days').click
+      find('select[name=range] > option', text: 'Last 30 days').click
       expect(page).to have_selector('.projects-cards > .project-card', count: 1)
     end
 
@@ -164,12 +163,12 @@ describe 'signs me in, view projects, accounting_periods, timesheet', type: :fea
     end
 
     aggregate_failures 'projects listing - inactive' do
-      find('select > option', text: 'Inactive').click
+      find('select[name=visibility] > option', text: 'Inactive').click
       expect(page).to have_selector('tbody > tr', count: 1)
     end
 
     aggregate_failures 'projects listing - all' do
-      find('select > option', text: 'All').click
+      find('select[name=visibility] > option', text: 'All').click
       expect(page).to have_selector('tbody > tr', count: 4)
     end
   end

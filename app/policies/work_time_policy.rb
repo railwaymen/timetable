@@ -4,7 +4,7 @@ class WorkTimePolicy < ApplicationPolicy
   def update?
     return true if record.project.nil?
 
-    user.admin? || !record.project.accounting?
+    user.admin? || user.manager? || !record.project.accounting?
   end
 
   def permitted_attributes
@@ -18,11 +18,11 @@ class WorkTimePolicy < ApplicationPolicy
       project_id
       body
       task
-      tag
+      tag_id
       starts_at
       ends_at
     ]
-    params = params.concat(%i[user_id]) if user.admin?
+    params = params.concat(%i[user_id]) if user.admin? || user.manager?
     params
   end
 
@@ -30,7 +30,7 @@ class WorkTimePolicy < ApplicationPolicy
     params = %i[
       body
       task
-      tag
+      tag_id
       starts_at
       ends_at
     ]
@@ -47,7 +47,7 @@ class WorkTimePolicy < ApplicationPolicy
       if user.admin? || user.manager?
         scope.all
       else
-        scope.joins(:project).where('work_times.user_id=:user_id OR projects.leader_id=:user_id', user_id: user.id)
+        scope.joins(:project).where('work_times.user_id = :user_id OR projects.leader_id = :user_id', user_id: user.id)
       end
     end
   end

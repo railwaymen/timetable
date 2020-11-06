@@ -6,6 +6,7 @@ import Modal from '@components/shared/modal';
 import WorkHoursDay from './work_hours_day';
 import * as Api from '../../../shared/api';
 import { displayDuration } from '../../../shared/helpers';
+import SearchBox from './search_box';
 
 class EntryHistory extends React.Component {
   constructor(props) {
@@ -28,9 +29,8 @@ class EntryHistory extends React.Component {
     this.onPreviousUserChange = this.onPreviousUserChange.bind(this);
     this.onNextUserChange = this.onNextUserChange.bind(this);
     this.filterWorkHoursByUser = this.filterWorkHoursByUser.bind(this);
-    this.translateTag = this.translateTag.bind(this);
     this.switchMonth = this.switchMonth.bind(this);
-    this.filterWorkHours = this.filterWorkHours.bind(this);
+    this.setWorkHoursAfterSearch = this.setWorkHoursAfterSearch.bind(this);
 
     this.state = {
       workHours: [],
@@ -60,27 +60,29 @@ class EntryHistory extends React.Component {
     });
 
     const linkParams = URI(window.location.href).search(true);
-    const filteredUserId = linkParams.user_id;
-    let {
-      from, to, project_id,
-    } = this.state;
-
-    if (linkParams.from && linkParams.to) {
-      from = linkParams.from.replace(' ', '+');
-      to = linkParams.to.replace(' ', '+');
-    }
-
-    // eslint-disable-next-line
-    if (linkParams.project_id) project_id = linkParams.project_id;
-
-    if (filteredUserId) {
-      this.filterWorkHoursByUser(filteredUserId, {
+    if (!linkParams.query) {
+      const filteredUserId = linkParams.user_id;
+      let {
         from, to, project_id,
-      });
-    } else {
-      this.getWorkHours({
-        from, to, project_id,
-      });
+      } = this.state;
+
+      if (linkParams.from && linkParams.to) {
+        from = linkParams.from.replace(' ', '+');
+        to = linkParams.to.replace(' ', '+');
+      }
+
+      // eslint-disable-next-line
+      if (linkParams.project_id) project_id = linkParams.project_id;
+
+      if (filteredUserId) {
+        this.filterWorkHoursByUser(filteredUserId, {
+          from, to, project_id,
+        });
+      } else {
+        this.getWorkHours({
+          from, to, project_id,
+        });
+      }
     }
   }
 
@@ -187,6 +189,7 @@ class EntryHistory extends React.Component {
                   .removeSearch('to')
                   .removeSearch('project_id')
                   .removeSearch('user_id')
+                  .removeSearch('query')
                   .addSearch(prepareParams);
 
                 window.history.pushState('Timetable', 'Reports', newPath);
@@ -195,16 +198,35 @@ class EntryHistory extends React.Component {
               this.groupWorkHoursPerDay();
               this.totalWorkHours();
 
-              let lastWorkTime = this.state.workHours[0];
-              if (lastWorkTime && lastWorkTime.project.name === 'Lunch') {
-                // eslint-disable-next-line
-                lastWorkTime = this.state.workHours[1];
-              }
-
-              this.props.setLastProject((lastWorkTime || {}).project);
+              const lastWorkTime = this.state.workHours.filter((workTime) => workTime.project.lunch === false && workTime.project.accounting === false)[0];
+              if (lastWorkTime) this.props.setLastProject(lastWorkTime.project);
             });
           });
       });
+  }
+
+  setWorkHoursAfterSearch(workHours, params) {
+    this.setState({
+      workHours,
+      shouldWork: 0,
+      mandatoryHours: 0,
+      selectedProject: {},
+      project_id: undefined,
+      from: moment().startOf('month').format(),
+      to: moment().endOf('month').format(),
+    }, () => {
+      const newPath = URI(window.location.href)
+        .removeSearch('from')
+        .removeSearch('to')
+        .removeSearch('project_id')
+        .removeSearch('user_id')
+        .removeSearch('query')
+        .addSearch(params);
+
+      window.history.pushState('Timetable', 'Reports', newPath);
+      this.groupWorkHoursPerDay();
+      this.totalWorkHours();
+    });
   }
 
   pushEntry(object) {
@@ -232,7 +254,7 @@ class EntryHistory extends React.Component {
         );
 
         let lastWorkTime = this.state.workHours[0];
-        if (lastWorkTime && lastWorkTime.project.name === 'Lunch') {
+        if (lastWorkTime && lastWorkTime.project.lunch === true) {
           // eslint-disable-next-line
           lastWorkTime = this.state.workHours[1];
           if (lastWorkTime) {
@@ -383,11 +405,6 @@ class EntryHistory extends React.Component {
     return displayDuration(value);
   }
 
-  translateTag(tag_key) {
-    if (tag_key === 'dev') return null;
-    return tag_key && I18n.t(`apps.tag.${tag_key}`);
-  }
-
   renderGroupedRecords() {
     return (
       this.state.daysKeys.map((key, index) => {
@@ -403,7 +420,7 @@ class EntryHistory extends React.Component {
             increaseWorkHours={this.increaseWorkHours}
             pushEntry={this.pushEntry}
             projects={this.props.projects}
-            tags={this.props.tags}
+            globalTags={this.props.globalTags}
             updateWorkHours={this.updateWorkHours}
             assignModalInfo={this.assignModalInfo}
             lockRequests={this.props.lockRequests}
@@ -439,7 +456,7 @@ class EntryHistory extends React.Component {
             </span>
           </td>
           <td>
-            <span className={this.changedClassName(version, 'tag')}>
+            <span className={this.changedClassName(version, 'tag_id')}>
               {version.tag}
             </span>
           </td>
@@ -498,6 +515,7 @@ class EntryHistory extends React.Component {
 
     return (
       <div className="float-right row mx-0">
+        <SearchBox setWorkHoursAfterSearch={this.setWorkHoursAfterSearch} from={from} selectedProject={selectedProject} getWorkHours={this.getWorkHours} />
         <div className="dropdown project-filters">
           <button
             className="btn btn-info btn-block dropdown-toggle"

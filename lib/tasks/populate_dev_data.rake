@@ -10,7 +10,7 @@ task populate_dev_data: :environment do
 
   10.times do |i|
     index = i + 1
-    User.where(id: index).first_or_create! email: "user#{index}@example.com", first_name: FFaker::Name.first_name, last_name: FFaker::Name.last_name, password: 'password'
+    User.where(email: "user#{index}@example.com").first_or_create! first_name: FFaker::Name.first_name, last_name: FFaker::Name.last_name, password: 'password'
   end
 
   10.times do |i|
@@ -26,7 +26,7 @@ task populate_dev_data: :environment do
         body = FFaker::DizzleIpsum.sentence
         starts_at = day.days.ago.beginning_of_day + 8.hours + i.hours
         ends_at = day.days.ago.beginning_of_day + 8.hours + i.hours + 1.hour
-        user.work_times.create! body: body, starts_at: starts_at, ends_at: ends_at, project_id: project_ids.sample, creator: user, department: user.department
+        user.work_times.create! tag: WorkTime.tags.keys.sample, body: body, starts_at: starts_at, ends_at: ends_at, project_id: project_ids.sample, creator: user, department: user.department
       end
     end
   end

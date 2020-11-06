@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import _ from 'lodash';
-import URI from 'urijs';
 import ErrorTooltip from '@components/shared/error_tooltip';
 import { defaultDatePickerProps } from '../../shared/helpers';
 import translateErrors from '../../shared/translate_errors';
@@ -26,7 +25,11 @@ function Entry(props) {
   const {
     startDate, endDate, description, vacationType,
   } = vacation;
-  const { selectedUser, setSelectedUser, getVacations } = props;
+  const { user, setUser, getVacations } = props;
+
+  useEffect(() => {
+    setErrors({});
+  }, [vacation]);
 
   useEffect(() => {
     if (window.currentUser.staff_manager) {
@@ -37,10 +40,6 @@ function Entry(props) {
         });
     }
   }, []);
-
-  useEffect(() => {
-    setErrors({});
-  }, [vacation]);
 
   function onVacationChange(name, value) {
     setVacation({
@@ -118,9 +117,8 @@ function Entry(props) {
   function onSubmit() {
     const newErrors = validate();
     if (!_.isEmpty(newErrors)) { return setErrors(newErrors); }
-    const userId = (window.currentUser.staff_manager) ? selectedUser.id : URI(window.location.href).search(true).user_id || currentUser.id;
     const entryData = {
-      user_id: userId,
+      user_id: user.id,
       start_date: startDate,
       end_date: endDate,
       vacation_type: vacationType,
@@ -143,17 +141,7 @@ function Entry(props) {
       };
       setVacation(newVacation);
     }).catch((e) => {
-      // if (e.errors && (e.errors.base || e.errors.start_date || e.errors.end_date || e.errors.description || e.errors.vacation_type)) {
-      //   newErrors = {};
-      //   if (e.errors.start_date) newErrors.startDate = e.errors.start_date;
-      //   if (e.errors.end_date) newErrors.endDate = e.errors.end_date;
-      //   if (e.errors.description) newErrors.description = e.errors.description;
-      //   if (e.errors.vacation_type) newErrors.vacationType = e.errors.vacation_type;
-      //   if (e.errors.base) newErrors.base = e.errors.base;
       setErrors(translateErrors('vacation', e.errors));
-      // } else {
-      //   alert(I18n.t('activerecord.errors.models.vacation.basic'));
-      // }
     });
     if (!_.isEmpty(errors)) {
       return false;
@@ -161,18 +149,10 @@ function Entry(props) {
     return true;
   }
 
-  function Submit() {
-    return (
-      <button type="button" className="bt-vacation" onClick={onSubmit}>
-        <span className="bt-txt">{I18n.t('common.send')}</span>
-      </button>
-    );
-  }
-
   function FilterUsers(filter) {
     const lowerFilter = filter.toLowerCase();
     return _.filter(users, (u) => (
-      u.active && (`${u.first_name} ${u.last_name}`.toLowerCase().match(lowerFilter) || `${u.last_name} ${u.first_name}`.toLowerCase().match(lowerFilter))
+      u.name.toLowerCase().match(lowerFilter)
     ));
   }
 
@@ -180,21 +160,29 @@ function Entry(props) {
     return (
       <div>
         <b>
-          {`${currentlySelectedUser.first_name} ${currentlySelectedUser.last_name}`}
+          {currentlySelectedUser.name}
         </b>
       </div>
     );
   }
 
-  function RenderUsersList(user, currentlySelectedUser) {
+  function RenderUsersList(dropDownUser, currentlySelectedUser) {
     return (
       <div>
-        {user.id === currentlySelectedUser.id ? (
+        {dropDownUser.id === currentlySelectedUser.id ? (
           <b>
-            {`${user.first_name} ${user.last_name}`}
+            {dropDownUser.name}
           </b>
-        ) : `${user.first_name} ${user.last_name}`}
+        ) : dropDownUser.name}
       </div>
+    );
+  }
+
+  function Submit() {
+    return (
+      <button type="button" className="bt-vacation" onClick={onSubmit}>
+        <span className="bt-txt">{I18n.t('common.send')}</span>
+      </button>
     );
   }
 
@@ -222,8 +210,8 @@ function Entry(props) {
           <div className="user-filter">
             <Dropdown
               objects={users}
-              updateObject={(currentlySelectedUser) => setSelectedUser(currentlySelectedUser)}
-              selectedObject={selectedUser}
+              updateObject={(currentlySelectedUser) => setUser(currentlySelectedUser)}
+              selectedObject={user}
               filterObjects={FilterUsers}
               renderSelectedObject={RenderSelectedUser}
               renderObjectsList={RenderUsersList}
@@ -239,8 +227,8 @@ function Entry(props) {
 }
 
 Entry.propTypes = {
-  selectedUser: PropTypes.object.isRequired,
-  setSelectedUser: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  setUser: PropTypes.func.isRequired,
   getVacations: PropTypes.func.isRequired,
 };
 

@@ -7,12 +7,10 @@ import ErrorTooltip from '@components/shared/error_tooltip';
 import ModalButton from '@components/shared/modal_button';
 import ProjectsDropdown from '../projects_dropdown';
 import * as Api from '../../../shared/api';
-import TagsDropdown from '../tags_dropdown';
 import { defaultDatePickerProps, formattedHoursAndMinutes, inclusiveParse } from '../../../shared/helpers';
 import translateErrors from '../../../shared/translate_errors';
 import WorkTimeTask from '../../../shared/work_time_task';
 import WorkTimeDuration from '../../../shared/work_time_duration';
-import WorkTimeTag from '../../../shared/work_time_tag';
 import WorkTimeTime from '../../../shared/work_time_time';
 import WorkTimeDescription from '../../../shared/work_time_description';
 
@@ -26,26 +24,28 @@ class WorkHours extends React.Component {
     this.toggleEdit = this.toggleEdit.bind(this);
     this.renderBodyEditable = this.renderBodyEditable.bind(this);
     this.renderDateEditable = this.renderDateEditable.bind(this);
-    this.renderTagEditable = this.renderTagEditable.bind(this);
     this.workHoursJsonApi = this.workHoursJsonApi.bind(this);
     this.saveWorkHours = this.saveWorkHours.bind(this);
     this.getInfo = this.getInfo.bind(this);
     this.disableEdit = this.disableEdit.bind(this);
-    this.toggleTagEdit = this.toggleTagEdit.bind(this);
     this.onHoursEdit = this.onHoursEdit.bind(this);
     this.onTimeFocus = this.onTimeFocus.bind(this);
     this.onTimeBlur = this.onTimeBlur.bind(this);
     this.recountTime = this.recountTime.bind(this);
+    this.selectTag = this.selectTag.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onTagChange = this.onTagChange.bind(this);
+    this.filterUsers = this.filterUsers.bind(this);
     this.updateProject = this.updateProject.bind(this);
 
     this.state = {
       workHours: this.props.workHours,
       editing: false,
-      tagEditable: false,
       errors: [],
     };
+
+    this.searchRef = React.createRef();
+    this.tagRef = React.createRef();
   }
 
   componentDidMount() {
@@ -256,7 +256,6 @@ class WorkHours extends React.Component {
     if (this.state.workHours.editable === true) {
       this.setState({
         editing: true,
-        tagEditable: true,
         errors: [],
       }, () => {
         document.addEventListener('click', this.disableEdit);
@@ -275,21 +274,6 @@ class WorkHours extends React.Component {
     });
   }
 
-  toggleTagEdit() {
-    const { tagEditable } = this.state;
-
-    if (tagEditable) {
-      document.removeEventListener('click', this.toggleTagEdit);
-    } else {
-      document.addEventListener('click', this.toggleTagEdit);
-    }
-
-    this.setState({
-      editing: false,
-      tagEditable: !tagEditable,
-    });
-  }
-
   disableEdit(e) {
     const { localName } = e.target;
     const properly = ['textarea', 'input'];
@@ -299,13 +283,34 @@ class WorkHours extends React.Component {
 
       this.setState({
         editing: false,
-        tagEditable: false,
       }, () => {
         if (!this.state.editing) {
           this.saveWorkHours();
         }
       });
     }
+  }
+
+  selectTag(tag) {
+    // const id = parseInt(e.target.attributes.getNamedItem('data-value').value, 10);
+
+    this.setState((prevState) => ({
+      workHours: {
+        ...prevState.workHours,
+        tag_id: tag.id,
+      },
+    }), this.saveWorkHours);
+  }
+
+  combinedTags() {
+    const {
+      workHours,
+    } = this.state;
+
+    const project = this.props.projects.find((p) => p.id === workHours.project_id);
+    if (project == null) { return this.props.globalTags; }
+
+    return this.props.globalTags.concat(project.tags);
   }
 
   workHoursJsonApi() {
@@ -315,11 +320,16 @@ class WorkHours extends React.Component {
       id: workHours.id,
       body: workHours.body,
       task: workHours.task,
-      tag: workHours.tag,
+      tag_id: workHours.tag_id,
       project_id: workHours.project.id,
       starts_at: workHours.starts_at,
       ends_at: workHours.ends_at,
     };
+  }
+
+  filterUsers(filter) {
+    const lowerFilter = filter.toLowerCase();
+    return _.filter(this.combinedTags(), (t) => (t.name.toLowerCase().match(lowerFilter)));
   }
 
   renderBodyEditable() {
@@ -338,14 +348,6 @@ class WorkHours extends React.Component {
             />
           </div>
         )}
-      </div>
-    );
-  }
-
-  renderTagEditable() {
-    return (
-      <div className="tag-container">
-        <TagsDropdown updateTag={this.onTagChange} selectedTag={this.state.workHours.tag} tags={this.props.tags} />
       </div>
     );
   }
@@ -389,9 +391,10 @@ class WorkHours extends React.Component {
 
   render() {
     const {
-      workHours, editing, errors, tagEditable,
+      workHours, editing, errors,
     } = this.state;
 
+    const selectedTag = this.combinedTags().find((t) => t.id === workHours.tag_id) || {};
     const internalProjects = this.props.projects.filter((p) => p.internal === true && !p.accounting);
 
     return (
@@ -412,7 +415,13 @@ class WorkHours extends React.Component {
               <div className="project-container">
                 {editing && currentUser.isAdmin() && workHours.project.internal && !workHours.project.accounting ? (
                   <div className="project-dropdown">
-                    <ProjectsDropdown updateProject={this.updateProject} selectedProject={workHours.project} projects={internalProjects} />
+                    <ProjectsDropdown
+                      includeColors
+                      placeholder={I18n.t('apps.timesheet.select_project')}
+                      updateProject={this.updateProject}
+                      selectedProject={workHours.project}
+                      projects={internalProjects}
+                    />
                   </div>
                 ) : (
                   <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
@@ -420,11 +429,22 @@ class WorkHours extends React.Component {
                   </span>
                 )}
               </div>
-              { workHours.project.taggable && (
-              <WorkTimeTag tagEditable={tagEditable} workTime={workHours} onClick={this.toggleTagEdit}>
-                { tagEditable && this.renderTagEditable() }
-              </WorkTimeTag>
-              )}
+              <div className="tag-container">
+                {editing && workHours.project.taggable ? (
+                  <div className="project-dropdown">
+                    <ProjectsDropdown
+                      placeholder={I18n.t('apps.timesheet.select_tag')}
+                      updateProject={this.selectTag}
+                      selectedProject={selectedTag}
+                      projects={this.combinedTags()}
+                    />
+                  </div>
+                ) : (
+                  <span className="tag-pill">
+                    {workHours.tag}
+                  </span>
+                )}
+              </div>
             </div>
             {editing ? (
               this.renderDateEditable()

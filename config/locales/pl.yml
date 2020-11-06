@@ -32,8 +32,6 @@ pl:
       project: Projekt
       note: Notatka
       update: Aktualizacja
-      developers: Deweloperzy
-      testers: Testerzy
       color: Kolor
       active: Aktywny
       filter_active: Aktywne
@@ -47,7 +45,15 @@ pl:
       new: Nowy projekt
       external_integration_help: Włącza integracje z JIRA która loguje czas pracy w zadaniach
       external_id_help: Wartość tą można znaleźć na liście projektów JIRA w kolumnie "key" np. SH
+      sort:
+        hours: Sortuj według godzin
+        alphabetical: Sortuj alfabetycznie
+      type:
+        commercial: Komercyjne
+        internal: Wewnętrzne
+        all: Wszystkie
     milestones:
+      progress: Postęp
       add: Nowy etap
       import_from_jira: Importuj z JIRA
       import_in_progress: Trwa import z JIRA ...
@@ -95,7 +101,7 @@ pl:
       restore_previous: Przywróć poprzednią wersję
       restore_first: Przywróć pierwszą wersję
       collision: Kolizja z następującymi raportami
-      all_users: Wszyscy użytkownicy
+      clear_filters: Wyczyść filtry
     combined_reports:
       combined_report: Raport łączony
       combine_reports: Połącz raporty
@@ -117,17 +123,16 @@ pl:
       periods_count: liczbę okresów
       recounting: Przeliczam...
     timesheet:
+      search_placeholder: Szukaj wśród wpisów
       overall_work_time: Łączny czas pracy w wybranym okresie
       what_have_you_done: Nad czym pracowałeś ?
       task_url: Url taska
       select_month: Wybierz miesiąc
       select_project: Wybierz projekt
+      select_tag: Wybierz tag
       required_duration_until_end_of_day: Wymagany czas pracy do końca dnia (dotyczy tylko pracowników etatowych)
       required_duration_until_end_of_month: Wymagany czas pracy do końca miesiąca (dotyczy tylko pracowników etatowych)
-      use_timer: Użyj stopera
-      add_manually: Dodaj ręcznie
       work_time: Czas pracy
-      unsaved_changes: Masz niezapisane zmiany!
       history:
         date: Data
         when: Kiedy
@@ -141,9 +146,6 @@ pl:
         duration: Czas trwania
     users:
       user_active: Aktywny
-      active: Aktywne
-      all: Wszystkie
-      inactive: Nieaktywne
       add: Dodaj nowe konto
       first_name: Imię
       last_name: Nazwisko
@@ -152,7 +154,6 @@ pl:
       button_disabled_tooltip: Tworzenie kont zablokowane. Automatyczne tworzenie poprzez logowanie LDAP.
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
       new: Nowe konto
-      position: Pozycja
       department: Dział
     external_auths:
       authorized: Zewnętrzne autoryzacje
@@ -161,13 +162,6 @@ pl:
       new: Nowe uwierzytelnienie
       domain: Domena
       token: Token
-    tag:
-      dev: Inne
-      im: Spotkanie wewnętrzne
-      ui: Spotkanie wewnętrzne
-      cc: Rozmowa z klientem
-      res: Poszukiwanie informacji
-      various: Różne
     project_report_roles:
       developer: Development
       qa: Quality Assurance
@@ -194,6 +188,7 @@ pl:
       expand_used_days: Rozwiń użyte dni urlopu
       fold_used_days: Zwiń użyte dni urlopu
     staff:
+      all: Wszystkie
       general: Ogólne
       filter: Filtruj
       csv_export: Export .csv
@@ -201,7 +196,6 @@ pl:
       declined: Odrzucone
       unconfirmed: Niepotwierdzone
       approved: Zatwierdzony
-      person: Osoba
       vacation_type: Rodzaj Urlopu
       time_period: Czas Trwania
       choose: Wybierz
@@ -216,7 +210,6 @@ pl:
       show_declined: Pokaż odrzucone
       show_acceptable: Pokaż do zaakceptowania
       acceptable: Do zaakceptowania
-      all: Wszystkie
       available_vacation_days: Pozostałe dni urlopu
       available_vacation_days_after_accepting: Pozostałe dni urlopu po zaakceptowaniu
       user_has_already_filled_in_work_time: 'Użytkownik %{parameter} już wypełnił czas pracy w dniach: '
@@ -235,6 +228,10 @@ pl:
       closed: Zamknięty
       generate_periods: Generuj okresy urlopowe
       edit: Edycja okresu urlopowego
+    tags:
+      new: Nowy tag
+      global: Globany
+      search: Szukaj po nazwie
     projects_distribution:
       add_resource: Dodaj zasoby
       resource_menu: Menu zasobów
@@ -252,6 +249,7 @@ pl:
         update_assignment: '{{user}} zaktualizował zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
         delete_assignment: '{{user}} usunął zasób {{resource}} przypisany do projektu {{project}} od {{start}} do {{end}}'
   common:
+    tag: Tag
     back: Wróć
     expand: "Rozwiń"
     lock: "Zablokuj"
@@ -312,6 +310,7 @@ pl:
     unpaid: Urlop bezpłatny
     rehabilitation: Urlop rehabilitacyjny
     illness: Urlop chorobowy
+    overtime: Odbiór nadgodzin
     care: Urlop opiekuńczy
     care_definition: Opieka zg. z art. 188 Kp.
     vacation_code:
@@ -325,6 +324,7 @@ pl:
       unpaid: Ub
       rehabilitation: R
       illness: Ch
+      overtime: Inne
       care: Op
     vacation_periods: Okresy urlopowe
     title: Tytuł
@@ -342,6 +342,9 @@ pl:
     refresh_error: Wystąpił błąd podczas odświeżania
     project_milestones: Etapy projektu
     milestone_reports: Raporty etapów
+    tags: Tagi
+    active: Aktywne
+    inactive: Nieaktywne
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -510,6 +513,11 @@ pl:
             base:
               combined_reports_exist: Nie można usunąć raportu, ponieważ jest użyty w raporcie łączonym
             name:
+              blank: Nazwa jest wymagana
+        tag:
+          attributes:
+            name:
+              taken: Ta nazwa jest już zajęta
               blank: Nazwa jest wymagana
   activemodel:
     errors:

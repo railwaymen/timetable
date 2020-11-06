@@ -34,7 +34,7 @@ RSpec.describe Api::VacationsController do
   def used_vacation_days_response
     {
       planned: 0, requested: 0, compassionate: 0, paternity: 0, parental: 0, upbringing: 0, unpaid: 0,
-      rehabilitation: 0, illness: 0, care: 0
+      rehabilitation: 0, illness: 0, care: 0, overtime: 0
     }
   end
 

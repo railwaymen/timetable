@@ -1,6 +1,5 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import _ from 'lodash';
 import Entry from './entry';
 import EntryHistory from './history/entry_history';
 import * as Api from '../../shared/api';
@@ -17,14 +16,15 @@ class Timesheet extends React.Component {
 
     this.state = {
       projects: [],
+      lastProject: null,
       tags: [],
       requestsLocked: false,
+      globalTags: [],
     };
   }
 
   componentDidMount() {
     this.getProjects();
-    this.getTags();
   }
 
   onCopy(object) {
@@ -32,25 +32,20 @@ class Timesheet extends React.Component {
   }
 
   getProjects() {
-    Api.makeGetRequest({ url: '/api/projects/simple' })
+    Api.makeGetRequest({ url: '/api/projects/with_tags' })
       .then((response) => {
         this.setState({
-          projects: response.data,
-        });
-      });
-  }
-
-  getTags() {
-    Api.makeGetRequest({ url: '/api/projects/tags' })
-      .then((response) => {
-        this.setState({
-          tags: response.data,
+          projects: response.data.projects,
+          globalTags: response.data.global_tags,
         });
       });
   }
 
   setLastProject(project) {
-    if (!_.isEmpty(project)) this.entry.paste({ project });
+    if (!this.state.lastProject) {
+      this.setState({ lastProject: project });
+      this.entry.paste({ project });
+    }
   }
 
   pushEntry(object) {
@@ -66,7 +61,9 @@ class Timesheet extends React.Component {
   }
 
   render() {
-    const { projects, tags, requestsLocked } = this.state;
+    const {
+      projects, globalTags, tags, requestsLocked,
+    } = this.state;
     const projectsForEntries = projects.filter((project) => !project.accounting);
 
     if (projects.length > 0) {
@@ -82,6 +79,7 @@ class Timesheet extends React.Component {
             tags={tags}
             lockRequests={this.lockRequests}
             requestsLocked={requestsLocked}
+            globalTags={globalTags}
           />
           <EntryHistory
             ref={(entryHistory) => { this.entryHistory = entryHistory; }}
@@ -91,6 +89,7 @@ class Timesheet extends React.Component {
             tags={tags}
             lockRequests={this.lockRequests}
             requestsLocked={requestsLocked}
+            globalTags={globalTags}
           />
         </>
       );

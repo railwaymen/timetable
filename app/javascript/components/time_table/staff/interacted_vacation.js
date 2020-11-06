@@ -67,6 +67,7 @@ function InteractedVacation(props) {
             <option value="parental">{I18n.t('common.parental')}</option>
             <option value="upbringing">{I18n.t('common.upbringing')}</option>
             <option value="unpaid">{I18n.t('common.unpaid')}</option>
+            <option value="overtime">{I18n.t('common.overtime')}</option>
             <option value="rehabilitation">{I18n.t('common.rehabilitation')}</option>
             <option value="illness">{I18n.t('common.illness')}</option>
             <option value="care">{I18n.t('common.care_definition')}</option>

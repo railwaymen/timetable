@@ -6,10 +6,13 @@ import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 import { displayDuration } from '../../shared/helpers';
 import SynchronizeReport from './synchronize_report';
+import Breadcrumb from '../../shared/breadcrumb';
 
 export default function ProjectReports(props) {
   const projectId = parseInt(props.match.params.projectId, 10);
   const [reports, setReports] = useState([]);
+  const [crumbs, setCrumbs] = useState([]);
+  const [project, setProject] = useState({});
 
   function getReports() {
     Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports` })
@@ -46,15 +49,34 @@ export default function ProjectReports(props) {
     }
   }
 
+  function getProject() {
+    Api.makeGetRequest({ url: `/api/projects/${projectId}` })
+      .then((response) => {
+        setProject(response.data);
+      });
+  }
+
   useEffect(() => {
     getReports();
+    getProject();
   }, []);
+
+  useEffect(() => {
+    if (project.name) {
+      setCrumbs([
+        { href: '/projects', label: I18n.t('common.projects') },
+        { href: `/projects/${projectId}/work_times`, label: project.name },
+        { label: I18n.t('common.reports') },
+      ]);
+    }
+  }, [project]);
 
   return (
     <div className="list-of-reports">
       <Helmet>
         <title>{I18n.t('common.reports')}</title>
       </Helmet>
+      <Breadcrumb crumbs={crumbs} />
       <div className="reports-nav">
         <div className="btn-group pull-right">
           <Link className="btn btn-secondary active" to={`/projects/${projectId}/reports`}>

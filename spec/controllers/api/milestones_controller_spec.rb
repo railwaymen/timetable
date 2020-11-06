@@ -35,6 +35,19 @@ RSpec.describe Api::MilestonesController do
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql([milestone_response(milestone)].to_json)
     end
+
+    context 'when work-time has Jira payload' do
+      it 'should relate work-time to milestone by jira-milestone' do
+        sign_in(admin)
+        milestone = create(:milestone, starts_on: 15.days.ago, ends_on: 5.days.ago, jira_issues: ['test'])
+        work_time = create(:work_time, project: milestone.project, integration_payload: { 'Jira' => { 'task_id' => 'test' } })
+
+        get :index, params: { project_id: milestone.project_id, with_estimates: true }, format: :json
+
+        expect(response.code).to eql('200')
+        expect(response.body).to be_json_eql([milestone_response(milestone).merge(work_times_duration: work_time.duration)].to_json)
+      end
+    end
   end
 
   describe '#create' do
@@ -119,8 +132,9 @@ RSpec.describe Api::MilestonesController do
       sign_in(admin)
       milestone = create(:milestone, starts_on: 5.days.ago, ends_on: 5.days.from_now)
       work_time = create(:work_time, project: milestone.project)
-      work_time_response = work_time.slice(:id, :starts_at, :ends_at, :duration, :tag, :date, :department)
+      work_time_response = work_time.slice(:id, :starts_at, :ends_at, :duration, :date, :department)
                                     .merge({
+                                             tag: work_time.tag.name,
                                              body: work_time.body,
                                              task: work_time.task,
                                              task_preview: work_time.task,
@@ -131,6 +145,29 @@ RSpec.describe Api::MilestonesController do
       get :work_times, params: { project_id: milestone.project_id, milestone_id: milestone.id }, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql([work_time_response].to_json)
+    end
+
+    context 'when work-time has Jira payload' do
+      it 'should relate work-time to milestone by jira-milestone' do
+        sign_in(admin)
+        milestone = create(:milestone, starts_on: 15.days.ago, ends_on: 5.days.ago, jira_issues: ['test'])
+        work_time = create(:work_time,
+                           project: milestone.project,
+                           integration_payload: { 'Jira' => { 'task_id' => 'test' } })
+        work_time_response = work_time.slice(:id, :starts_at, :ends_at, :duration, :date, :department)
+                                      .merge({
+                                               tag: work_time.tag.name,
+                                               body: work_time.body,
+                                               task: work_time.task,
+                                               task_preview: work_time.task,
+                                               user_name: work_time.user.name,
+                                               external_id: work_time.external('task_id')
+                                             })
+
+        get :work_times, params: { project_id: milestone.project_id, milestone_id: milestone.id }, format: :json
+        expect(response.code).to eql('200')
+        expect(response.body).to be_json_eql([work_time_response].to_json)
+      end
     end
   end
 

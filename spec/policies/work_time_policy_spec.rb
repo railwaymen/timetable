@@ -77,12 +77,12 @@ RSpec.describe WorkTimePolicy, type: :policy do
   describe '#permitted_attributes' do
     context 'for create' do
       it 'for admin' do
-        expected_attributes = %i[project_id body task tag starts_at ends_at user_id]
+        expected_attributes = %i[project_id body task tag_id starts_at ends_at user_id]
         expect(described_class.new(admin, WorkTime.new).permitted_attributes).to eql(expected_attributes)
       end
 
       it 'for regular user' do
-        expected_attributes = %i[project_id body task tag starts_at ends_at]
+        expected_attributes = %i[project_id body task tag_id starts_at ends_at]
         expect(described_class.new(user, WorkTime.new).permitted_attributes).to eql(expected_attributes)
       end
     end
@@ -91,12 +91,12 @@ RSpec.describe WorkTimePolicy, type: :policy do
       let(:work_time) { build_stubbed(:work_time) }
 
       it 'for admin' do
-        expected_attributes = %i[body task tag starts_at ends_at project_id]
+        expected_attributes = %i[body task tag_id starts_at ends_at project_id]
         expect(described_class.new(admin, work_time).permitted_attributes).to eql(expected_attributes)
       end
 
       it 'regular user' do
-        expected_attributes = %i[body task tag starts_at ends_at]
+        expected_attributes = %i[body task tag_id starts_at ends_at]
         expect(described_class.new(user, work_time).permitted_attributes).to eql(expected_attributes)
       end
     end

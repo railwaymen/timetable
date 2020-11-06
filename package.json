@@ -9,6 +9,7 @@
     "bootstrap": "^4.4.1",
     "chart.js": "^2.9.3",
     "classnames": "^2.2.6",
+    "color-hash": "^1.0.3",
     "component-webpack-plugin": "^0.2.1",
     "jquery": "^3.5.1",
     "lodash": "^4.17.19",
@@ -16,7 +17,6 @@
     "popper.js": "^1.16.1",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
-    "react-autocomplete": "^1.8.1",
     "react-big-scheduler": "0.2.6",
     "react-datepicker": "^1.7.0",
     "react-dnd": "5.0.0",
@@ -25,7 +25,6 @@
     "react-helmet": "^5.2.1",
     "react-router-dom": "^5.1.2",
     "react-useinterval": "^1.0.1",
-    "react_ujs": "^2.6.1",
     "tinycolor2": "^1.4.1",
     "urijs": "^1.19.1"
   },

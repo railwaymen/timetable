@@ -34,10 +34,18 @@ class MilestonesQuery
     sanitize_array [raw, @project.id, @project.id]
   end
 
-  def raw
+  def raw # rubocop:disable Metrics/MethodLength
     %(
       SELECT milestones.*, sum(work_times.duration) as work_times_duration FROM milestones
-      LEFT OUTER JOIN work_times ON work_times.date >= milestones.starts_on AND work_times.date <= milestones.ends_on AND work_times.project_id = ?
+      LEFT OUTER JOIN work_times ON
+        (
+          (work_times.integration_payload IS NULL AND
+           work_times.date >= milestones.starts_on AND
+           work_times.date <= milestones.ends_on) OR
+          (work_times.integration_payload IS NOT NULL AND
+           work_times.integration_payload->'Jira'->>'task_id' = ANY(milestones.jira_issues))
+        ) AND
+        work_times.project_id = ?
       WHERE milestones.project_id = ?
       GROUP BY milestones.id
       ORDER BY milestones.starts_on

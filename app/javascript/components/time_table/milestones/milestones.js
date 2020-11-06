@@ -4,10 +4,12 @@ import { Helmet } from 'react-helmet';
 import useInterval from 'react-useinterval';
 import MilestoneEntry from './milestone_entry';
 import { makeGetRequest, makePostRequest, makePutRequest } from '../../shared/api';
+import Breadcrumb from '../../shared/breadcrumb';
 
 function Milestones() {
   const { projectId } = useParams();
   const [milestones, setMilestones] = useState([]);
+  const [crumbs, setCrumbs] = useState([]);
   const [project, setProject] = useState({});
   const [recounting, setRecounting] = useState(null);
 
@@ -54,6 +56,16 @@ function Milestones() {
     getProject();
   }, []);
 
+  useEffect(() => {
+    if (project.name) {
+      setCrumbs([
+        { href: '/projects', label: I18n.t('common.projects') },
+        { href: `/projects/${projectId}/work_times`, label: project.name },
+        { label: I18n.t('common.project_milestones') },
+      ]);
+    }
+  }, [project]);
+
   function renderEnableImportButton() {
     if (project.external_integration_enabled === false) {
       return (
@@ -94,19 +106,9 @@ function Milestones() {
           {[project.name, I18n.t('common.project_milestones')].join(' - ')}
         </title>
       </Helmet>
+      <Breadcrumb crumbs={crumbs} />
       <div className="row mb-3">
-        <div className="col-md-8">
-          <h1 className="project-title">
-            <span
-              className="badge badge-secondary project-badge"
-              style={{
-                backgroundColor: `#${project.color}`,
-              }}
-            />
-            {project.name}
-          </h1>
-        </div>
-        <div className="col-md-4 text-right">
+        <div className="col-md-12 text-right">
           <div className="btn-group">
             {renderEnableImportButton()}
             {renderImportButton()}

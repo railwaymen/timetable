@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="<%= !current_user ? locale : current_user.lang %>">
+<head>
+  <title>TimeTable</title>
+  <%= csrf_meta_tags %>
+  <%= favicon_link_tag Rails.application.secrets.favicon, skip_pipeline: true if Rails.application.secrets.favicon.present?  %>
+  <%= stylesheet_link_tag    "application", media: "all" %>
+  <%= stylesheet_link_tag    "//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", media: "all" %>
+  <%= stylesheet_link_tag   "https://fonts.googleapis.com/css?family=Hind+Vadodara:400,500,600&display=swap&subset=latin-ext", media: "all" %> 
+</head>
+<body>
+  <%= yield %>
+</body>
+</html>

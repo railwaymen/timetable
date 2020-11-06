@@ -1,8 +1,10 @@
 import _ from 'lodash';
 import Chart from 'chart.js';
 import React, { useState, useEffect, useRef } from 'react';
-import { tagColors } from '../../shared/constants';
+import ColorHash from 'color-hash';
 import { formattedDuration } from '../../shared/helpers';
+
+const colorHash = new ColorHash();
 
 function MilestoneTagBreakdownChart(props) {
   const { workTimes, workTimesSumByTag } = props;
@@ -11,13 +13,13 @@ function MilestoneTagBreakdownChart(props) {
 
   function updateChartWithData() {
     if (chart) {
-      const dates = Object.keys(_.groupBy(workTimes, 'date'));
+      const dates = Object.keys(_.groupBy(workTimes, 'date')).reverse();
 
-      const datasets = Object.keys(tagColors).map((tag) => {
+      const datasets = Object.keys(workTimesSumByTag).map((tag) => {
         const data = dates.map((date) => (_.chain(workTimes).filter({ date, tag }).sumBy('duration').value()));
         return {
           label: tag,
-          backgroundColor: tagColors[tag],
+          backgroundColor: colorHash.hex(tag),
           data,
         };
       });

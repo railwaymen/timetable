@@ -5,7 +5,7 @@ module Api
   # rubocop:disable Metrics/MethodLength
   class WorkTimesController < Api::BaseController
     def index
-      @work_times = WorkTime.kept.includes(:project).order(starts_at: :desc).where(permitted_search_params)
+      @work_times = WorkTime.kept.includes(:project, :tag).order(starts_at: :desc).where(permitted_search_params)
 
       respond_with @work_times
     end
@@ -21,8 +21,7 @@ module Api
       work_time = build_new_work_time
       authorize work_time
       @work_time = WorkTimeForm.new(work_time: work_time)
-      @work_time.save(work_hours_save_params)
-      increase_work_time(@work_time, @work_time.duration) if @work_time.valid?(context)
+      increase_work_time(@work_time, @work_time.duration) if @work_time.save(work_hours_save_params)
       respond_with @work_time
     end
 
@@ -30,8 +29,7 @@ module Api
       work_time = build_new_work_time
       authorize work_time
       @work_time = WorkTimeFillGapsForm.new(work_time: work_time)
-      saved = @work_time.save(work_hours_save_params)
-      increase_work_time(@work_time, @work_time.saved.sum(&:duration)) if saved
+      increase_work_time(@work_time, @work_time.saved.sum(&:duration)) if @work_time.save(work_hours_save_params)
       respond_with @work_time
     end
 
@@ -40,12 +38,9 @@ module Api
       authorize @work_time
       @work_time.assign_attributes(permitted_attributes(@work_time))
       duration_was = @work_time.duration
-      if current_user.admin? && @work_time.changed?
-        @work_time.updated_by_admin = true if @work_time.user_id != current_user.id
-      end
+      @work_time.updated_by_admin = true if @work_time.user_id != current_user.id && @work_time.changed?
       @work_time = WorkTimeForm.new(work_time: @work_time)
-      @work_time.save(work_hours_save_params)
-      increase_or_decrease_work_time(@work_time, duration_was) if @work_time.valid?(context)
+      increase_or_decrease_work_time(@work_time, duration_was) if @work_time.save(work_hours_save_params)
       respond_with @work_time
     end
 
@@ -54,17 +49,20 @@ module Api
       authorize @work_time
       @work_time.assign_attributes(updated_by_admin: true) if @work_time.user_id != current_user.id
       @work_time.assign_attributes(discarded_at: Time.zone.now)
-      @work_time.save(work_hours_save_params)
+      decrease_work_time(@work_time, @work_time.duration) if @work_time.save(work_hours_save_params)
       UpdateExternalAuthWorker.perform_async(@work_time.project_id, @work_time.external(:task_id), @work_time.id) if @work_time.external(:task_id)
-      decrease_work_time(@work_time, @work_time.duration)
       respond_with @work_time
     end
 
-    private
+    def search
+      @work_times = WorkTime.kept.includes(:project, :tag).order(starts_at: :desc)
+                            .where(permitted_search_query_params)
+                            .where('body ILIKE :query OR task ILIKE :query', query: "%#{params[:query]}%")
 
-    def context
-      :user unless current_user.admin?
+      respond_with @work_times
     end
+
+    private
 
     def work_hours_save_params
       current_user.admin? ? {} : { context: :user }
@@ -103,6 +101,23 @@ module Api
       end.delete_if { |_key, value| value.nil? }
     end
 
+    def permitted_search_query_params
+      if current_user.admin? || current_user.manager?
+        {
+          user_id: params[:user_id].presence || current_user.id
+        }
+      elsif current_user.leader?
+        {
+          user_id: params[:user_id].presence || current_user.id,
+          project_id: params[:user_id].presence ? current_user.projects.pluck(:id) : nil
+        }
+      else
+        {
+          user_id: params[:user_id].presence
+        }
+      end.delete_if { |_key, value| value.nil? }
+    end
+
     def increase_or_decrease_work_time(work_time, duration_was)
       if work_time.duration > duration_was
         increase_work_time(work_time, work_time.duration - duration_was)
@@ -120,11 +135,7 @@ module Api
     end
 
     def find_work_time
-      if current_user.admin?
-        WorkTime.kept.find(params[:id])
-      else
-        current_user.work_times.kept.find(params[:id])
-      end
+      policy_scope(WorkTime.kept).find(params[:id])
     end
   end
   # rubocop:enable Metrics/MethodLength

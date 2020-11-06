@@ -11,6 +11,7 @@
 
 @import 'application/new-entry';
 @import 'application/project-card';
+@import 'application/project-table';
 @import 'application/time-entries';
 
 @import 'application/edit-report-form';
@@ -108,9 +109,6 @@ div.react-datepicker__input-container {
 .list-group-item {
   display: flex;
   align-items: flex-end;
-  &.record {
-    padding: 5px 15px;
-  }
 }
 .row.row-eq-height {
   display: -webkit-box;
@@ -490,6 +488,17 @@ button:disabled {
   cursor: not-allowed;
 }
 
+input[name="search-input"] {
+  background-color: #17a2b8;
+  color: white;
+  border: 1px solid #17a2b8;
+  border-radius: 0.25rem;
+  padding-left: 10px;
+  &::placeholder {
+    color: white;
+  }
+}
+
 .milestone-summary {
   .selected-border {
     border: 1px solid #17a2b8;
@@ -503,8 +512,5 @@ button:disabled {
     .milestone-progress {
       margin-top: 2px;
     }
-  }
-  .cursor-pointer {
-    cursor: pointer;
   }
 }

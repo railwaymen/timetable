@@ -536,6 +536,7 @@ class ProjectsDistribution extends React.Component {
     const {
       assignedProjectIds, viewModel, users, resources, projects, selectedProjects, selectedUsers,
     } = this.state;
+    const filteredProjects = projects.filter((project) => !project.accounting);
     Loader.hideLoader();
     return (
       <>
@@ -578,7 +579,7 @@ class ProjectsDistribution extends React.Component {
         <Modal
           ref={(modal) => { this.modal = modal; }}
           users={users}
-          projects={projects}
+          projects={filteredProjects}
           resources={resources}
           updateResourcesAndEvents={this.updateResourcesAndEvents}
           addEvent={this.addEvent}

@@ -8,6 +8,7 @@ import ModalButton from '@components/shared/modal_button';
 import Modal from '@components/shared/modal';
 import * as Api from '../../shared/api';
 import { displayDuration, extractIntegrationPayload } from '../../shared/helpers';
+import Breadcrumb from '../../shared/breadcrumb';
 import TagPill from '../timesheet/tag_pill';
 
 export default class EditReport extends React.Component {
@@ -16,6 +17,7 @@ export default class EditReport extends React.Component {
 
     bindAll(this, [
       'getReport',
+      'getProject',
       'renderCategory',
       'onMergeOwnerChange',
       'onMergeTaskChange',
@@ -38,6 +40,7 @@ export default class EditReport extends React.Component {
       mergeTask: '',
       mergeOwner: '',
       mergeDescription: '',
+      crumbs: [],
       workTimeModalCategory: null,
       workTimeModalId: null,
     };
@@ -46,7 +49,7 @@ export default class EditReport extends React.Component {
   componentDidMount() {
     this.props.history.replace({ pathname: this.props.location.pathname, state: {} });
     if (this.state.currentBody) return;
-    this.getReport();
+    this.getReport().then(this.getProject);
   }
 
   onHardReset() {
@@ -111,11 +114,11 @@ export default class EditReport extends React.Component {
     });
   }
 
-  onIgnore(event, category, id) {
+  onIgnore(event, category, ids) {
     event.preventDefault();
     if (window.confirm(I18n.t('common.confirm'))) {
       this.setState(({ currentBody }) => {
-        const [removedWorkedTime, rest] = partition(currentBody[category], (wt) => wt.id === id);
+        const [removedWorkedTime, rest] = partition(currentBody[category], (wt) => ids.includes(wt.id));
         const ignored = removedWorkedTime.concat(currentBody.ignored || []);
         const newBody = { ...currentBody, [category]: rest, ignored };
         return { currentBody: newBody, workTimeModalCategory: null, workTimeModalId: null };
@@ -180,9 +183,23 @@ export default class EditReport extends React.Component {
 
   getReport() {
     const { projectId, reportId } = this.state;
-    Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports/${reportId}/edit` })
+    return Api.makeGetRequest({ url: `/api/projects/${projectId}/project_reports/${reportId}/edit` })
       .then(({ data }) => {
         this.setState({ report: data, currentBody: this.prepareBody(data.last_body) });
+      });
+  }
+
+  getProject() {
+    const { report, projectId } = this.state;
+    Api.makeGetRequest({ url: `/api/projects/${projectId}` })
+      .then((response) => {
+        const crumbs = [
+          { href: '/projects', label: I18n.t('common.projects') },
+          { href: `/projects/${projectId}/work_times`, label: response.data.name },
+          { href: `/projects/${projectId}/reports`, label: I18n.t('common.reports') },
+          { label: report.name },
+        ];
+        this.setState({ crumbs });
       });
   }
 
@@ -232,6 +249,35 @@ export default class EditReport extends React.Component {
       });
       return { currentBody: { ...currentBody, [category]: newBody } };
     });
+  }
+
+  renderIgnoreButton(category, id) {
+    return (
+      <button
+        key="ignore"
+        type="button"
+        className="btn btn-outline-danger destroy"
+        onClick={(e) => this.onIgnore(e, category, [id])}
+        data-tooltip-bottom={I18n.t('apps.reports.ignore')}
+      >
+        <i className="fa fa-trash-o" />
+      </button>
+    );
+  }
+
+  renderIgnoreMultipleButton(category, ids) {
+    return (
+      <button
+        key="ignore"
+        type="button"
+        className="btn btn-outline-danger destroy"
+        onClick={(e) => this.onIgnore(e, category, ids)}
+        data-tooltip-bottom={I18n.t('apps.reports.ignore')}
+      >
+        <i className="fa fa-trash-o" />
+        <i className="fa fa-trash-o" />
+      </button>
+    );
   }
 
   renderMergeButton(category) {
@@ -304,15 +350,13 @@ export default class EditReport extends React.Component {
             this.renderEditOrMergeButton(category, id, willBeAddedToMerge)
           )}
         </React.Fragment>,
-        <button
-          key="ignore"
-          type="button"
-          className="btn btn-outline-danger destroy"
-          onClick={(e) => this.onIgnore(e, category, id)}
-          data-tooltip-bottom={I18n.t('apps.reports.ignore')}
-        >
-          <i className="fa fa-trash-o" />
-        </button>,
+        <React.Fragment key="ignore">
+          {toMerge && toMergeTasks.length >= 2 ? (
+            this.renderIgnoreMultipleButton(category, toMergeTasks.map((t) => t.id))
+          ) : (
+            this.renderIgnoreButton(category, id)
+          )}
+        </React.Fragment>,
       );
     }
     return result;
@@ -422,7 +466,9 @@ export default class EditReport extends React.Component {
           <table className="table">
             <thead>
               <tr>
-                <th>Tag</th>
+                <th>
+                  {I18n.t('common.tag')}
+                </th>
                 <th>
                   {I18n.t('common.task')}
                 </th>
@@ -532,7 +578,16 @@ export default class EditReport extends React.Component {
             <thead>
               <tr>
                 <th>
+                  {I18n.t('common.tag')}
+                </th>
+                <th>
                   {I18n.t('common.task')}
+                </th>
+                <th>
+                  {I18n.t('common.type')}
+                </th>
+                <th>
+                  {I18n.t('common.labels')}
                 </th>
                 <th>
                   {I18n.t('common.description')}
@@ -550,11 +605,20 @@ export default class EditReport extends React.Component {
             </thead>
             <tbody>
               {times.map(({
-                id, task, duration, owner, description, cost,
+                id, task, duration, owner, description, tag, integration_payload, cost,
               }) => (
                 <tr key={id}>
+                  <td><TagPill tag={tag} bold={false} /></td>
                   <td>
                     {task && <a href={task} target="_blank" rel="noopener noreferrer">{task}</a>}
+                  </td>
+                  <td>
+                    {extractIntegrationPayload(integration_payload).type}
+                  </td>
+                  <td>
+                    {(extractIntegrationPayload(integration_payload).labels || []).map((label) => (
+                      <span key={label} className="badge badge-pill badge-primary">{label}</span>
+                    ))}
                   </td>
                   <td>{description}</td>
                   <td>{owner}</td>
@@ -697,6 +761,7 @@ export default class EditReport extends React.Component {
             <title>{`${I18n.t('common.edit')} ${report.name} - ${report.project_name}`}</title>
           )}
         </Helmet>
+        <Breadcrumb crumbs={this.state.crumbs} />
         {without(Object.keys(currentBody), 'ignored').sort().map(this.renderCategory)}
         {this.renderWorkTimeModal()}
         {this.renderIgnored()}

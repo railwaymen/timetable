@@ -7,6 +7,7 @@ import { defaultDatePickerProps } from '@components/shared/helpers';
 import ErrorTooltip from '@components/shared/error_tooltip';
 import translateErrors from '@components/shared/translate_errors';
 import { makeGetRequest, makePostRequest, makePutRequest } from '../../shared/api';
+import Breadcrumb from '../../shared/breadcrumb';
 
 const EditMilestone = () => {
   const history = useHistory();
@@ -31,6 +32,8 @@ const EditMilestone = () => {
   };
   const [milestone, setMilestone, onChange] = useFormHandler(milestoneDefaults);
   const [errors, setErrors] = useState({});
+  const [project, setProject] = useState({});
+  const [crumbs, setCrumbs] = useState([]);
 
   function onDateChange(date, name) {
     const value = date ? date.format('YYYY-MM-DD') : null;
@@ -100,6 +103,13 @@ const EditMilestone = () => {
       });
   }
 
+  function getProject() {
+    makeGetRequest({ url: `/api/projects/${projectId}` })
+      .then((response) => {
+        setProject(response.data);
+      });
+  }
+
   function renderEditableEstimates() {
     return editableEstimateTypes.map((type) => (
       <div key={type} className="col-2">
@@ -126,10 +136,31 @@ const EditMilestone = () => {
 
   useEffect(() => {
     if (id) getMilestone();
+    getProject();
   }, []);
+
+  useEffect(() => {
+    if (project.name && milestone.name) {
+      setCrumbs([
+        { href: '/projects', label: I18n.t('common.projects') },
+        { href: `/projects/${projectId}/work_times`, label: project.name },
+        { href: `/projects/${projectId}/milestones`, label: I18n.t('common.project_milestones') },
+        { label: milestone.name },
+      ]);
+    }
+    if (project.name && id === undefined) {
+      setCrumbs([
+        { href: '/projects', label: I18n.t('common.projects') },
+        { href: `/projects/${projectId}/work_times`, label: project.name },
+        { href: `/projects/${projectId}/milestones`, label: I18n.t('common.project_milestones') },
+        { label: I18n.t('apps.milestones.add') },
+      ]);
+    }
+  }, [project, milestone]);
 
   return (
     <div id="content">
+      <Breadcrumb crumbs={crumbs} />
       <form onSubmit={onSubmit}>
         <div className="form-group">
           {errors.name && <div className="error-description">{errors.name.join(', ')}</div>}

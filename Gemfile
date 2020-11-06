@@ -28,9 +28,8 @@ gem 'prawn', require: false
 gem 'prawn-table', require: false
 gem 'pundit'
 gem 'rack'
-gem 'rails', '6.0.3.2'
+gem 'rails', '6.0.3.3'
 gem 'rails-ujs'
-gem 'react-rails'
 gem 'redis-namespace'
 gem 'sass-rails'
 gem 'sentry-raven'
@@ -45,6 +44,7 @@ gem 'whenever'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'bundler-audit'
   gem 'capistrano'
   gem 'capistrano-bundler'
   gem 'capistrano-nvm'

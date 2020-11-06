@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import { departmentColors } from '../../shared/constants';
+import departmentColors from '../../shared/constants';
 import { formattedDuration } from '../../shared/helpers';
 
 function MilestoneSummary(props) {

@@ -4,13 +4,16 @@ import { Helmet } from 'react-helmet';
 import _ from 'lodash';
 import * as Api from '../../shared/api';
 import ProjectStats from './project_stats';
+import RangeFilter from './range_filter';
+import TypeFilter from './type_filter';
 
 function Projects() {
   const [projectsStats, setProjectsStats] = useState([]);
   const [range, setRange] = useState(30);
+  const [type, setType] = useState('commercial');
 
   function getProjects() {
-    Api.makeGetRequest({ url: `/api/projects?range=${range}` })
+    Api.makeGetRequest({ url: `/api/projects?range=${range}&type=${type}` })
       .then((response) => {
         setProjectsStats(response.data);
       });
@@ -20,17 +23,9 @@ function Projects() {
     return _.map(projectsStats, (value) => <ProjectStats stats={value} key={value.project_id} />);
   }
 
-  function renderOption(value) {
-    return (
-      <option value={value}>
-        {`${I18n.t('apps.projects.last')} ${String(value)} ${I18n.t('apps.projects.days')}`}
-      </option>
-    );
-  }
-
   useEffect(() => {
     getProjects();
-  }, [range]);
+  }, [range, type]);
 
   return (
     <div>
@@ -43,12 +38,16 @@ function Projects() {
             <NavLink className="btn btn-secondary active" exact to="/projects">{I18n.t('common.rank')}</NavLink>
             <NavLink className="btn btn-secondary" to="/projects/list">{I18n.t('common.all')}</NavLink>
           </div>
+          { currentUser.isSuperUser() && (
+            <div className="btn-group pull-left">
+              <NavLink to="/projects/new" className="btn btn-secondary pull-left">{I18n.t('common.add')}</NavLink>
+            </div>
+          )}
           <div className="btn-group pull-left">
-            <select id="range" value={range} className="form-control" onChange={(e) => setRange(e.target.value)}>
-              {renderOption(30)}
-              {renderOption(60)}
-              {renderOption(90)}
-            </select>
+            <RangeFilter range={range} setRange={setRange} />
+          </div>
+          <div className="btn-group pull-left">
+            <TypeFilter type={type} setType={setType} />
           </div>
         </div>
       </header>

@@ -1,7 +1,9 @@
 import Chart from 'chart.js';
 import React, { useState, useEffect, useRef } from 'react';
-import { tagColors } from '../../shared/constants';
+import ColorHash from 'color-hash';
 import { formattedDuration } from '../../shared/helpers';
+
+const colorHash = new ColorHash();
 
 function MilestonePieChart(props) {
   const { workTimesSumByTag, handleChartClick } = props;
@@ -11,7 +13,7 @@ function MilestonePieChart(props) {
   function updateChartWithData() {
     if (chart) {
       const values = Object.values(workTimesSumByTag);
-      const colors = Object.keys(workTimesSumByTag).map((key) => tagColors[key]);
+      const colors = Object.keys(workTimesSumByTag).map((tag) => colorHash.hex(tag));
       const labels = Object.keys(workTimesSumByTag);
 
       chart.config.data = {

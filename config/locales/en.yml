@@ -32,8 +32,6 @@ en:
       project: Project
       note: Note
       update: Update
-      developers: Developers
-      testers: Testers
       color: Color
       active: Active
       filter_active: Active
@@ -47,7 +45,15 @@ en:
       new: New Project
       external_integration_help: Enable JIRA integration which logs work time in tickets
       external_id_help: This value can be found on projects list in column 'key' i.e. SH
+      sort:
+        hours: Sort by hours
+        alphabetical: Sort alphabetical
+      type:
+        commercial: Commercial
+        internal: Internal
+        all: All
     milestones:
+      progress: Progress
       add: New Milestone
       import_from_jira: Import from JIRA
       import_in_progress: Import from JIRA in progress ...
@@ -95,7 +101,7 @@ en:
       restore_previous: Restore a previous version
       restore_first: Restore the first version
       collision: Collision with following reports
-      all_users: All users
+      clear_filters: Clear filters
     combined_reports:
       combined_report: Combined report
       combine_reports: Combine reports
@@ -117,17 +123,16 @@ en:
       periods_count: periods count
       recounting: Recounting...
     timesheet:
+      search_placeholder: Search among work times
       overall_work_time: Total worktime in selected period
       what_have_you_done: What have you done ?
       task_url: Task url
       select_month: Select month
       select_project: Select project
+      select_tag: Select tag
       required_duration_until_end_of_day: Required work duration until end of day (only applies to full time employees)
       required_duration_until_end_of_month: Required work duration until end of month (only applies to full time employees)
-      use_timer: Use timer
-      add_manually: Add manually
       work_time: Worktime
-      unsaved_changes: You have unsaved changes!
       history:
         date: Date
         when: When
@@ -141,9 +146,6 @@ en:
         duration: Duration
     users:
       user_active: 'Active'
-      active: Active
-      all: All
-      inactive: Inactive
       add: Add new account
       first_name: First name
       last_name: Last name
@@ -152,7 +154,6 @@ en:
       button_disabled_tooltip: Account creation disabled. Automatic creation with LDAP login.
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
       new: New account
-      position: Position
       department: Department
     external_auths:
       authorized: External authorizations
@@ -161,13 +162,6 @@ en:
       new: New auth
       domain: Domain
       token: Token
-    tag:
-      dev: Others
-      ui: Internal Meeting
-      im: Internal Meeting
-      cc: Client Communication
-      res: Research
-      various: Various
     project_report_roles:
       developer: Development
       qa: Quality Assurance
@@ -194,6 +188,7 @@ en:
       expand_used_days: Expand used vacation days
       fold_used_days: Fold used vacation days
     staff:
+      all: Wszystkie
       general: General
       filter: Filter
       csv_export: Export .csv
@@ -201,7 +196,6 @@ en:
       declined: Declined
       unconfirmed: Unconfirmed
       approved: Approved
-      person: Person
       vacation_type: Vacation Type
       time_period: Time Period
       choose: Choose
@@ -216,7 +210,6 @@ en:
       show_declined: Show declined
       show_acceptable: Show acceptable
       acceptable: Acceptable
-      all: All
       available_vacation_days: Available vacation days
       available_vacation_days_after_accepting: Available vacation days after accepting
       user_has_already_filled_in_work_time: 'User %{parameter} has already filled in the work time in days: '
@@ -235,6 +228,10 @@ en:
       closed: Closed
       generate_periods: Generate vacation periods
       edit: Edit vacation period
+    tags:
+      new: New tag
+      global: Global
+      search: Search by name
     projects_distribution:
       add_resource: Add resource
       resource_menu: Resource menu
@@ -252,6 +249,7 @@ en:
         update_assignment: '{{user}} updated assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
         delete_assignment: '{{user}} deleted assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
   common:
+    tag: Tag
     back: Back
     expand: Expand
     lock: "Lock"
@@ -312,6 +310,7 @@ en:
     unpaid: Unpaid leave
     rehabilitation: Rehabilitation leave
     illness: Illness
+    overtime: Time off in exchange for overtime
     care: Care
     care_definition: Care according to Article 188 of the Code of .
     vacation_code:
@@ -325,6 +324,7 @@ en:
       unpaid: Ub
       rehabilitation: R
       illness: Ch
+      overtime: Other
       care: Op
     vacation_periods: Vacation Periods
     title: Title
@@ -342,6 +342,9 @@ en:
     refresh_error: An error occurred while refreshing
     project_milestones: Project milestones
     milestone_reports: Milestone reports
+    tags: Tags
+    active: Active
+    inactive: Inactive
   activerecord:
     errors:
       models:
@@ -459,6 +462,11 @@ en:
             base:
               combined_reports_exist: Report cannot be deleted because is used in a combined report
             name:
+              blank: Name is required
+        tag:
+          attributes:
+            name:
+              taken: Name is already taken
               blank: Name is required
   activemodel:
     errors:

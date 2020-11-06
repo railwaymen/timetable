@@ -5,6 +5,7 @@ import useFormHandler from '@hooks/use_form_handler';
 import Preloader from '../../shared/preloader';
 import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
+import Breadcrumb from '../../shared/breadcrumb';
 
 function EditProject(props) {
   const projectId = parseInt(props.match.params.id, 10);
@@ -23,6 +24,7 @@ function EditProject(props) {
   const [project, setProject, onChange] = useFormHandler(defaultProjectParams);
   const [errors, setErrors] = useState({});
   const [users, setUsers] = useState([]);
+  const [crumbs, setCrumbs] = useState([]);
   const [redirectToReferer, setRedirectToReferer] = useState();
 
   function getProject() {
@@ -60,6 +62,21 @@ function EditProject(props) {
     if (currentUser.isManager()) getUsers();
   }, []);
 
+  useEffect(() => {
+    if (project.name) {
+      setCrumbs([
+        { href: '/projects/list', label: I18n.t('common.projects') },
+        { label: project.name },
+      ]);
+    }
+    if (Number.isNaN(projectId) === true) {
+      setCrumbs([
+        { href: '/projects', label: I18n.t('common.projects') },
+        { label: I18n.t('apps.projects.new') },
+      ]);
+    }
+  }, [project]);
+
   if (redirectToReferer) return <Redirect to={redirectToReferer} />;
 
   if (!projectId || projectId === project.id) {
@@ -72,6 +89,7 @@ function EditProject(props) {
             <title>{I18n.t('apps.projects.new')}</title>
           )}
         </Helmet>
+        <Breadcrumb crumbs={crumbs} />
         <form>
           {currentUser.isSuperUser() && (
             <>

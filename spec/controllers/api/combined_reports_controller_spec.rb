@@ -10,7 +10,7 @@ RSpec.describe Api::CombinedReportsController do
 
   def combined_report_response(combined_report)
     combined_report.attributes
-                   .slice('id', 'name', 'starts_at', 'ends_at', 'duration_sum', 'cost', 'currency')
+                   .slice('id', 'project_id', 'name', 'starts_at', 'ends_at', 'duration_sum', 'cost', 'currency')
                    .merge(generated: combined_report.generated?)
   end
 

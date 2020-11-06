@@ -8,6 +8,7 @@ import SynchronizeReport from '@components/time_table/project_reports/synchroniz
 import * as Api from '../../shared/api';
 import translateErrors from '../../shared/translate_errors';
 import { displayDuration } from '../../shared/helpers';
+import Breadcrumb from '../../shared/breadcrumb';
 
 export default function NewCombinedReport(props) {
   const projectId = parseInt(props.match.params.projectId, 10);
@@ -15,6 +16,8 @@ export default function NewCombinedReport(props) {
   const [reports, setReports] = useState([]);
   const [combinedReport, setCombinedReport, onChange] = useFormHandler({ name: '', report_ids: [] });
   const [errors, setErrors] = useState({});
+  const [project, setProject] = useState({});
+  const [crumbs, setCrumbs] = useState([]);
   const history = useHistory();
 
   function getReports() {
@@ -58,8 +61,27 @@ export default function NewCombinedReport(props) {
     });
   }
 
+  function getProject() {
+    Api.makeGetRequest({ url: `/api/projects/${projectId}` })
+      .then((response) => {
+        setProject(response.data);
+      });
+  }
+
+  useEffect(() => {
+    if (project.name) {
+      setCrumbs([
+        { href: '/projects', label: I18n.t('common.projects') },
+        { href: `/projects/${projectId}/work_times`, label: project.name },
+        { href: `/projects/${projectId}/combined_reports`, label: I18n.t('common.combined_reports') },
+        { label: I18n.t('apps.reports.new') },
+      ]);
+    }
+  }, [project]);
+
   useEffect(() => {
     getReports();
+    getProject();
   }, []);
 
   const saveDisabled = combinedReport.report_ids.length === 0;
@@ -69,6 +91,7 @@ export default function NewCombinedReport(props) {
       <Helmet>
         <title>{I18n.t('apps.combined_reports.new')}</title>
       </Helmet>
+      <Breadcrumb crumbs={crumbs} />
       <form className="row mx-0" onSubmit={onSubmit}>
         <div className="form-group">
           {errors.base && (
