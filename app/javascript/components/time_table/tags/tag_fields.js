@@ -13,7 +13,7 @@ function TagFields(props) {
   const [availableProjects, setAvailableProjects] = useState([]);
 
   function getAvailableProjects() {
-    makeGetRequest({ url: '/api/projects/list' })
+    makeGetRequest({ url: '/api/projects/simple' })
       .then((response) => {
         setTag({ ...tag, project_id: response.data[0].id });
         setAvailableProjects(response.data);

@@ -48,11 +48,11 @@ function EditProject(props) {
 
     if (projectId) {
       Api.makePutRequest({ url: `/api/projects/${project.id}`, body: { project } })
-        .then(() => setRedirectToReferer('/projects/list'))
+        .then(() => setRedirectToReferer('/projects'))
         .catch((results) => setErrors(translateErrors('project', results.errors)));
     } else {
       Api.makePostRequest({ url: '/api/projects', body: { project } })
-        .then(() => setRedirectToReferer('/projects/list'))
+        .then(() => setRedirectToReferer('/projects'))
         .catch((results) => setErrors(translateErrors('project', results.errors)));
     }
   }
@@ -65,7 +65,7 @@ function EditProject(props) {
   useEffect(() => {
     if (project.name) {
       setCrumbs([
-        { href: '/projects/list', label: I18n.t('common.projects') },
+        { href: '/projects', label: I18n.t('common.projects') },
         { label: project.name },
       ]);
     }
@@ -209,7 +209,7 @@ function EditProject(props) {
               </small>
             </div>
           )}
-          <NavLink className="btn btn-secondary" to="/projects/list">{I18n.t('common.cancel')}</NavLink>
+          <NavLink className="btn btn-secondary" to="/projects">{I18n.t('common.cancel')}</NavLink>
           <input className="btn btn-primary" type="submit" value={I18n.t('common.save')} onClick={onSubmit} />
         </form>
       </>
