@@ -6,10 +6,10 @@ module Api
     before_action :authenticate_admin_or_manager_or_leader!, only: %i[show create update]
 
     def index
-      @project_stats = ProjectRateQuery.new(project_query_params).results
+      @projects = ProjectsQuery.new(project_query_params.slice(:type, :visibility)).results
     end
 
-    def list
+    def stats
       @project_stats = ProjectRateQuery.new(project_query_params).results
     end
 
@@ -18,7 +18,7 @@ module Api
     end
 
     def current_milestones
-      @milestones = Milestones::CurrentQuery.new(project_ids: params[:projects]).results
+      @milestones = Milestones::CurrentQuery.new(project_ids: params[:project_ids]).results
       respond_with @milestones
     end
 

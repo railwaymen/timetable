@@ -18,7 +18,7 @@ function RangeFilter(props) {
       {renderOption('30')}
       {renderOption('60')}
       {renderOption('90')}
-      {renderOption('')}
+      {renderOption('180')}
     </select>
   );
 }

@@ -7,18 +7,14 @@ function ProjectStats(props) {
   function projectLabel() {
     const { stats } = props;
 
-    if (currentUser.canManageProject({ id: stats.project_id })) {
+    if (currentUser.canManageProject({ id: stats.id })) {
       return (
-        <Link to={`/projects/${stats.project_id}/work_times`}>
+        <Link to={`/projects/${stats.id}/work_times`}>
           {stats.name}
         </Link>
       );
     }
     return stats.name;
-  }
-
-  function renderName(first_name, last_name) {
-    return [first_name, last_name].join(' ');
   }
 
   const { stats } = props;
@@ -37,16 +33,16 @@ function ProjectStats(props) {
             />
           </h3>
         </div>
-        {stats.leader_first_name && (
+        {stats.leader_name && (
           <p className="font-weight-bold text-center">
-            {renderName(stats.leader_first_name, stats.leader_last_name)}
+            {stats.leader_name}
           </p>
         )}
         <div className="card-body">
           <ul>
             { stats.users.map((user) => (
               <li className="person" key={user.id}>
-                {renderName(user.first_name, user.last_name)}
+                {user.name}
               </li>
             )) }
           </ul>

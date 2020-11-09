@@ -60,7 +60,7 @@ Rails.application.routes.draw do
         get :file, on: :member
       end
       get :current_milestones, on: :collection
-      get :list, on: :collection
+      get :stats, on: :collection
       get :simple, on: :collection
       get :with_tags, on: :collection
       get :tags, on: :collection

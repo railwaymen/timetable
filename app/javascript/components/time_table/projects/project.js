@@ -51,14 +51,13 @@ function Project(props) {
 
   return (
     <tr>
-      <td />
       <td>{renderProjectName()}</td>
-      <td>{project.leader ? `${project.leader.first_name} ${project.leader.last_name}` : ''}</td>
+      <td>{project.leader_name}</td>
       <td onMouseEnter={() => setShowUsers(true)} onMouseLeave={() => setShowUsers(false)}>
         {project.users.length}
         {showUsers && (
           <div className="project-users">
-            {project.users.map((user) => <p className="m-2" key={user.id}>{`${user.first_name} ${user.last_name}`}</p>)}
+            {project.users.map((user) => <p className="m-2" key={user.id}>{user.name}</p>)}
           </div>
         )}
       </td>
