@@ -27,6 +27,13 @@ module WorkTimes
       ActiveRecord::Base.sanitize_sql_array(['AND date <= ?', to_date])
     end
 
+    def other_sql_jira_issues
+      issues = project.milestones.where.not(id: milestone.id).flat_map(&:jira_issues)
+      return [] if issues.empty?
+
+      ActiveRecord::Base.sanitize_sql_array(['[?]', issues])
+    end
+
     def sql_jira_issues
       return [] unless milestone.jira_issues
 
@@ -35,11 +42,16 @@ module WorkTimes
 
     def work_time_sql
       <<-SQL
-        (integration_payload IS NULL AND
-         date >= :from_date
-         #{sql_to_date}) OR
-        (integration_payload IS NOT NULL AND
-         integration_payload->'Jira'->>'task_id' = ANY(ARRAY#{sql_jira_issues}::text[]))
+        ((
+          date >= :from_date
+          #{sql_to_date} AND
+          (integration_payload->'Jira'->>'task_id' IS NULL OR NOT(integration_payload->'Jira'->>'task_id' = ANY(ARRAY#{other_sql_jira_issues}::text[])))
+          ) OR
+        (
+          integration_payload IS NOT NULL AND
+          integration_payload->'Jira'->>'task_id' = ANY(ARRAY#{sql_jira_issues}::text[]) AND
+          NOT(integration_payload->'Jira'->>'task_id' = ANY(ARRAY#{other_sql_jira_issues}::text[]))
+        ))
       SQL
     end
   end

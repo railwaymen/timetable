@@ -32,7 +32,6 @@ function MilestoneReports() {
   const [selectedTag, setSelectedTag] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [crumbs, setCrumbs] = useState([]);
-  const prevSelectedMilestoneId = usePrevious(selectedMilestoneId);
   const prevRangeType = usePrevious(rangeType);
 
   function setChartDates(data) {
@@ -111,7 +110,7 @@ function MilestoneReports() {
 
     return Promise.all([projectPromise, milestonesPromise]).then((values) => {
       const [projectResponse, milestonesResponse] = values;
-      const currentMilestone = milestonesResponse.data.find((m) => m.current);
+      const currentMilestone = milestonesResponse.data[0];
 
       setProject(projectResponse.data);
       setMilestones(milestonesResponse.data);
@@ -141,7 +140,7 @@ function MilestoneReports() {
   }
 
   useEffect(() => {
-    getInitialData().then(getWorkTimes);
+    getInitialData();
   }, []);
 
   useEffect(() => {
@@ -155,7 +154,7 @@ function MilestoneReports() {
   }, [project]);
 
   useEffect(() => {
-    if (prevSelectedMilestoneId) getWorkTimes();
+    getWorkTimes();
   }, [selectedMilestoneId]);
 
   useEffect(() => {
