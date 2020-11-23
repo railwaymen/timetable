@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import * as Api from '../../shared/api';
 import TypeFilter from './type_filter';
+import VisibilityFilter from '../../shared/visibility_filter';
 
 function Projects() {
   const [projects, setProjects] = useState([]);
@@ -68,17 +69,7 @@ function Projects() {
           <NavLink to="/projects/new" className="btn btn-secondary pull-left">{I18n.t('common.add')}</NavLink>
         )}
         <div className="btn-group pull-left">
-          <select
-            name="visibility"
-            id="filter"
-            className="form-control"
-            onChange={(e) => setVisibility(e.target.value)}
-            value={visibility}
-          >
-            <option value="active">{I18n.t('apps.projects.filter_active')}</option>
-            <option value="inactive">{I18n.t('apps.projects.filter_inactive')}</option>
-            <option value="all">{I18n.t('apps.projects.filter_all')}</option>
-          </select>
+          <VisibilityFilter visibility={visibility} setVisibility={setVisibility} />
         </div>
         <div className="btn-group pull-left">
           <TypeFilter type={type} setType={setType} />

@@ -133,7 +133,7 @@ function EditProject(props) {
                   onChange={onChange}
                 />
                 <label className="form-check-label" htmlFor="active">
-                  {I18n.t('apps.projects.active')}
+                  {I18n.t('common.active')}
                 </label>
               </div>
             </>

@@ -16,7 +16,7 @@ module Api
     end
 
     def create
-      @milestone = project.milestones.create(milestone_params)
+      @milestone = project.milestones.create(milestone_params.except(:active))
       authorize @milestone
       respond_with @milestone
     end
@@ -56,7 +56,7 @@ module Api
     private
 
     def milestone_params
-      params.permit(:name, :starts_on, :ends_on, :note, :closed, :visible_on_reports,
+      params.permit(:name, :starts_on, :ends_on, :note, :closed, :visible_on_reports, :active,
                     :dev_estimate, :qa_estimate, :ux_estimate, :pm_estimate, :other_estimate, :estimate_change_note)
     end
 
