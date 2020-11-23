@@ -71,4 +71,8 @@ class WorkTime < ApplicationRecord
   def external(name)
     integration_payload&.dig(external_auth&.provider, name.to_s)
   end
+
+  def jira_task_id
+    integration_payload&.dig('Jira', 'task_id')
+  end
 end

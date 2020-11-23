@@ -7,7 +7,7 @@ class Milestone < ApplicationRecord
   belongs_to :project
 
   validates :name, presence: true
-  validates :starts_on, presence: true, if: :visible_on_reports?
+  validates :starts_on, presence: true, if: :starts_on_required?
 
   before_save :calculate_total_estimate
 
@@ -28,5 +28,9 @@ class Milestone < ApplicationRecord
       (starts_on && ends_on && milestone.starts_on && milestone.ends_on && (starts_on..ends_on).cover?(milestone.starts_on..milestone.ends_on)) ||
         (starts_on && ends_on && milestone.starts_on && (starts_on..ends_on).cover?(milestone.starts_on))
     end
+  end
+
+  def starts_on_required?
+    visible_on_reports? && external_id.nil?
   end
 end

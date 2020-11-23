@@ -10,5 +10,16 @@ FactoryBot.define do
     sequence(:ends_at) { starts_at + 15.minutes }
     creator { user }
     department { user.department }
+
+    trait :with_jira_url do
+      sequence(:task) { |n| "https://example.com/XX-#{n}" }
+      sequence(:integration_payload) do |n|
+        {
+          'Jira' => {
+            'task_id' => "XX-#{n}"
+          }
+        }
+      end
+    end
   end
 end
