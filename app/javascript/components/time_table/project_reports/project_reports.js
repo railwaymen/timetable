@@ -134,9 +134,18 @@ export default function ProjectReports(props) {
                     {report.generated && (
                       <a
                         className="btn btn-outline-secondary bt-download"
-                        href={`/api/projects/${projectId}/project_reports/${report.id}/file`}
+                        href={`/api/projects/${projectId}/project_reports/${report.id}/file.pdf`}
                       >
                         <i className="fa fa-file-pdf-o mr-2" />
+                        {I18n.t('common.download')}
+                      </a>
+                    )}
+                    {report.generated && (
+                      <a
+                        className="btn btn-outline-secondary bt-download"
+                        href={`/api/projects/${projectId}/project_reports/${report.id}/file.csv`}
+                      >
+                        <i className="fa fa-file-excel-o mr-2" />
                         {I18n.t('common.download')}
                       </a>
                     )}

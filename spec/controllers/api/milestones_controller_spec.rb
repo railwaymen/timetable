@@ -9,7 +9,7 @@ RSpec.describe Api::MilestonesController do
   def milestone_response(milestone)
     milestone.slice('id', 'external_id', 'name', 'starts_on', 'ends_on', 'project_id', 'dev_estimate', 'closed', 'visible_on_reports',
                     'qa_estimate', 'ux_estimate', 'pm_estimate', 'other_estimate', 'external_estimate', 'total_estimate')
-             .merge(current: milestone == milestone.project.current_milestone, date_overlaps: milestone.overlaps_with_other?)
+             .merge(active: milestone.kept?, current: milestone == milestone.project.current_milestone, date_overlaps: milestone.overlaps_with_other?)
   end
 
   describe '#index' do

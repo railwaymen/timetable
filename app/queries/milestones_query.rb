@@ -34,6 +34,13 @@ class MilestonesQuery
     sanitize_array [raw, @project.id, @project.id, @project.id]
   end
 
+  def visibilty_filter
+    return 'AND milestones.discarded_at IS NULL' if @params[:display] == 'active'
+    return 'AND milestones.discarded_at IS NOT NULL' if @params[:display] == 'inactive'
+
+    ''
+  end
+
   def raw # rubocop:disable Metrics/MethodLength
     %(
       SELECT milestones.*, sum(work_times.duration) as work_times_duration FROM milestones
@@ -43,6 +50,7 @@ class MilestonesQuery
           OR
         (work_times.date BETWEEN milestones.starts_on AND milestones.ends_on AND (work_times.integration_payload->'Jira'->>'task_id' IS NULL OR NOT(work_times.integration_payload->'Jira'->>'task_id' IN (SELECT unnest(jira_issues) from milestones where project_id = ?)))))
       WHERE milestones.project_id = ?
+      #{visibilty_filter}
       GROUP BY milestones.id
       ORDER BY milestones.starts_on
     )

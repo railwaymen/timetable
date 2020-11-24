@@ -10,7 +10,7 @@ describe GenerateProjectReportWorker do
 
     it 'creates correct file' do
       generator_double = double
-      allow(ProjectReportGenerator).to receive(:new).and_return(generator_double)
+      allow(ProjectReportPdfGenerator).to receive(:new).and_return(generator_double)
       allow(generator_double).to receive(:call) do |file_path|
         IO.write(file_path, content)
       end

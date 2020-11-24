@@ -5,16 +5,18 @@ import useInterval from 'react-useinterval';
 import MilestoneEntry from './milestone_entry';
 import { makeGetRequest, makePostRequest, makePutRequest } from '../../shared/api';
 import Breadcrumb from '../../shared/breadcrumb';
+import VisibilityFilter from '../../shared/visibility_filter';
 
 function Milestones() {
   const { projectId } = useParams();
   const [milestones, setMilestones] = useState([]);
+  const [visibility, setVisibility] = useState('active');
   const [crumbs, setCrumbs] = useState([]);
   const [project, setProject] = useState({});
   const [recounting, setRecounting] = useState(null);
 
   function getMilestones() {
-    makeGetRequest({ url: `/api/projects/${projectId}/milestones?with_estimates=true` })
+    makeGetRequest({ url: `/api/projects/${projectId}/milestones?display=${visibility}&with_estimates=true` })
       .then((response) => {
         setMilestones(response.data);
       });
@@ -52,9 +54,12 @@ function Milestones() {
   useInterval(getImportState, (project.external_integration_enabled === true && (recounting === null || recounting === true)) ? 1000 : null);
 
   useEffect(() => {
-    getMilestones();
     getProject();
   }, []);
+
+  useEffect(() => {
+    getMilestones();
+  }, [visibility]);
 
   useEffect(() => {
     if (project.name) {
@@ -109,6 +114,9 @@ function Milestones() {
       <Breadcrumb crumbs={crumbs} />
       <div className="row mb-3">
         <div className="col-md-12 text-right">
+          <div className="btn-group pull-left">
+            <VisibilityFilter visibility={visibility} setVisibility={setVisibility} />
+          </div>
           <div className="btn-group">
             {renderEnableImportButton()}
             {renderImportButton()}

@@ -5,6 +5,7 @@ import * as Api from '../../shared/api';
 import Project from './project';
 import RangeFilter from './range_filter';
 import TypeFilter from './type_filter';
+import VisibilityFilter from '../../shared/visibility_filter';
 import SortOptions from './sort_options';
 
 function ProjectsProgress() {
@@ -57,17 +58,7 @@ function ProjectsProgress() {
           <NavLink to="/projects/new" className="btn btn-secondary pull-left">{I18n.t('common.add')}</NavLink>
         )}
         <div className="btn-group pull-left">
-          <select
-            name="visibility"
-            id="filter"
-            className="form-control"
-            onChange={(e) => setVisibility(e.target.value)}
-            value={visibility}
-          >
-            <option value="active">{I18n.t('apps.projects.filter_active')}</option>
-            <option value="inactive">{I18n.t('apps.projects.filter_inactive')}</option>
-            <option value="all">{I18n.t('apps.projects.filter_all')}</option>
-          </select>
+          <VisibilityFilter visibility={visibility} setVisibility={setVisibility} />
         </div>
         <div className="btn-group pull-left">
           <RangeFilter range={range} setRange={setRange} />

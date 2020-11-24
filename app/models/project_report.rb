@@ -32,7 +32,7 @@ class ProjectReport < ApplicationRecord
   validate :discard_combined_reports_exist
 
   def generated?
-    file_path.present?
+    pdf_file_path.present? && csv_file_path.present?
   end
 
   def duration_without_ignored

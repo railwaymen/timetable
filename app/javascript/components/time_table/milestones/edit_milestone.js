@@ -29,6 +29,7 @@ const EditMilestone = () => {
     total_estimate: 0,
     closed: false,
     visible_on_reports: false,
+    active: true,
   };
   const [milestone, setMilestone, onChange] = useFormHandler(milestoneDefaults);
   const [errors, setErrors] = useState({});
@@ -222,6 +223,14 @@ const EditMilestone = () => {
               {I18n.t('apps.milestones.milestone_closed')}
             </label>
           </div>
+          { id && (
+            <div className="col form-check">
+              <input className="form-check-input" type="checkbox" name="active" checked={milestone.active} onChange={onChange} id="milestone-active" />
+              <label className="form-check-label" htmlFor="milestone-active">
+                {I18n.t('common.active')}
+              </label>
+            </div>
+          )}
         </div>
         <div className="form-group">
           <textarea
