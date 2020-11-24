@@ -351,21 +351,24 @@ RSpec.describe Api::ProjectReportsController, type: :controller do
 
   describe 'GET #file' do
     let(:project_report) { create(:project_report) }
-    context 'no file' do
-      it 'renders no content' do
-        get :file, params: { project_id: project_report.project.id, id: project_report.id }
 
-        expect(response).to be_no_content
-      end
-    end
-
-    context 'file do' do
+    context 'pdf file' do
       it 'sends file' do
-        project_report.update!(file_path: file_fixture('sample.pdf').to_path)
-        get :file, params: { project_id: project_report.project.id, id: project_report.id }
+        project_report.update!(pdf_file_path: file_fixture('sample.pdf').to_path)
+        get :file, params: { project_id: project_report.project.id, id: project_report.id, format: :pdf }
 
         expect(response).to be_ok
         expect(response.body).to eq file_fixture('sample.pdf').binread
+      end
+    end
+
+    context 'csv file' do
+      it 'sends file' do
+        project_report.update!(csv_file_path: file_fixture('sample.csv').to_path)
+        get :file, params: { project_id: project_report.project.id, id: project_report.id, format: :csv }
+
+        expect(response).to be_ok
+        expect(response.body).to eq file_fixture('sample.csv').binread
       end
     end
   end

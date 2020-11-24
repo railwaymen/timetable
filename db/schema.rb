@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_29_095728) do
+ActiveRecord::Schema.define(version: 2020_11_24_072605) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
 
   create_table "accounting_periods", id: :serial, force: :cascade do |t|
     t.integer "user_id", null: false
@@ -169,12 +170,13 @@ ActiveRecord::Schema.define(version: 2020_10_29_095728) do
     t.datetime "ends_at", null: false
     t.string "currency", default: "", null: false
     t.string "name", null: false
-    t.string "file_path"
+    t.string "pdf_file_path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.string "refresh_status", default: "fresh", null: false
     t.datetime "refreshed_at"
+    t.string "csv_file_path"
     t.index ["discarded_at"], name: "index_project_reports_on_discarded_at"
     t.index ["project_id"], name: "index_project_reports_on_project_id"
   end

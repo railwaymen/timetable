@@ -6,7 +6,7 @@ require 'tempfile'
 require 'uri'
 # rubocop:disable Metrics/ClassLength
 # :nocov:
-class ProjectReportGenerator
+class ProjectReportPdfGenerator
   attr_reader :project_report, :wage_hash, :name_hash, :description_hash
 
   STRONG_GRAY = 'B6B6B6'
@@ -16,7 +16,7 @@ class ProjectReportGenerator
   LOGO_PATH = Rails.root.join('public/images/reports_logo.jpg')
   FONT_PATH = Rails.root.join('app/assets/fonts')
 
-  def initialize(project_report:)
+  def initialize(project_report)
     @project_report = project_report
     roles = project_report.project_report_roles
     @wage_hash = Hash[roles.map do |role|

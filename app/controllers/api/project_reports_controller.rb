@@ -80,9 +80,11 @@ module Api
     def file
       @report = @project.project_reports.kept.find(params[:id])
       authorize @report
-      return head(:no_content) if @report.file_path.blank?
 
-      send_file @report.file_path
+      respond_to do |format|
+        format.csv  { send_file @report.csv_file_path }
+        format.pdf { send_file @report.pdf_file_path }
+      end
     end
 
     def roles
