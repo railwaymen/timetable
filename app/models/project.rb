@@ -27,7 +27,7 @@ class Project < ApplicationRecord
   after_save :change_events_color_and_name, if: proc { |project| project.saved_change_to_color? || project.saved_change_to_name? }
 
   def users_participating(range)
-    users.joins(:work_times).merge(WorkTime.kept).where(work_times: { starts_at: range })
+    User.where(id: work_times.select('distinct(user_id)').kept.where(starts_at: range))
   end
 
   def accounting?
