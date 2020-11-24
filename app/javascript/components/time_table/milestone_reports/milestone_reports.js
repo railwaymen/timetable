@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
-import usePrevious from '@hooks/use_previous';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -23,16 +22,19 @@ function MilestoneReports() {
   const [milestones, setMilestones] = useState([]);
   const [project, setProject] = useState({});
   const [mainChartType, setMainChartType] = useState('progress');
-  const [rangeType, setRangeType] = useState('milestone');
-  const [selectedMilestoneId, setSelectedMilestoneId] = useState('');
-  const [fromDate, setFromDate] = useState(moment().startOf('isoWeek').formatDate());
-  const [toDate, setToDate] = useState(moment().endOf('isoWeek').formatDate());
   const [selectedMilestone, setSelectedMilestone] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [crumbs, setCrumbs] = useState([]);
-  const prevRangeType = usePrevious(rangeType);
+  const [chartDataDates, setChartDataDates] = useState({
+    fromDate: null,
+    toDate: null,
+  });
+  const [filters, setFilters] = useState({
+    fromDate: moment().startOf('isoWeek').formatDate(),
+    toDate: moment().endOf('isoWeek').formatDate(),
+  });
 
   function setChartDates(data) {
     if (selectedMilestone !== null) {
@@ -44,13 +46,16 @@ function MilestoneReports() {
         newFromDate = newFromDate.isBefore(selectedMilestone.starts_on) ? newFromDate.formatDate() : selectedMilestone.starts_on;
         newToDate = newToDate.isAfter(selectedMilestone.ends_on) ? newToDate.formatDate() : selectedMilestone.ends_on;
       }
-      setToDate(newToDate);
-      setFromDate(newFromDate);
+      setChartDataDates({ fromDate: newFromDate, toDate: newToDate });
     }
   }
 
   function getWorkTimes() {
+    const {
+      rangeType, fromDate, toDate, selectedMilestoneId,
+    } = filters;
     const params = rangeType === 'customDates' ? `?from=${fromDate}&to=${toDate}` : `?milestone_id=${selectedMilestoneId}`;
+    setChartDataDates({ fromDate: null, toDate: null });
 
     makeGetRequest({ url: `/api/projects/${projectId}/milestones/work_times${params}` })
       .then((response) => {
@@ -115,13 +120,13 @@ function MilestoneReports() {
       setProject(projectResponse.data);
       setMilestones(milestonesResponse.data);
       setSelectedMilestone(currentMilestone);
-      setSelectedMilestoneId(currentMilestone.id);
+      if (currentMilestone) setFilters({ ...filters, rangeType: 'milestone', selectedMilestoneId: currentMilestone.id });
     });
   }
 
   function onMilestoneChange(event) {
     const id = parseInt(event.target.value, 10);
-    setSelectedMilestoneId(id);
+    setFilters({ ...filters, selectedMilestoneId: id });
     setSelectedMilestone(milestones.find((m) => m.id === id));
   }
 
@@ -130,7 +135,7 @@ function MilestoneReports() {
   }
 
   function onRangeTypeChange(event) {
-    setRangeType(event.target.value);
+    setFilters({ ...filters, rangeType: event.target.value });
   }
 
   function renderMilestoneDates(milestone) {
@@ -154,12 +159,9 @@ function MilestoneReports() {
   }, [project]);
 
   useEffect(() => {
-    getWorkTimes();
-  }, [selectedMilestoneId]);
-
-  useEffect(() => {
-    if (prevRangeType) getWorkTimes();
-  }, [rangeType, fromDate, toDate]);
+    if ((filters.rangeType === 'customDates' && filters.fromDate && filters.toDate)
+         || (filters.rangeType === 'milestone' && filters.selectedMilestoneId)) getWorkTimes();
+  }, [filters]);
 
   function renderDatesRange() {
     return (
@@ -167,20 +169,20 @@ function MilestoneReports() {
         <DatePicker
           {...defaultDatePickerProps}
           dateFormat="YYYY-MM-DD"
-          selected={moment(fromDate, 'YYYY-MM-DD')}
-          value={fromDate}
+          selected={moment(filters.fromDate, 'YYYY-MM-DD')}
+          value={filters.fromDate}
           name="fromDate"
           placeholderText={I18n.t('common.from')}
-          onChange={(date) => setFromDate(date.format('YYYY-MM-DD'))}
+          onChange={(date) => setFilters({ ...filters, fromDate: date.format('YYYY-MM-DD') })}
         />
         <DatePicker
           {...defaultDatePickerProps}
           dateFormat="YYYY-MM-DD"
-          selected={moment(toDate, 'YYYY-MM-DD')}
-          value={toDate}
+          selected={moment(filters.toDate, 'YYYY-MM-DD')}
+          value={filters.toDate}
           name="toDate"
           placeholderText={I18n.t('common.from')}
-          onChange={(date) => setToDate(date.format('YYYY-MM-DD'))}
+          onChange={(date) => setFilters({ ...filters, toDate: date.format('YYYY-MM-DD') })}
         />
       </div>
     );
@@ -189,7 +191,7 @@ function MilestoneReports() {
   function renderMilestones() {
     return (
       <div className="col-5">
-        <select className="form-control" value={selectedMilestoneId} name="selectedMilestoneId" onChange={onMilestoneChange}>
+        <select className="form-control" value={filters.selectedMilestoneId} name="selectedMilestoneId" onChange={onMilestoneChange}>
           {milestones.map((milestone) => (
             <option key={milestone.id} value={milestone.id}>
               {milestone.name}
@@ -222,13 +224,13 @@ function MilestoneReports() {
       <Breadcrumb crumbs={crumbs} />
       <div className="row">
         <div className="col-2">
-          <select className="form-control" value={rangeType} name="rangeType" onChange={onRangeTypeChange}>
+          <select className="form-control" value={filters.rangeType} name="rangeType" onChange={onRangeTypeChange}>
             <option value="milestone">{I18n.t('apps.milestone_reports.range_type.show_milestone')}</option>
             <option value="customDates">{I18n.t('apps.milestone_reports.range_type.date_range')}</option>
           </select>
         </div>
-        {rangeType === 'milestone' && renderMilestones()}
-        {rangeType === 'customDates' && renderDatesRange()}
+        {filters.rangeType === 'milestone' && renderMilestones()}
+        {filters.rangeType === 'customDates' && renderDatesRange()}
         <div className="col-2">
           <select className="form-control" value={mainChartType} name="mainChartType" onChange={onMainChartTypeChange}>
             <option value="progress">{I18n.t('apps.milestone_reports.type.progress')}</option>
@@ -247,9 +249,9 @@ function MilestoneReports() {
           )}
           {mainChartType === 'progress' && (
             <MilestoneProgressChart
-              estimateTotal={rangeType === 'customDates' ? null : selectedMilestone?.total_estimate}
-              fromDate={fromDate}
-              toDate={toDate}
+              estimateTotal={filters.rangeType === 'customDates' ? null : selectedMilestone?.total_estimate}
+              fromDate={chartDataDates.fromDate || filters.fromDate}
+              toDate={chartDataDates.toDate || filters.toDate}
               workTimes={data.workTimes}
             />
           )}
@@ -262,7 +264,7 @@ function MilestoneReports() {
         <div className="col-md-4 milestone-summary">
           <div className="sticky-record">
             <MilestoneSummary
-              milestone={rangeType === 'customDates' ? null : selectedMilestone}
+              milestone={filters.rangeType === 'customDates' ? null : selectedMilestone}
               workTimes={data.workTimes}
               workTimesSumByType={data.workTimesSumByType}
               selectedDepartment={selectedDepartment}
