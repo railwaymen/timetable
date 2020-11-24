@@ -28,6 +28,8 @@ module WorkTimes
     end
 
     def other_sql_jira_issues
+      return [] if milestone.nil?
+
       issues = project.milestones.where.not(id: milestone.id).flat_map(&:jira_issues)
       return [] if issues.empty?
 
@@ -35,7 +37,7 @@ module WorkTimes
     end
 
     def sql_jira_issues
-      return [] unless milestone.jira_issues
+      return [] unless milestone&.jira_issues
 
       ActiveRecord::Base.sanitize_sql_array(['[?]', milestone.jira_issues])
     end

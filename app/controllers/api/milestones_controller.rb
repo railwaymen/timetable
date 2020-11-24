@@ -30,7 +30,7 @@ module Api
 
     def work_times
       authorize Milestone
-      milestone = project.milestones.find_by(id: params[:milestone_id]) || project.current_milestone
+      milestone = project.milestones.find_by(id: params[:milestone_id])
 
       from_date = params[:from].presence || milestone.starts_on
       to_date = params[:to].presence || milestone.ends_on
