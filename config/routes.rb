@@ -26,6 +26,10 @@ Rails.application.routes.draw do
     resources :hardwares, only: %i[index create destroy update] do
       get :types, on: :collection
       resources :fields, controller: :hardware_fields, only: %i[create destroy update]
+      get :rental_agreement, on: :collection
+      get :return_agreement, on: :collection
+      put :change_status
+      resources :accessories, controller: :hardware_accessories, only: %i[create destroy update]
     end
     resources :accounting_periods do
       collection do
@@ -85,6 +89,8 @@ Rails.application.routes.draw do
       get :activity, on: :collection
     end
     resources :project_resource_assignments
+    delete :hardwares_bulk_destroy, to: 'hardwares#bulk_destroy'
+    put :hardwares_bulk_update, to: 'hardwares#bulk_update'
   end
 
   resources :reports, only: [] do

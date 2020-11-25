@@ -7,7 +7,6 @@ import { makeDeleteRequest } from '../../../shared/api';
 const FieldsList = (props) => {
   const [fields, setFields] = useState(props.fields);
   const [createFieldExpanded, setCreateFieldExpanded] = useState(false);
-  const [fieldsExpanded, setFieldsExpanded] = useState(false);
 
   const updateFieldList = (field) => {
     setFields([...fields, field]);
@@ -22,76 +21,46 @@ const FieldsList = (props) => {
     });
   };
 
-  const onFieldsExpand = () => {
-    setFieldsExpanded(!fieldsExpanded);
-  };
-
   const onCreateFieldExpand = () => {
     setCreateFieldExpanded(!createFieldExpanded);
   };
 
-  if (fieldsExpanded) {
-    return (
+  return (
+    <div>
+      <div className="mb-3 mt-3">
+        <h4 className="font-weight-bold">{I18n.t('apps.hardware.additional_fields')}</h4>
+      </div>
+
+      {fields.map((field) => {
+        const { name, value, id } = field;
+        return (
+          <Field
+            hardware_id={props.hardware_id}
+            onDelete={onDelete}
+            key={id}
+            id={id}
+            name={name}
+            value={value}
+            locked={props.locked}
+            status={props.status}
+          />
+        );
+      })}
+
       <div>
-        <div className="mb-3">
-          <h4 className="font-weight-bold">{I18n.t('apps.hardware.additional_fields')}</h4>
-        </div>
-
-        {fields.map((field) => {
-          const { name, value, id } = field;
-          return (
-            <Field
-              hardware_id={props.hardware_id}
-              onDelete={onDelete}
-              key={id}
-              id={id}
-              name={name}
-              value={value}
-              locked={props.locked}
-            />
-          );
-        })}
-
-        <div>
-          <div className="row">
-            <div className="col">
-              {(!props.locked || currentUser.isHardwareManager()) && (
-                <CreateField
-                  toggleExpand={onCreateFieldExpand}
-                  expanded={createFieldExpanded}
-                  updateFieldList={updateFieldList}
-                  hardware_id={props.hardware_id}
-                />
-              )}
-            </div>
-            {!createFieldExpanded && (
-              <div className="col-md-3">
-                <button
-                  onClick={onFieldsExpand}
-                  type="button"
-                  className="btn rounded-circle btn-outline-primary"
-                  data-tooltip-bottom={I18n.t('common.fold')}
-                >
-                  <i className="fa fa-arrow-up" />
-                </button>
-              </div>
+        <div className="row">
+          <div className="col">
+            {((!props.locked && props.status === 'in_office') || currentUser.isHardwareManager()) && (
+              <CreateField
+                toggleExpand={onCreateFieldExpand}
+                expanded={createFieldExpanded}
+                updateFieldList={updateFieldList}
+                hardware_id={props.hardware_id}
+              />
             )}
           </div>
         </div>
       </div>
-    );
-  }
-
-  return (
-    <div className=" d-flex justify-content-end">
-      <button
-        onClick={onFieldsExpand}
-        type="button"
-        data-tooltip-bottom={I18n.t('common.expand')}
-        className="btn btn-outline-primary rounded-circle "
-      >
-        <i className="fa fa-arrow-down" />
-      </button>
     </div>
   );
 };
@@ -99,6 +68,8 @@ const FieldsList = (props) => {
 FieldsList.propTypes = {
   hardware_id: PropTypes.number.isRequired,
   fields: PropTypes.array.isRequired,
+  locked: PropTypes.bool.isRequired,
+  status: PropTypes.string.isRequired,
 };
 
 export default FieldsList;

@@ -17,6 +17,8 @@ class ApplicationController < ActionController::Base
   end
 
   def use_user_locale(&block)
+    Rails.logger.info '-====='
+    Rails.logger.info block
     I18n.with_locale(current_user.try(:lang), &block)
   end
 

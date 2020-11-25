@@ -8,6 +8,13 @@ en:
       manufacturer: Manufacturer
       model: Model
       serial_number: Serial Number
+      physical_condition: Physical condition
+      functional_condition: Functional condition
+      accessories: Accessories
+      accessory: Accessory
+      no_accessories: No accessories
+      add_accessory: Add accessory
+      accessory_number: 'Accessory #{{index}}'
       no_user: Without user
       field:
         add_new: Add field
@@ -19,6 +26,80 @@ en:
         laptop: Laptop
         tablet: Tablet
         smartphone: Smartphone
+      confirm_delete: 
+        one: 'Are you sure you want to delete {{count}} hardware?'
+        other: 'Are you sure you want to delete {{count}} hardwares?'
+      hardware_rental: Hardware rental
+      hardware_return: Hardware return
+      company: Company
+      borrower: Borrower
+      lender: Lender
+      loaning: "This hardware is in loaning process, you can't edit it"
+      loaned: "This hardware is loaned, you can't edit it"
+      returning: "This hardware is in returning process, you can't edit it"
+      accept_loaning: Accept loan
+      accept_returning: Accept return
+      skip_loaned: Not all hardwares are in the office. Only those hardwares in the ofice will be inlcuded in agreement.
+      skip_returned: Not all hardwares are loaned. Only loaned hardwares will be included in agreement.
+      skip_not_in_office: Not all hardwares are in the office. Only those hardwares in the ofice will be deleted.
+      undo: Undo
+      admin:
+        skip_not_in_office: Not all hardwares are in the office and they will be deleted.
+      statuses:
+        in_office: In office
+        loaning: Loaning
+        loaned: Loaned
+        returning: Returning
+      agreements:
+        agreement_between: 'Concluded on <b>%{date}</b> between:'
+        nip: Tax Identification Number
+        represented_by: represented by
+        lender: Lender
+        referred_to_as: 'hereinafter referred to as „%{data}”'
+        and: and
+        name_and_surname: 'Name i Surname: ....................'
+        address: 'Address: ....................'
+        id_document: 'Series and number of the document confirming the identity: ....................'
+        borrower: Borrower
+        additional_info: 'Additional informations:'
+        total_value: 'with a total value of: ....................<b>gross PLN</b>'
+        lender_or_proxy: Lender or authorized person to sign the contract - Proxy
+      rental_agreement:
+        title: Agreement on individual material liability for entrusted property
+        paragraph_number_1: >-
+          Borrower declares that on ....................................... he accepts material liability for the property of the lender entrusted to
+          him with the obligation to return or calculate :
+        paragraph_number_2: >-
+          The borrower declares that entrusting him with the property of .................................. occurred in a correct manner. The borrower
+          confirms the quantitative and qualitative compatibility of the property with the actual state.
+        paragraph_number_3: >-
+          In connection with the acceptance of the material responsibility specified in § 1 of the contract, the
+          <br>Borrower is obliged to:
+          <br>%{bullet} take care of the property entrusted to him,
+          <br>%{bullet} immediately informing the lender by submitting a statement in writing about the identified threats to the
+          proper security of the property entrusted to him or about shortages in this respect,
+          <br>%{bullet} settlement of entrusted property,
+          <br>%{bullet} compensation for any damage caused to property entrusted, resulting from the culpable behavior of the
+          borrower
+        paragraph_number_4: The contract is concluded for <b>an indefinite period</b>.
+        paragraph_number_5: All changes to the contract require, under pain of nullity, a written form.
+        paragraph_number_6: >-
+          In matters not covered by the contract, the provisions of the Civil Code apply.
+          <br>Legal basis: Act of 23 April 1964 - Civil Code (Journal of Laws No. 16, item 93, as amended)
+        paragraph_number_7: >-
+          Disputed issues arising from the application of the contract shall be settled there will be a court competent for the
+          registered office of the Lender.
+        paragraph_number_8: The contract was drawn up in two identical copies, one for each party.
+      return_agreement:
+        title: Hardware return protocol
+        point: point
+        paragraph_number_1: 'The Lender accepts the return of the equipment:'
+        paragraph_number_2: The Lender and the Borrower declares that the property listed in § 1 %{points} at the time of receipt has no defects.
+        paragraph_number_3: The protocol were made in two identical copies.
+      mailer:
+        body: '%{user_name} wants to %{action} hardware/hardwares.'
+        rental: rent
+        return: return
     header:
       login: Login
       username: Username
@@ -253,7 +334,9 @@ en:
     back: Back
     expand: Expand
     lock: "Lock"
+    lock_selected: Lock selected
     unlock: "Unlock"
+    unlock_selected: Unlock selected
     fold: Fold
     rank: 'Rank'
     add: Add
@@ -265,6 +348,7 @@ en:
     close: Close
     edit: Edit
     destroy: Delete
+    destroy_selected: Delete selected
     from: From
     to: To
     task: Task
@@ -345,6 +429,8 @@ en:
     tags: Tags
     active: Active
     inactive: Inactive
+    select_all: Select all
+    unselect_all: Unselect all
   activerecord:
     errors:
       models:
@@ -369,6 +455,18 @@ en:
               blank: Project is required
         external_auth:
           basic: Error during authorization
+        hardware_accessory:
+          attributes:
+            name:
+              taken: Name is already taken
+              blank: Name is required
+        hardware_field:
+          attributes:
+            name:
+              taken: Name is already taken
+              blank: Name is required
+            value:
+              blank: Value is required
         hardware:
           attributes:
             type:
@@ -380,6 +478,12 @@ en:
             serial_number:
               blank: Serial Number can't be blank
               taken: Serial Number is already in use
+            status:
+              wrong_transition: of one/few of the hardware is wrong for this action
+            physical_condition:
+              blank: Information about physcial condition of the hardware is required
+            functional_condition:
+              blank: Information about functional condition of the hardware is required
         vacation:
           basic: There was an error while trying to add application for vacation
           attributes:

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class HardwareFieldPolicy < ApplicationPolicy
+class HardwareAccessoryPolicy < ApplicationPolicy
   def update?
-    Rails.logger.info 'COCOCOCOCOCOCCO'
+    Rails.logger.info 'HMMMM'
     if user.admin? || user.hardware_manager?
       true
     else
