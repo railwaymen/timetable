@@ -13,6 +13,12 @@ RSpec.describe Api::ProjectsController do
                                'dev_estimate', 'qa_estimate', 'ux_estimate', 'pm_estimate', 'other_estimate', 'external_estimate', 'total_estimate').merge(external_id: milestone.external_id)
   end
 
+  def with_tags_response(project)
+    project.attributes.slice('id', 'name', 'internal', 'work_times_allows_task', 'tags_enabled', 'color', 'lunch', 'autofill', 'count_duration')
+           .merge(active: project.kept?, accounting: project.accounting?)
+           .merge(tags: project.tags.map { |tag| tag.attributes.slice('id', 'name', 'use_as_default') })
+  end
+
   def stats_response(project, work_times)
     project.attributes.slice('color', 'name', 'id').merge(
       leader_name: project.leader&.name,
@@ -44,6 +50,28 @@ RSpec.describe Api::ProjectsController do
       get :index, format: :json
       expect(response.code).to eql('200')
       expect(response.body).to be_json_eql([index_response(project)].to_json)
+    end
+  end
+
+  describe '#with_tags' do
+    it 'authenticates user' do
+      get :index, format: :json
+      expect(response.code).to eql('401')
+    end
+
+    it 'returns valid json' do
+      sign_in(user)
+      global_tag = create(:tag)
+      project = create(:project)
+      create(:tag, project: project)
+      expected_response = {
+        global_tags: [global_tag.slice('id', 'name', 'use_as_default')],
+        projects: [with_tags_response(project)]
+      }
+
+      get :with_tags, format: :json
+      expect(response.code).to eql('200')
+      expect(response.body).to be_json_eql(expected_response.to_json)
     end
   end
 
