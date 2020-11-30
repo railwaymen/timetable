@@ -714,8 +714,12 @@ export default class EditReport extends React.Component {
         )}
         {report.generated && (
           <div className="report-download-actions">
-            <a className="btn btn-outline-success btn-lg" href={`/api/projects/${projectId}/project_reports/${reportId}/file`}>
+            <a className="btn btn-outline-success btn-lg" href={`/api/projects/${projectId}/project_reports/${reportId}/file.pdf`}>
               <i className="fa fa-file-pdf-o mr-2" />
+              {I18n.t('common.download')}
+            </a>
+            <a className="btn btn-outline-success btn-lg" href={`/api/projects/${projectId}/project_reports/${reportId}/file.csv`}>
+              <i className="fa fa-file-excel-o mr-2" />
               {I18n.t('common.download')}
             </a>
           </div>

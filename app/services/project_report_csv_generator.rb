@@ -53,8 +53,11 @@ class ProjectReportCsvGenerator
     tag.humanize
   end
 
+  SECONDS_IN_MINUTE = MINUTES_IN_HOUR = 60
   def format_duration(duration)
-    Time.at(duration).utc.strftime('%H:%M')
+    minutes = (duration / SECONDS_IN_MINUTE) % MINUTES_IN_HOUR
+    hours = duration / (SECONDS_IN_MINUTE * MINUTES_IN_HOUR)
+    format('%<hours>02d:%<minutes>02d', hours: hours, minutes: minutes)
   end
 
   def format_cost(cost)
