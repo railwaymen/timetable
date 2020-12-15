@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import Entry from './entry';
 import EntryHistory from './history/entry_history';
 import * as Api from '../../shared/api';
+import ColorizeHelper from '../../../helpers/colorize_helper';
 
 class Timesheet extends React.Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class Timesheet extends React.Component {
       .then((response) => {
         this.setState({
           projects: response.data.projects,
-          globalTags: response.data.global_tags,
+          globalTags: ColorizeHelper.colorizeArray(response.data.global_tags),
         });
       });
   }

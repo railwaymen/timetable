@@ -10,6 +10,7 @@ import translateErrors from '../../shared/translate_errors';
 import * as Api from '../../shared/api';
 import * as Validations from '../../shared/validations';
 import { defaultDatePickerProps, formattedHoursAndMinutes, inclusiveParse } from '../../shared/helpers';
+import ColorizeHelper from '../../../helpers/colorize_helper';
 
 class Entry extends React.Component {
   constructor(props) {
@@ -134,7 +135,11 @@ class Entry extends React.Component {
       if (!data[0].id) {
         throw new Error('Invalid response');
       }
-      data.forEach(this.props.pushEntry);
+
+      ColorizeHelper
+        .colorizeArray(data, { resolveField: 'tag', to: 'tag_color', includeHash: true })
+        .forEach(this.props.pushEntry);
+
       const newState = {
         body: '',
         task: '',
@@ -169,14 +174,17 @@ class Entry extends React.Component {
 
   paste(object) {
     const project = this.props.projects.find((p) => p.id === object.project.id);
+
     const combinedTags = (project.tags || []).concat(this.props.globalTags);
-    const tag = combinedTags.find((t) => t.id === object.tag_id);
+    const colorizedTags = ColorizeHelper.colorizeArray(combinedTags, { resolveField: 'name' });
+
+    const tag = colorizedTags.find((t) => t.id === object.tag_id);
     this.setState({
       body: _.unescape(object.body),
       project,
       project_id: project.id,
       task: object.task,
-      combinedTags,
+      combinedTags: colorizedTags,
       tag: tag || this.findDefaultTag(),
     });
   }
@@ -239,10 +247,13 @@ class Entry extends React.Component {
       };
     }
 
+    const combinedTags = project.tags.concat(this.props.globalTags);
+    const colorizedTags = ColorizeHelper.colorize(combinedTags, { resolveField: 'name' });
+
     this.setState({
       ...autoSettings,
       project,
-      combinedTags: project.tags.concat(this.props.globalTags),
+      combinedTags: colorizedTags,
       tag: this.findDefaultTag(),
       project_id: project.id,
     }, () => {
@@ -293,6 +304,8 @@ class Entry extends React.Component {
       body, task, tag, starts_at, ends_at, durationHours, date, errors, project, combinedTags,
     } = this.state;
     const { requestsLocked } = this.props;
+
+    console.log({ combinedTags });
 
     return (
       <div className="new-entry" id="content">
@@ -349,6 +362,8 @@ class Entry extends React.Component {
               { (project.taggable || project.tags_enabled) && (
                 <div className="col-sm-4 col-md-1 tag-container">
                   <ProjectsDropdown
+                    flowTextColor
+                    includeColors
                     placeholder={I18n.t('apps.timesheet.select_tag')}
                     updateProject={this.selectTag}
                     selectedProject={tag}

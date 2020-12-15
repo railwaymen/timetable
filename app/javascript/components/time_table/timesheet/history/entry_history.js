@@ -7,6 +7,7 @@ import WorkHoursDay from './work_hours_day';
 import * as Api from '../../../shared/api';
 import { displayDuration } from '../../../shared/helpers';
 import SearchBox from './search_box';
+import ColorizeHelper from '../../../../helpers/colorize_helper';
 
 class EntryHistory extends React.Component {
   constructor(props) {
@@ -175,8 +176,17 @@ class EntryHistory extends React.Component {
       }).then(() => {
         Api.makeGetRequest({ url })
           .then((response) => {
+            const workHours = response.data.map((workHour) => {
+              const color = ColorizeHelper.colorizeElement(workHour.tag, { includeHash: true });
+
+              return {
+                ...workHour,
+                tag_color: color,
+              };
+            });
+
             this.setState({
-              workHours: response.data,
+              workHours,
               project_id,
               from,
               to,

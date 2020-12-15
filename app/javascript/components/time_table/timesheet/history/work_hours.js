@@ -13,6 +13,7 @@ import WorkTimeTask from '../../../shared/work_time_task';
 import WorkTimeDuration from '../../../shared/work_time_duration';
 import WorkTimeTime from '../../../shared/work_time_time';
 import WorkTimeDescription from '../../../shared/work_time_description';
+import ColorizeHelper from '../../../../helpers/colorize_helper';
 
 class WorkHours extends React.Component {
   constructor(props) {
@@ -310,7 +311,7 @@ class WorkHours extends React.Component {
     const project = this.props.projects.find((p) => p.id === workHours.project_id);
     if (project == null) { return this.props.globalTags; }
 
-    return this.props.globalTags.concat(project.tags);
+    return ColorizeHelper.colorizeArray(this.props.globalTags.concat(project.tags));
   }
 
   workHoursJsonApi() {
@@ -433,6 +434,7 @@ class WorkHours extends React.Component {
                 {editing && workHours.project.taggable ? (
                   <div className="project-dropdown">
                     <ProjectsDropdown
+                      includeColors
                       placeholder={I18n.t('apps.timesheet.select_tag')}
                       updateProject={this.selectTag}
                       selectedProject={selectedTag}
@@ -440,7 +442,7 @@ class WorkHours extends React.Component {
                     />
                   </div>
                 ) : (
-                  <span className="tag-pill">
+                  <span style={{ border: `1px solid ${workHours.tag_color}`, color: workHours.tag_color }} className="tag-pill">
                     {workHours.tag}
                   </span>
                 )}

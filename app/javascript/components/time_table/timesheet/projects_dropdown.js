@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ProjectsList from './projects_list';
+import ColorizeHelper from '../../../helpers/colorize_helper';
 
 class ProjectsDropdown extends React.Component {
   constructor(props) {
@@ -127,6 +128,8 @@ class ProjectsDropdown extends React.Component {
     const { isExpanded, filter } = this.state;
     const { selectedProject, placeholder, includeColors } = this.props;
 
+    const color = ColorizeHelper.colorText(`#${selectedProject.color}`);
+
     return (
       <div className="dropdown" style={{ minWidth: '90px' }}>
         <input type="hidden" name="project" value="12" />
@@ -142,8 +145,13 @@ class ProjectsDropdown extends React.Component {
           onChange={this.onFilterChange}
           onKeyDown={this.onKeyDown}
         />
-        <div className={`text active ${(isExpanded ? 'hidden' : '')}`} style={{ background: `#${selectedProject.color}` }} onClick={this.expandDropdown}>
-          {includeColors && (<div className="circular empty label ui" style={{ background: `#${selectedProject.color}` }} />)}
+        <div className={`text active ${(isExpanded ? 'hidden' : '')}`} style={{ color, background: `#${selectedProject.color}` }} onClick={this.expandDropdown}>
+          {includeColors && (
+            <div
+              className="circular empty label ui"
+              style={{ color: ColorizeHelper.colorText(`#${selectedProject.color}`), background: `#${selectedProject.color}` }}
+            />
+          )}
           {selectedProject.name}
         </div>
         {isExpanded && this.renderProjectsList()}
