@@ -7,7 +7,7 @@ module Api
     before_action :find_vacation, only: %i[approve decline undone self_decline update_dates]
     around_action :disable_paper_trail, only: %i[approve decline undone self_decline update_dates]
 
-    def index
+    def index # rubocop:disable Metrics/MethodLength
       selected_user =
         if current_user.staff_manager?
           params[:user_id] && User.kept.find(params[:user_id]) || current_user

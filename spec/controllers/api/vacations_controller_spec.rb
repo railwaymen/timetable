@@ -65,10 +65,11 @@ RSpec.describe Api::VacationsController do
 
     it 'filters user vacation applications by year' do
       sign_in(user)
+      vacation_period = create(:vacation_period, vacation_days: 10, user: user, starts_at: 1.year.ago.beginning_of_year, ends_at: 1.year.ago.end_of_year)
       create(:vacation, user: user)
       get :index, params: { year: (Time.current - 1.year).year }, format: :json
       expect(response.code).to eql('200')
-      expect(response.body).to eql({ records: [], available_vacation_days: 0, used_vacation_days: used_vacation_days_response }.to_json)
+      expect(response.body).to eql({ records: [], available_vacation_days: vacation_period.vacation_days, used_vacation_days: used_vacation_days_response }.to_json)
     end
 
     it 'filters user vacation applications by user' do
