@@ -16,7 +16,8 @@ module Api
         end
       @vacations = Vacation.where('user_id = :user_id AND (extract(year from start_date) = :year OR extract(year from start_date) = :year)',
                                   user_id: selected_user.id, year: params[:year]).order(:start_date)
-      @available_vacation_days = selected_user.available_vacation_days(@vacations)
+      vacation_period = selected_user.vacation_periods.where('extract(year from starts_at) = ?', params[:year]).first!
+      @available_vacation_days = selected_user.available_vacation_days(@vacations, vacation_period)
       @used_vacation_days = selected_user.used_vacation_days(@vacations)
     end
 
