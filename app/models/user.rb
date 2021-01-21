@@ -94,8 +94,8 @@ class User < ApplicationRecord
   end
   # rubocop:enable Metrics/MethodLength
 
-  def available_vacation_days(selected_vacations = vacations.current_year)
-    last_vacation_period = vacation_periods.last
+  def available_vacation_days(selected_vacations = vacations.current_year, vacation_period = nil)
+    last_vacation_period = vacation_period || vacation_periods.last
     already_used_vacation_days = selected_vacations.where(status: :accepted, vacation_type: %w[planned requested]).sum(:business_days_count)
     last_vacation_period.nil? ? 0 - already_used_vacation_days : last_vacation_period.vacation_days - already_used_vacation_days
   end
