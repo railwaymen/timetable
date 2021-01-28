@@ -8,6 +8,13 @@ pl:
       manufacturer: Producent
       model: Model
       serial_number: Numer seryjny
+      physical_condition: Stan fizyczny
+      functional_condition: Stan funkcjonalny
+      accessories: Akcesoria
+      accessory: Akcesorium
+      no_accessories: Brak akcesoriów
+      add_accessory: Dodaj akcesorium
+      accessory_number: 'Akcesorium #{{index}}'
       no_user: Bez użytkownika
       field:
         add_new: Dodaj pole
@@ -19,6 +26,80 @@ pl:
         laptop: Laptop
         tablet: Tablet
         smartphone: Smartphone
+      confirm_delete: 
+        one: 'Czy na pewno chcesz usunąć {{count}} sprzęt?'
+        two: 'Czy na pewno chcesz usunąć {{count}} sprzęt?'
+        other: 'Czy na pewno chcesz usunąć {{count}} sprzętów?'
+      hardware_rental: Wypożyczenie sprzętu
+      hardware_return: Zdanie sprzętu
+      company: Firma
+      borrower: Biorący
+      lender: Użyczający
+      loaning: Ten sprzęt jest w trakcie wypożyczania, nie możesz go edytować
+      loaned: Ten sprzęt jest wypożyczony, nie możesz go edytować
+      returning: Ten sprzęt jest zwracany, nie możesz go edytować
+      accept_loaning: Zaakceptuj użyczenie
+      accept_returning: Zaakceptuj zwrot
+      skip_loaned: Nie wszystkie zaznaczone sprzęty są w biurze. Tylko te sprzęty, które są w biurze zostaną załączone do umowy.
+      skip_returned: Nie wszystkie zaznaczone sprzęty są wypożyczone. Tylko te sprzęty, które są wypożyczone zostaną załączone do umowy.
+      skip_not_in_office: Nie wszystkie zaznaczone sprzęty są w biurze. Tylko te sprzęty, które są w biurze zostaną usunięte.
+      undo: Cofnij
+      admin:
+        skip_not_in_office: Nie wszystkie zaznaczone sprzęty są w biurze i zostaną one usunięte.
+      statuses:
+        in_office: W biurze
+        loaning: W trakcie wypożyczania
+        loaned: Wypożyczony
+        returning: W trakcie zwrotu
+      agreements:
+        agreement_between: 'Zawarta w dniu <b>%{date}</b> pomiędzy:'
+        nip: NIP
+        represented_by: reprezentowanym przez
+        lender: Użyczającym
+        referred_to_as: 'zwanym dalej „%{data}”'
+        and: a
+        name_and_surname: 'Imię i Nazwisko: ....................'
+        address: 'Adres: ....................'
+        id_document: 'Seria i nr dokumentu potwierdzającego tożsamość: ....................'
+        borrower: Biorącym
+        additional_info: 'Informacje dodatkowe:'
+        total_value: 'o łącznej wartości: ....................<b>zł brutto</b>'
+        lender_or_proxy: Użyczający lub osoba upoważniona do podpisywania umowy - Pełnomocnik
+      rental_agreement:
+        title: Umowa o indywidualnej odpowiedzialności materialnej za powierzone mienie
+        paragraph_number_1: >- 
+          Biorący oświadcza, że z dniem ....................................... przyjmuje odpowiedzialność materialną za mienie
+          użyczającego powierzone mu z obowiązkiem zwrotu lub wyliczenia się:
+        paragraph_number_2: >-
+          Biorący oświadcza, że powierzenie mu mienia z dnia .................................. nastąpiło w sposób prawidłowy.
+          Biorący potwierdza ilościową i jakościową zgodność mienia ze stanem faktycznym.
+        paragraph_number_3: >-
+          W związku z przyjęciem odpowiedzialności materialnej określonej w § 1 umowy,
+          <br>Biorący zobowiązany jest do:
+          <br>%{bullet} sprawowania pieczy nad powierzonym mu mieniem,
+          <br>%{bullet} niezwłocznego informowania użyczającego poprzez złożenie oświadczenia na piśmie o stwierdzonych
+          zagrożeniach dla prawidłowego zabezpieczenia powierzonego mu mienia bądź o brakach w tym zakresie,
+          <br>%{bullet} rozliczenia się z powierzonego mienia,
+          <br>%{bullet} wyrównania wszelkich szkód powstałych w mieniu powierzonym, wynikłych z zawinionego zachowania
+          biorącego
+        paragraph_number_4: Umowa zostaje zawarta na <b>czas nieokreślony</b>.
+        paragraph_number_5: Wszelkie zmiany umowy wymagają, pod rygorem nieważności, formy pisemnej.
+        paragraph_number_6: >-
+          W sprawach nieuregulowanych w umowie zastosowanie mają przepisy Kodeksu Cywilnego
+          <br>Podstawa prawna: Ustawa z dnia 23.04.1964 r. - Kodeks cywilny (Dz. U. nr 16, poz. 93 ze zm.)
+        paragraph_number_7: Sprawy sporne wynikłe ze stosowania umowy rozstrzygać będzie sąd właściwy dla siedziby Użyczającego.
+        paragraph_number_8: Umowę sporządzono w dwóch jednobrzmiących egzemplarzach, po jednym dla każdej ze stron.
+      return_agreement:
+        title: Umowa zdania sprzętu
+        point: pkt.
+        paragraph_number_1: 'Zamawiający odbiera:'
+        paragraph_number_2: Zamawiający oświadcza, iż mienie wymienione w § 1 %{points} w chwili odbioru nie posiada wad.
+        paragraph_number_3: Protokół sporządzono w dwóch jednobrzmiących egzemplarzach.
+      mailer:
+        body: '%{user_name} chce %{action} sprzęt/sprzęty.'
+        rental: wypożyczyć
+        renturn: zawrócić
+        title: '[Hardware %{action}]'
     header:
       login: Logowanie
       username: Użytkownik
@@ -253,7 +334,9 @@ pl:
     back: Wróć
     expand: "Rozwiń"
     lock: "Zablokuj"
+    lock_selected: Zablokuj zaznaczone
     unlock: "Odblokuj"
+    unlock_selected: Odblokuj zaznaczone
     fold: "Zwiń"
     rank: 'Ranking'
     add: Dodaj
@@ -265,6 +348,7 @@ pl:
     close: Zamknij
     edit: Edytuj
     destroy: Usuń
+    destroy_selected: Usuń zaznaczone
     from: Od
     to: Do
     task: Zadanie
@@ -345,6 +429,8 @@ pl:
     tags: Tagi
     active: Aktywne
     inactive: Nieaktywne
+    select_all: Zaznacz wszystkie
+    unselect_all: Odznacz wszystkie
   errors:
     format: "%{attribute} %{message}"
     messages:
@@ -413,6 +499,11 @@ pl:
               blank: Projekt jest wymagany
         external_auth:
           basic: Błąd uwierzytelnienia
+        hardware_accessory:
+          attributes:
+            name:
+              taken: Nazwa jest zajeta
+              blank: Nazwa jest wymagana
         hardware_field:
           attributes:
             name:
@@ -431,6 +522,12 @@ pl:
             serial_number:
               blank: Numer seryjny jest wymagany
               taken: Numer seryjny jest zajety
+            status:
+              wrong_transition: przynajmniej jednego ze sprzętów jest nieprawidłowy dla danej akcji
+            physical_condition:
+              blank: Informacja o stanie fizycznym urządzenia jest wymagana
+            functional_condition:
+              blank: Informacja o stanie funkcjonalnym urządzenia jest wymagana
         vacation:
           basic: Nie udało się dodać podania o urlop
           attributes:

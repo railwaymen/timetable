@@ -92,6 +92,7 @@ CreateField.propTypes = {
   updateFieldList: PropTypes.func.isRequired,
   toggleExpand: PropTypes.func.isRequired,
   expanded: PropTypes.bool.isRequired,
+  hardware_id: PropTypes.number.isRequired,
 };
 
 export default CreateField;
