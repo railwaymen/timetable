@@ -12,7 +12,7 @@ RSpec.describe RemoteWork, type: :model do
 
   describe '#assign_duration before validation' do
     it 'counts duration' do
-      work_time = create :remote_work, starts_at: Time.current, ends_at: 2.hours.from_now
+      work_time = create :remote_work, starts_at: Time.zone.now.beginning_of_day, ends_at: Time.zone.now.beginning_of_day + 2.hours
       expect(work_time.duration).to eq 7200
     end
   end
