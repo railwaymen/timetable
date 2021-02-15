@@ -39,6 +39,7 @@ module.exports = {
     'max-len': ['error', { 'code': 160 }],
 
     // TODO: enable these rules:
+    'react/sort-comp': 'off',
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
     'react/destructuring-assignment': 'off',
