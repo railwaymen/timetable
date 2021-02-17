@@ -7,5 +7,7 @@ FactoryBot.define do
     manufacturer { 'Apple' }
     model { 'Macbook 13 PRO' }
     sequence(:serial_number) { |n| "XXX#{n}" }
+    physical_condition { 'good' }
+    functional_condition { 'good' }
   end
 end

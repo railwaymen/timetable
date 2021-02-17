@@ -102,8 +102,37 @@ const EditHardware = ({
               {errors.serialNumber
               && <Errors errors={errors.serialNumber} />}
             </div>
+            <hr />
+            <div className="ui field">
+              <label className="font-weight-bold" htmlFor="physical_condition">
+                {I18n.t('apps.hardware.physical_condition')}
+              </label>
+              <textarea
+                type="text"
+                name="physical_condition"
+                className="form-control"
+                value={stateHardware.physical_condition}
+                onChange={onChange}
+              />
+              {errors.physicalCondition && <Errors errors={errors.physicalCondition} />}
+            </div>
+            <hr />
+            <div className="ui field">
+              <label className="font-weight-bold" htmlFor="functional_condition">
+                {I18n.t('apps.hardware.functional_condition')}
+              </label>
+              <textarea
+                type="text"
+                name="functional_condition"
+                className="form-control"
+                value={stateHardware.functional_condition}
+                onChange={onChange}
+              />
+              {errors.functionalCondition && <Errors errors={errors.functionalCondition} />}
+            </div>
             {currentUser.isHardwareManager() && (
               <div className="form-group">
+                <hr />
                 <label className="font-weight-bold">
                   {I18n.t('common.user')}
                 </label>
@@ -147,6 +176,7 @@ EditHardware.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   hardware: PropTypes.object.isRequired,
+  users: PropTypes.array.isRequired,
 };
 
 export default EditHardware;

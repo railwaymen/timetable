@@ -6,7 +6,7 @@ import useFormHandler from '../../../../hooks/use_form_handler';
 import translateErrors from '../../../shared/translate_errors';
 
 const Field = ({
-  hardware_id, id, name, value, locked, onDelete,
+  hardware_id, id, name, value, locked, onDelete, status,
 }) => {
   const [edit, setEdit] = useState(false);
   const [field, , onChange] = useFormHandler({ id, name, value });
@@ -49,7 +49,7 @@ const Field = ({
           </div>
         </div>
         <div className="col-md-4">
-          {(!locked || currentUser.isHardwareManager()) && (
+          {((!locked && status === 'in_office') || currentUser.isHardwareManager()) && (
           <div className="btn-group">
             <button
               type="button"
@@ -82,6 +82,7 @@ Field.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
+  status: PropTypes.string.isRequired,
 };
 
 export default Field;

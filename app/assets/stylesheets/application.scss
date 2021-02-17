@@ -514,3 +514,19 @@ input[name="search-input"] {
     }
   }
 }
+
+.fit-content {
+  width: fit-content;
+}
+
+.pointer-cursor {
+  cursor: pointer;
+}
+
+.ui.divider {
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.ws-bs {
+  white-space: break-spaces;
+}

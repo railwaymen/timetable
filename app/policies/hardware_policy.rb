@@ -5,7 +5,7 @@ class HardwarePolicy < ApplicationPolicy
     if user.admin? || user.hardware_manager?
       true
     else
-      !record.locked?
+      !record.locked? && (record.in_office? || record.loaned?)
     end
   end
 
@@ -20,7 +20,10 @@ class HardwarePolicy < ApplicationPolicy
        manufacturer
        serial_number
        model
-       user_id]
+       user_id
+       status
+       physical_condition
+       functional_condition]
   end
 
   def hardware_manager_params
@@ -29,7 +32,10 @@ class HardwarePolicy < ApplicationPolicy
        serial_number
        model
        user_id
-       locked]
+       locked
+       status
+       physical_condition
+       functional_condition]
   end
 
   class Scope < Scope

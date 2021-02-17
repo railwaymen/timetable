@@ -25,6 +25,8 @@ const CreateHardware = ({ updateHardwareList, selectedUser }) => {
         manufacturer: '',
         model: '',
         serial_number: '',
+        physical_condition: '',
+        functional_condition: '',
       });
       setErrors({});
     }).catch((response) => {
@@ -85,6 +87,34 @@ const CreateHardware = ({ updateHardwareList, selectedUser }) => {
               onChange={onChange}
             />
             {errors.serialNumber && <Errors errors={errors.serialNumber} />}
+          </div>
+        </div>
+        <div className="row">
+          <div className="form-group col-md-6">
+            <label htmlFor="physical_condition">
+              {I18n.t('apps.hardware.physical_condition')}
+            </label>
+            <textarea
+              type="text"
+              name="physical_condition"
+              className="form-control"
+              value={hardware.physical_condition}
+              onChange={onChange}
+            />
+            {errors.physicalCondition && <Errors errors={errors.physicalCondition} />}
+          </div>
+          <div className="form-group col-md-6">
+            <label htmlFor="functional_condition">
+              {I18n.t('apps.hardware.functional_condition')}
+            </label>
+            <textarea
+              type="text"
+              name="functional_condition"
+              className="form-control"
+              value={hardware.functional_condition}
+              onChange={onChange}
+            />
+            {errors.functionalCondition && <Errors errors={errors.functionalCondition} />}
           </div>
         </div>
         <div className="d-flex justify-content-end">

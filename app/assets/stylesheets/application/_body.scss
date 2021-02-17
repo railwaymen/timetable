@@ -31,9 +31,62 @@ button, input, optgroup, select, textarea {
   background-color: $card-background-color;
   border-radius: $border-radius;
   border: 1px solid $border-color;
-  box-shadow: 0px 20px 30px -25px rgba(black, .3);
+  box-shadow: 0px 20px 30px -25px rgba($hardware-in-office-color, .3);
   transition: .3s;
   &:hover {
-    box-shadow: 0px 35px 45px -45px rgba(black, .5);
+    box-shadow: 0px 35px 45px -45px rgba($hardware-in-office-color, .5);
+  }
+  &.loaning {
+    box-shadow: 0px 20px 30px -25px rgba($hardware-loaning-color, .7);
+    &:hover {
+      box-shadow: 0px 35px 45px -45px rgba($hardware-loaning-color, 1);
+    }
+  }
+  &.loaned {
+    box-shadow: 0px 20px 30px -25px rgba($hardware-loaned-color, .7);
+    &:hover {
+      box-shadow: 0px 35px 45px -45px rgba($hardware-loaned-color, 1);
+    }
+  }
+  &.returning {
+    box-shadow: 0px 20px 30px -25px rgba($hardware-returning-color, .7);
+    &:hover {
+      box-shadow: 0px 35px 45px -45px rgba($hardware-returning-color, 1);
+    }
+  }
+  .card-body {
+    .loaning {
+      color: $hardware-loaning-color;
+      &.warning-border {
+        border: 1px solid $hardware-loaning-color;
+      }
+    }
+    .loaned {
+      color: $hardware-loaned-color;
+      &.warning-border {
+        border: 1px solid $hardware-loaned-color;
+      }
+    }
+    .returning {
+      color: $hardware-returning-color;
+      &.warning-border {
+        border: 1px solid $hardware-returning-color;
+      }
+    }
+    .status-select {
+      .selected {
+        background-color: orange;
+      }
+      div {
+        cursor: pointer;
+        border-radius: 3px;
+        &:not(:last-child) {
+          margin-bottom: 2px;
+        }
+        &:hover:not(.selected) {
+          background-color: rgba(orange, .5);
+        }
+      }
+    }
   }
 }
