@@ -19,6 +19,7 @@ task populate_dev_data: :environment do
   end
 
   project_ids = Project.filter_by(:active).pluck(:id)
+  tags = Tag.all
 
   User.find_each do |user|
     90.times do |day|
@@ -26,7 +27,7 @@ task populate_dev_data: :environment do
         body = FFaker::DizzleIpsum.sentence
         starts_at = day.days.ago.beginning_of_day + 8.hours + i.hours
         ends_at = day.days.ago.beginning_of_day + 8.hours + i.hours + 1.hour
-        user.work_times.create! tag: WorkTime.tags.keys.sample, body: body, starts_at: starts_at, ends_at: ends_at, project_id: project_ids.sample, creator: user, department: user.department
+        user.work_times.create! tag: tags.sample, body: body, starts_at: starts_at, ends_at: ends_at, project_id: project_ids.sample, creator: user, department: user.department
       end
     end
   end

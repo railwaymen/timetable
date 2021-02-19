@@ -20,7 +20,7 @@ module Vacations
     attr_reader :user_id, :start_date, :end_date
 
     def work_time_sql
-      <<-SQL
+      <<-SQL.squish
         (
           (
             (starts_at BETWEEN :start_date AND :end_date) AND

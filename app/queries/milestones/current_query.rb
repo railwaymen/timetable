@@ -21,7 +21,7 @@ module Milestones
     end
 
     def raw
-      <<~SQL
+      <<~SQL.squish
         SELECT DISTINCT ON(milestones.project_id) milestones.*,
           sum(work_times.duration) as work_times_duration
         FROM milestones
