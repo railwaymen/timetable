@@ -107,6 +107,19 @@ function EditProject(props) {
                 />
               </div>
               <div className="form-group">
+                <label htmlFor="tag">{I18n.t('common.tag')}</label>
+                {errors.tag && <div className="error-description">{errors.tag.join(', ')}</div>}
+                <input
+                  id="tag"
+                  className={`${errors.tag ? 'error' : ''} form-control`}
+                  type="text"
+                  name="tag"
+                  placeholder={I18n.t('common.tag')}
+                  onChange={onChange}
+                  value={project.tag}
+                />
+              </div>
+              <div className="form-group">
                 <label htmlFor="leader">{I18n.t('apps.projects.leader')}</label>
                 <select
                   name="leader_id"
@@ -162,6 +175,19 @@ function EditProject(props) {
             />
             <label className="form-check-label" htmlFor="work_times_allows_task">
               {I18n.t('apps.projects.work_times_allows_task')}
+            </label>
+          </div>
+          <div className="form-group form-check">
+            <input
+              id="billable"
+              type="checkbox"
+              className="form-check-input"
+              name="billable"
+              checked={project.billable}
+              onChange={onChange}
+            />
+            <label className="form-check-label" htmlFor="billable">
+              {I18n.t('apps.projects.billable')}
             </label>
           </div>
           <div className="form-group form-check">

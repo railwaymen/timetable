@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_12_141124) do
+ActiveRecord::Schema.define(version: 2021_02_12_102904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -271,6 +271,8 @@ ActiveRecord::Schema.define(version: 2021_01_12_141124) do
     t.boolean "tags_enabled", default: true, null: false
     t.boolean "vacation", default: false, null: false
     t.boolean "booked", default: false, null: false
+    t.string "tag"
+    t.boolean "billable", default: false, null: false
     t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["leader_id"], name: "index_projects_on_leader_id"
     t.index ["milestones_import_user_id"], name: "index_projects_on_milestones_import_user_id"

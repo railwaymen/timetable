@@ -40,7 +40,7 @@ class ProjectReportCreator
     Set.new(user_role_map.map { |user_id, data| user_id if data[:role].present? }.compact) == Set.new(work_times.map(&:user_id))
   end
 
-  SELECT_STATEMENT = <<~SQL
+  SELECT_STATEMENT = <<~SQL.squish
     STRING_AGG(work_times.id::text, ',') as composed_id,
     user_id,
     CONCAT(users.first_name, ' ', users.last_name) AS owner,

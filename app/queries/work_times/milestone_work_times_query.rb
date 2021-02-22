@@ -43,7 +43,7 @@ module WorkTimes
     end
 
     def work_time_sql
-      <<-SQL
+      <<-SQL.squish
         ((
           date >= :from_date
           #{sql_to_date} AND

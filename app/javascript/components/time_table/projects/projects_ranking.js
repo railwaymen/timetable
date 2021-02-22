@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import _ from 'lodash';
+import moment from 'moment';
 import * as Api from '../../shared/api';
 import ProjectStats from './project_stats';
 import RangeFilter from './range_filter';
 import TypeFilter from './type_filter';
+import DateRangeFilter from '../../shared/date_range_filter';
 
 function ProjectsRanking() {
   const [projectsStats, setProjectsStats] = useState([]);
@@ -32,6 +34,7 @@ function ProjectsRanking() {
       <Helmet>
         <title>{I18n.t('common.projects')}</title>
       </Helmet>
+      {currentUser.isSuperUser() && <EfficiencyReports />}
       <header className="page-header">
         <div className="clearfix mb-3">
           <div className="btn-group pull-right">
@@ -55,6 +58,29 @@ function ProjectsRanking() {
       <div className="row row-eq-height projects-cards">
         { !_.isEmpty(projectsStats) && renderGroupedRecords() }
       </div>
+    </div>
+  );
+}
+
+function EfficiencyReports() {
+  const [from, setFrom] = useState(moment().startOf('month').format());
+  const [to, setTo] = useState(moment().endOf('month').format());
+
+  const onGenerate = () => {
+    const path = `/efficiency_reports?from=${from}&to=${to}`;
+    window.open(path, '_blank');
+  };
+
+  return (
+    <div>
+      <DateRangeFilter
+        from={from}
+        to={to}
+        title={I18n.t('common.download')}
+        onFilter={onGenerate}
+        onFromChange={(time) => setFrom(time.format())}
+        onToChange={(time) => setTo(time.format())}
+      />
     </div>
   );
 }
