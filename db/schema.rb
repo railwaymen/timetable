@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_24_072605) do
+ActiveRecord::Schema.define(version: 2021_01_12_141124) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,17 @@ ActiveRecord::Schema.define(version: 2020_11_24_072605) do
     t.index ["project_report_id"], name: "index_combined_reports_project_reports_on_project_report_id"
   end
 
+  create_table "companies", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "address", null: false
+    t.string "zip_code", null: false
+    t.string "city", null: false
+    t.string "nip", null: false
+    t.string "krs", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "external_auths", force: :cascade do |t|
     t.bigint "project_id"
     t.jsonb "data", null: false
@@ -77,6 +88,15 @@ ActiveRecord::Schema.define(version: 2020_11_24_072605) do
     t.bigint "user_id"
     t.index ["project_id"], name: "index_external_auths_on_project_id"
     t.index ["user_id"], name: "index_external_auths_on_user_id"
+  end
+
+  create_table "hardware_accessories", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "hardware_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["hardware_id"], name: "index_hardware_accessories_on_hardware_id"
+    t.index ["name", "hardware_id"], name: "index_hardware_accessories_on_name_and_hardware_id", unique: true
   end
 
   create_table "hardware_fields", force: :cascade do |t|
@@ -94,8 +114,20 @@ ActiveRecord::Schema.define(version: 2020_11_24_072605) do
     t.string "serial_number", null: false
     t.bigint "user_id"
     t.boolean "locked", default: false, null: false
+    t.string "status", default: "in_office", null: false
+    t.string "physical_condition", null: false
+    t.string "functional_condition", null: false
     t.index ["serial_number"], name: "index_hardwares_on_serial_number", unique: true
     t.index ["user_id"], name: "index_hardwares_on_user_id"
+  end
+
+  create_table "lenders", force: :cascade do |t|
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.bigint "company_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["company_id"], name: "index_lenders_on_company_id"
   end
 
   create_table "milestone_estimates", force: :cascade do |t|
@@ -391,8 +423,10 @@ ActiveRecord::Schema.define(version: 2020_11_24_072605) do
   add_foreign_key "combined_reports_project_reports", "project_reports"
   add_foreign_key "external_auths", "projects"
   add_foreign_key "external_auths", "users"
+  add_foreign_key "hardware_accessories", "hardwares"
   add_foreign_key "hardware_fields", "hardwares"
   add_foreign_key "hardwares", "users"
+  add_foreign_key "lenders", "companies"
   add_foreign_key "milestone_estimates", "milestones"
   add_foreign_key "project_report_roles", "project_reports"
   add_foreign_key "project_report_roles", "users"

@@ -25,6 +25,11 @@ class ApplicationController < ActionController::Base
     return head(:forbidden) unless current_user.admin? || current_user.manager? || current_user.leader?
   end
 
+  def authenticate_admin_or_hardware_manager!
+    authenticate_user!
+    return head(:forbidden) unless current_user.admin? || current_user.hardware_manager?
+  end
+
   def disable_paper_trail
     PaperTrail.request.enabled = false
     yield

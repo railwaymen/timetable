@@ -2,10 +2,10 @@
 
 class HardwareFieldPolicy < ApplicationPolicy
   def update?
-    if user.admin || user.hardware_manager?
+    if user.admin? || user.hardware_manager?
       true
     else
-      !record.hardware.locked?
+      !record.hardware.locked? && record.hardware.in_office?
     end
   end
 

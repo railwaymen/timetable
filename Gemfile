@@ -61,6 +61,7 @@ group :test do
   gem 'capybara'
   gem 'capybara-selenium'
   gem 'json_spec'
+  gem 'pdf-inspector'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
   gem 'webdrivers'
