@@ -125,6 +125,7 @@ en:
       external_integration_enabled: JIRA integration
       external_id: External ID
       new: New Project
+      billable: Billable
       external_integration_help: Enable JIRA integration which logs work time in tickets
       external_id_help: This value can be found on projects list in column 'key' i.e. SH
       sort:
