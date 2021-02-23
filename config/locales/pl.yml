@@ -124,6 +124,7 @@ pl:
       external_integration_enabled: Integracja z JIRA
       external_id: Zewnetrzne ID
       new: Nowy projekt
+      billable: Fakturowany
       external_integration_help: Włącza integracje z JIRA która loguje czas pracy w zadaniach
       external_id_help: Wartość tą można znaleźć na liście projektów JIRA w kolumnie "key" np. SH
       sort:
