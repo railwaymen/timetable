@@ -6,7 +6,7 @@ import { defaultDatePickerProps } from './helpers';
 
 const dateFormat = 'DD/MM/YYYY';
 const DateRangeFilter = ({
-  from, to, onFromChange, onToChange, onFilter, className = '', children,
+  from, to, onFromChange, onToChange, onFilter, className = '', children, title = I18n.t('apps.reports.filter'),
 }) => (
   <div className={`date-range-filter ${className}`}>
     <DatePicker
@@ -28,7 +28,7 @@ const DateRangeFilter = ({
       placeholderText={I18n.t('common.to')}
     />
     <button type="button" className="btn btn-secondary filter" onClick={onFilter}>
-      {I18n.t('apps.reports.filter')}
+      {title}
     </button>
     {children}
   </div>

@@ -94,6 +94,8 @@ Rails.application.routes.draw do
     resources :companies, only: %i[index]
   end
 
+  resource :efficiency_reports, only: :show
+
   resources :reports, only: [] do
     get :project, on: :collection
   end

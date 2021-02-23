@@ -35,7 +35,7 @@ RSpec.describe Api::ProjectsController do
   end
 
   def full_project_response(project)
-    project.attributes.slice('id', 'name', 'work_times_allows_task', 'milestones_import_enabled', 'tags_enabled', 'external_integration_enabled', 'color', 'leader_id').merge(active: project.kept?, external_id: project.external_id)
+    project.attributes.slice('id', 'name', 'work_times_allows_task', 'milestones_import_enabled', 'tag', 'billable', 'tags_enabled', 'external_integration_enabled', 'color', 'leader_id').merge(active: project.kept?, external_id: project.external_id)
   end
 
   describe '#index' do
@@ -203,6 +203,8 @@ RSpec.describe Api::ProjectsController do
         tags_enabled: project.tags_enabled?,
         milestones_import_enabled: project.milestones_import_enabled,
         external_id: project.external_id,
+        tag: project.tag,
+        billable: project.billable,
         color: project.color,
         active: project.kept?,
         leader_id: project.leader_id,
@@ -233,6 +235,8 @@ RSpec.describe Api::ProjectsController do
         milestones_import_enabled: project.milestones_import_enabled,
         external_id: project.external_id,
         color: project.color,
+        billable: project.billable,
+        tag: project.tag,
         active: project.kept?,
         leader_id: project.leader_id
       }.to_json
@@ -255,6 +259,8 @@ RSpec.describe Api::ProjectsController do
         tags_enabled: project.tags_enabled?,
         milestones_import_enabled: project.milestones_import_enabled,
         external_id: project.external_id,
+        billable: project.billable,
+        tag: project.tag,
         color: project.color,
         active: project.kept?,
         leader_id: project.leader_id

@@ -127,7 +127,7 @@ RSpec.describe Api::AccountingPeriodsController do
       accounting_period = create(:accounting_period)
       delete :destroy, params: { id: accounting_period.id }, format: :json
       expect(response.code).to eql('204')
-      expect(AccountingPeriod.where(id: accounting_period.id).exists?).to be false
+      expect(AccountingPeriod.exists?(id: accounting_period.id)).to be false
       expect(response.body).to eq('')
     end
   end
