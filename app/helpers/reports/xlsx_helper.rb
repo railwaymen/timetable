@@ -11,5 +11,9 @@ module Reports
         sheet.change_column_width(*argument)
       end
     end
+
+    def calculate_days_should_work(starts_at, ends_at)
+      starts_at.to_date.business_days_until(ends_at)
+    end
   end
 end
