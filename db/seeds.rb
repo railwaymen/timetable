@@ -11,3 +11,37 @@ Project.where(name: 'ZKS').first_or_create! internal: true, booked: true, autofi
 
 Tag.where(name: 'dev').first_or_initialize.update!(use_as_default: true)
 
+producents = ['Apple', 'Dell', 'Lenovo', 'Microsoft']
+category = ['computers', 'displays', 'mobile_phones']
+models = ['A', 'B', 'C']
+states = ['poor', 'good', 'average']
+users = User.all
+cpu = ['intel', 'amd']
+
+accessories_names = ['Headphones', 'Hub', 'Case']
+
+150.times do |i|
+  device = HardwareDevice.create!(
+    category: category.sample,
+    brand: producents.sample,
+    model: models.sample,
+    serial_number: "SMSRLNMBR-#{i}-#{rand(100)}",
+    year_of_production: Time.current - rand(5).years,
+    year_bought: Time.current - rand(5).years,
+    used_since: Time.current - rand(5).years,
+    state: states.sample,
+    os_version: rand(150),
+    note: '',
+    user_id: users.sample.id,
+    cpu: cpu.sample,
+    ram: rand(16),
+    storage: rand(500)
+  )
+
+  rand(3).times do |j|
+    device.accessories.create!(
+      name: accessories_names.sample,
+      quantity: 1
+    )
+  end
+end

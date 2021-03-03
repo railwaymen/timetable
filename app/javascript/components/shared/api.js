@@ -8,12 +8,56 @@ const csrfToken = () => {
 };
 
 export const makePutRequest = (data) => fetch(data.url, {
-  body: JSON.stringify(data.body),
+  body: data.formData ? data.body : JSON.stringify(data.body),
   method: 'PUT',
   headers: {
     'X-CSRF-Token': csrfToken(),
     Accept: 'application/json',
     'Content-Type': 'application/json',
+  },
+  credentials: 'same-origin',
+}).then((response) => {
+  if (response.statusText === 'No Content') {
+    return { data: {}, status: response.status };
+  }
+  return response.json().then((responseData) => {
+    if (response.status >= 400 && response.status < 500) {
+      return Promise.reject(responseData);
+    }
+    return {
+      data: responseData,
+    };
+  });
+});
+
+export const makePostFormdataRequest = (data) => fetch(data.url, {
+  body: data.body,
+  method: 'POST',
+  headers: {
+    'X-CSRF-Token': csrfToken(),
+    accept: 'application/json',
+  },
+  credentials: 'same-origin',
+}).then((response) => {
+  if (response.statusText === 'No Content') {
+    return { data: {}, status: response.status };
+  }
+  return response.json().then((responseData) => {
+    if (response.status >= 400 && response.status < 500) {
+      return Promise.reject(responseData);
+    }
+    return {
+      data: responseData,
+    };
+  });
+});
+
+export const makePutFormdataRequest = (data) => fetch(data.url, {
+  body: data.body,
+  method: 'PUT',
+  headers: {
+    'X-CSRF-Token': csrfToken(),
+    accept: 'application/json',
   },
   credentials: 'same-origin',
 }).then((response) => {
