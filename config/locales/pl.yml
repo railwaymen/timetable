@@ -461,6 +461,7 @@ pl:
     date: Data
     refresh: Odśwież
     hardware: Mój sprzęt
+    hardware_devices: 'Sprzęt'
     type: Typ
     labels: Etykiety
     refreshed_at: Odświeżony

@@ -466,6 +466,7 @@ en:
     date: Date
     refresh: Refresh
     hardware: My hardware
+    hardware_devices: 'Hardware devices'
     type: Type
     labels: Labels
     refreshed_at: Refreshed
