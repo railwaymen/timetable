@@ -3,7 +3,7 @@ import { makeGetRequest } from '../../../../shared/api';
 import Paginate from './paginate';
 import TableRow from './table-row';
 
-export default function ActiveContent({ phrase, visible }) {
+export default function ActiveContent({ phrase, visible, onSelectItem }) {
   const [content, setContent] = useState({
     list: [], isLoaded: false, currentPage: 1, totalPages: 1,
   });
@@ -49,7 +49,7 @@ export default function ActiveContent({ phrase, visible }) {
         </thead>
         <tbody>
           {list.map((item) => (
-            <TableRow item={item} key={item.id} />
+            <TableRow item={item} key={item.id} onRemove={onSelectItem} />
           ))}
         </tbody>
       </table>

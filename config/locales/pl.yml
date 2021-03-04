@@ -26,7 +26,7 @@ pl:
         laptop: Laptop
         tablet: Tablet
         smartphone: Smartphone
-      confirm_delete: 
+      confirm_delete:
         one: 'Czy na pewno chcesz usunąć {{count}} sprzęt?'
         two: 'Czy na pewno chcesz usunąć {{count}} sprzęt?'
         other: 'Czy na pewno chcesz usunąć {{count}} sprzętów?'
@@ -67,7 +67,7 @@ pl:
         lender_or_proxy: Użyczający lub osoba upoważniona do podpisywania umowy - Pełnomocnik
       rental_agreement:
         title: Umowa o indywidualnej odpowiedzialności materialnej za powierzone mienie
-        paragraph_number_1: >- 
+        paragraph_number_1: >-
           Biorący oświadcza, że z dniem ....................................... przyjmuje odpowiedzialność materialną za mienie
           użyczającego powierzone mu z obowiązkiem zwrotu lub wyliczenia się:
         paragraph_number_2: >-
@@ -100,6 +100,47 @@ pl:
         rental: wypożyczyć
         renturn: zawrócić
         title: '[Hardware %{action}]'
+    hardware_devices:
+      os_system: 'System operacyjny'
+      cpu: 'CPU'
+      ram: 'Ram'
+      storage: 'Storage'
+      remove: 'Usun'
+      archive: 'Archiwizuj'
+      remove_confirm: 'Jesteś pewny?'
+      remove_title: 'Jesteś pewny ze chcesz usunać ten przedmiot?'
+      remove_body: 'Ta akcja jest nieodwracalna. Usunięty przedmiot zostanie from where you can only delete it.'
+      type: 'Typ'
+      brand: 'Marka'
+      model: 'Model'
+      add_new_device: 'Nowe urządzenie'
+      system: 'System'
+      serial_number: 'Numer seryjny'
+      category: 'Kategoria'
+      year_of_production: 'Rok produkcji'
+      year_bought: 'Rok zakupu'
+      used_since: 'Uzywany od'
+      edit: 'Edytuj'
+      delete_item: 'Usuń'
+      add_access: 'Dodany dostęp'
+      assigned_user: Przypisany uzytkownik
+      status: 'Status'
+      item_info: 'Bazowe informacje'
+      dates: 'Daty'
+      accessories: 'Akcesoria'
+      name: 'Nazwa'
+      show_details: 'Pokaz szczegoly'
+      quantity: 'Ilosc'
+      note: 'Notka'
+      edit_device: 'Edytuj urzadzenie'
+      log_history: 'Historia'
+      delete: 'Usun przedmiot'
+      add_photo: 'Dodaj zdjecie'
+      photos: 'Zdjecia'
+      add_accessory: 'Dodaj akcesoria'
+      add: 'Dodaj urzadzenie'
+      assigned_person: 'Przypisana osoba'
+      state: 'Stan'
     header:
       login: Logowanie
       username: Użytkownik

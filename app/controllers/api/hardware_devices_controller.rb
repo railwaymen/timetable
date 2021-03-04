@@ -5,17 +5,17 @@ module Api
     before_action :authenticate_admin_or_hardware_manager!
 
     def index
-      scope = HardwareDevice.active
+      scope = HardwareDevice.active.includes(user: :projects)
       scope = scope.search(params[:q]).order(search_strength: :desc) if params[:q].present?
 
-      @devices = scope.page(params[:page])
+      @devices = scope.page(params[:page]).order(created_at: :desc)
     end
 
     def archived
-      scope = HardwareDevice.archived
+      scope = HardwareDevice.archived.includes(user: :projects)
       scope = scope.search(params[:q]).order(search_strength: :desc) if params[:q].present?
 
-      @devices = scope.page(params[:page])
+      @devices = scope.page(params[:page]).order(created_at: :desc)
     end
 
     def show

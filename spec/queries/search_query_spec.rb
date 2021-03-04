@@ -7,16 +7,16 @@ RSpec.describe SearchQuery do
     context 'when correctly added columns' do
       it 'correctly calculalte the search strength dependent on value' do
         hardware1 = FactoryBot.create(:hardware_device, brand: 'ExampleName', model: 'AAB')
-        hardware2 = FactoryBot.create(:hardware_device, brand: 'BrandName', model: 'AAD')
+        FactoryBot.create(:hardware_device, brand: 'BrandName', model: 'AAD')
         hardware3 = FactoryBot.create(:hardware_device, brand: 'ExampleTest', model: 'BBX')
 
         scope = HardwareDevice.all
         query = described_class
-          .new(scope)
-          .ilike(
-            values: ['example', 'AAB'],
-            names: ['brand', 'model']
-          )
+                .new(scope)
+                .ilike(
+                  values: %w[example AAB],
+                  names: %w[brand model]
+                )
 
         results = query.execute.order(search_strength: :desc)
 
@@ -34,7 +34,7 @@ RSpec.describe SearchQuery do
         scope = HardwareDevice.all
 
         expect do
-          query = described_class
+          described_class
             .new(scope)
             .ilike(
               values: ['example'],

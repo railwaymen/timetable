@@ -3,5 +3,4 @@
 require 'rails_helper'
 
 RSpec.describe HardwareDeviceAccessory, type: :model do
-
 end

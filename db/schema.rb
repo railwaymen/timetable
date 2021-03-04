@@ -120,8 +120,6 @@ ActiveRecord::Schema.define(version: 2021_02_23_105601) do
     t.index ["name", "hardware_id"], name: "index_hardware_accessories_on_name_and_hardware_id", unique: true
   end
 
-<<<<<<< HEAD
-=======
   create_table "hardware_device_accessories", force: :cascade do |t|
     t.string "name", null: false
     t.integer "quantity", default: 1, null: false
@@ -152,7 +150,6 @@ ActiveRecord::Schema.define(version: 2021_02_23_105601) do
     t.index ["user_id"], name: "index_hardware_devices_on_user_id"
   end
 
->>>>>>> Added hardware devices logic
   create_table "hardware_fields", force: :cascade do |t|
     t.string "name", null: false
     t.string "value", null: false
@@ -481,11 +478,8 @@ ActiveRecord::Schema.define(version: 2021_02_23_105601) do
   add_foreign_key "external_auths", "projects"
   add_foreign_key "external_auths", "users"
   add_foreign_key "hardware_accessories", "hardwares"
-<<<<<<< HEAD
-=======
   add_foreign_key "hardware_device_accessories", "hardware_devices"
   add_foreign_key "hardware_devices", "users"
->>>>>>> Added hardware devices logic
   add_foreign_key "hardware_fields", "hardwares"
   add_foreign_key "hardwares", "users"
   add_foreign_key "lenders", "companies"

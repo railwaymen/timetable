@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import HardwareDeviceAttributeModel from '../../../models/hardware-device-attribute-model';
 import HardwareDeviceModel from '../../../models/hardware-device-model';
 import { makeDeleteRequest, makeGetRequest } from '../../shared/api';
@@ -18,7 +18,9 @@ export default function HardwareItem() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRemovedModal, setIsRemovedModal] = useState(false);
   const [isLogModal, setIsLogModal] = useState(false);
-  const [history, setHistory] = useState({ list: [], loaded: false });
+  const [deviceHistory, setDeviceHistory] = useState({ list: [], loaded: false });
+
+  const history = useHistory();
 
   const { id } = useParams();
 
@@ -56,8 +58,7 @@ export default function HardwareItem() {
       makeGetRequest({
         url: `/api/hardware_devices/${id}/history`,
       }).then(({ data }) => {
-        setHistory({ list: data, loaded: true });
-        console.log({ data });
+        setDeviceHistory({ list: data, loaded: true });
       });
     }
 
@@ -67,6 +68,8 @@ export default function HardwareItem() {
   const onRemove = () => {
     makeDeleteRequest({
       url: `/api/hardware_devices/${id}`,
+    }).then(() => {
+      history.push('/hardware-devices');
     });
   };
 
@@ -87,8 +90,9 @@ export default function HardwareItem() {
     name,
     note,
     category,
+    archived,
   } = hardwareDevice;
-  const { list: historyList } = history;
+  const { list: historyList } = deviceHistory;
 
   const user = users.find((u) => u.id === user_id);
 
@@ -99,7 +103,7 @@ export default function HardwareItem() {
         visible={isRemovedModal}
         onCancel={onToggleRemoveProcess}
         onConfirm={onRemove}
-        confirmTitle={I18n.t('apps.hardware_devices.remove')}
+        confirmTitle={archived ? I18n.t('apps.hardware_devices.remove') : I18n.t('apps.hardware_devices.archive')}
         title={I18n.t('apps.hardware_devices.remove_title')}
       >
         <p>{I18n.t('apps.hardware_devices.remove_body')}</p>

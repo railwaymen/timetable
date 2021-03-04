@@ -5,7 +5,6 @@ const FIELDS = [
   'os_version',
   'serial_number',
   'state',
-  'user_id',
   'year_of_production',
   'year_bought',
   'used_since',
@@ -19,6 +18,10 @@ export default function buildFormData({ device, accessories }) {
   FIELDS.forEach((field) => {
     form.append(`hardware_device[${field}]`, device[field]);
   });
+
+  if (device.user_id) {
+    form.append('hardware_device[user_id]', device.user_id);
+  }
 
   device.images.forEach((image) => {
     if (image.removed) {

@@ -17,10 +17,4 @@ json.os_version device.os_version
 json.state device.state
 json.note device.note
 json.user device.user
-json.images do
-  json.array! device.images do |image|
-    json.id image.id
-    json.record_id image.record_id
-    json.source rails_blob_path(image, disposition: 'attachment')
-  end
-end
+json.archived device.archived

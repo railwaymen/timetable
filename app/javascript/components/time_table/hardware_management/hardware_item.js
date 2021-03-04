@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import HardwareDeviceAttributeModel from '../../../models/hardware-device-attribute-model';
 import HardwareDeviceModel from '../../../models/hardware-device-model';
 import { makeGetRequest, makePutFormdataRequest, makePostFormdataRequest } from '../../shared/api';
@@ -21,6 +21,7 @@ export default function HardwareItem() {
   const [errors, setErrors] = useState({});
 
   const { id: paramId } = useParams();
+  const history = useHistory();
   const id = Number.isNaN(paramId) ? null : paramId;
 
   useEffect(() => {
@@ -78,6 +79,8 @@ export default function HardwareItem() {
       return makePutFormdataRequest({
         url: `/api/hardware_devices/${id}`,
         body: form,
+      }).then(() => {
+        history.push('/hardware-devices');
       }).catch((e) => {
         setErrors(e);
       });
@@ -86,6 +89,8 @@ export default function HardwareItem() {
     return makePostFormdataRequest({
       url: '/api/hardware_devices',
       body: form,
+    }).then(() => {
+      history.push('/hardware-devices');
     }).catch((e) => {
       setErrors(e);
     });
@@ -287,6 +292,7 @@ const InputsList = ({
   <>
     {items.map((item) => (
       <Input
+        key={item}
         onChange={onChange}
         type={type}
         value={object[item]}

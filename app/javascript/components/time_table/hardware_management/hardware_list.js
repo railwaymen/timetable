@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { makeDeleteRequest } from '../../shared/api';
+import ConfirmModal from './hardware-item/confirm-modal';
 import ActiveContent from './hardware-items/tables/active-content';
 import ArchivedContent from './hardware-items/tables/archived-content';
 
@@ -8,13 +10,39 @@ export default function HardwareList() {
 
   const [query, setQuery] = useState('');
   const [searchPhrase, setSearchPhrase] = useState('');
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [containerFingerprint, setContainerFingerprint] = useState(new Date());
 
   const onSearch = () => {
     setSearchPhrase(query);
   };
 
+  const onRemove = () => {
+    const { id } = selectedItem;
+
+    makeDeleteRequest({
+      url: `/api/hardware_devices/${id}`,
+    }).then(() => {
+      setContainerFingerprint(new Date());
+      setSelectedItem(null);
+    });
+  };
+
+  const onCancel = () => {
+    setSelectedItem(null);
+  };
+
   return (
     <div className="hardware-content">
+      <ConfirmModal
+        visible={selectedItem}
+        onCancel={onCancel}
+        onConfirm={onRemove}
+        confirmTitle={selectedItem?.archived ? I18n.t('apps.hardware_devices.remove') : I18n.t('apps.hardware_devices.archive')}
+        title={I18n.t('apps.hardware_devices.remove_title')}
+      >
+        <p>{I18n.t('apps.hardware_devices.remove_body')}</p>
+      </ConfirmModal>
       <div className="header">
         <div>
           <input type="text" value={query} onChange={({ target: { value } }) => setQuery(value)} />
@@ -39,10 +67,14 @@ export default function HardwareList() {
         <ActiveContent
           visible={selectedList === 'active'}
           phrase={searchPhrase}
+          onSelectItem={setSelectedItem}
+          key={`active-${containerFingerprint}`}
         />
         <ArchivedContent
           visible={selectedList === 'inactive'}
           phrase={searchPhrase}
+          onSelectItem={setSelectedItem}
+          key={`archived-${containerFingerprint}`}
         />
       </div>
     </div>

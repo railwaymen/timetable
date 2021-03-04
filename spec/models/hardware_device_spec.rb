@@ -18,14 +18,14 @@ RSpec.describe HardwareDevice, type: :model do
 
       expect(hardware.valid?).to eq false
       expect(hardware.errors.messages).to eq(
-        serial_number: ["serial_number_exists"]
+        serial_number: ['serial_number_exists']
       )
     end
   end
 
   describe 'search' do
     it 'calls a search_query' do
-      mock_search = double()
+      mock_search = double
 
       expect(mock_search).to receive(:ilike).and_return(mock_search)
       expect(mock_search).to receive(:execute).and_return(mock_search)

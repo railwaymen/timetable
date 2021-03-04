@@ -19,6 +19,7 @@ export default class HardwareDeviceModel {
     used_since = '',
     category,
     note = '',
+    archived = false,
   }) {
     this.id = id;
     this.brand = brand;
@@ -34,6 +35,7 @@ export default class HardwareDeviceModel {
     this.used_since = used_since;
     this.note = note;
     this.name = `${brand} - ${model}`;
+    this.archived = archived;
 
     this.os_version = os_version;
     this.cpu = cpu;

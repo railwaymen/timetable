@@ -12,7 +12,7 @@ export default function ConfirmModal({
         {children}
         <div className="actions">
           <Button onClick={onCancel} className="space-lg">{cancelTitle}</Button>
-          <Button onClick={onConfirm}>{confirmTitle}</Button>
+          <Button onClick={onConfirm} type="danger" className="danger">{confirmTitle}</Button>
         </div>
       </div>
     </Modal>

@@ -19,7 +19,7 @@ class CreateHardwareDevices < ActiveRecord::Migration[6.0]
 
       t.string :state, null: false
       t.text :note
-      t.references :user, foreign_key: true
+      t.references :user, foreign_key: true, null: true
 
       t.timestamps
     end

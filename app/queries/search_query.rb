@@ -10,7 +10,7 @@ class SearchQuery
     @ilike_conditions = []
   end
 
-  def execute
+  def execute # rubocop:disable Metrics/MethodLength
     where_clause = @ilike_conditions.join(' OR ')
 
     select_clause = @ilike_conditions.map do |condition|

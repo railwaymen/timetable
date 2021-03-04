@@ -58,13 +58,13 @@ RSpec.describe Api::HardwareDevicesController do
           cpu: hardware.cpu,
           ram: hardware.ram,
           user_id: hardware.user_id,
-          category: hardware.category,
           storage: hardware.storage,
           os_version: hardware.os_version,
           state: hardware.state,
           note: hardware.note,
+          archived: hardware.archived,
           user: hardware.user,
-          images: [],
+          images: []
         }.as_json
 
         get :show, params: { id: hardware.id, format: 'json' }

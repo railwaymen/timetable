@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Tag from '../../shared/tag';
 
-export default function TableRow({ item }) {
+export default function TableRow({ item, onRemove }) {
   const [showActions, setShowActions] = useState(false);
 
   const toggleActions = () => {
     setShowActions((state) => !state);
+  };
+
+  const onRemoveItem = () => {
+    onRemove(item);
+    setShowActions(false);
   };
 
   return (
@@ -31,7 +36,7 @@ export default function TableRow({ item }) {
             <div className="tooltip">
               <Link to={`/hardware-devices/${item.id}/show`} className="item transparent-button">{I18n.t('apps.hardware_devices.show_details')}</Link>
               <Link to={`/hardware-devices/${item.id}/edit`} className="item transparent-button">{I18n.t('common.edit')}</Link>
-              <button type="button" className="item transparent-button danger">{I18n.t('common.remove')}</button>
+              <button onClick={onRemoveItem} type="button" className="item transparent-button danger">{I18n.t('common.remove')}</button>
             </div>
           )}
         </div>
