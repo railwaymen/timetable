@@ -30,6 +30,10 @@ module Reports
       end
       # rubocop:enable Metrics/ParameterLists
 
+      def percentage_sum_billable
+        projects.group_by(&:billable).each_with_object({}) { |e, hash| hash[e[0]] = e[1].sum(&:project_duration).to_f / duration }
+      end
+
       def duration_to_days
         duration.to_f / 60 / 60 / 24
       end
