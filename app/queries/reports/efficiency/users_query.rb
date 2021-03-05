@@ -7,7 +7,7 @@ module Reports
 
       delegate :each, :empty?, to: :records
 
-      def initialize(starts_at:, ends_at:)
+      def initialize(starts_at: Time.current - 1.month, ends_at: Time.current)
         @starts_at = starts_at
         @ends_at = ends_at
       end
