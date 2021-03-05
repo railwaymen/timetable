@@ -65,6 +65,7 @@ module Api
       params.require(:hardware_device).permit(
         :category,
         :brand,
+        :device_type,
         :model,
         :serial_number,
         :year_of_production,

@@ -19,11 +19,13 @@ users = User.all
 cpu = ['intel', 'amd']
 
 accessories_names = ['Headphones', 'Hub', 'Case']
+types = ['A', 'B', 'C']
 
 150.times do |i|
   device = HardwareDevice.create!(
     category: category.sample,
     brand: producents.sample,
+    device_type: types.sample,
     model: models.sample,
     serial_number: "SMSRLNMBR-#{i}-#{rand(100)}",
     year_of_production: Time.current - rand(5).years,

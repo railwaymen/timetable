@@ -110,7 +110,7 @@ pl:
       remove_confirm: 'Jesteś pewny?'
       remove_title: 'Jesteś pewny ze chcesz usunać ten przedmiot?'
       remove_body: 'Ta akcja jest nieodwracalna. Usunięty przedmiot zostanie from where you can only delete it.'
-      type: 'Typ'
+      device_type: 'Typ'
       brand: 'Marka'
       model: 'Model'
       add_new_device: 'Nowe urządzenie'

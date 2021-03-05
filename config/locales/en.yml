@@ -145,7 +145,7 @@ en:
       remove_confirm: 'Are you sure?'
       remove_title: 'Are you sure you want to delete this item?'
       remove_body: 'This action is irreversible. The deleted item will be moved to the Archive from where you can only delete it.'
-      type: 'Type'
+      device_type: 'Type'
       brand: 'Brand'
       model: 'Model'
       add_new_device: 'New device'

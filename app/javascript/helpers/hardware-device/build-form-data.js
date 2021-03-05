@@ -1,6 +1,5 @@
 const FIELDS = [
   'brand',
-  'type',
   'model',
   'os_version',
   'serial_number',
@@ -10,6 +9,10 @@ const FIELDS = [
   'used_since',
   'note',
   'category',
+  'device_type',
+  'cpu',
+  'ram',
+  'storage',
 ];
 
 export default function buildFormData({ device, accessories }) {

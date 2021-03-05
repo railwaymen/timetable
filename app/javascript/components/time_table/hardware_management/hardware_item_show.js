@@ -109,9 +109,7 @@ export default function HardwareItem() {
         <p>{I18n.t('apps.hardware_devices.remove_body')}</p>
       </ConfirmModal>
       <Modal visible={isLogModal} onClose={onToggleLogs}>
-        {historyList.map((version) => (
-          <p>{version.object_changes}</p>
-        ))}
+        <LogHistory list={historyList} />
       </Modal>
       <h3>{hardwareDeviceId ? I18n.t('apps.hardware_devices.edit_device') : I18n.t('apps.hardware_devices.add_new_device')}</h3>
       <div className="item-content">
@@ -123,10 +121,9 @@ export default function HardwareItem() {
           <ContentsList
             items={[
               'category',
-              'type',
+              'device_type',
               'brand',
               'model',
-              'system',
               'serial_number',
             ]}
             object={hardwareDevice}
@@ -221,3 +218,46 @@ const ContentsList = ({ items, object }) => (
     ))}
   </>
 );
+
+function LogHistory({ list }) {
+  if (list.length > 1) {
+    const keys = Object.keys(list[0].changeset);
+
+    return (
+      <div style={{ maxHeight: '100vh', overflowY: 'scroll' }}>
+        <table>
+          <thead>
+            <tr>
+              {keys.map((key) => (
+                <th>{key}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <HistoryList list={list} keys={keys} />
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  return <></>;
+}
+
+function HistoryList({ list, keys }) {
+  return list.map(({ changeset }) => (
+    <tr>
+      {keys.map((key) => {
+        const element = changeset[key];
+
+        if (!element) {
+          return <td />;
+        }
+
+        return (
+          <td>{element[0] ? <b>{element[1]}</b> : element[1]}</td>
+        );
+      })}
+    </tr>
+  ));
+}

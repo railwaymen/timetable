@@ -187,10 +187,9 @@ export default function HardwareItem() {
           />
           <InputsList
             items={[
-              'type',
+              'device_type',
               'brand',
               'model',
-              'system',
               'serial_number',
             ]}
             onChange={onChange}

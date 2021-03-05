@@ -134,6 +134,8 @@ ActiveRecord::Schema.define(version: 2021_02_23_105601) do
     t.string "brand", null: false
     t.string "model", null: false
     t.string "serial_number", null: false
+    t.string "device_type", null: false
+    t.bigint "price", default: 0, null: false
     t.date "year_of_production", null: false
     t.date "year_bought", null: false
     t.date "used_since", null: false

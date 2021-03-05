@@ -5,6 +5,8 @@ class CreateHardwareDevices < ActiveRecord::Migration[6.0]
       t.string :brand, null: false
       t.string :model, null: false
       t.string :serial_number, null: false
+      t.string :device_type, null: false
+      t.bigint :price, null: false, default: 0
 
       t.date :year_of_production, null: false
       t.date :year_bought, null: false

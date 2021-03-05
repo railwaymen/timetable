@@ -10,6 +10,7 @@ json.year_bought device.year_bought
 json.used_since device.used_since
 json.cpu device.cpu
 json.ram device.ram
+json.device_type device.device_type
 json.user_id device.user_id
 json.category device.category
 json.storage device.storage
