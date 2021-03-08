@@ -12,9 +12,9 @@ export default function ActiveContent({ phrase, visible, onSelectItem }) {
   useEffect(() => {
     makeGetRequest({
       url: `/api/hardware_devices?page=${1}&q=${phrase}`,
-    }).then(({ data: { data, total_pages } }) => {
+    }).then(({ data: { records, total_pages } }) => {
       setContent({
-        list: data, isLoaded: true, page: 1, totalPages: total_pages,
+        list: records, isLoaded: true, page: 1, totalPages: total_pages,
       });
       setPage(1);
     });
@@ -23,9 +23,9 @@ export default function ActiveContent({ phrase, visible, onSelectItem }) {
   useEffect(() => {
     makeGetRequest({
       url: `/api/hardware_devices?page=${page}&q=${phrase}`,
-    }).then(({ data: { data, total_pages } }) => {
+    }).then(({ data: { records, total_pages } }) => {
       setContent({
-        list: data, isLoaded: true, page, totalPages: total_pages,
+        list: records, isLoaded: true, page, totalPages: total_pages,
       });
     });
   }, [page]);

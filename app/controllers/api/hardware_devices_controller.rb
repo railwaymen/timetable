@@ -27,31 +27,27 @@ module Api
     end
 
     def create
-      device = HardwareDevice.new(hardware_device_params)
+      @device = HardwareDevice.new(hardware_device_params)
 
-      if device.save
-        render json: {}, status: :created
-      else
-        render json: device.errors, status: :unprocessable_entity
-      end
+      @device.save
+
+      respond_with @device
     end
 
     def update
       device = HardwareDevice.find(params[:id])
       form = HardwareDevices::UpdateForm.new(device, permitted_params: hardware_device_params)
+      form.save
 
-      if form.save
-        render json: {}, status: :ok
-      else
-        render json: form.hardware_device.errors, status: :unprocessable_entity
-      end
+      @device = form.hardware_device
+      respond_with @device
     end
 
     def destroy
       @device = HardwareDevice.find(params[:id])
 
       if @device.archived
-        @device.destroy!
+        @device.discard!
       else
         @device.update!(archived: true)
       end

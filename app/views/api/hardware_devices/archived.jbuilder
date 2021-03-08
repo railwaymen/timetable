@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-json.data do
+json.records do
   json.array! @devices do |device|
     json.partial! 'hardware_device', locals: { device: device }
   end

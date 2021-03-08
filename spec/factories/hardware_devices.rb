@@ -11,6 +11,8 @@ FactoryBot.define do
     used_since { '2021-02-22' }
     state { 'poor' }
     os_version { '10.0.0' }
+    device_type { 'Type1' }
+    price { 1000 }
     user { nil }
   end
 end

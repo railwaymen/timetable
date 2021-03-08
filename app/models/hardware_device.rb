@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class HardwareDevice < ApplicationRecord
-  validates :brand, :model, :serial_number, :year_of_production, :year_bought, :used_since, :category, presence: true
+  include Discard::Model
+
+  validates :brand, :model, :serial_number, :year_of_production, :year_bought, :used_since, :category, :device_type, presence: true
   validate :unique_serial_number
 
   has_paper_trail
@@ -19,8 +21,8 @@ class HardwareDevice < ApplicationRecord
 
   accepts_nested_attributes_for :accessories, allow_destroy: true
 
-  scope :active, -> { where(archived: false) }
-  scope :archived, -> { where(archived: true) }
+  scope :active, -> { where(archived: false, discarded_at: nil) }
+  scope :archived, -> { where(archived: true, discarded_at: nil) }
 
   def unique_serial_number
     return unless HardwareDevice.where.not(id: id).exists?(category: category, serial_number: serial_number)

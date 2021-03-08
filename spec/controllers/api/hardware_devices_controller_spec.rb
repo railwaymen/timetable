@@ -23,7 +23,7 @@ RSpec.describe Api::HardwareDevicesController do
         sign_in admin
 
         get :index, params: { format: 'json' }
-        expect(JSON.parse(response.body)['data'].count).to eq(2)
+        expect(JSON.parse(response.body)['records'].count).to eq(2)
       end
     end
   end
@@ -56,6 +56,7 @@ RSpec.describe Api::HardwareDevicesController do
           year_bought: hardware.year_bought,
           used_since: hardware.used_since,
           cpu: hardware.cpu,
+          device_type: hardware.device_type,
           ram: hardware.ram,
           user_id: hardware.user_id,
           storage: hardware.storage,
@@ -123,7 +124,7 @@ RSpec.describe Api::HardwareDevicesController do
         sign_in admin
 
         get :archived, params: { format: 'json' }
-        expect(JSON.parse(response.body)['data'].count).to eq(1)
+        expect(JSON.parse(response.body)['records'].count).to eq(1)
       end
     end
   end
@@ -205,6 +206,7 @@ RSpec.describe Api::HardwareDevicesController do
               used_since: '2021-02-22',
               state: 'poor',
               os_version: '10.0',
+              device_type: 'MyType',
               user_id: user.id
             }
           }
@@ -259,7 +261,8 @@ RSpec.describe Api::HardwareDevicesController do
 
           expect do
             delete :destroy, params: params
-          end.to change(HardwareDevice, :count).by(-1)
+          end.to change(HardwareDevice, :count).by(0)
+          expect(hardware.reload.discarded_at).to_not be_nil
         end
       end
     end
