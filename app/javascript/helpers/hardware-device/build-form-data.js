@@ -9,6 +9,7 @@ const FIELDS = [
   'used_since',
   'note',
   'category',
+  'price',
   'device_type',
   'cpu',
   'ram',

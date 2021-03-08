@@ -74,6 +74,7 @@ module Api
         :category,
         :os_version,
         :state,
+        :price,
         :note,
         :user,
         accessories_attributes: %i[id name quantity _destroy],

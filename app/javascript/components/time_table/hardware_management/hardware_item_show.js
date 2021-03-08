@@ -124,6 +124,7 @@ export default function HardwareItem() {
               'device_type',
               'brand',
               'model',
+              'price',
               'serial_number',
             ]}
             object={hardwareDevice}

@@ -20,6 +20,7 @@ export default class HardwareDeviceModel {
     category,
     note = '',
     device_type = '',
+    price = 0,
     archived = false,
   }) {
     this.id = id;
@@ -38,6 +39,7 @@ export default class HardwareDeviceModel {
     this.name = `${brand} - ${model}`;
     this.archived = archived;
     this.device_type = device_type;
+    this.price = price;
 
     this.os_version = os_version;
     this.cpu = cpu;
