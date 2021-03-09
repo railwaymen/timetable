@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Reports::Efficiency::XlsxProjectsService do
+RSpec.describe Reports::Efficiency::Csv::UsersService do
   describe 'fill_sheet' do
     context 'when worksheet sheet index does not exists' do
       it 'correctly creates new sheet and assign attributes' do
@@ -21,18 +21,18 @@ RSpec.describe Reports::Efficiency::XlsxProjectsService do
           end
         end
 
-        workbook = described_class.new(sheet_index: 1).call
+        csv = described_class.new.call
 
-        expect(workbook).to be_present
+        expect(csv).to be_present
       end
     end
 
     context 'when worksheet sheet index does exists' do
       context 'when projects does not exists' do
         it 'correctly build XLSX worksheet' do
-          workbook = described_class.new.call
+          csv = described_class.new.call
 
-          expect(workbook).to be_present
+          expect(csv).to be_present
         end
       end
 
@@ -53,9 +53,9 @@ RSpec.describe Reports::Efficiency::XlsxProjectsService do
             end
           end
 
-          workbook = described_class.new.call
+          csv = described_class.new.call
 
-          expect(workbook).to be_present
+          expect(csv).to be_present
         end
       end
 
@@ -77,9 +77,9 @@ RSpec.describe Reports::Efficiency::XlsxProjectsService do
             end
           end
 
-          workbook = described_class.new.call
+          csv = described_class.new.call
 
-          expect(workbook).to be_present
+          expect(csv).to be_present
         end
       end
     end
