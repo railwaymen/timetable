@@ -51,6 +51,7 @@ RSpec.describe Api::HardwareDevicesController do
           category: hardware.category,
           brand: hardware.brand,
           model: hardware.model,
+          price: hardware.price,
           serial_number: hardware.serial_number,
           year_of_production: hardware.year_of_production,
           year_bought: hardware.year_bought,
