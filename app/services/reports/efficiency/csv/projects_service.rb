@@ -20,7 +20,7 @@ module Reports
           @work_times_duration_unbillable_all = @collection[0]&.work_times_duration_unbillable_all
         end
 
-        def call
+        def call # rubocop:disable Metrics/MethodLength
           CSV.generate do |csv|
             csv << ATTRIBUTES
 

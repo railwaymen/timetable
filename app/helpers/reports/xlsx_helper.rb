@@ -3,7 +3,7 @@
 module Reports
   module XlsxHelper
     def duration_to_days(duration = 0)
-      duration.to_f / 60 / 60 / 24
+      duration.to_f / 60 / 60 / 8
     end
 
     def setup_columns_width(sheet, *args)

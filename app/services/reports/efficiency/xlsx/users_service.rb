@@ -13,7 +13,7 @@ module Reports
         def initialize(workbook: RubyXL::Workbook.new, starts_at: Time.current - 1.month, ends_at: Time.current, sheet_index: 0)
           @collection = UsersQuery.new(starts_at: starts_at, ends_at: ends_at)
           @buisness_days = calculate_days_should_work(starts_at, ends_at)
-          @buisness_days_work_hours = @buisness_days * 8 / 24
+          @buisness_days_work_hours = @buisness_days * 8 * 60 * 60
 
           @workbook = workbook
 
@@ -54,7 +54,7 @@ module Reports
           sheet.add_cell(current_row, 5, user.percentage_sum_billable[false]).set_number_format('0.00%')
 
           sheet.add_cell(current_row, 6, user.duration_to_days).set_number_format('[hh]:mm:ss.000')
-          sheet.add_cell(current_row, 7, user.duration_to_days / @buisness_days_work_hours).set_number_format('0.00%')
+          sheet.add_cell(current_row, 7, user.duration_to_days / @buisness_days).set_number_format('0.00%')
           sheet.add_cell(current_row, 8, user.percentage_part).set_number_format('0.00%')
           sheet.add_cell(current_row, 9, @buisness_days)
         end
