@@ -35,7 +35,7 @@ module Reports
       end
 
       def duration_to_days
-        duration.to_f / 60 / 60 / 24
+        duration.to_f / 60 / 60 / 8
       end
 
       def build_project(project)

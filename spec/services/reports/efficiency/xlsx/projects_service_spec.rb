@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Reports::Efficiency::XlsxUsersService do
+RSpec.describe Reports::Efficiency::Xlsx::ProjectsService do
   describe 'fill_sheet' do
     context 'when worksheet sheet index does not exists' do
       it 'correctly creates new sheet and assign attributes' do
