@@ -65,11 +65,9 @@ function ProjectsRanking() {
 function EfficiencyReports() {
   const [from, setFrom] = useState(moment().startOf('month').format());
   const [to, setTo] = useState(moment().endOf('month').format());
-  const [format, setFormat] = useState('xlsx');
-  const [generate, setGenerate] = useState('projects');
 
   const onGenerate = () => {
-    const path = `/efficiency_reports.${format}?from=${from}&to=${to}&file=${generate}`;
+    const path = `/efficiency_reports?from=${from}&to=${to}`;
     window.open(path, '_blank');
   };
 
@@ -83,16 +81,6 @@ function EfficiencyReports() {
         onFromChange={(time) => setFrom(time.format())}
         onToChange={(time) => setTo(time.format())}
       />
-      <select defaultValue={format} value={format} onChange={({ target: { value } }) => setFormat(value)}>
-        <option value="xlsx">xlsx</option>
-        <option value="csv">csv</option>
-      </select>
-      {format === 'csv' && (
-        <select defaultValue={generate} value={generate} onChange={({ target: { value } }) => setGenerate(value)}>
-          <option value="projects">projects</option>
-          <option value="users">users</option>
-        </select>
-      )}
     </div>
   );
 }
