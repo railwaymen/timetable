@@ -25,26 +25,54 @@ RSpec.describe EfficiencyReportsController, type: :controller do
     end
 
     context 'when manager' do
-      it 'serve report' do
-        user = FactoryBot.create(:user, :manager)
+      context 'when csv format' do
+        it 'serve report' do
+          user = FactoryBot.create(:user, :manager)
 
-        sign_in(user)
+          sign_in(user)
 
-        get :show, params: { from: Time.current.to_s, to: (Time.current + 1.day).to_s }
+          get :show, params: { from: Time.current.to_s, to: (Time.current + 1.day).to_s }, format: :csv
 
-        expect(response.code).to eq '200'
+          expect(response.code).to eq '200'
+        end
+      end
+
+      context 'when xlsx format' do
+        it 'serve report' do
+          user = FactoryBot.create(:user, :manager)
+
+          sign_in(user)
+
+          get :show, params: { from: Time.current.to_s, to: (Time.current + 1.day).to_s }, format: :xlsx
+
+          expect(response.code).to eq '200'
+        end
       end
     end
 
     context 'when admin' do
-      it 'serve report' do
-        user = FactoryBot.create(:user, :admin)
+      context 'when csv format' do
+        it 'serve report' do
+          user = FactoryBot.create(:user, :admin)
 
-        sign_in(user)
+          sign_in(user)
 
-        get :show, params: { from: Time.current.to_s, to: (Time.current + 1.day).to_s }
+          get :show, params: { from: Time.current.to_s, to: (Time.current + 1.day).to_s }, format: :csv
 
-        expect(response.code).to eq '200'
+          expect(response.code).to eq '200'
+        end
+      end
+
+      context 'when xlsx format' do
+        it 'serve report' do
+          user = FactoryBot.create(:user, :admin)
+
+          sign_in(user)
+
+          get :show, params: { from: Time.current.to_s, to: (Time.current + 1.day).to_s }, format: :xlsx
+
+          expect(response.code).to eq '200'
+        end
       end
     end
   end

@@ -72,7 +72,7 @@ function EfficiencyReports() {
   };
 
   return (
-    <div>
+    <div className="filters-report-efficiency">
       <DateRangeFilter
         from={from}
         to={to}
