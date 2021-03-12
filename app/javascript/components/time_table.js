@@ -31,6 +31,9 @@ import EditVacationPeriod from './time_table/vacation_periods/edit_vacation_peri
 import ProjectsDistribution from './time_table/projects_distribution/projects_distribution';
 import RemoteWork from './time_table/remote_work/remote_work';
 import HardwareList from './time_table/hardware/hardware_list';
+import HardwareManagementList from './time_table/hardware_management/hardware_list';
+import HardwareManagementItemEdit from './time_table/hardware_management/hardware_item';
+import HardwareManagementItem from './time_table/hardware_management/hardware_item_show';
 import Milestones from './time_table/milestones/milestones';
 import EditMilestone from './time_table/milestones/edit_milestone';
 import MilestoneEstimates from './time_table/milestones/milestone_estimates';
@@ -87,6 +90,11 @@ class TimeTable extends React.Component {
             <Route path="/remote_work" exact component={RemoteWork} />
             <Route path="/projects_distribution" component={ProjectsDistribution} />
             <Route path="/hardware" component={HardwareList} />
+
+            <Route path="/hardware-devices/:id/edit" exact component={HardwareManagementItemEdit} />
+            <Route path="/hardware-devices" exact component={HardwareManagementList} />
+            <Route path="/hardware-devices/:id/show" exact component={HardwareManagementItem} />
+            <Route path="/hardware-devices/new" component={HardwareManagementItemEdit} />
           </div>
         </div>
       </BrowserRouter>
