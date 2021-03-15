@@ -26,7 +26,7 @@ en:
         laptop: Laptop
         tablet: Tablet
         smartphone: Smartphone
-      confirm_delete: 
+      confirm_delete:
         one: 'Are you sure you want to delete {{count}} hardware?'
         other: 'Are you sure you want to delete {{count}} hardwares?'
       hardware_rental: Hardware rental
@@ -135,6 +135,47 @@ en:
         commercial: Commercial
         internal: Internal
         all: All
+    hardware_devices:
+      os_system: 'Operating system'
+      cpu: 'CPU'
+      ram: 'Ram'
+      storage: 'Storage'
+      remove: 'Remove'
+      archive: 'Archive'
+      remove_confirm: 'Are you sure?'
+      remove_title: 'Are you sure you want to delete this item?'
+      remove_body: 'This action is irreversible. The deleted item will be moved to the Archive from where you can only delete it.'
+      device_type: 'Type'
+      brand: 'Brand'
+      model: 'Model'
+      add_new_device: 'New device'
+      system: 'System'
+      serial_number: 'Serial number'
+      category: 'Category'
+      year_of_production: 'Year of production'
+      year_bought: 'Year bought'
+      used_since: 'Used since'
+      edit: 'Edit'
+      delete_item: 'Delete item'
+      add_access: 'Added access'
+      assigned_user: Assigned 'user'
+      status: 'Status'
+      item_info: 'Basic Item Info'
+      dates: 'Dates'
+      accessories: 'Accessories'
+      name: 'Name'
+      show_details: 'Show details'
+      quantity: 'Quantity'
+      note: 'Note'
+      edit_device: 'Edit device'
+      log_history: 'Log history'
+      delete: 'Delete device'
+      add_photo: 'Add photo'
+      photos: 'Photos'
+      add_accessory: 'Add accessory'
+      add: 'Add device'
+      assigned_person: 'Assigned person'
+      state: 'State'
     milestones:
       progress: Progress
       add: New Milestone
@@ -332,6 +373,10 @@ en:
         update_assignment: '{{user}} updated assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
         delete_assignment: '{{user}} deleted assignment for {{resource}} to project {{project}} from {{start}} to {{end}}'
   common:
+    action: 'Action'
+    active: 'Active'
+    inactive: 'Inactive'
+    search: 'Search'
     tag: Tag
     back: Back
     expand: Expand
@@ -421,6 +466,7 @@ en:
     date: Date
     refresh: Refresh
     hardware: My hardware
+    hardware_devices: 'Hardware devices'
     type: Type
     labels: Labels
     refreshed_at: Refreshed

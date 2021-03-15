@@ -22,6 +22,15 @@ Rails.application.routes.draw do
         get :by_users, on: :collection
       end
     end
+    resources :hardware_devices, only: %i[index show create update destroy] do
+      member do
+        get :history
+      end
+      collection do
+        get :archived
+      end
+      resources :hardware_device_accessories, only: %i[index show create update destroy]
+    end
     resources :users, only: %i[index show create update]
     resources :hardwares, only: %i[index create destroy update] do
       get :types, on: :collection
@@ -30,6 +39,7 @@ Rails.application.routes.draw do
       get :return_agreement, on: :collection
       put :change_status
       resources :accessories, controller: :hardware_accessories, only: %i[create destroy update]
+      resources :images, controller: :hardware_images, only: %i[create destroy update]
     end
     resources :accounting_periods do
       collection do
@@ -101,5 +111,7 @@ Rails.application.routes.draw do
   end
 
   get '/' => 'home#index', :constraints => { format: :html }
-  get '*url' => 'home#index', :constraints => { format: :html }
+  get '*url' => 'home#index', constraints: lambda { |req|
+    req.path.exclude? 'rails/active_storage'
+  }
 end

@@ -3,6 +3,8 @@
 module Reports
   module Efficiency
     class User
+      include XlsxHelper
+
       class RecordError < StandardError; end
 
       ATTRIBUTES = %i[id first_name last_name duration duration_all projects].freeze
@@ -35,7 +37,11 @@ module Reports
       end
 
       def duration_to_days
-        duration.to_f / 60 / 60 / 8
+        duration_to_workable_days(duration.to_f)
+      end
+
+      def duration_to_fully_days
+        duration_to_full_days(duration.to_f)
       end
 
       def build_project(project)
