@@ -54,7 +54,7 @@ module Reports
           sheet.add_cell(current_row, 5, user.percentage_sum_billable[false]).set_number_format('0.00%')
 
           sheet.add_cell(current_row, 6, user.duration_to_days).set_number_format('[hh]:mm:ss.000')
-          sheet.add_cell(current_row, 7, user.duration_to_days / @buisness_days).set_number_format('0.00%')
+          sheet.add_cell(current_row, 7, user.duration_to_fully_days / @buisness_days).set_number_format('0.00%')
           sheet.add_cell(current_row, 8, user.percentage_part).set_number_format('0.00%')
           sheet.add_cell(current_row, 9, @buisness_days)
         end

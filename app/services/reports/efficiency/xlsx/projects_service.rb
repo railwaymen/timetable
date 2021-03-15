@@ -71,19 +71,19 @@ module Reports
           summary_current_row += 1
 
           sheet.add_cell(summary_current_row, offset, 'y')
-          sheet.add_cell(summary_current_row, offset + 1, duration_to_days(@work_times_duration_billable_all)).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(summary_current_row, offset + 1, duration_to_workable_days(@work_times_duration_billable_all)).set_number_format('[hh]:mm:ss.000')
           sheet.add_cell(summary_current_row, offset + 2, @work_times_duration_billable_all.to_f / @work_times_duration_all).set_number_format('0.00%')
 
           summary_current_row += 1
 
           sheet.add_cell(summary_current_row, offset, 'n')
-          sheet.add_cell(summary_current_row, offset + 1, duration_to_days(@work_times_duration_unbillable_all)).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(summary_current_row, offset + 1, duration_to_workable_days(@work_times_duration_unbillable_all)).set_number_format('[hh]:mm:ss.000')
           sheet.add_cell(summary_current_row, offset + 2, @work_times_duration_unbillable_all.to_f / @work_times_duration_all).set_number_format('0.00%')
 
           summary_current_row += 1
 
           sheet.add_cell(summary_current_row, offset, 'total')
-          sheet.add_cell(summary_current_row, offset + 1, duration_to_days(@work_times_duration_unbillable_all + @work_times_duration_billable_all)).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(summary_current_row, offset + 1, duration_to_workable_days(@work_times_duration_unbillable_all + @work_times_duration_billable_all)).set_number_format('[hh]:mm:ss.000')
           sheet.add_cell(summary_current_row, offset + 2, '')
         end
 
@@ -101,7 +101,7 @@ module Reports
             tag_duration = tag_collection.sum(&:project_duration)
 
             sheet.add_cell(summary_current_row, offset, tag_name)
-            sheet.add_cell(summary_current_row, offset + 1, duration_to_days(tag_duration)).set_number_format('[hh]:mm:ss.000')
+            sheet.add_cell(summary_current_row, offset + 1, duration_to_workable_days(tag_duration)).set_number_format('[hh]:mm:ss.000')
             sheet.add_cell(summary_current_row, offset + 2, tag_duration.to_f / @work_times_duration_all).set_number_format('0.00%')
 
             summary_current_row += 1
