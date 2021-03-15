@@ -2,8 +2,12 @@
 
 module Reports
   module XlsxHelper
-    def duration_to_days(duration = 0)
+    def duration_to_full_days(duration = 0)
       duration.to_f / 60 / 60 / 8
+    end
+
+    def duration_to_workable_days(duration = 0)
+      duration.to_f / 60 / 60 / 24
     end
 
     def setup_columns_width(sheet, *args)

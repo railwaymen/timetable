@@ -3,6 +3,8 @@
 module Reports
   module Efficiency
     class Project
+      include XlsxHelper
+
       class RecordError < StandardError; end
 
       ATTRIBUTES = %i[id name project_duration tag billable work_times_duration_all work_times_duration_billable_all work_times_duration_unbillable_all].freeze
@@ -43,7 +45,7 @@ module Reports
       end
 
       def project_duration_to_days
-        project_duration.to_f / 60 / 60 / 24
+        duration_to_workable_days(project_duration.to_f)
       end
 
       def billing_percentage_part
