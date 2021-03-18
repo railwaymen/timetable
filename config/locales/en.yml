@@ -136,6 +136,7 @@ en:
         internal: Internal
         all: All
     hardware_devices:
+      price: 'Price'
       os_system: 'Operating system'
       cpu: 'CPU'
       ram: 'Ram'

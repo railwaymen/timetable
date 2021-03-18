@@ -101,6 +101,7 @@ pl:
         renturn: zawrócić
         title: '[Hardware %{action}]'
     hardware_devices:
+      price: 'Cena'
       os_system: 'System operacyjny'
       cpu: 'CPU'
       ram: 'Ram'
