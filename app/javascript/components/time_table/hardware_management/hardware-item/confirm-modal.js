@@ -3,7 +3,7 @@ import Button from '../shared/button';
 import Modal from './modal';
 
 export default function ConfirmModal({
-  children, onCancel, onConfirm, confirmTitle = 'confirm', cancelTitle = 'cancel', visible, title,
+  children, onCancel, onConfirm, confirmTitle = I18n.t('common.confirm'), cancelTitle = I18n.t('common.cancel'), visible, title,
 }) {
   return (
     <Modal visible={visible} onClose={onCancel}>

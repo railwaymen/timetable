@@ -136,6 +136,15 @@ en:
         internal: Internal
         all: All
     hardware_devices:
+      other: 'Other'
+      displays: 'Displays'
+      mobile_phones: 'Mobile phones'
+      computers: 'Computers'
+      tablets: 'Tablets'
+      good: 'Good'
+      average: 'Average'
+      poor: 'Poor'
+      save_item: 'Save item'
       price: 'Price'
       os_system: 'Operating system'
       cpu: 'CPU'

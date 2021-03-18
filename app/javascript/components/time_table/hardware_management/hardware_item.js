@@ -176,6 +176,7 @@ export default function HardwareItem() {
             placeholder={I18n.t('apps.hardware_devices.category')}
             name="category"
             value={category}
+            translatable
             options={[
               'computers',
               'displays',
@@ -266,6 +267,7 @@ export default function HardwareItem() {
             onChange={onChange}
             errors={errors.status}
             placeholder={I18n.t('apps.hardware_devices.status')}
+            translatable
           />
           <h5>
             {I18n.t('apps.hardware_devices.photos')}
