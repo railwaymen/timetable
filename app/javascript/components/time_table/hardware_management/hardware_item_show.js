@@ -118,9 +118,9 @@ export default function HardwareItem() {
             {I18n.t('apps.hardware_devices.item_info')}
             :
           </h5>
+          <ContentValue value={I18n.t(`apps.hardware_devices.${category}`)} placeholder={I18n.t('apps.hardware_devices.category')} />
           <ContentsList
             items={[
-              'category',
               'device_type',
               'brand',
               'model',
@@ -196,7 +196,7 @@ export default function HardwareItem() {
           <ContentValue
             classNameElement="space-md"
             placeholder={I18n.t('apps.hardware_devices.status')}
-            value={state}
+            value={I18n.t(`apps.hardware_devices.${state}`)}
           />
           <h5>
             {I18n.t('apps.hardware_devices.photos')}

@@ -16,7 +16,7 @@ export default function TableRow({ item, onRemove }) {
 
   return (
     <tr>
-      <td><b>{item.category}</b></td>
+      <td><b>{I18n.t(`apps.hardware_devices.${item.category}`)}</b></td>
       <td>{item.brand}</td>
       <td>{item.model}</td>
       <td>{item.serial_number}</td>
