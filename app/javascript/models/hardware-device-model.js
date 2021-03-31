@@ -36,7 +36,7 @@ export default class HardwareDeviceModel {
     this.category = category || 'other';
     this.used_since = used_since;
     this.note = note;
-    this.name = `${brand} - ${model}`;
+    this.name = `${brand} ${model && `- ${model}`}`;
     this.archived = archived;
     this.device_type = device_type;
     this.price = price;
