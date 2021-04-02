@@ -1,4 +1,17 @@
+import moment from 'moment';
 import AttachmentModel from './attachment-model';
+
+function isPresent(value) {
+  return ![null, undefined, ''].includes(value);
+}
+
+function resolveUsedSince(used_since, user_id) {
+  if (!isPresent(used_since) && (isPresent(user_id) && user_id !== 'unassigned')) {
+    return moment().format('YYYY-MM-DD');
+  }
+
+  return used_since;
+}
 
 export default class HardwareDeviceModel {
   constructor({
@@ -29,12 +42,12 @@ export default class HardwareDeviceModel {
     this.model = model;
     this.user_id = user_id;
     this.serial_number = serial_number;
-    this.state = state;
+    this.state = state || 'good';
     this.images = images.map((image) => new AttachmentModel(image));
     this.year_of_production = year_of_production;
     this.year_bought = year_bought;
     this.category = category || 'other';
-    this.used_since = used_since;
+    this.used_since = resolveUsedSince(used_since, user_id);
     this.note = note;
     this.name = `${brand} ${model && `- ${model}`}`;
     this.archived = archived;

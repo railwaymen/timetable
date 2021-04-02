@@ -9,12 +9,16 @@ export default function HardwareList() {
   const [selectedList, setSelectedList] = useState('active');
 
   const [query, setQuery] = useState('');
-  const [searchPhrase, setSearchPhrase] = useState('');
+  const [unassignedDevicesOnly, setUnassignedDevicesOnly] = useState(false);
+
+  const [searchPhrase, setSearchPhrase] = useState({ query, unassigned: false });
   const [selectedItem, setSelectedItem] = useState(null);
   const [containerFingerprint, setContainerFingerprint] = useState(new Date());
 
-  const onSearch = () => {
-    setSearchPhrase(query);
+  const onSearch = (e) => {
+    e.preventDefault();
+
+    setSearchPhrase({ query, unassigned: unassignedDevicesOnly });
   };
 
   const onRemove = () => {
@@ -44,10 +48,19 @@ export default function HardwareList() {
         <p>{I18n.t('apps.hardware_devices.remove_body')}</p>
       </ConfirmModal>
       <div className="header">
-        <div>
+        <form onSubmit={onSearch}>
+          <div>
+            <label htmlFor="unassignedDevicesOnly">Show unassigned only</label>
+            <input
+              id="unassignedDevicesOnly"
+              type="checkbox"
+              checked={unassignedDevicesOnly}
+              onChange={() => setUnassignedDevicesOnly(!unassignedDevicesOnly)}
+            />
+          </div>
           <input type="text" value={query} onChange={({ target: { value } }) => setQuery(value)} />
           <button className="search-button" type="submit" onClick={onSearch}>{I18n.t('common.search')}</button>
-        </div>
+        </form>
         <div>
           <Link to="/hardware-devices/new" className="action-button primary edit">
             <i className="fa fa-plus space-md" />

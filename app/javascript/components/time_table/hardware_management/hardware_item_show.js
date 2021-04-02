@@ -142,7 +142,7 @@ export default function HardwareItem() {
           {['mobile_phones', 'tablets'].includes(category) && (
             <ContentsList
               items={[
-                'os_system',
+                'os_version',
               ]}
               object={hardwareDevice}
             />
