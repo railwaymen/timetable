@@ -73,9 +73,9 @@ RSpec.describe SearchQuery do
     end
 
     it 'correctly protects from sql injection in table' do
-      hardware1 = FactoryBot.create(:hardware_device, brand: 'ExampleName', model: 'AAB', used_since: Time.current - 5.days)
+      FactoryBot.create(:hardware_device, brand: 'ExampleName', model: 'AAB', used_since: Time.current - 5.days)
       FactoryBot.create(:hardware_device, brand: 'BrandName', model: 'AAD')
-      hardware3 = FactoryBot.create(:hardware_device, brand: 'ExampleTest', model: 'BBX')
+      FactoryBot.create(:hardware_device, brand: 'ExampleTest', model: 'BBX')
 
       date_phrase = '123'
       phrase = %W[example AAB #{date_phrase}]

@@ -13,9 +13,9 @@ export default function Images({
     const fileEntries = [];
     let i = 1;
 
-    console.log({ fileEntries, files, f: [...files] });
+    const filesArray = [...files];
 
-    [...files].each((uploadedFile) => {
+    filesArray.forEach((uploadedFile) => {
       const source = URL.createObjectURL(uploadedFile);
 
       if (list.length + i < 10) {
@@ -24,8 +24,6 @@ export default function Images({
 
       i += 1;
     });
-
-    console.log({ fileEntries, files, f: [...files] });
 
     onFilesUpload(fileEntries);
   };
@@ -38,8 +36,6 @@ export default function Images({
   };
 
   const active = list.filter((content) => !content.removed);
-
-  console.log({ length: active.length });
 
   return (
     <div className="images">

@@ -8,7 +8,7 @@ module HardwareDevices
       @hardware_device = hardware_device
 
       @remove_images_ids = permitted_params[:remove_images_ids] || []
-      @user_id = permitted_params[:user_id].to_i == 0 ? nil : permitted_params[:user_id]
+      @user_id = permitted_params[:user_id].to_i.zero? ? nil : permitted_params[:user_id]
 
       @params = permitted_params.reject { |key| key.to_sym == :remove_images_ids }
     end
