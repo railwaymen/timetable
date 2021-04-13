@@ -10,10 +10,19 @@ export default function Images({
   const [showPreviewIndex, setShowPreviewIndex] = useState(null);
 
   const onUpload = ({ target: { files } }) => {
-    const fileEntries = [...files].map((uploadedFile) => {
+    const fileEntries = [];
+    let i = 1;
+
+    const filesArray = [...files];
+
+    filesArray.forEach((uploadedFile) => {
       const source = URL.createObjectURL(uploadedFile);
 
-      return new AttachmentModel({ added: true, source, file: uploadedFile });
+      if (list.length + i < 10) {
+        fileEntries.push(new AttachmentModel({ added: true, source, file: uploadedFile }));
+      }
+
+      i += 1;
     });
 
     onFilesUpload(fileEntries);
@@ -26,11 +35,13 @@ export default function Images({
     setShowPreviewIndex(elementIndex);
   };
 
+  const active = list.filter((content) => !content.removed);
+
   return (
     <div className="images">
       <ImagesPreview startWith={showPreviewIndex} visible={showPreviewIndex !== null} onClose={() => setShowPreviewIndex(null)} images={list} />
-      {list.filter((content) => !content.removed).map((content) => (
-        <div className="photo-card">
+      {active.map((content) => (
+        <div key={content.id} className="photo-card">
           {editable && (
             <button className="remove-button" type="button" onClick={() => onRemoveImage(content.id)}>
               <i className="fa fa-trash" />
@@ -39,7 +50,7 @@ export default function Images({
           <img onClick={() => onShowImage(content.id)} src={content.source} alt="preview" />
         </div>
       ))}
-      {editable && (
+      {editable && active.length < 10 && (
         <button type="button" onClick={() => input.current.click()} className="photo-card add">
           {I18n.t('apps.hardware_devices.add_photo')}
           <input

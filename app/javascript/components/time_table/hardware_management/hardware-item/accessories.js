@@ -79,6 +79,14 @@ function PreviewList({ list }) {
 function EditableList({
   list, onChange, onToggleRemove, onAdd,
 }) {
+  const onQuantityChange = (uniqueId, e) => {
+    const { target: { value } } = e;
+
+    if (value >= 0) {
+      onChange(uniqueId, e);
+    }
+  };
+
   return (
     <>
       {list.map((accessory) => (
@@ -93,7 +101,7 @@ function EditableList({
           />
           <Input
             disabled={accessory.removed}
-            onChange={(e) => onChange(accessory.uniqueId, e)}
+            onChange={(e) => onQuantityChange(accessory.uniqueId, e)}
             placeholder={I18n.t('apps.hardware_devices.quantity')}
             type="number"
             name="quantity"

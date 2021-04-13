@@ -12,6 +12,7 @@ import Select from './inputs/select';
 import buildFormData from '../../../helpers/hardware-device/build-form-data';
 import Breadcrumb from './shared/breadcrumb';
 import Validator from '../../../validators/validator';
+import SelectFilter from './inputs/select-filter';
 
 export default function HardwareItem() {
   const [hardwareDevice, setHardwareDevice] = useState(new HardwareDeviceModel({}));
@@ -70,7 +71,7 @@ export default function HardwareItem() {
 
     const validator = new Validator(hardwareDevice);
 
-    validator.validatePresenceOf('brand', 'model', 'serial_number', 'year_of_production', 'year_bought', 'used_since');
+    validator.validatePresenceOf('brand', 'model', 'serial_number', 'year_of_production', 'year_bought');
     if (!validator.isValid) {
       return setErrors(validator.errors);
     }
@@ -213,10 +214,10 @@ export default function HardwareItem() {
           {['mobile_phones', 'tablets'].includes(category) && (
             <InputsList
               items={[
-                'os_system',
+                'os_version',
               ]}
               onChange={onChange}
-              errors={errors.os_system}
+              errors={errors.os_version}
               object={hardwareDevice}
             />
           )}
@@ -252,8 +253,8 @@ export default function HardwareItem() {
           </div>
         </Container>
         <Container>
-          <Select
-            options={[{ id: null, name: 'unassigned' }].concat(users)}
+          <SelectFilter
+            options={[{ id: null, name: I18n.t('apps.hardware_devices.unassigned') }].concat(users)}
             name="user_id"
             value={user_id}
             onChange={onChange}

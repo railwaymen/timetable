@@ -146,7 +146,8 @@ en:
       poor: 'Poor'
       save_item: 'Save item'
       price: 'Price'
-      os_system: 'Operating system'
+      unassigned: 'Unassigned'
+      os_version: 'Operating system'
       cpu: 'CPU'
       ram: 'Ram'
       storage: 'Storage'
@@ -168,7 +169,7 @@ en:
       edit: 'Edit'
       delete_item: 'Delete item'
       add_access: 'Added access'
-      assigned_user: Assigned 'user'
+      assigned_user: Assigned user
       status: 'Status'
       item_info: 'Basic Item Info'
       dates: 'Dates'

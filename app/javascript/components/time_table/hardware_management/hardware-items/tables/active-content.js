@@ -10,8 +10,10 @@ export default function ActiveContent({ phrase, visible, onSelectItem }) {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
+    const { query, unassigned } = phrase;
+
     makeGetRequest({
-      url: `/api/hardware_devices?page=${1}&q=${phrase}`,
+      url: `/api/hardware_devices?page=1&q=${query}&${unassigned ? 'unassigned_only=true' : ''}`,
     }).then(({ data: { records, total_pages } }) => {
       setContent({
         list: records, isLoaded: true, page: 1, totalPages: total_pages,
@@ -21,8 +23,10 @@ export default function ActiveContent({ phrase, visible, onSelectItem }) {
   }, [phrase]);
 
   useEffect(() => {
+    const { query, unassigned } = phrase;
+
     makeGetRequest({
-      url: `/api/hardware_devices?page=${page}&q=${phrase}`,
+      url: `/api/hardware_devices?page=1&q=${query}&${unassigned ? 'unassigned_only=true' : ''}`,
     }).then(({ data: { records, total_pages } }) => {
       setContent({
         list: records, isLoaded: true, page, totalPages: total_pages,

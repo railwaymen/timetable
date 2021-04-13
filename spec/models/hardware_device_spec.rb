@@ -8,7 +8,6 @@ RSpec.describe HardwareDevice, type: :model do
   it { is_expected.to validate_presence_of(:serial_number) }
   it { is_expected.to validate_presence_of(:year_of_production) }
   it { is_expected.to validate_presence_of(:year_bought) }
-  it { is_expected.to validate_presence_of(:used_since) }
   it { is_expected.to validate_presence_of(:category) }
 
   describe 'unique_serial_number' do
@@ -27,6 +26,7 @@ RSpec.describe HardwareDevice, type: :model do
     it 'calls a search_query' do
       mock_search = double
 
+      expect(mock_search).to receive(:custom).and_return(mock_search)
       expect(mock_search).to receive(:ilike).and_return(mock_search)
       expect(mock_search).to receive(:execute).and_return(mock_search)
       expect(SearchQuery).to receive(:new).and_return(mock_search)
