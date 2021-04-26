@@ -389,13 +389,17 @@ class WorkHours extends React.Component {
     );
   }
 
+  projectIsEditable(workHours) {
+    return (workHours.project.internal || !workHours.task) && !workHours.project.accounting;
+  }
+
   render() {
     const {
       workHours, editing, errors,
     } = this.state;
 
     const selectedTag = this.combinedTags().find((t) => t.id === workHours.tag_id) || {};
-    const internalProjects = this.props.projects.filter((p) => p.internal === true && !p.accounting);
+    const projectsWithoutAccounting = this.props.projects.filter((p) => !p.accounting);
 
     return (
       <div className={`time-entries-list-container ${!_.isEmpty(errors) ? 'has-error' : ''}`}>
@@ -413,18 +417,22 @@ class WorkHours extends React.Component {
                 {editing && this.renderBodyEditable()}
               </div>
               <div className="project-container">
-                {editing && currentUser.isAdmin() && workHours.project.internal && !workHours.project.accounting ? (
+                {editing && this.projectIsEditable(workHours) ? (
                   <div className="project-dropdown">
                     <ProjectsDropdown
                       includeColors
                       placeholder={I18n.t('apps.timesheet.select_project')}
                       updateProject={this.updateProject}
                       selectedProject={workHours.project}
-                      projects={internalProjects}
+                      projects={projectsWithoutAccounting}
                     />
                   </div>
                 ) : (
-                  <span className="project-pill" style={{ background: `#${workHours.project.color}` }}>
+                  <span
+                    {...(editing && { 'data-tooltip-bottom': I18n.t('apps.timesheet.project_locked') })}
+                    className="project-pill"
+                    style={{ background: `#${workHours.project.color}` }}
+                  >
                     {workHours.project.name}
                   </span>
                 )}

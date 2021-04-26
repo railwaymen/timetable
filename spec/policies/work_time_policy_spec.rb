@@ -90,12 +90,19 @@ RSpec.describe WorkTimePolicy, type: :policy do
     context 'for update' do
       let(:work_time) { build_stubbed(:work_time) }
 
-      it 'for admin' do
+      it 'for work time assigned to internal project' do
         expected_attributes = %i[body task tag_id starts_at ends_at project_id]
-        expect(described_class.new(admin, work_time).permitted_attributes).to eql(expected_attributes)
+        expect(described_class.new(user, work_time).permitted_attributes).to eql(expected_attributes)
       end
 
-      it 'regular user' do
+      it 'for work time without task url' do
+        work_time = build_stubbed(:work_time, task: nil)
+        expected_attributes = %i[body task tag_id starts_at ends_at project_id]
+        expect(described_class.new(user, work_time).permitted_attributes).to eql(expected_attributes)
+      end
+
+      it 'for work time with task url' do
+        work_time = build_stubbed(:work_time, task: 'https://example.com/FOO-1')
         expected_attributes = %i[body task tag_id starts_at ends_at]
         expect(described_class.new(user, work_time).permitted_attributes).to eql(expected_attributes)
       end
