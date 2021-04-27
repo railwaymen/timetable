@@ -13,7 +13,7 @@ class NotifyOffEmployees
     end
 
     def users_on_vacation_today
-      User.joins(:vacations).where(vacations: { status: :accepted })
+      User.joins(:vacations).where(vacations: { status: :accepted }).where('vacations.business_days_count < 30')
           .where('vacations.start_date <= ? AND vacations.end_date >= ?', Time.zone.today, Time.zone.today).map(&:name)
     end
 
