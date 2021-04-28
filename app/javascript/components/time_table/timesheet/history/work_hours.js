@@ -389,10 +389,6 @@ class WorkHours extends React.Component {
     );
   }
 
-  projectIsEditable(workHours) {
-    return (workHours.project.internal || !workHours.task) && !workHours.project.accounting;
-  }
-
   render() {
     const {
       workHours, editing, errors,
@@ -417,7 +413,7 @@ class WorkHours extends React.Component {
                 {editing && this.renderBodyEditable()}
               </div>
               <div className="project-container">
-                {editing && this.projectIsEditable(workHours) ? (
+                {editing && workHours.project_editable ? (
                   <div className="project-dropdown">
                     <ProjectsDropdown
                       includeColors

@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 
 ruby '2.7.0'
 
-gem 'awesome_print'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.4.1'
 gem 'business_time'
@@ -43,6 +42,7 @@ gem 'webpacker'
 gem 'whenever'
 
 group :development do
+  gem 'awesome_print'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'bundler-audit'

@@ -257,7 +257,7 @@ pl:
       periods_count: liczbę okresów
       recounting: Przeliczam...
     timesheet:
-      project_locked: Nie można zmienić projektu gdy wpis posiada link do taska. Jeśli chcesz zmienić projekt usuń i dodaj ponownie wpis.
+      project_locked: Nie można zmienić projektu gdy wpis posiada link do taska lub tag projektowy. Jeśli chcesz zmienić projekt usuń i dodaj ponownie wpis.
       search_placeholder: Szukaj wśród wpisów
       overall_work_time: Łączny czas pracy w wybranym okresie
       what_have_you_done: Nad czym pracowałeś ?
