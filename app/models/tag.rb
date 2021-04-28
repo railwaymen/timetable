@@ -12,8 +12,12 @@ class Tag < ApplicationRecord
   validate :validates_name_uniqueness
 
   def validates_name_uniqueness
-    errors.add(:name, :taken) if project_id.nil? && Tag.kept.where.not(id: id).exists?(name: name)
+    errors.add(:name, :taken) if global? && Tag.kept.where.not(id: id).exists?(name: name)
     errors.add(:name, :taken) if project_id.present? &&
                                  (Tag.kept.where.not(id: id).exists?(project_id: nil, name: name) || Tag.kept.where.not(id: id).exists?(project_id: project_id, name: name))
+  end
+
+  def global?
+    project_id.nil?
   end
 end

@@ -15,7 +15,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
 
   def work_time_response(work_time)
     work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'tag_id', 'user_id')
-             .merge(task_preview: task_preview_helper(work_time.task), editable: !work_time.project.accounting?)
+             .merge(task_preview: task_preview_helper(work_time.task), editable: !work_time.project.accounting?, project_editable: work_time.task.blank? && work_time.tag.global?)
              .merge(date: work_time.starts_at.to_date,
                     tag: work_time.tag.name,
                     project: work_time.project.attributes.slice('name', 'color', 'lunch', 'internal', 'count_duration', 'work_times_allows_task').merge(
