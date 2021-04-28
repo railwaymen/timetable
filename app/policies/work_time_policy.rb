@@ -34,7 +34,7 @@ class WorkTimePolicy < ApplicationPolicy
       starts_at
       ends_at
     ]
-    params = params.concat(%i[project_id]) if user.admin?
+    params = params.concat(%i[project_id]) if record.task.blank?
     params
   end
 

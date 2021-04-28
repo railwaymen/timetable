@@ -41,7 +41,27 @@ class SearchQuery
     self
   end
 
+  def custom(sql_function:, sql_function_args: [], value:)
+    sql_function_attributes = sql_function_args.map(&method(:custom_query_argument)).join(', ')
+
+    expression = "#{sql_function}(#{sql_function_attributes})"
+    santized_condition = ActiveRecord::Base.sanitize_sql_array(["#{expression} ILIKE ?", "%#{value}%"])
+
+    @ilike_conditions.push(santized_condition)
+
+    self
+  end
+
   private
+
+  def custom_query_argument(argument)
+    if argument[:type] == 'table'
+      validate_column_name(argument[:value])
+      argument[:value]
+    else
+      "'#{argument[:value]}'"
+    end
+  end
 
   def validate_column_name(name)
     return if @column_names.include?(name.to_s.split('.').last)

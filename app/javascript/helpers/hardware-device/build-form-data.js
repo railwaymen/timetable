@@ -23,7 +23,9 @@ export default function buildFormData({ device, accessories }) {
     form.append(`hardware_device[${field}]`, device[field]);
   });
 
-  if (device.user_id) {
+  if (device.user_id === 'unassigned') {
+    form.append('hardware_device[user_id]', undefined);
+  } else {
     form.append('hardware_device[user_id]', device.user_id);
   }
 

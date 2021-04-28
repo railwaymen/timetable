@@ -109,9 +109,10 @@ pl:
       save_item: 'Zapisz'
       good: 'Dobry'
       average: 'Średni'
+      unassigned: 'Nieprzypisany'
       poor: 'Kiepski'
       price: 'Cena'
-      os_system: 'System operacyjny'
+      os_version: 'System operacyjny'
       cpu: 'CPU'
       ram: 'Ram'
       storage: 'Storage'
@@ -256,6 +257,7 @@ pl:
       periods_count: liczbę okresów
       recounting: Przeliczam...
     timesheet:
+      project_locked: Nie można zmienić projektu gdy wpis posiada link do taska. Jeśli chcesz zmienić projekt usuń i dodaj ponownie wpis.
       search_placeholder: Szukaj wśród wpisów
       overall_work_time: Łączny czas pracy w wybranym okresie
       what_have_you_done: Nad czym pracowałeś ?
@@ -382,6 +384,7 @@ pl:
         update_assignment: '{{user}} zaktualizował zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
         delete_assignment: '{{user}} usunął zasób {{resource}} przypisany do projektu {{project}} od {{start}} do {{end}}'
   common:
+    search: 'Szukaj'
     tag: Tag
     back: Wróć
     expand: "Rozwiń"

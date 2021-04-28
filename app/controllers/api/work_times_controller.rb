@@ -65,7 +65,7 @@ module Api
     private
 
     def work_hours_save_params
-      current_user.admin? ? {} : { context: :user }
+      current_user.admin? || current_user.manager? ? {} : { context: :user }
     end
 
     def build_new_work_time

@@ -3,7 +3,7 @@
 class HardwareDevice < ApplicationRecord
   include Discard::Model
 
-  validates :brand, :model, :serial_number, :year_of_production, :year_bought, :used_since, :category, :device_type, presence: true
+  validates :brand, :model, :serial_number, :year_of_production, :year_bought, :category, :device_type, :state, presence: true
   validate :unique_serial_number
 
   has_paper_trail
@@ -46,6 +46,13 @@ class HardwareDevice < ApplicationRecord
         :state
       ],
       values: phrase.split(' ')
+    ).custom(
+      sql_function: 'to_char',
+      sql_function_args: [
+        { type: 'table', value: 'hardware_devices.year_of_production' },
+        { type: 'string', value: 'YYYY-MM-DD' }
+      ],
+      value: phrase
     ).execute
   end
 end

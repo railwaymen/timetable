@@ -142,7 +142,7 @@ export default function HardwareItem() {
           {['mobile_phones', 'tablets'].includes(category) && (
             <ContentsList
               items={[
-                'os_system',
+                'os_version',
               ]}
               object={hardwareDevice}
             />
@@ -191,7 +191,7 @@ export default function HardwareItem() {
           <ContentValue
             classNameElement="space-md"
             placeholder={I18n.t('apps.hardware_devices.assigned_user')}
-            value={user?.full_name}
+            value={`${user?.first_name} ${user?.last_name}`}
           />
           <ContentValue
             classNameElement="space-md"
