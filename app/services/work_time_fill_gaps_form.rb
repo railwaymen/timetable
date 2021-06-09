@@ -28,6 +28,7 @@ class WorkTimeFillGapsForm
     return false unless valid?
 
     work_time.department = user.department
+    work_time.body = work_time.external(:summary) if work_time.body.blank? && work_time.external(:summary).present?
     @saved = WorkTime.transaction { create_filler_work_times(additional_params) }
     if @saved.present? && external_payload
       work_time = @saved.first
@@ -54,6 +55,7 @@ class WorkTimeFillGapsForm
     work_times_ranges.map do |range|
       wt = work_time.dup
       wt.assign_attributes(starts_at: range.begin, ends_at: range.end, integration_payload: external_payload)
+      wt.body = wt.external(:summary) if wt.body.blank? && wt.external(:summary).present?
       unless wt.save(additional_params)
         copy_errors(wt)
         raise ActiveRecord::Rollback
