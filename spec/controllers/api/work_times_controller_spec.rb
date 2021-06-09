@@ -206,7 +206,8 @@ RSpec.describe Api::WorkTimesController, type: :controller do
           class Sample < Base; def self.from_data(*args); end; end
         end
         jira_payload = {
-          task_id: 'TO-1'
+          task_id: 'TO-1',
+          summary: 'Task description'
         }
         project = create(:project, :external_integration_enabled)
         project.update(external_payload: { 'id' => 'TO' })
@@ -215,8 +216,11 @@ RSpec.describe Api::WorkTimesController, type: :controller do
         strategy_double = double('strategy')
         allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
         expect(strategy_double).to receive(:integration_payload) { jira_payload }
-        post :create, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com/TO-1' } }, format: :json
+        post :create, params: { work_time: { project_id: project.id, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com/TO-1' } }, format: :json
         expect(response.code).to eql('200')
+        work_time = user.work_times.first!
+        expect(work_time.task).to eql('http://example.com/TO-1')
+        expect(work_time.body).to eql(jira_payload[:summary])
       end
     end
   end
@@ -283,12 +287,19 @@ RSpec.describe Api::WorkTimesController, type: :controller do
       project = create(:project, :external_integration_enabled)
       create(:external_auth, user: user, provider: 'Sample')
       sign_in(user)
+      jira_payload = {
+        task_id: 'TO-1',
+        summary: 'Task description'
+      }
       strategy_double = double('strategy')
       allow(ExternalAuthStrategy::Sample).to receive(:from_data) { strategy_double }
-      expect(strategy_double).to receive(:integration_payload) { { task_id: 1 } }
+      expect(strategy_double).to receive(:integration_payload) { jira_payload }
       expect(UpdateExternalAuthWorker).to receive(:perform_async)
-      post :create_filling_gaps, params: { work_time: { project_id: project.id, body: body, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com' } }, format: :json
+      post :create_filling_gaps, params: { work_time: { project_id: project.id, tag_id: tag.id, starts_at: starts_at, ends_at: ends_at, task: 'http://example.com/TO-1' } }, format: :json
       expect(response.code).to eql('200')
+      work_time = user.work_times.first!
+      expect(work_time.task).to eql('http://example.com/TO-1')
+      expect(work_time.body).to eql(jira_payload[:summary])
     end
 
     it 'creates when admin' do
