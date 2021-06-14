@@ -113,7 +113,7 @@ module Api
         }
       else
         {
-          user_id: params[:user_id].presence
+          user_id: current_user.id
         }
       end.delete_if { |_key, value| value.nil? }
     end
