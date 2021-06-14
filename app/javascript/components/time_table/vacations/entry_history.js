@@ -13,6 +13,7 @@ function EntryHistory(props) {
   const [usedVacationsExpanded] = useState(false);
   const [collapsibleProperties, setCollapsibleProperties] = useState({});
   const [years, setYears] = useState([]);
+  const [expandedVacations, setExpandedVacations] = useState({});
 
   function getYears() {
     const currentYear = parseInt(moment().year(), 10);
@@ -38,15 +39,41 @@ function EntryHistory(props) {
     }
   }
 
+  function toggleVacationExpanded(id) {
+    setExpandedVacations({ ...expandedVacations, [id]: !expandedVacations[id] });
+  }
+
   function Vacation({ vacation }) {
     const [status, statusClass] = vacation.status === 'approved' ? (
       [I18n.t('apps.vacations.status.unconfirmed'), 'unconfirmed']
     ) : (
       [I18n.t(`apps.vacations.status.${vacation.status}`), vacation.status]
     );
+    const isExpanded = expandedVacations[vacation.id];
+    const chevronClass = isExpanded ? 'up' : 'down';
+    const collapsableClassName = isExpanded ? 'show' : 'hide';
+    const label = isExpanded ? I18n.t('apps.vacations.hide_description') : I18n.t('apps.vacations.show_description');
+
     return (
       <tr className="vacation">
-        <td className="text-left">{I18n.t(`common.${vacation.vacation_type}`)}</td>
+        <td className="text-left">
+          {I18n.t(`common.${vacation.vacation_type}`)}
+          <button
+            className="btn btn-link px-0"
+            type="button"
+            data-toggle="collapse"
+            data-target={`#vacation-${vacation.id}`}
+            aria-expanded="false"
+            aria-controls={`vacation-${vacation.id}`}
+            onClick={() => toggleVacationExpanded(vacation.id)}
+          >
+            <i className={`mr-2 fa fa-chevron-${chevronClass}`} />
+            {label}
+          </button>
+          <div className={`collapse ${collapsableClassName}`} id={`vacation-${vacation.id}`}>
+            {vacation.description}
+          </div>
+        </td>
         <td>
           {moment(vacation.start_date).format('DD.MM.YYYY')}
           <span>-</span>

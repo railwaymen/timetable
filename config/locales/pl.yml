@@ -311,6 +311,8 @@ pl:
       other: Inny
     vacations:
       vacation_description: Powód urlopu
+      show_description: Pokaż powód
+      hide_description: Ukryj powód
       status:
         unconfirmed: Niepotwierdzone
         declined: Odrzucony

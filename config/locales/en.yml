@@ -312,6 +312,8 @@ en:
       other: Other
     vacations:
       vacation_description: Reason for the vacation
+      show_description: Show reason
+      hide_description: Hide reason
       status:
         unconfirmed: Unconfirmed
         declined: Declined
