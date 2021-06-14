@@ -259,7 +259,6 @@ en:
       recounting: Recounting...
     timesheet:
       project_locked: Cannot change project when time entry has task url or project level tag. To change project in this case you need to remove entry and add it again.
-      search_placeholder: Search among work times
       overall_work_time: Total worktime in selected period
       what_have_you_done: What have you done ?
       task_url: Task url
