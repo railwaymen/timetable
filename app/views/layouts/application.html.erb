@@ -8,15 +8,9 @@
   <%= stylesheet_link_tag    "//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", media: "all" %>
   <%= stylesheet_link_tag   "https://fonts.googleapis.com/css?family=Hind+Vadodara:400,500,600&display=swap&subset=latin-ext", media: "all" %> 
   <script>window.currentUser = JSON.parse('<%= raw render(template: "api/users/_app_user") %>')</script>
+  <script>window.sentryUrl = "<%= Rails.application.secrets.sentry_url %>"</script>
   <%= javascript_include_tag "application" %>
   <%= javascript_pack_tag 'application' %>
-
-  <% if Rails.application.secrets.raven_url.present? %>
-    <script src='https://cdn.ravenjs.com/3.25.2/raven.min.js' crossorigin='anonymous'/>
-    <script>
-      Raven.config('<%= Rails.application.secrets.raven_url %>').install();
-    </script>
-  <% end %>
 </head>
 <body>
   <%= yield %>

@@ -147,8 +147,19 @@ GEM
     factory_bot_rails (6.0.0)
       factory_bot (~> 6.0.0)
       railties (>= 5.0.0)
-    faraday (0.15.3)
+    faraday (1.4.2)
+      faraday-em_http (~> 1.0)
+      faraday-em_synchrony (~> 1.0)
+      faraday-excon (~> 1.1)
+      faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.1)
       multipart-post (>= 1.2, < 3)
+      ruby2_keywords (>= 0.0.4)
+    faraday-em_http (1.0.0)
+    faraday-em_synchrony (1.0.0)
+    faraday-excon (1.1.0)
+    faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.1.0)
     ffaker (2.15.0)
     ffi (1.12.2)
     globalid (0.4.2)
@@ -344,6 +355,7 @@ GEM
       rubocop (>= 0.82.0)
     ruby-progressbar (1.11.0)
     ruby-rc4 (0.1.5)
+    ruby2_keywords (0.0.4)
     rubyXL (3.3.33)
       nokogiri (>= 1.4.4)
       rubyzip (>= 1.1.6)
@@ -362,8 +374,18 @@ GEM
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
     semantic_range (2.3.1)
-    sentry-raven (2.7.4)
-      faraday (>= 0.7.6, < 1.0)
+    sentry-rails (4.5.1)
+      railties (>= 5.0)
+      sentry-ruby-core (~> 4.5.0)
+    sentry-ruby (4.5.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      faraday (>= 1.0)
+      sentry-ruby-core (= 4.5.1)
+    sentry-ruby-core (4.5.1)
+      concurrent-ruby
+      faraday
+    sentry-sidekiq (4.5.1)
+      sentry-ruby-core (~> 4.5.0)
     shoulda-matchers (4.3.0)
       activesupport (>= 4.2.0)
     sidekiq (6.1.1)
@@ -480,7 +502,9 @@ DEPENDENCIES
   rubyXL (~> 3.3.16)
   sass-rails
   selenium-webdriver
-  sentry-raven
+  sentry-rails
+  sentry-ruby
+  sentry-sidekiq
   shoulda-matchers
   sidekiq
   sidekiq-status

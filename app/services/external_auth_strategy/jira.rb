@@ -14,7 +14,7 @@ JIRA::HTTPError.class_eval do
       class: response.class.to_s,
       all: response_body
     }.to_json
-    Raven.capture_message(@message)
+    Sentry.capture_exception(StandardError.new(@message))
   end
 end
 
