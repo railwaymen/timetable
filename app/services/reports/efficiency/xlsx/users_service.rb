@@ -18,7 +18,7 @@ module Reports
           @workbook = workbook
 
           @sheet_index = sheet_index
-          @name = generate_report_name(starts_at, ends_at, prefix: 'users')
+          @name = generate_report_name(starts_at, ends_at, prefix: 'crew')
         end
 
         def call # rubocop:disable Metrics/MethodLength

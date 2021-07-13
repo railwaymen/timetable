@@ -6,8 +6,8 @@ class EfficiencyReportsController < ApplicationController
   include Reports::ReportsHelper
 
   def show
-    projects_workbook = ::Reports::Efficiency::Xlsx::ProjectsService.new(starts_at: starts_at, ends_at: ends_at).call
-    users_workbook = ::Reports::Efficiency::Xlsx::UsersService.new(
+    projects_workbook = Reports::Efficiency::Xlsx::ProjectsService.new(starts_at: starts_at, ends_at: ends_at).call
+    users_workbook = Reports::Efficiency::Xlsx::UsersService.new(
       workbook: projects_workbook,
       starts_at: starts_at,
       ends_at: ends_at,
