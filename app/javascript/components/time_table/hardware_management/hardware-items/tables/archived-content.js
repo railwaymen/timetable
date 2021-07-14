@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeGetRequest } from '../../../../shared/api';
+import TableHeader from './table-header';
 import Paginate from './paginate';
 import TableRow from './table-row';
 
@@ -39,18 +40,7 @@ export default function ArchivedContent({ phrase, visible, onSelectItem }) {
   return (
     <div className="content" style={!visible ? { display: 'none' } : {}}>
       <table className="table">
-        <thead>
-          <tr>
-            <th>{I18n.t('apps.hardware_devices.category')}</th>
-            <th>{I18n.t('apps.hardware_devices.brand')}</th>
-            <th>{I18n.t('apps.hardware_devices.model')}</th>
-            <th>{I18n.t('apps.hardware_devices.serial_number')}</th>
-            <th>{I18n.t('apps.hardware_devices.assigned_person')}</th>
-            <th>{I18n.t('apps.hardware_devices.state')}</th>
-            <th>{I18n.t('apps.hardware_devices.year_of_production')}</th>
-            <th>{I18n.t('common.action')}</th>
-          </tr>
-        </thead>
+        <TableHeader />
         <tbody>
           {list.map((item) => (
             <TableRow item={item} key={item.id} onRemove={onSelectItem} />
