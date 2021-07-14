@@ -15,5 +15,5 @@ export default function TableHeader() {
         <th>{I18n.t('common.action')}</th>
       </tr>
     </thead>
-  )
+  );
 }
