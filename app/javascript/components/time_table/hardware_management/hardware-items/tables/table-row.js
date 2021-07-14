@@ -19,6 +19,7 @@ export default function TableRow({ item, onRemove }) {
       <td><b>{I18n.t(`apps.hardware_devices.${item.category}`)}</b></td>
       <td>{item.brand}</td>
       <td>{item.model}</td>
+      <td>{item.os_version}</td>
       <td>{item.serial_number}</td>
       <td>
         <b>{item.user ? `${item.user.first_name} ${item.user.last_name}` : I18n.t('apps.hardware_devices.unassigned')}</b>
