@@ -7,7 +7,7 @@ module Reports
 
       class RecordError < StandardError; end
 
-      ATTRIBUTES = %i[id first_name last_name duration duration_all projects].freeze
+      ATTRIBUTES = %i[id first_name last_name department duration duration_all projects].freeze
 
       attr_reader(*ATTRIBUTES)
 
@@ -18,12 +18,14 @@ module Reports
         last_name:,
         work_times_duration:,
         work_times_duration_all:,
+        department:,
         work_times_users_projects:
       )
         @id = id
         @first_name = first_name
         @last_name = last_name
         @duration = work_times_duration
+        @department = department
         @duration_all = work_times_duration_all
 
         @projects = JSON.parse(work_times_users_projects).map(&method(:build_project))
