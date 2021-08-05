@@ -6,17 +6,25 @@ module ExternalValidatable
   extend ActiveSupport::Concern
 
   included do
-    validate :validate_integration
+    validate :validate_url, :validate_integration
   end
 
   private
 
   def validate_integration
-    return nil if project.nil? || !project.external_integration_enabled? || user.external_auth.nil? || task.blank?
+    return nil if errors.key?(:task) || project.nil? || !project.external_integration_enabled? || user.external_auth.nil? || task.blank?
 
     return validate_task_in_project unless external_payload.nil?
 
     errors.add(:task, :invalid_external)
+  end
+
+  def validate_url
+    return if task.blank?
+
+    URI.parse(task)
+  rescue URI::InvalidURIError
+    errors.add(:task, :invalid_uri)
   end
 
   def validate_task_in_project

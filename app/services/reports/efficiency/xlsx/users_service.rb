@@ -8,7 +8,7 @@ module Reports
 
         attr_reader :collection, :buisness_days, :buisness_days_work_hours
 
-        ATTRIBUTES = %w[name project tag billable billable_yes billable_no time percentage_of_time global_participation_percentage working_days].freeze
+        ATTRIBUTES = %w[name department project tag billable billable_yes billable_no time percentage_of_time global_participation_percentage working_days].freeze
 
         def initialize(workbook: RubyXL::Workbook.new, starts_at: Time.current - 1.month, ends_at: Time.current, sheet_index: 0)
           @collection = UsersQuery.new(starts_at: starts_at, ends_at: ends_at)
@@ -18,13 +18,13 @@ module Reports
           @workbook = workbook
 
           @sheet_index = sheet_index
-          @name = generate_report_name(starts_at, ends_at, prefix: 'users')
+          @name = generate_report_name(starts_at, ends_at, prefix: 'crew')
         end
 
         def call # rubocop:disable Metrics/MethodLength
           return @workbook if @collection.empty?
 
-          setup_columns_width(sheet, [0, 15], [1, 15], [4, 15], [5, 30], [6, 30])
+          setup_columns_width(sheet, [0, 15], [1, 15], [2, 15], [5, 15], [6, 30], [7, 30])
           build_headers(elements: ATTRIBUTES)
 
           current_row = 1
@@ -44,27 +44,28 @@ module Reports
 
         private
 
-        def user_cell(user:, current_row:)
+        def user_cell(user:, current_row:) # rubocop:disable Metrics/MethodLength
           sheet.add_cell(current_row, 0, "#{user.first_name} #{user.last_name}")
-          sheet.add_cell(current_row, 1, '')
+          sheet.add_cell(current_row, 1, user.department)
           sheet.add_cell(current_row, 2, '')
           sheet.add_cell(current_row, 3, '')
+          sheet.add_cell(current_row, 4, '')
 
-          sheet.add_cell(current_row, 4, user.percentage_sum_billable[true]).set_number_format('0.00%')
-          sheet.add_cell(current_row, 5, user.percentage_sum_billable[false]).set_number_format('0.00%')
+          sheet.add_cell(current_row, 5, user.percentage_sum_billable[true]).set_number_format('0.00%')
+          sheet.add_cell(current_row, 6, user.percentage_sum_billable[false]).set_number_format('0.00%')
 
-          sheet.add_cell(current_row, 6, user.duration_to_days).set_number_format('[hh]:mm:ss.000')
-          sheet.add_cell(current_row, 7, user.duration_to_fully_days / @buisness_days).set_number_format('0.00%')
-          sheet.add_cell(current_row, 8, user.percentage_part).set_number_format('0.00%')
-          sheet.add_cell(current_row, 9, @buisness_days)
+          sheet.add_cell(current_row, 7, user.duration_to_days).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, 8, user.duration_to_fully_days / @buisness_days).set_number_format('0.00%')
+          sheet.add_cell(current_row, 9, user.percentage_part).set_number_format('0.00%')
+          sheet.add_cell(current_row, 10, @buisness_days)
         end
 
         def project_cell(project:, current_row:)
-          sheet.add_cell(current_row, 1, project.name)
-          sheet.add_cell(current_row, 2, project.tag)
-          sheet.add_cell(current_row, 3, project.billable ? 'y' : 'n')
-          sheet.add_cell(current_row, 6, project.project_duration_to_days).set_number_format('[hh]:mm:ss.000')
-          sheet.add_cell(current_row, 7, project.percentage_part).set_number_format('0.00%')
+          sheet.add_cell(current_row, 2, project.name)
+          sheet.add_cell(current_row, 3, project.tag)
+          sheet.add_cell(current_row, 4, project.billable ? 'y' : 'n')
+          sheet.add_cell(current_row, 7, project.project_duration_to_days).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, 8, project.percentage_part).set_number_format('0.00%')
         end
       end
     end

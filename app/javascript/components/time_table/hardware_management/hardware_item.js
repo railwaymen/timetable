@@ -71,7 +71,7 @@ export default function HardwareItem() {
 
     const validator = new Validator(hardwareDevice);
 
-    validator.validatePresenceOf('brand', 'model', 'serial_number', 'year_of_production', 'year_bought');
+    validator.validatePresenceOf('brand', 'device_type', 'model', 'serial_number', 'year_of_production', 'year_bought', 'used_since');
     if (!validator.isValid) {
       return setErrors(validator.errors);
     }

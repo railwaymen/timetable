@@ -388,6 +388,10 @@
       background-color: #35BB75;
     }
 
+    &.not_selected {
+      background-color: #999;
+    }
+
     &.poor {
       background-color: #F0957A;
     }

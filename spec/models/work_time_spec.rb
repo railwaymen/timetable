@@ -51,12 +51,6 @@ RSpec.describe WorkTime, type: :model do
       expect(WorkTime.new).to_not be_valid
     end
 
-    it 'should validate task url' do
-      @work_time.task = 'abcde fgh ijk'
-      expect(@work_time).to_not be_valid
-      expect(@work_time.errors[:task].present?).to eql(true)
-    end
-
     it 'should validate presence of project_id' do
       @work_time.project_id = nil
       expect(@work_time).to_not be_valid

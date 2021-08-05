@@ -52,9 +52,9 @@ RSpec.describe Api::VacationsController do
                                     vacation_type: :others, vacation_sub_type: :parental, description: 'Parental', status: :accepted)
       vacation3 = create(:vacation, user: user, vacation_type: :requested, status: :accepted)
       vacations_response = [
-        vacation1.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count').merge(full_name: user.to_s),
-        vacation3.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count').merge(full_name: user.to_s),
-        vacation2.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count').merge(full_name: user.to_s)
+        vacation1.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count', 'description').merge(full_name: user.to_s),
+        vacation3.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count', 'description').merge(full_name: user.to_s),
+        vacation2.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count', 'description').merge(full_name: user.to_s)
       ]
       get :index, params: { year: Time.current.year }, format: :json
       expect(response.code).to eql('200')
@@ -78,7 +78,7 @@ RSpec.describe Api::VacationsController do
       vacation_period = create(:vacation_period, user: user2)
       vacation = create(:vacation, user: user2)
       vacations_response = [
-        vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count').merge(full_name: user2.to_s)
+        vacation.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count', 'description').merge(full_name: user2.to_s)
       ]
       get :index, params: { user_id: user2.id, year: Time.current.year }, format: :json
       expect(response.code).to eql('200')

@@ -3,6 +3,8 @@
     "@babel/core": "^7.0.0",
     "@babel/preset-react": "^7.12.13",
     "@rails/webpacker": "5.2.1",
+    "@sentry/browser": "^6.7.0",
+    "@sentry/tracing": "^6.7.0",
     "antd": "^3.25.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",

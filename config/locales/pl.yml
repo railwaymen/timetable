@@ -105,6 +105,7 @@ pl:
       displays: 'Monitory'
       mobile_phones: 'Telefony'
       computers: 'Komputery'
+      not_selected: 'Nie wybrano'
       tablets: 'Tablety'
       save_item: 'Zapisz'
       good: 'Dobry'
@@ -258,7 +259,6 @@ pl:
       recounting: Przeliczam...
     timesheet:
       project_locked: Nie można zmienić projektu gdy wpis posiada link do taska lub tag projektowy. Jeśli chcesz zmienić projekt usuń i dodaj ponownie wpis.
-      search_placeholder: Szukaj wśród wpisów
       overall_work_time: Łączny czas pracy w wybranym okresie
       what_have_you_done: Nad czym pracowałeś ?
       task_url: Url taska
@@ -311,6 +311,8 @@ pl:
       other: Inny
     vacations:
       vacation_description: Powód urlopu
+      show_description: Pokaż powód
+      hide_description: Ukryj powód
       status:
         unconfirmed: Niepotwierdzone
         declined: Odrzucony
@@ -384,7 +386,7 @@ pl:
         update_assignment: '{{user}} zaktualizował zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
         delete_assignment: '{{user}} usunął zasób {{resource}} przypisany do projektu {{project}} od {{start}} do {{end}}'
   common:
-    search: 'Szukaj'
+    search: Szukaj
     tag: Tag
     back: Wróć
     expand: "Rozwiń"

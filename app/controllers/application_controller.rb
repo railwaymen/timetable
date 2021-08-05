@@ -7,8 +7,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :exception
   around_action :use_user_locale
-  before_action :set_raven_context
-
+  before_action :assign_sentry_user
   helper_method :current_user
 
   def authenticate_admin!
@@ -43,8 +42,7 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def set_raven_context
-    Raven.user_context(id: current_user&.id)
-    Raven.extra_context(params: params.to_unsafe_h, url: request.url)
+  def assign_sentry_user
+    Sentry.set_user(id: current_user&.id)
   end
 end

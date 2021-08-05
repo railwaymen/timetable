@@ -19,7 +19,6 @@ class WorkTime < ApplicationRecord
   validate :validates_time, on: :user
   validate :validates_date
   validate :validates_body
-  validate :task_url
 
   delegate :external_auth, to: :user
 
@@ -33,14 +32,6 @@ class WorkTime < ApplicationRecord
 
   def project_zero?
     project.try(:count_duration?) == false
-  end
-
-  def task_url
-    return if task.blank?
-
-    URI.parse(task)
-  rescue URI::InvalidURIError
-    errors.add(:task, :invalid_uri)
   end
 
   def assign_duration
