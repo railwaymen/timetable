@@ -4,8 +4,8 @@ module Reports
   module Efficiency
     class UsersQuery
       include Enumerable
-
-      delegate :each, :empty?, to: :records
+      include WhereConditions
+      include Querable
 
       def initialize(starts_at: Time.current - 1.month, ends_at: Time.current)
         @starts_at = starts_at
@@ -17,17 +17,23 @@ module Reports
       end
 
       def records
-        @records ||= begin
-          sanitized_sql = ActiveRecord::Base.sanitize_sql_array([sql, starts_at: @starts_at, ends_at: @ends_at])
+        @records ||= ActiveRecord::Base
+                     .connection
+                     .execute(sanitized_sql)
+                     .map(&:symbolize_keys.to_proc >> User.method(:new))
+      end
 
-          ActiveRecord::Base
-            .connection
-            .execute(sanitized_sql)
-            .map(&:symbolize_keys.to_proc >> User.method(:new))
-        end
+      def where_project_id_not(id)
+        where_wrap('projects.id != ?', id, column: :work_times_user_project)
+          .where_wrap('project_id != ?', id, column: :work_times_total)
+          .where_wrap('project_id != ?', id, column: :work_times_users_total)
       end
 
       private
+
+      def sanitized_sql
+        ActiveRecord::Base.sanitize_sql_array([sql, starts_at: @starts_at, ends_at: @ends_at])
+      end
 
       def sql
         <<-SQL.squish
@@ -51,6 +57,7 @@ module Reports
             FROM work_times
             INNER JOIN projects ON projects.id = work_times.project_id
             WHERE work_times.starts_at >= :starts_at AND work_times.ends_at <= :ends_at AND work_times.discarded_at IS NULL
+            #{where_wrap_clause(:work_times_user_project).then { _1.present? ? "AND #{_1}" : '' }}
             GROUP BY work_times.user_id, projects.id
           ) work_times_user_project ON work_times_user_project.user_id = users.id
           INNER JOIN (
@@ -58,6 +65,7 @@ module Reports
               SUM(work_times.duration) AS sum
             FROM work_times
             WHERE work_times.starts_at >= :starts_at AND work_times.ends_at <= :ends_at AND work_times.discarded_at IS NULL
+            #{where_wrap_clause(:work_times_total).then { _1.present? ? "AND #{_1}" : '' }}
             LIMIT 1
           ) work_times_total ON true
           INNER JOIN (
@@ -66,6 +74,7 @@ module Reports
               SUM(work_times.duration) AS sum
             FROM work_times
             WHERE work_times.starts_at >= :starts_at AND work_times.ends_at <= :ends_at AND work_times.discarded_at IS NULL
+            #{where_wrap_clause(:work_times_users_total).then { _1.present? ? "AND #{_1}" : '' }}
             GROUP BY work_times.user_id
           ) work_times_users_total ON work_times_users_total.user_id = users.id
           GROUP BY users.id
