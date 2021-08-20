@@ -7,9 +7,12 @@ module Reports
 
       class RecordError < StandardError; end
 
+      Billable = Struct.new(:percentage, :full_days, keyword_init: true)
+
       ATTRIBUTES = %i[id first_name last_name department duration duration_all projects].freeze
 
       attr_reader(*ATTRIBUTES)
+      attr_accessor :no_vacations
 
       # rubocop:disable Metrics/ParameterLists
       def initialize(
@@ -34,8 +37,19 @@ module Reports
       end
       # rubocop:enable Metrics/ParameterLists
 
-      def percentage_sum_billable
-        projects.group_by(&:billable).each_with_object({}) { |e, hash| hash[e[0]] = e[1].sum(&:project_duration).to_f / duration }
+      def sum_billable
+        @sum_billable ||= begin
+          billable_object_default = {
+            true => Billable.new(percentage: 0, full_days: 0),
+            false => Billable.new(percentage: 0, full_days: 0)
+          }
+
+          projects.group_by(&:billable).each_with_object(billable_object_default) do |e, hash|
+            sum = e[1].sum(&:project_duration).to_f
+
+            hash[e[0]] = Billable.new(percentage: sum / duration, full_days: duration_to_workable_days(sum))
+          end
+        end
       end
 
       def duration_to_days
