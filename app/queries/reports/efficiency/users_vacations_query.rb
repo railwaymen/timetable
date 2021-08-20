@@ -3,7 +3,7 @@
 module Reports
   module Efficiency
     class UsersVacationsQuery
-      VACATION_PROJECT_ID = ::Project.find_by(name: 'Vacation')&.id
+      VACATION_PROJECT_ID = ::Project.find_by(vacation: true)&.id
 
       include Querable
 
