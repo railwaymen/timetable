@@ -24,9 +24,9 @@ module Reports
       end
 
       def where_project_id_not(id)
-        where_wrap('projects.id != ?', id, column: :work_times_user_project)
-          .where_wrap('project_id != ?', id, column: :work_times_total)
-          .where_wrap('project_id != ?', id, column: :work_times_users_total)
+        where_wrap('projects.id != ?', id, table: :work_times_user_project)
+          .where_wrap('project_id != ?', id, table: :work_times_total)
+          .where_wrap('project_id != ?', id, table: :work_times_users_total)
       end
 
       private
