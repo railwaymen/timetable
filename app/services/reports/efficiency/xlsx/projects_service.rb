@@ -97,7 +97,7 @@ module Reports
 
           summary_current_row += 1
 
-          @collection.group_by(&:tag).each do |tag_name, tag_collection|
+          @collection.group_by(&:tag).sort { _1[0] == 'project' ? 0 : (_2 <=> _1) + 1 }.each do |tag_name, tag_collection|
             tag_duration = tag_collection.sum(&:project_duration)
 
             sheet.add_cell(summary_current_row, offset, tag_name)

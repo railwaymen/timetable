@@ -10,6 +10,8 @@ RSpec.describe Reports::Efficiency::Xlsx::UsersService do
         users = FactoryBot.create_list(:user, 4)
         time_pivot = Time.current.beginning_of_day
 
+        stub_const('Reports::Efficiency::UsersVacationsQuery::VACATION_PROJECT_ID', projects.first.id)
+
         10.times do |i|
           users.each do |user|
             projects.each_with_index do |project, j|

@@ -4,8 +4,7 @@ module Reports
   module Efficiency
     class ProjectsQuery
       include Enumerable
-
-      delegate :each, :empty?, to: :records
+      include Querable
 
       def initialize(starts_at: Time.current - 1.month, ends_at: Time.current)
         @starts_at = starts_at
@@ -17,17 +16,17 @@ module Reports
       end
 
       def records
-        @records ||= begin
-          sanitized_sql = ActiveRecord::Base.sanitize_sql_array([sql, starts_at: @starts_at, ends_at: @ends_at])
-
-          ActiveRecord::Base
-            .connection
-            .execute(sanitized_sql)
-            .map(&:symbolize_keys.to_proc >> Project.method(:new))
-        end
+        @records ||= ActiveRecord::Base
+                     .connection
+                     .execute(sanitized_sql)
+                     .map(&:symbolize_keys.to_proc >> Project.method(:new))
       end
 
       private
+
+      def sanitized_sql
+        ActiveRecord::Base.sanitize_sql_array([sql, starts_at: @starts_at, ends_at: @ends_at])
+      end
 
       def sql
         <<-SQL.squish
