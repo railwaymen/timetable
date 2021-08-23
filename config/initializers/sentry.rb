@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Sentry.init do |config|
-  config.dsn = Rails.application.credentials.sentry_url
+  config.dsn = Rails.application.secrets.sentry_url
   config.traces_sample_rate = 0
 
   config.async = lambda do |event, hint|
