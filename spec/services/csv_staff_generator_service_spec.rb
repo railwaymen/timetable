@@ -6,7 +6,7 @@ RSpec.describe CsvStaffGeneratorService do
   def response(vacations)
     result = "Contract ID,Developer,Date From,Date To,Requested at,Status,Duration (days),Description,Vacation Type,Vacation Code,Approved by\n"
     vacations.each do |v|
-      approvers = v.vacation_interactions.where(action: %w[accepted approved]).order(id: :asc).map { |vi| vi.user.to_s }.join(', ')
+      approvers = v.vacation_interactions.where(action: %w[accepted approved]).order(id: :desc).map { |vi| vi.user.to_s }.join(', ')
       result += "#{v.user.contract_name},#{v.user.last_name} #{v.user.first_name},#{v.start_date.strftime('%Y-%m-%d')},"\
                 "#{v.end_date.strftime('%Y-%m-%d')},#{v.created_at.to_date},#{I18n.t("apps.staff.#{v.status}")},"\
                 "#{v.start_date.business_days_until(v.end_date + 1.day)},#{v.description},#{I18n.t("common.#{v.vacation_type}")},"\
