@@ -15,16 +15,7 @@ import ReactDOM from 'react-dom';
 import 'popper.js';
 import 'bootstrap';
 import moment from 'moment';
-import * as Sentry from '@sentry/browser';
-import { Integrations } from '@sentry/tracing';
 import Timetable from '../components/time_table';
-
-if (window.sentryUrl) {
-  Sentry.init({
-    dsn: window.sentryUrl,
-    integrations: [new Integrations.BrowserTracing()],
-  });
-}
 
 window.$ = jquery;
 window.jquery = jquery;
