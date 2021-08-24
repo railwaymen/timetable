@@ -68,6 +68,8 @@ module Reports
       end
 
       def percentage_part
+        return 0 if duration.nil?
+
         duration.to_f / duration_all
       end
     end
