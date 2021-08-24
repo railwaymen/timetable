@@ -103,11 +103,9 @@ export default function HardwareItem() {
 
   return (
     <div className="hardware-content">
-      {isRentalModalVisible !== null && (
-        <Modal style={{ minWidth: '30%' }} visible={isRentalModalVisible} onClose={onToggleRentalModalVisible}>
-          <Rental id={id} onSubmit={onToggleRentalModalVisible} />
-        </Modal>
-      )}
+      <Modal style={{ minWidth: '30%' }} visible={isRentalModalVisible} onClose={onToggleRentalModalVisible}>
+        <Rental id={id} onSubmit={onToggleRentalModalVisible} />
+      </Modal>
       <Breadcrumb items={[{ name, path: `/hardware-devices/${id}/show` }]} />
       <ConfirmModal
         visible={isRemovedModal}
