@@ -2,16 +2,8 @@
 
 module Agreements
   module PdfFields
-    def return_agreement_title
-      I18n.t('apps.hardware.return_agreement.title')
-    end
-
     def return_paragraph_number_1
       I18n.t('apps.hardware.return_agreement.paragraph_number_1')
-    end
-
-    def rental_agreement_title
-      I18n.t('apps.hardware.rental_agreement.title')
     end
 
     def rental_paragraph_number_1
