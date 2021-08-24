@@ -33,7 +33,7 @@ module Reports
           SELECT
             projects.id,
             projects.name,
-            projects.tag,
+            COALESCE(projects.tag, 'not_provided') AS tag,
             projects.billable,
             SUM(work_times.duration) AS work_times_duration,
             work_times_total.sum AS work_times_duration_all,
