@@ -370,6 +370,14 @@
       flex: 1;
       display: flex;
       align-items: center;
+
+      &.end {
+        justify-content: flex-end;
+
+        select {
+          flex: 1;
+        }
+      }
     }
   }
 

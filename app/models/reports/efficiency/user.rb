@@ -31,7 +31,7 @@ module Reports
         @department = department
         @duration_all = work_times_duration_all
 
-        @projects = JSON.parse(work_times_users_projects).map(&method(:build_project))
+        @projects = JSON.parse(work_times_users_projects).compact.map(&method(:build_project))
 
         raise RecordError, 'incorrect user' if id.blank?
       end
@@ -68,6 +68,8 @@ module Reports
       end
 
       def percentage_part
+        return 0 if duration.nil?
+
         duration.to_f / duration_all
       end
     end

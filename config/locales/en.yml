@@ -16,11 +16,23 @@ en:
       add_accessory: Add accessory
       accessory_number: 'Accessory #{{index}}'
       no_user: Without user
+      category: 'Category'
+      brand: 'Brand'
+      year_of_production: 'Year of production'
+      year_bought: 'Year bought'
+      cpu: 'CPU'
+      ram: 'RAM'
+      storage: 'Storage'
       field:
         add_new: Add field
         name: Name
         value: Value
       types:
+        computers: 'Computer'
+        displays: 'Display'
+        mobile_phones: "Mobile phone"
+        tablets: 'Tablet'
+        other: 'Other'
         screen: Screen
         pc: PC
         laptop: Laptop
@@ -136,6 +148,9 @@ en:
         internal: Internal
         all: All
     hardware_devices:
+      rental: 'Rental'
+      return: 'Return'
+      generate: 'Generate'
       other: 'Other'
       displays: 'Displays'
       mobile_phones: 'Mobile phones'

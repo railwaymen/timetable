@@ -27,6 +27,20 @@ module Api
       @versions = HardwareDevice.find(params[:id]).versions
     end
 
+    def rental_agreement
+      device = HardwareDevice.active.find(params[:id])
+
+      generator = HardwareDevices::Agreements::DeviceAgreementService.new(
+        device,
+        lender_id: agreement_params[:lender_id],
+        type: agreement_type
+      )
+
+      HardwareMailer.send_agreement_to_accountancy(current_user, generator.generate, agreement_type).deliver_later
+
+      head :no_content
+    end
+
     def create
       @device = HardwareDevice.new(hardware_device_params)
 
@@ -57,6 +71,14 @@ module Api
     end
 
     private
+
+    def agreement_type
+      agreement_params[:type]&.to_sym.presence_in(HardwareDevice::AGREEMENT_TYPES) || HardwareDevice::AGREEMENT_TYPES[0]
+    end
+
+    def agreement_params
+      params.permit(:lender_id, :type)
+    end
 
     def hardware_device_params # rubocop:disable Metrics/MethodLength
       params.require(:hardware_device).permit(

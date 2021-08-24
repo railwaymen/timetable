@@ -1,6 +1,11 @@
 import React from 'react';
 
-export default function Modal({ children, visible = false, onClose }) {
+export default function Modal({
+  children,
+  visible = false,
+  onClose,
+  style = {},
+}) {
   const onBackdropClick = (e) => {
     if (e.target.className === 'hardware-modal') {
       onClose();
@@ -11,7 +16,7 @@ export default function Modal({ children, visible = false, onClose }) {
 
   return (
     <div className="hardware-modal" onClick={onBackdropClick}>
-      <div className="content">
+      <div className="content" style={style}>
         <div className="close" onClick={onClose}>
           <i className="fa fa-close mr-3" />
         </div>
