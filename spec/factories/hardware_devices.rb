@@ -14,5 +14,9 @@ FactoryBot.define do
     device_type { 'Type1' }
     price { 1000 }
     user { nil }
+
+    trait :with_accessories do
+      accessories { [FactoryBot.build(:hardware_device_accessory)] }
+    end
   end
 end

@@ -7,7 +7,8 @@ require 'uri'
 
 module Agreements
   class BaseGeneratorService
-    FONT_PATH = Rails.root.join('app/assets/fonts')
+    include PdfFields
+    include PdfSettings
 
     def initialize(hardwares, params)
       @hardwares = hardwares
@@ -25,29 +26,11 @@ module Agreements
 
     private
 
-    def font_settings
-      @pdf.font_families.update('Roboto' => {
-        normal: 'Roboto-Regular.ttf',
-        bold: 'Roboto-Bold.ttf',
-        italic: 'Roboto-Italic.ttf',
-        bold_italic: 'Roboto-BoldItalic.ttf'
-      }.transform_values(&method(:font_path)))
-      @pdf.font 'Roboto'
-      @pdf.font_size 11
-      @pdf.default_leading 6
-    end
-
     def generate_pdf
       print_header
       PartiesToTheAgreementGeneratorService.new(@pdf, @params).print_parties_to_the_agreement
       print_paragraphs
       print_singatures
-    end
-
-    def print_header
-      @pdf.text 'Kraków, ................', align: :right
-      @pdf.text agreement_title, align: :center, style: :bold
-      @pdf.move_down 20
     end
 
     def print_paragraphs
@@ -105,10 +88,6 @@ module Agreements
         @pdf.text '.......................................', align: :center
         @pdf.text I18n.t('apps.hardware.agreements.lender_or_proxy'), align: :center
       end
-    end
-
-    def font_path(font)
-      File.join(FONT_PATH, font)
     end
   end
 end

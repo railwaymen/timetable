@@ -3,6 +3,8 @@
 class HardwareDevice < ApplicationRecord
   include Discard::Model
 
+  AGREEMENT_TYPES = %i[rental return].freeze
+
   validates :brand, :model, :serial_number, :year_of_production, :year_bought, :category, :device_type, :state, presence: true
   validate :unique_serial_number
 

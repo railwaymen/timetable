@@ -16,12 +16,23 @@ pl:
       add_accessory: Dodaj akcesorium
       accessory_number: 'Akcesorium #{{index}}'
       no_user: Bez użytkownika
+      category: 'Kategoria'
+      brand: 'Marka'
+      year_of_production: 'Rok produkcji'
+      year_bought: 'Zakupiony w roku'
+      cpu: 'Procesor'
+      ram: 'RAM'
+      storage: 'Dysk twardy'
       field:
         add_new: Dodaj pole
         name: Nazwa
         value: Wartość
       types:
-        screen: Monitor
+        computers: 'Komputer'
+        displays: 'Monitor'
+        mobile_phones: "Smartphone"
+        tablets: 'Tablet'
+        other: 'Inny'
         pc: Komputer
         laptop: Laptop
         tablet: Tablet
@@ -101,6 +112,9 @@ pl:
         renturn: zawrócić
         title: '[Hardware %{action}]'
     hardware_devices:
+      rental: 'Wypożyczenie'
+      return: 'Zwrot'
+      generate: 'Generuj'
       other: 'Inne'
       displays: 'Monitory'
       mobile_phones: 'Telefony'
