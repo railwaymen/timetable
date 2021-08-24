@@ -46,7 +46,7 @@ module Reports
             MAX(work_times_total.sum) AS work_times_duration_all,
             json_agg(DISTINCT work_times_user_project.*) AS work_times_users_projects
           FROM users
-          INNER JOIN (
+          LEFT JOIN (
             SELECT DISTINCT
               work_times.user_id,
               projects.id,
@@ -60,7 +60,7 @@ module Reports
             #{where_wrap_clause(:work_times_user_project).then { _1.present? ? "AND #{_1}" : '' }}
             GROUP BY work_times.user_id, projects.id
           ) work_times_user_project ON work_times_user_project.user_id = users.id
-          INNER JOIN (
+          LEFT JOIN (
             SELECT
               SUM(work_times.duration) AS sum
             FROM work_times
@@ -68,7 +68,7 @@ module Reports
             #{where_wrap_clause(:work_times_total).then { _1.present? ? "AND #{_1}" : '' }}
             LIMIT 1
           ) work_times_total ON true
-          INNER JOIN (
+          LEFT JOIN (
             SELECT
               work_times.user_id,
               SUM(work_times.duration) AS sum
@@ -77,6 +77,7 @@ module Reports
             #{where_wrap_clause(:work_times_users_total).then { _1.present? ? "AND #{_1}" : '' }}
             GROUP BY work_times.user_id
           ) work_times_users_total ON work_times_users_total.user_id = users.id
+          WHERE users.discarded_at IS NULL
           GROUP BY users.id
         SQL
       end
