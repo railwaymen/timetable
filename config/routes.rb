@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     resources :hardware_devices, only: %i[index show create update destroy] do
       member do
         get :history
+
+        post :rental_agreement
       end
       collection do
         get :archived

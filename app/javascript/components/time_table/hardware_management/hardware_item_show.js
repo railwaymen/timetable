@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import Select from './inputs/select';
 import HardwareDeviceAttributeModel from '../../../models/hardware-device-attribute-model';
 import HardwareDeviceModel from '../../../models/hardware-device-model';
-import { makeDeleteRequest, makeGetRequest } from '../../shared/api';
+import { makeDeleteRequest, makeGetRequest, makePostRequest } from '../../shared/api';
 import Accessories from './hardware-item/accessories';
 import Container from './hardware-item/container';
 import Images from './hardware-item/images';
@@ -10,6 +11,7 @@ import ConfirmModal from './hardware-item/confirm-modal';
 import ContentValue from './hardware-item/content-value';
 import Modal from './hardware-item/modal';
 import Breadcrumb from './shared/breadcrumb';
+import Button from './shared/button';
 
 export default function HardwareItem() {
   const [hardwareDevice, setHardwareDevice] = useState({});
@@ -19,6 +21,7 @@ export default function HardwareItem() {
   const [isRemovedModal, setIsRemovedModal] = useState(false);
   const [isLogModal, setIsLogModal] = useState(false);
   const [deviceHistory, setDeviceHistory] = useState({ list: [], loaded: false });
+  const [isRentalModalVisible, setIsRentalModalVisible] = useState(null);
 
   const history = useHistory();
 
@@ -73,6 +76,8 @@ export default function HardwareItem() {
     });
   };
 
+  const onToggleRentalModalVisible = () => setIsRentalModalVisible((state) => !state);
+
   if (isLoading) {
     return (
       <div>
@@ -98,6 +103,11 @@ export default function HardwareItem() {
 
   return (
     <div className="hardware-content">
+      {isRentalModalVisible !== null && (
+        <Modal style={{ minWidth: '30%' }} visible={isRentalModalVisible} onClose={onToggleRentalModalVisible}>
+          <Rental id={id} onSubmit={onToggleRentalModalVisible} />
+        </Modal>
+      )}
       <Breadcrumb items={[{ name, path: `/hardware-devices/${id}/show` }]} />
       <ConfirmModal
         visible={isRemovedModal}
@@ -183,6 +193,9 @@ export default function HardwareItem() {
               <i className="symbol fa fa-pencil" />
               {I18n.t('apps.hardware_devices.edit')}
             </Link>
+            <button type="button" className="transparent-button space-md info" onClick={onToggleRentalModalVisible}>
+              {I18n.t('apps.hardware_devices.generate')}
+            </button>
             <button type="button" className="transparent-button destroy space-md" onClick={onToggleRemoveProcess}>
               <i className="symbol fa fa-trash" />
               {I18n.t('apps.hardware_devices.delete')}
@@ -207,6 +220,82 @@ export default function HardwareItem() {
             editable={false}
           />
         </Container>
+      </div>
+    </div>
+  );
+}
+
+function Rental({ id, onSubmit }) {
+  const [companies, setCompanies] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState(null);
+
+  const [selectedLender, setSelectedLender] = useState(null);
+  const [typeOfDocument, setTypeOfDocument] = useState('rental');
+
+  const onCompanyChange = ({ target: { value } }) => {
+    const foundCompany = companies.find((company) => company.id === parseInt(value, 10));
+
+    setSelectedCompany(foundCompany);
+  };
+
+  const onStaffChange = ({ target: { value } }) => setSelectedLender(value);
+
+  const onTypeOfDocumentChange = ({ target: { value } }) => setTypeOfDocument(value);
+
+  const onSubmitForm = () => {
+    makePostRequest({
+      url: `/api/hardware_devices/${id}/rental_agreement`,
+      body: {
+        type: typeOfDocument,
+        lender_id: selectedLender?.id,
+      },
+    }).then(onSubmit);
+  };
+
+  useEffect(() => {
+    makeGetRequest({ url: '/api/companies' })
+      .then((response) => {
+        setCompanies(response.data);
+        setSelectedCompany(response.data[0]);
+        setSelectedLender(response.data[0].lenders[0]);
+      });
+  }, []);
+
+  return (
+    <div className="item-content">
+      <div className="content-container">
+        <Select
+          onChange={onCompanyChange}
+          placeholder={I18n.t('apps.hardware.company')}
+          name="company"
+          innerClassName="end"
+          value={selectedCompany?.id}
+          translatable
+          options={companies}
+        />
+        {selectedCompany && (
+          <Select
+            onChange={onStaffChange}
+            placeholder={I18n.t('apps.hardware.lender')}
+            name="staffUser"
+            optionName="full_name"
+            value={selectedLender}
+            innerClassName="end"
+            translatable
+            options={selectedCompany.lenders}
+          />
+        )}
+        <Select
+          onChange={onTypeOfDocumentChange}
+          placeholder={I18n.t('common.type')}
+          name="type"
+          optionName="type"
+          value={typeOfDocument}
+          innerClassName="end"
+          translatable
+          options={['rental', 'return']}
+        />
+        <Button onClick={onSubmitForm} type="primary">{I18n.t('apps.hardware_devices.generate')}</Button>
       </div>
     </div>
   );
