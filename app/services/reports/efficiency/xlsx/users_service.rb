@@ -65,11 +65,11 @@ module Reports
 
           buisness_days_work_hours_all = buisness_days_work_hours * collection_count
 
-          sheet.add_cell(current_row, 0, 'user_sum').set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, 0, 'user_sum')
           sheet.add_cell(current_row, 1, duration_to_full_days(worked_duration_all)).set_number_format('[hh]:mm:ss.000')
 
           current_row += 1
-          sheet.add_cell(current_row, 0, 'required_sum').set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, 0, 'required_sum')
           sheet.add_cell(current_row, 1, duration_to_full_days(buisness_days_work_hours_all)).set_number_format('[hh]:mm:ss.000')
         end
 
