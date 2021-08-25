@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'prawn'
+
 module HardwareDevices
   module Agreements
     class DeviceAgreementService

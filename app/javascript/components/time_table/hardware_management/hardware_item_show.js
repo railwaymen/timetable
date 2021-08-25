@@ -3,7 +3,7 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import Select from './inputs/select';
 import HardwareDeviceAttributeModel from '../../../models/hardware-device-attribute-model';
 import HardwareDeviceModel from '../../../models/hardware-device-model';
-import { makeDeleteRequest, makeGetRequest, makePostRequest } from '../../shared/api';
+import { makeDeleteRequest, makeGetRequest } from '../../shared/api';
 import Accessories from './hardware-item/accessories';
 import Container from './hardware-item/container';
 import Images from './hardware-item/images';
@@ -241,13 +241,13 @@ function Rental({ id, onSubmit }) {
   const onTypeOfDocumentChange = ({ target: { value } }) => setTypeOfDocument(value);
 
   const onSubmitForm = () => {
-    makePostRequest({
-      url: `/api/hardware_devices/${id}/rental_agreement`,
-      body: {
-        type: typeOfDocument,
-        lender_id: selectedLender?.id,
-      },
-    }).then(onSubmit);
+    const searchParams = new URLSearchParams({
+      type: typeOfDocument,
+      lender_id: selectedLender?.id,
+    });
+
+    window.open(`/api/hardware_devices/${id}/rental_agreement?${searchParams.toString()}`, '_blank').focus();
+    onSubmit();
   };
 
   useEffect(() => {
