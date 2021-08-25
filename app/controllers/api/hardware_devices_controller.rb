@@ -36,9 +36,10 @@ module Api
         type: agreement_type
       )
 
-      HardwareMailer.send_agreement_to_accountancy(current_user, generator.generate, agreement_type).deliver_later
-
-      head :no_content
+      send_data(
+        generator.generate,
+        filename: "#{device.serial_number}-#{generator.type}-#{Time.current}.pdf"
+      )
     end
 
     def create

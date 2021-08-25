@@ -134,37 +134,27 @@ RSpec.describe Api::HardwareDevicesController do
     context 'agreement_type is equal to rental' do
       context 'with accessories' do
         it 'correctly create pdf' do
-          mocked_mailer = double
-          allow(mocked_mailer).to receive(:deliver_later).and_return(true)
-          allow(HardwareMailer).to receive(:send_agreement_to_accountancy).and_return(mocked_mailer)
-
           lender = FactoryBot.create(:lender)
           hardware_device = FactoryBot.create(:hardware_device, :with_accessories)
 
           sign_in(FactoryBot.create(:user, :admin))
 
-          post :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :rental }
+          get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :rental }
 
-          expect(HardwareMailer).to have_received(:send_agreement_to_accountancy)
-          expect(response.code).to eq('204')
+          expect(response.code).to eq('200')
         end
       end
 
       context 'without accessories' do
         it 'correctly create pdf' do
-          mocked_mailer = double
-          allow(mocked_mailer).to receive(:deliver_later).and_return(true)
-          allow(HardwareMailer).to receive(:send_agreement_to_accountancy).and_return(mocked_mailer)
-
           lender = FactoryBot.create(:lender)
           hardware_device = FactoryBot.create(:hardware_device)
 
           sign_in(FactoryBot.create(:user, :admin))
 
-          post :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :rental }
+          get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :rental }
 
-          expect(HardwareMailer).to have_received(:send_agreement_to_accountancy)
-          expect(response.code).to eq('204')
+          expect(response.code).to eq('200')
         end
       end
     end
@@ -172,37 +162,27 @@ RSpec.describe Api::HardwareDevicesController do
     context 'agreement_type is equal to return' do
       context 'with accessories' do
         it 'correctly create pdf' do
-          mocked_mailer = double
-          allow(mocked_mailer).to receive(:deliver_later).and_return(true)
-          allow(HardwareMailer).to receive(:send_agreement_to_accountancy).and_return(mocked_mailer)
-
           lender = FactoryBot.create(:lender)
           hardware_device = FactoryBot.create(:hardware_device, :with_accessories)
 
           sign_in(FactoryBot.create(:user, :admin))
 
-          post :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :return }
+          get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :return }
 
-          expect(HardwareMailer).to have_received(:send_agreement_to_accountancy)
-          expect(response.code).to eq('204')
+          expect(response.code).to eq('200')
         end
       end
 
       context 'without accessories' do
         it 'correctly create pdf' do
-          mocked_mailer = double
-          allow(mocked_mailer).to receive(:deliver_later).and_return(true)
-          allow(HardwareMailer).to receive(:send_agreement_to_accountancy).and_return(mocked_mailer)
-
           lender = FactoryBot.create(:lender)
           hardware_device = FactoryBot.create(:hardware_device)
 
           sign_in(FactoryBot.create(:user, :admin))
 
-          post :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :return }
+          get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :return }
 
-          expect(HardwareMailer).to have_received(:send_agreement_to_accountancy)
-          expect(response.code).to eq('204')
+          expect(response.code).to eq('200')
         end
       end
     end

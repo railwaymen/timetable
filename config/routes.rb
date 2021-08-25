@@ -26,7 +26,7 @@ Rails.application.routes.draw do
       member do
         get :history
 
-        post :rental_agreement
+        get :rental_agreement
       end
       collection do
         get :archived
