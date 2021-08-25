@@ -3,17 +3,12 @@
 module Reports
   module Efficiency
     class UsersQuery
-      include Enumerable
       include WhereConditions
       include Querable
 
       def initialize(starts_at: Time.current - 1.month, ends_at: Time.current)
         @starts_at = starts_at
         @ends_at = ends_at
-      end
-
-      def [](row = 0)
-        records[row]
       end
 
       def records
