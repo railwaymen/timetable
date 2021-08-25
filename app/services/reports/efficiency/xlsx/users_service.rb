@@ -51,10 +51,27 @@ module Reports
             end
           end
 
+          current_row += 1
+          users_aggregator(current_row)
+
           @workbook
         end
 
         private
+
+        def users_aggregator(current_row = 0)
+          collection_count = collection.count
+          worked_duration_all = collection.first.duration_all
+
+          buisness_days_work_hours_all = buisness_days_work_hours * collection_count
+
+          sheet.add_cell(current_row, 0, 'user_sum')
+          sheet.add_cell(current_row, 1, duration_to_full_days(worked_duration_all)).set_number_format('[hh]:mm:ss.000')
+
+          current_row += 1
+          sheet.add_cell(current_row, 0, 'required_sum')
+          sheet.add_cell(current_row, 1, duration_to_full_days(buisness_days_work_hours_all)).set_number_format('[hh]:mm:ss.000')
+        end
 
         def vacation_user_cell(user:, current_row:)
           sheet.add_cell(current_row, 11, user.no_vacations.duration_to_days).set_number_format('[hh]:mm:ss.000')
