@@ -37,6 +37,7 @@ module Reports
             users.first_name,
             users.last_name,
             users.department,
+            users.created_at,
             MAX(work_times_users_total.sum) AS work_times_duration,
             MAX(work_times_total.sum) AS work_times_duration_all,
             json_agg(DISTINCT work_times_user_project.*) AS work_times_users_projects

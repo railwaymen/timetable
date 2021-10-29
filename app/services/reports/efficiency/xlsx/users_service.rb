@@ -27,6 +27,9 @@ module Reports
           @buisness_days = calculate_days_should_work(starts_at, ends_at)
           @buisness_days_work_hours = @buisness_days * 8 * 60 * 60
 
+          @starts_at = starts_at
+          @ends_at = ends_at
+
           @workbook = workbook
 
           @sheet_index = sheet_index
@@ -92,10 +95,18 @@ module Reports
           sheet.add_cell(current_row, 5, user.sum_billable[true].percentage).set_number_format('0.00%')
           sheet.add_cell(current_row, 6, user.sum_billable[false].percentage).set_number_format('0.00%')
 
+          current_buisness_days = begin
+            if user.created_at > @starts_at
+              calculate_days_should_work(user.created_at, @ends_at)
+            else
+              @buisness_days
+            end
+          end
+
           sheet.add_cell(current_row, 7, user.duration_to_days).set_number_format('[hh]:mm:ss.000')
-          sheet.add_cell(current_row, 8, user.duration_to_fully_days / @buisness_days).set_number_format('0.00%')
+          sheet.add_cell(current_row, 8, user.duration_to_fully_days / current_buisness_days).set_number_format('0.00%')
           sheet.add_cell(current_row, 9, user.percentage_part).set_number_format('0.00%')
-          sheet.add_cell(current_row, 10, @buisness_days)
+          sheet.add_cell(current_row, 10, current_buisness_days)
 
           vacation_user_cell(user: user, current_row: current_row) if user.no_vacations
         end
