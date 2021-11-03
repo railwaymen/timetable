@@ -9,7 +9,7 @@ module Reports
 
       Billable = Struct.new(:percentage, :full_days, keyword_init: true)
 
-      ATTRIBUTES = %i[id first_name last_name department duration duration_all projects].freeze
+      ATTRIBUTES = %i[id first_name created_at last_name department duration duration_all projects].freeze
 
       attr_reader(*ATTRIBUTES)
       attr_accessor :no_vacations
@@ -19,6 +19,7 @@ module Reports
         id:,
         first_name:,
         last_name:,
+        created_at:,
         work_times_duration:,
         work_times_duration_all:,
         department:,
@@ -28,6 +29,7 @@ module Reports
         @first_name = first_name
         @last_name = last_name
         @duration = work_times_duration
+        @created_at = Time.zone.parse(created_at.to_s)
         @department = department
         @duration_all = work_times_duration_all
 
