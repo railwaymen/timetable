@@ -34,7 +34,6 @@ RSpec.describe Reports::Efficiency::Xlsx::UsersService do
         projects = FactoryBot.create_list(:project, 4)
         users = FactoryBot.create_list(:user, 4, created_at: Time.current - 3.months)
 
-        user = FactoryBot.create(:user, created_at: Time.current - 2.days)
         time_pivot = Time.current.beginning_of_day
 
         stub_const('Reports::Efficiency::UsersVacationsQuery::VACATION_PROJECT_ID', projects.first.id)
