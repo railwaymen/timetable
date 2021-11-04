@@ -95,13 +95,7 @@ module Reports
           sheet.add_cell(current_row, 5, user.sum_billable[true].percentage).set_number_format('0.00%')
           sheet.add_cell(current_row, 6, user.sum_billable[false].percentage).set_number_format('0.00%')
 
-          current_buisness_days = begin
-            if user.created_at > @starts_at
-              calculate_days_should_work(user.created_at, @ends_at)
-            else
-              @buisness_days
-            end
-          end
+          current_buisness_days = calculate_user_buisness_days(user)
 
           sheet.add_cell(current_row, 7, user.duration_to_days).set_number_format('[hh]:mm:ss.000')
           sheet.add_cell(current_row, 8, user.duration_to_fully_days / current_buisness_days).set_number_format('0.00%')
@@ -117,6 +111,12 @@ module Reports
           sheet.add_cell(current_row, 4, project.billable ? 'y' : 'n')
           sheet.add_cell(current_row, 7, project.project_duration_to_days).set_number_format('[hh]:mm:ss.000')
           sheet.add_cell(current_row, 8, project.percentage_part).set_number_format('0.00%')
+        end
+
+        def calculate_user_buisness_days(user)
+          return calculate_days_should_work(user.created_at, @ends_at) if user.created_at > @starts_at
+
+          @buisness_days
         end
       end
     end
