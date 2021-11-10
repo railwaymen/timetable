@@ -3,10 +3,11 @@
 module Reports
   module Efficiency
     module Xlsx
-      class UsersService < EfficiencyService
+      class UsersService < EfficiencyService # rubocop:disable Metrics/ClassLength
         include XlsxHelper
+        include XlsxCellsHelper
 
-        attr_reader :collection, :buisness_days, :buisness_days_work_hours
+        attr_reader :collection, :collection_length, :buisness_days, :buisness_days_work_hours
 
         VACATION_ATTRIBUTES = %w[
           hrs_no_vacation
@@ -31,6 +32,7 @@ module Reports
           @ends_at = ends_at
 
           @workbook = workbook
+          @collection_length = collection.length
 
           @sheet_index = sheet_index
           @name = generate_report_name(starts_at, ends_at, prefix: 'crew')
@@ -39,7 +41,7 @@ module Reports
         def call # rubocop:disable Metrics/MethodLength
           return @workbook if @collection.empty?
 
-          setup_columns_width(sheet, [0, 15], [1, 15], [2, 15], [5, 15], [6, 30], [7, 30], [11, 30], [12, 30], [13, 30], [14, 30], [15, 30])
+          setup_columns_width(sheet, [A, 15], [B, 15], [C, 15], [E, 15], [F, 30], [G, 30], [J, 30], [K, 30], [L, 30], [M, 30], [N, 30])
           build_headers(elements: ATTRIBUTES)
 
           current_row = 1
@@ -62,55 +64,80 @@ module Reports
 
         private
 
-        def users_aggregator(current_row = 0)
-          collection_count = collection.count
-          worked_duration_all = collection.first.duration_all
+        def users_aggregator(current_row = 0) # rubocop:disable Metrics/MethodLength
+          sheet.add_cell(current_row, A, 'user_sum')
+          sheet.add_cell(current_row, B, '', subtotal_formula_cell('H', 9)).set_number_format('[hh]:mm:ss.000')
 
-          buisness_days_work_hours_all = buisness_days_work_hours * collection_count
-
-          sheet.add_cell(current_row, 0, 'user_sum')
-          sheet.add_cell(current_row, 1, duration_to_full_days(worked_duration_all)).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, E, 'AVG:')
+          sheet.add_cell(current_row, F, '', subtotal_formula_cell('F')).set_number_format('0.00%')
+          sheet.add_cell(current_row, G, '', subtotal_formula_cell('G')).set_number_format('0.00%')
+          sheet.add_cell(current_row, H, '', subtotal_formula_cell('H')).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, I, '', subtotal_formula_cell('I')).set_number_format('0.00%')
+          sheet.add_cell(current_row, J, '', subtotal_formula_cell('J')).set_number_format('0.00%')
+          sheet.add_cell(current_row, K, '', subtotal_formula_cell('K'))
+          sheet.add_cell(current_row, L, '', subtotal_formula_cell('L')).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, M, '', subtotal_formula_cell('M')).set_number_format('0.00%')
+          sheet.add_cell(current_row, N, '', subtotal_formula_cell('N')).set_number_format('0.00%')
+          sheet.add_cell(current_row, O, '', subtotal_formula_cell('O')).set_number_format('0.00%')
+          sheet.add_cell(current_row, P, '', subtotal_formula_cell('P')).set_number_format('0.00%')
 
           current_row += 1
-          sheet.add_cell(current_row, 0, 'required_sum')
-          sheet.add_cell(current_row, 1, duration_to_full_days(buisness_days_work_hours_all)).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, A, 'required_sum')
+          sheet.add_cell(current_row, B, '', "(SUBTOTAL(9,K2:K#{@collection_length})*8)/24").set_number_format('[hh]:mm:ss.000')
+
+          sheet.add_cell(current_row, E, 'SUM:')
+          sheet.add_cell(current_row, F, '', subtotal_formula_cell('F', 9)).set_number_format('0.00%')
+          sheet.add_cell(current_row, G, '', subtotal_formula_cell('G', 9)).set_number_format('0.00%')
+          sheet.add_cell(current_row, H, '', subtotal_formula_cell('H', 9)).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, I, '', subtotal_formula_cell('I', 9)).set_number_format('0.00%')
+          sheet.add_cell(current_row, J, '', subtotal_formula_cell('J', 9)).set_number_format('0.00%')
+          sheet.add_cell(current_row, K, '', subtotal_formula_cell('K', 9))
+          sheet.add_cell(current_row, L, '', subtotal_formula_cell('L', 9)).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, M, '', subtotal_formula_cell('M', 9)).set_number_format('0.00%')
+          sheet.add_cell(current_row, N, '', subtotal_formula_cell('N', 9)).set_number_format('0.00%')
+          sheet.add_cell(current_row, O, '', subtotal_formula_cell('O', 9)).set_number_format('0.00%')
+          sheet.add_cell(current_row, P, '', subtotal_formula_cell('P', 9)).set_number_format('0.00%')
+
+          current_row += 1
+          sheet.add_cell(current_row, A, 'total time')
+          sheet.add_cell(current_row, B, '', "B#{current_row - 1} - B#{current_row}").set_number_format('[hh]:mm:ss.000')
         end
 
         def vacation_user_cell(user:, current_row:)
-          sheet.add_cell(current_row, 11, user.no_vacations.duration_to_days).set_number_format('[hh]:mm:ss.000')
-          sheet.add_cell(current_row, 12, user.no_vacations.sum_billable[true].percentage).set_number_format('0.00%')
-          sheet.add_cell(current_row, 13, user.no_vacations.sum_billable[false].percentage).set_number_format('0.00%')
+          sheet.add_cell(current_row, L, user.no_vacations.duration_to_days).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, M, user.no_vacations.sum_billable[true].percentage).set_number_format('0.00%')
+          sheet.add_cell(current_row, N, user.no_vacations.sum_billable[false].percentage).set_number_format('0.00%')
 
-          sheet.add_cell(current_row, 14, user.no_vacations.sum_billable[true].full_days).set_number_format('[hh]:mm:ss.000')
-          sheet.add_cell(current_row, 15, user.no_vacations.sum_billable[false].full_days).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, O, user.no_vacations.sum_billable[true].full_days).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, P, user.no_vacations.sum_billable[false].full_days).set_number_format('[hh]:mm:ss.000')
         end
 
         def user_cell(user:, current_row:) # rubocop:disable Metrics/MethodLength
-          sheet.add_cell(current_row, 0, "#{user.first_name} #{user.last_name}")
-          sheet.add_cell(current_row, 1, user.department)
-          sheet.add_cell(current_row, 2, '')
-          sheet.add_cell(current_row, 3, '')
-          sheet.add_cell(current_row, 4, '')
+          sheet.add_cell(current_row, A, "#{user.first_name} #{user.last_name}")
+          sheet.add_cell(current_row, B, user.department)
+          sheet.add_cell(current_row, C, '')
+          sheet.add_cell(current_row, D, '')
+          sheet.add_cell(current_row, E, '')
 
-          sheet.add_cell(current_row, 5, user.sum_billable[true].percentage).set_number_format('0.00%')
-          sheet.add_cell(current_row, 6, user.sum_billable[false].percentage).set_number_format('0.00%')
+          sheet.add_cell(current_row, F, user.sum_billable[true].percentage).set_number_format('0.00%')
+          sheet.add_cell(current_row, G, user.sum_billable[false].percentage).set_number_format('0.00%')
 
           current_buisness_days = calculate_user_buisness_days(user)
 
-          sheet.add_cell(current_row, 7, user.duration_to_days).set_number_format('[hh]:mm:ss.000')
-          sheet.add_cell(current_row, 8, user.duration_to_fully_days / current_buisness_days).set_number_format('0.00%')
-          sheet.add_cell(current_row, 9, user.percentage_part).set_number_format('0.00%')
-          sheet.add_cell(current_row, 10, current_buisness_days)
+          sheet.add_cell(current_row, H, user.duration_to_days).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, I, user.duration_to_fully_days / current_buisness_days).set_number_format('0.00%')
+          sheet.add_cell(current_row, J, user.percentage_part).set_number_format('0.00%')
+          sheet.add_cell(current_row, K, current_buisness_days)
 
           vacation_user_cell(user: user, current_row: current_row) if user.no_vacations
         end
 
         def project_cell(project:, current_row:)
-          sheet.add_cell(current_row, 2, project.name)
-          sheet.add_cell(current_row, 3, project.tag)
-          sheet.add_cell(current_row, 4, project.billable ? 'y' : 'n')
-          sheet.add_cell(current_row, 7, project.project_duration_to_days).set_number_format('[hh]:mm:ss.000')
-          sheet.add_cell(current_row, 8, project.percentage_part).set_number_format('0.00%')
+          sheet.add_cell(current_row, B, project.name)
+          sheet.add_cell(current_row, C, project.tag)
+          sheet.add_cell(current_row, D, project.billable ? 'y' : 'n')
+          sheet.add_cell(current_row, H, project.project_duration_to_days).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(current_row, I, project.percentage_part).set_number_format('0.00%')
         end
 
         def calculate_user_buisness_days(user)
