@@ -101,6 +101,72 @@ module Reports
           current_row += 1
           sheet.add_cell(current_row, A, 'total time')
           sheet.add_cell(current_row, B, '', "B#{current_row - 1} - B#{current_row}").set_number_format('[hh]:mm:ss.000')
+
+          current_row += 2
+          sheet.add_cell(current_row, E, 'AVG')
+
+          current_row += 1
+          generate_row_avg_group(row: current_row, label: 'DEV', department: 'dev')
+          current_row += 1
+          generate_row_avg_group(row: current_row, label: 'PM', department: 'pm')
+          current_row += 1
+          generate_row_avg_group(row: current_row, label: 'QA', department: 'qa')
+          current_row += 1
+          generate_row_avg_group(row: current_row, label: 'UX', department: 'ux')
+          current_row += 1
+          generate_row_avg_group(row: current_row, label: 'Other', department: 'other')
+
+          current_row += 2
+
+          sheet.add_cell(current_row, E, 'SUM')
+          current_row += 1
+          generate_row_sum_group(row: current_row, label: 'DEV', department: 'dev')
+          current_row += 1
+          generate_row_sum_group(row: current_row, label: 'PM', department: 'pm')
+          current_row += 1
+          generate_row_sum_group(row: current_row, label: 'QA', department: 'qa')
+          current_row += 1
+          generate_row_sum_group(row: current_row, label: 'UX', department: 'ux')
+          current_row += 1
+          generate_row_sum_group(row: current_row, label: 'Other', department: 'other')
+        end
+
+        def generate_row_avg_group(row:, label:, department:) # rubocop:disable Metrics/MethodLength
+          sheet.add_cell(row, E, label)
+          sheet.add_cell(row, F, '', generate_average_if_cell_formula('B', 'F', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, G, '', generate_average_if_cell_formula('B', 'G', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, H, '', generate_average_if_cell_formula('B', 'H', condition_name: department)).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(row, I, '', generate_average_if_cell_formula('B', 'I', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, J, '', generate_average_if_cell_formula('B', 'J', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, K, '', generate_average_if_cell_formula('B', 'K', condition_name: department))
+          sheet.add_cell(row, L, '', generate_average_if_cell_formula('B', 'L', condition_name: department)).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(row, M, '', generate_average_if_cell_formula('B', 'M', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, N, '', generate_average_if_cell_formula('B', 'N', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, O, '', generate_average_if_cell_formula('B', 'O', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, P, '', generate_average_if_cell_formula('B', 'P', condition_name: department)).set_number_format('0.00%')
+        end
+
+        def generate_row_sum_group(row:, label:, department:) # rubocop:disable Metrics/MethodLength
+          sheet.add_cell(row, E, label)
+          sheet.add_cell(row, F, '', generate_sum_if_cell_formula('B', 'F', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, G, '', generate_sum_if_cell_formula('B', 'G', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, H, '', generate_sum_if_cell_formula('B', 'H', condition_name: department)).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(row, I, '', generate_sum_if_cell_formula('B', 'I', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, J, '', generate_sum_if_cell_formula('B', 'J', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, K, '', generate_sum_if_cell_formula('B', 'K', condition_name: department))
+          sheet.add_cell(row, L, '', generate_sum_if_cell_formula('B', 'L', condition_name: department)).set_number_format('[hh]:mm:ss.000')
+          sheet.add_cell(row, M, '', generate_sum_if_cell_formula('B', 'M', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, N, '', generate_sum_if_cell_formula('B', 'N', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, O, '', generate_sum_if_cell_formula('B', 'O', condition_name: department)).set_number_format('0.00%')
+          sheet.add_cell(row, P, '', generate_sum_if_cell_formula('B', 'P', condition_name: department)).set_number_format('0.00%')
+        end
+
+        def generate_average_if_cell_formula(condition_col, calculate_col, condition_name:)
+          "AVERAGEIF($#{condition_col}2:$#{condition_col}#{@collection_length},\"#{condition_name}\",#{calculate_col}2:#{calculate_col}#{@collection_length})"
+        end
+
+        def generate_sum_if_cell_formula(condition_col, calculate_col, condition_name:)
+          "SUMIF($#{condition_col}2:$#{condition_col}#{@collection_length},\"#{condition_name}\",#{calculate_col}2:#{calculate_col}#{@collection_length})"
         end
 
         def vacation_user_cell(user:, current_row:)

@@ -14,7 +14,7 @@ module Reports
 
       def length
         @length ||= begin
-          p_length = records.first.projects&.length || 0
+          p_length = records.first&.projects&.length || 0
           r_length = records.length
 
           p_length * r_length + r_length
