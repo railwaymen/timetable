@@ -39,7 +39,7 @@ System is translated into 2 languages: English and Polish
 
 ## Requirements
 
-* Ruby 2.4.1
+* Ruby 2.7.0
 * PostgreSQL 9.6.10
 * Redis 4.0.9
 
