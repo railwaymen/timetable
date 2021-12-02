@@ -50,8 +50,8 @@ To get it running locally run the following after cloning the repository:
 ```
 bundle install
 cp .env.example .env
-bundle exec rake db:create
-bundle exec rake db:seed
+yarn install
+bundle exec rake db:create db:schema:load db:seed
 bundle exec rails s
 ```
 
