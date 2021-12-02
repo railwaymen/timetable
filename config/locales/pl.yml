@@ -158,6 +158,7 @@ pl:
       show_details: 'Pokaz szczegoly'
       quantity: 'Ilosc'
       note: 'Notka'
+      invoice: 'Faktura'
       edit_device: 'Edytuj urzadzenie'
       log_history: 'Historia'
       delete: 'Usun przedmiot'

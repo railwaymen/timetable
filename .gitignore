@@ -36,3 +36,4 @@ public/javascripts
 .vscode
 
 /config/master.key
+/config/database.yml
