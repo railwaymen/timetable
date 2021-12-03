@@ -43,7 +43,7 @@ module HardwareDevices
         @pdf.text "#{index + 1}. #{I18n.t("apps.hardware.types.#{device.category}")}", style: :bold
         @pdf.text "#{I18n.t('apps.hardware.model').upcase}: <b>#{device.model}</b>", inline_format: true
         @pdf.text "#{I18n.t('apps.hardware.serial_number').upcase}: <b>#{device.serial_number}</b>", inline_format: true
-        @pdf.text "#{I18n.t('apps.hardware.physical_condition').upcase}: <b>#{device.state}</b>", inline_format: true
+        @pdf.text "#{I18n.t('apps.hardware.physical_condition').upcase}: <b>#{I18n.t('apps.hardware_devices.' + device.state)}</b>", inline_format: true
         print_additional_hardware_info(device)
         print_hardware_accessories(device.accessories)
         @pdf.text "#{I18n.t('apps.hardware.agreements.total_value')}: <b>#{device.price}</b>", inline_format: true
