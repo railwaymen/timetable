@@ -136,9 +136,10 @@ RSpec.describe Api::HardwareDevicesController do
       context 'with accessories' do
         it 'correctly create pdf' do
           lender = FactoryBot.create(:lender)
-          hardware_device = FactoryBot.create(:hardware_device, :with_accessories)
-
-          sign_in(FactoryBot.create(:user, :admin))
+          user = FactoryBot.create(:user, :admin)
+          hardware_device = FactoryBot.create(:hardware_device, :with_accessories, user: user)
+          
+          sign_in(user)
 
           get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :rental }
 
@@ -149,9 +150,10 @@ RSpec.describe Api::HardwareDevicesController do
       context 'without accessories' do
         it 'correctly create pdf' do
           lender = FactoryBot.create(:lender)
-          hardware_device = FactoryBot.create(:hardware_device)
+          user = FactoryBot.create(:user, :admin)
+          hardware_device = FactoryBot.create(:hardware_device, user: user)
 
-          sign_in(FactoryBot.create(:user, :admin))
+          sign_in(user)
 
           get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :rental }
 
@@ -164,9 +166,10 @@ RSpec.describe Api::HardwareDevicesController do
       context 'with accessories' do
         it 'correctly create pdf' do
           lender = FactoryBot.create(:lender)
-          hardware_device = FactoryBot.create(:hardware_device, :with_accessories)
-
-          sign_in(FactoryBot.create(:user, :admin))
+          user = FactoryBot.create(:user, :admin)
+          hardware_device = FactoryBot.create(:hardware_device, :with_accessories, user: user)
+          
+          sign_in(user)
 
           get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :return }
 
@@ -177,9 +180,10 @@ RSpec.describe Api::HardwareDevicesController do
       context 'without accessories' do
         it 'correctly create pdf' do
           lender = FactoryBot.create(:lender)
-          hardware_device = FactoryBot.create(:hardware_device)
+          user = FactoryBot.create(:user, :admin)
+          hardware_device = FactoryBot.create(:hardware_device, user: user)
 
-          sign_in(FactoryBot.create(:user, :admin))
+          sign_in(user)
 
           get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :return }
 
