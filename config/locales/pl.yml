@@ -74,7 +74,7 @@ pl:
         id_document: 'Seria i nr dokumentu potwierdzającego tożsamość: ....................'
         borrower: Biorącym
         additional_info: 'Informacje dodatkowe:'
-        total_value: 'o łącznej wartości: ....................<b>zł brutto</b>'
+        total_value: 'o łącznej wartości: <b>%{price} zł brutto</b>'
         lender_or_proxy: Użyczający lub osoba upoważniona do podpisywania umowy - Pełnomocnik
       rental_agreement:
         title: Umowa o indywidualnej odpowiedzialności materialnej za powierzone mienie

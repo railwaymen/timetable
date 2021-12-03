@@ -41,19 +41,19 @@ module HardwareDevices
 
       def print_hardware_info(device, index)
         @pdf.text "#{index + 1}. #{I18n.t("apps.hardware.types.#{device.category}")}", style: :bold
+        @pdf.text "#{I18n.t('apps.hardware.brand')}: #{device.brand}"
         @pdf.text "#{I18n.t('apps.hardware.model').upcase}: <b>#{device.model}</b>", inline_format: true
         @pdf.text "#{I18n.t('apps.hardware.serial_number').upcase}: <b>#{device.serial_number}</b>", inline_format: true
         @pdf.text "#{I18n.t('apps.hardware.physical_condition').upcase}: <b>#{I18n.t('apps.hardware_devices.' + device.state)}</b>", inline_format: true
         print_additional_hardware_info(device)
         print_hardware_accessories(device.accessories)
-        @pdf.text "#{I18n.t('apps.hardware.agreements.total_value')}: <b>#{device.price}</b>", inline_format: true
+        @pdf.text "#{I18n.t('apps.hardware.agreements.total_value', price: number_to_currency(device.price, unit: nil, separator: ',', delimiter: ' '))}", inline_format: true
         @pdf.move_down 15
       end
 
       def print_additional_hardware_info(hardware)
         @pdf.text I18n.t('apps.hardware.agreements.additional_info').upcase
 
-        @pdf.text "#{I18n.t('apps.hardware.brand')}: #{hardware.brand}"
         @pdf.text "#{I18n.t('apps.hardware.year_of_production')}: #{hardware.year_of_production&.strftime('%Y')}"
         @pdf.text "#{I18n.t('apps.hardware.year_bought')}: #{hardware.year_bought&.strftime('%Y')}"
         @pdf.text "#{I18n.t('apps.hardware.cpu')}: #{hardware.cpu}"

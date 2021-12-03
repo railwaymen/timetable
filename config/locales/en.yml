@@ -74,7 +74,7 @@ en:
         id_document: 'Series and number of the document confirming the identity: ....................'
         borrower: Borrower
         additional_info: 'Additional informations:'
-        total_value: 'with a total value of: ....................<b>gross PLN</b>'
+        total_value: 'with a total value of: <b>%{price} gross PLN</b>'
         lender_or_proxy: Lender or authorized person to sign the contract - Proxy
       rental_agreement:
         title: Agreement on individual material liability for entrusted property
