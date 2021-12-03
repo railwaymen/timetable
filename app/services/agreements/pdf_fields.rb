@@ -67,8 +67,8 @@ module Agreements
     end
 
     def print_company(company)
-      @pdf.text company.name, style: :bold
-      @pdf.text company.address
+      @pdf.text company.name + ' Sp. z o.o.', style: :bold
+      @pdf.text 'ul. ' + company.address
       @pdf.text [company.zip_code, company.city].join(' ')
       @pdf.text "#{I18n.t('apps.hardware.agreements.nip')}: #{company.nip}"
       @pdf.text ['KRS:', company.krs].join(' ')
