@@ -100,6 +100,7 @@ module Api
         :state,
         :price,
         :note,
+        :invoice,
         :user,
         accessories_attributes: %i[id name quantity _destroy],
         images: [],

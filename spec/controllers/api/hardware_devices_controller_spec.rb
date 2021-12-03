@@ -64,6 +64,7 @@ RSpec.describe Api::HardwareDevicesController do
           os_version: hardware.os_version,
           state: hardware.state,
           note: hardware.note,
+          invoice: hardware.invoice,
           archived: hardware.archived,
           user: hardware.user,
           images: []

@@ -194,6 +194,7 @@ en:
       show_details: 'Show details'
       quantity: 'Quantity'
       note: 'Note'
+      invoice: 'Invoice'
       edit_device: 'Edit device'
       log_history: 'Log history'
       delete: 'Delete device'

@@ -36,25 +36,20 @@ require 'paper_trail/frameworks/rspec'
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 # ActiveRecord::Migration.maintain_test_schema!
-require 'selenium/webdriver'
 
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
+Capybara.register_driver :selenium_chrome_headless do |app|
+  Capybara::Selenium::Driver.load_selenium
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+    opts.args << '--headless'
+    opts.args << '--disable-gpu'
+    opts.args << '--window-size=1440,900'
+    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
+    opts.args << '--disable-site-isolation-trials'
+  end
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
 
-Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[headless disable-gpu no-sandbox --window-size=1440,900], 'w3c' => false }
-  )
-
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :chrome,
-    desired_capabilities: capabilities
-  )
-end
-
-Capybara.javascript_driver = :headless_chrome
+Capybara.javascript_driver = :selenium_chrome_headless
 
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods

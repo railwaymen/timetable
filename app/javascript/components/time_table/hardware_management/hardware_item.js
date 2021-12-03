@@ -237,6 +237,17 @@ export default function HardwareItem() {
             object={hardwareDevice}
           />
           <h5>
+            {I18n.t('apps.hardware_devices.invoice')}
+          </h5>
+          <Input
+            onChange={onChange}
+            type="text"
+            value={hardwareDevice['invoice']}
+            name="invoice"
+            placeholder={I18n.t('apps.hardware_devices.invoice')}
+            errors={errors['invoice']}
+          />
+          <h5>
             {I18n.t('apps.hardware_devices.accessories')}
             :
           </h5>
@@ -249,7 +260,13 @@ export default function HardwareItem() {
             :
           </h5>
           <div className="input-wrapper">
-            <textarea value={note} placeholder={I18n.t('apps.hardware_devices.note')} name="note" onChange={onChange} />
+            <textarea 
+              value={note}
+              placeholder={I18n.t('apps.hardware_devices.note')}
+              name="note"
+              onChange={onChange}
+              style={{width: '600px', height: '400'}}
+            />
           </div>
         </Container>
         <Container>

@@ -61,13 +61,12 @@ group :development do
 end
 
 group :test do
-  gem 'capybara'
-  gem 'capybara-selenium'
+  gem 'capybara', '~> 3.34'
   gem 'json_spec'
   gem 'pdf-inspector'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
-  gem 'webdrivers'
+  gem 'webdrivers', '~> 4.0'
 end
 
 group :development, :test do
@@ -77,5 +76,4 @@ group :development, :test do
   gem 'puma'
   gem 'rails-controller-testing'
   gem 'rspec-rails'
-  gem 'selenium-webdriver'
 end
