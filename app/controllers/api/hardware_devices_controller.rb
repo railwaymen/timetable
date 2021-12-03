@@ -38,7 +38,7 @@ module Api
 
       send_data(
         generator.generate,
-        filename: "#{device.serial_number}-#{generator.type}-#{Time.current}.pdf"
+        filename: "#{device.user.first_name}_#{device.user.last_name}_rental_#{Date.today}.pdf"
       )
     end
 
