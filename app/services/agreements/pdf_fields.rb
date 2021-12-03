@@ -62,7 +62,9 @@ module Agreements
       @pdf.start_new_page if @pdf.cursor < 120
       @pdf.text '§ 3.', align: :center, style: :bold
       @pdf.move_down 5
-      @pdf.text I18n.t("apps.hardware.#{type}_agreement.paragraph_number_3")
+      I18n.t("apps.hardware.#{type}_agreement.paragraph_number_3", bullet: '•').split('<br>').each do |paragraph|
+        @pdf.text paragraph
+      end
       @pdf.move_down 30
     end
 
