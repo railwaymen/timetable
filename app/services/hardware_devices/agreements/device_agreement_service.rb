@@ -9,19 +9,19 @@ module HardwareDevices
       include ::Agreements::PdfFields
       include ActionView::Helpers::NumberHelper
 
-      attr_reader :devices, :lender_id, :borrower_id, :type
+      attr_reader :devices, :company_id, :borrower_id, :type
 
-      def initialize(*devices, lender_id: nil, borrower_id: nil, type: :rental)
+      def initialize(*devices, company_id: nil, borrower_id: nil, type: :rental)
         @pdf = Prawn::Document.new
 
         @devices = devices
-        @lender_id = lender_id
+        @company_id = company_id
         @borrower_id = borrower_id
         @type = type
       end
 
-      def lender
-        @lender ||= Lender.find(lender_id) if lender_id
+      def company
+        @company ||= Company.find(company_id) if company_id
       end
 
       def borrower
@@ -84,9 +84,8 @@ module HardwareDevices
 
       def parties_to_the_agreeement
         @pdf.text I18n.t('apps.hardware.agreements.agreement_between', date: Time.current.to_date.strftime('%d.%m.%Y')), inline_format: true
-        company = lender.company
         print_company(company)
-        print_lender(lender)
+        print_lenders(company.lenders)
         print_borrower(borrower)
       end
     end

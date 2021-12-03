@@ -74,9 +74,11 @@ module Agreements
       @pdf.text ['KRS:', company.krs].join(' ')
     end
 
-    def print_lender(lender)
+    def print_lenders(lenders)
       @pdf.text I18n.t('apps.hardware.agreements.represented_by')
-      @pdf.text lender.to_s, style: :bold
+      lenders.each do |lender|
+        @pdf.text lender.to_s, style: :bold
+      end
       @pdf.text I18n.t('apps.hardware.agreements.referred_to_as', data: I18n.t('apps.hardware.agreements.lender').upcase), style: :bold
     end
 

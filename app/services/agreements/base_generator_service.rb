@@ -28,7 +28,7 @@ module Agreements
 
     def generate_pdf
       print_header
-      PartiesToTheAgreementGeneratorService.new(@pdf, @params).print_parties_to_the_agreement
+      PartiesToTheAgreementGeneratorService.new(@pdf, @params, @hardwares[0].user_id).print_parties_to_the_agreement
       print_paragraphs
       print_singatures
     end

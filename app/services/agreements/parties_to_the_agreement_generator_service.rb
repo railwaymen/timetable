@@ -5,18 +5,19 @@ module Agreements
     include PdfFields
     include PdfSettings
 
-    def initialize(pdf, params)
+    def initialize(pdf, params, borrower_id)
       @pdf = pdf
       @params = params
+      @borrower_id = borrower_id
     end
 
     def print_parties_to_the_agreement
       @pdf.text I18n.t('apps.hardware.agreements.agreement_between', date: Time.current.to_date.strftime('%d.%m.%Y')), inline_format: true
-      lender = Lender.find(@params[:lender_id])
-      company = lender.company
+      company = Company.find(@params[:company_id])
+      borrower = User.find(@borrower_id)
       print_company(company)
-      print_lender(lender)
-      print_borrower
+      print_lenders(company.lenders)
+      print_borrower(borrower)
     end
   end
 end
