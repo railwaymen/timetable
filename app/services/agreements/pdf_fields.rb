@@ -80,9 +80,9 @@ module Agreements
       @pdf.text I18n.t('apps.hardware.agreements.referred_to_as', data: I18n.t('apps.hardware.agreements.lender').upcase), style: :bold
     end
 
-    def print_borrower
+    def print_borrower(borrower)
       @pdf.text I18n.t('apps.hardware.agreements.and')
-      @pdf.text I18n.t('apps.hardware.agreements.name_and_surname'), style: :bold
+      @pdf.text "#{I18n.t('apps.hardware.agreements.name_and_surname')} #{borrower.first_name} #{borrower.last_name}", style: :bold
       @pdf.text I18n.t('apps.hardware.agreements.address'), style: :bold
       @pdf.text 'PESEL: ..........................', style: :bold
       @pdf.text I18n.t('apps.hardware.agreements.id_document'), style: :bold

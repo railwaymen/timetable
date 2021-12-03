@@ -69,12 +69,12 @@ en:
         lender: Lender
         referred_to_as: 'hereinafter referred to as „%{data}”'
         and: and
-        name_and_surname: 'Name i Surname: ....................'
+        name_and_surname: 'Name i Surname:'
         address: 'Address: ....................'
         id_document: 'Series and number of the document confirming the identity: ....................'
         borrower: Borrower
         additional_info: 'Additional informations:'
-        total_value: 'with a total value of: <b>%{price} gross PLN</b>'
+        total_value: 'with a total value of: <b>%{price} net PLN</b>'
         lender_or_proxy: Lender or authorized person to sign the contract - Proxy
       rental_agreement:
         title: Agreement on individual material liability for entrusted property

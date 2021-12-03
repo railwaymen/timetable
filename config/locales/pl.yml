@@ -69,12 +69,12 @@ pl:
         lender: Użyczającym
         referred_to_as: 'zwanym dalej „%{data}”'
         and: a
-        name_and_surname: 'Imię i Nazwisko: ....................'
+        name_and_surname: 'Imię i Nazwisko:'
         address: 'Adres: ....................'
         id_document: 'Seria i nr dokumentu potwierdzającego tożsamość: ....................'
         borrower: Biorącym
         additional_info: 'Informacje dodatkowe:'
-        total_value: 'o łącznej wartości: <b>%{price} zł brutto</b>'
+        total_value: 'o łącznej wartości: <b>%{price} zł netto</b>'
         lender_or_proxy: Użyczający lub osoba upoważniona do podpisywania umowy - Pełnomocnik
       rental_agreement:
         title: Umowa o indywidualnej odpowiedzialności materialnej za powierzone mienie

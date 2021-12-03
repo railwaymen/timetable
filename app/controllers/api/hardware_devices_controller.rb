@@ -33,6 +33,7 @@ module Api
       generator = HardwareDevices::Agreements::DeviceAgreementService.new(
         device,
         lender_id: agreement_params[:lender_id],
+        borrower_id: device.user.id,
         type: agreement_type
       )
 
