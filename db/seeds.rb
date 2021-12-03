@@ -47,3 +47,7 @@ types = ['A', 'B', 'C']
     )
   end
 end
+
+company = Company.where(name: "Example", address: "Street", zip_code: "30-000", city: "Cracow", nip: "12345678", krs: "0000111111").first_or_create!
+lender = Lender.where(first_name: 'Jan', last_name: 'Kowalski').first_or_create!
+company.lenders << lender
