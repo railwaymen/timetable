@@ -138,7 +138,7 @@ RSpec.describe Api::HardwareDevicesController do
           lender = FactoryBot.create(:lender)
           user = FactoryBot.create(:user, :admin)
           hardware_device = FactoryBot.create(:hardware_device, :with_accessories, user: user)
-          
+
           sign_in(user)
 
           get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :rental }
@@ -168,7 +168,7 @@ RSpec.describe Api::HardwareDevicesController do
           lender = FactoryBot.create(:lender)
           user = FactoryBot.create(:user, :admin)
           hardware_device = FactoryBot.create(:hardware_device, :with_accessories, user: user)
-          
+
           sign_in(user)
 
           get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :return }

@@ -14,7 +14,7 @@ const FIELDS = [
   'cpu',
   'ram',
   'storage',
-  'invoice'
+  'invoice',
 ];
 
 export default function buildFormData({ device, accessories }) {

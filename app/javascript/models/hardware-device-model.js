@@ -35,7 +35,7 @@ export default class HardwareDeviceModel {
     device_type = '',
     price = 0,
     archived = false,
-    invoice = ''
+    invoice = '',
   }) {
     this.id = id;
     this.brand = brand;
