@@ -145,6 +145,7 @@ pl:
       category: 'Kategoria'
       year_of_production: 'Rok produkcji'
       year_bought: 'Rok zakupu'
+      month_bought: 'Miesiąc zakupu'
       used_since: 'Uzywany od'
       edit: 'Edytuj'
       delete_item: 'Usuń'

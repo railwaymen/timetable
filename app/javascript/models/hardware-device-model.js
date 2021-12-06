@@ -29,6 +29,7 @@ export default class HardwareDeviceModel {
     user_id = null,
     year_of_production = '',
     year_bought = '',
+    month_bought = '',
     used_since = '',
     category,
     note = '',
@@ -47,6 +48,7 @@ export default class HardwareDeviceModel {
     this.images = images.map((image) => new AttachmentModel(image));
     this.year_of_production = year_of_production;
     this.year_bought = year_bought;
+    this.month_bought = month_bought;
     this.category = category || 'other';
     this.used_since = resolveUsedSince(used_since, user_id);
     this.note = note;
