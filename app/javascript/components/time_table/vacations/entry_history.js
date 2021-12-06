@@ -16,11 +16,11 @@ function EntryHistory(props) {
   const [expandedVacations, setExpandedVacations] = useState({});
 
   function getYears() {
-    const currentYear = parseInt(moment().year(), 10);
-    const tempYears = [currentYear];
+    const nextYear = parseInt(moment().year(), 10) + 1;
+    const tempYears = [nextYear];
     const iterator = moment().format('YYYY') - moment('2019', 'YYYY').year();
     for (let i = 0; i < iterator; i += 1) {
-      tempYears.push(currentYear - (i + 1));
+      tempYears.push(nextYear - (i + 1));
     }
     setYears(tempYears.sort());
   }
