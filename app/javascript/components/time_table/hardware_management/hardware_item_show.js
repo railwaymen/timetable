@@ -247,7 +247,7 @@ function Rental({ id, onSubmit }) {
   const onSubmitForm = () => {
     const searchParams = new URLSearchParams({
       type: typeOfDocument,
-      company_id: selectedCompany?.id
+      company_id: selectedCompany?.id,
     });
 
     window.open(`/api/hardware_devices/${id}/rental_agreement?${searchParams.toString()}`, '_blank').focus();
