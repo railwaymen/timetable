@@ -47,7 +47,7 @@ class HardwareDevice < ApplicationRecord
         :os_version,
         :state
       ],
-      values: phrase.split(' ')
+      values: [phrase]
     ).custom(
       sql_function: 'to_char',
       sql_function_args: [
