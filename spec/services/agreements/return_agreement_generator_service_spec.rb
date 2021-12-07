@@ -10,7 +10,7 @@ RSpec.describe Agreements::ReturnAgreementGeneratorService do
       hardware_field = create(:hardware_field, hardware: hardware, name: 'Example Field', value: 'Example Value')
       company = create(:company)
       lender = create(:lender, company: company)
-      generator = described_class.new(Hardware.all, { lender_id: lender.id })
+      generator = described_class.new(Hardware.all, { company_id: company.id })
       pdf = generator.generate
       parsed_pdf = PDF::Inspector::Text.analyze(pdf).strings.join(' ')
       expect(parsed_pdf).to include(lender.to_s)

@@ -22,7 +22,6 @@ const HardwareList = () => {
   const [statusFilter, setStatusFilter] = useState(undefined);
   const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(undefined);
-  const [selectedLender, setSelectedLender] = useState(undefined);
   const selectedHardwaresIds = selectedHardwares.map((h) => h.id);
   const selectedStatuses = [...new Set(selectedHardwares.map((h) => h.status))];
 
@@ -56,12 +55,7 @@ const HardwareList = () => {
 
   useEffect(() => {
     if (companies.length) {
-      if (selectedLender) {
-        setSelectedCompany(companies.find((c) => c.id === selectedLender.company_id));
-      } else {
-        setSelectedCompany(companies[0]);
-        setSelectedLender(companies[0].lenders[0]);
-      }
+      setSelectedCompany(companies[0]);
     }
   }, [companies]);
 
@@ -140,7 +134,7 @@ const HardwareList = () => {
   function sendMailToAccountancy(hardwareIds) {
     let url = `/api/hardwares/${modalContext}_agreement`;
     url += `?ids=${hardwareIds}`;
-    url += `&lender_id=${selectedLender.id}`;
+    url += `&company_id=${selectedCompany.id}`;
     Api.makeGetRequest({ url });
   }
 
@@ -326,19 +320,6 @@ const HardwareList = () => {
               name="company"
             >
               {companies.map((c) => <option value={c.id}>{c.name}</option>)}
-            </select>
-          </div>
-          <div className="field">
-            <label>{I18n.t('apps.hardware.lender')}</label>
-            <select
-              onChange={(e) => setSelectedLender(selectedCompany.lenders.find((l) => l.id === parseInt(e.target.value, 10)))}
-              value={selectedLender ? selectedLender.id : ''}
-              className="dropdown ui"
-              id="company"
-              type="text"
-              name="company"
-            >
-              {selectedCompany && selectedCompany.lenders.map((l) => <option value={l.id}>{l.full_name}</option>)}
             </select>
           </div>
         </div>

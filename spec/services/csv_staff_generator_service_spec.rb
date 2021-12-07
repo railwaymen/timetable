@@ -6,7 +6,7 @@ RSpec.describe CsvStaffGeneratorService do
   def response(vacations)
     result = "Contract ID,Developer,Date From,Date To,Requested at,Status,Duration (days),Description,Vacation Type,Vacation Code,Approved by\n"
     vacations.each do |v|
-      approvers = v.vacation_interactions.where(action: %w[accepted approved]).order(id: :desc).map { |vi| vi.user.to_s }.join(', ')
+      approvers = v.vacation_interactions.where(action: %w[accepted approved]).map { |vi| vi.user.to_s }.join(', ')
       result += "#{v.user.contract_name},#{v.user.last_name} #{v.user.first_name},#{v.start_date.strftime('%Y-%m-%d')},"\
                 "#{v.end_date.strftime('%Y-%m-%d')},#{v.created_at.to_date},#{I18n.t("apps.staff.#{v.status}")},"\
                 "#{v.start_date.business_days_until(v.end_date + 1.day)},#{v.description},#{I18n.t("common.#{v.vacation_type}")},"\
@@ -21,9 +21,8 @@ RSpec.describe CsvStaffGeneratorService do
       staff_manager = create(:user, :staff_manager)
       admin = create(:user, :admin)
       first_vacation = create(:vacation, user: user, description: 'Other', vacation_type: :others, start_date: Time.current.to_date, end_date: Time.current.to_date + 4.days)
-      second_vacation =
-        create(:vacation, user: user, description: 'Other', vacation_type: :others, vacation_sub_type: :parental,
-                          status: :accepted, start_date: Time.current.to_date + 7.days, end_date: Time.current.to_date + 12.days)
+      second_vacation = create(:vacation, user: user, description: 'Other', vacation_type: :others, vacation_sub_type: :parental,
+                                          status: :accepted, start_date: Time.current.to_date + 7.days, end_date: Time.current.to_date + 12.days)
       create(:vacation_interaction, vacation: second_vacation, action: :accepted, user: staff_manager)
       create(:vacation_interaction, vacation: second_vacation, action: :approved, user: admin)
       expect(described_class.new({}).generate).to eql(response([first_vacation, second_vacation]))

@@ -62,7 +62,9 @@ module Agreements
       @pdf.start_new_page if @pdf.cursor < 120
       @pdf.text '§ 3.', align: :center, style: :bold
       @pdf.move_down 5
-      @pdf.text I18n.t("apps.hardware.#{type}_agreement.paragraph_number_3")
+      I18n.t("apps.hardware.#{type}_agreement.paragraph_number_3", bullet: '•').split('<br>').each do |paragraph|
+        @pdf.text paragraph
+      end
       @pdf.move_down 30
     end
 
@@ -74,15 +76,17 @@ module Agreements
       @pdf.text ['KRS:', company.krs].join(' ')
     end
 
-    def print_lender(lender)
+    def print_lenders(lenders)
       @pdf.text I18n.t('apps.hardware.agreements.represented_by')
-      @pdf.text lender.to_s, style: :bold
+      lenders.each do |lender|
+        @pdf.text lender.to_s, style: :bold
+      end
       @pdf.text I18n.t('apps.hardware.agreements.referred_to_as', data: I18n.t('apps.hardware.agreements.lender').upcase), style: :bold
     end
 
-    def print_borrower
+    def print_borrower(borrower)
       @pdf.text I18n.t('apps.hardware.agreements.and')
-      @pdf.text I18n.t('apps.hardware.agreements.name_and_surname'), style: :bold
+      @pdf.text "#{I18n.t('apps.hardware.agreements.name_and_surname')} #{borrower.first_name} #{borrower.last_name}", style: :bold
       @pdf.text I18n.t('apps.hardware.agreements.address'), style: :bold
       @pdf.text 'PESEL: ..........................', style: :bold
       @pdf.text I18n.t('apps.hardware.agreements.id_document'), style: :bold

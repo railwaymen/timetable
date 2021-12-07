@@ -50,7 +50,7 @@ export default function HardwareList() {
       <div className="header">
         <form onSubmit={onSearch}>
           <div>
-            <label htmlFor="unassignedDevicesOnly">Show unassigned only</label>
+            <label htmlFor="unassignedDevicesOnly">{I18n.t('apps.hardware_devices.show_unassigned_only')}</label>
             <input
               id="unassignedDevicesOnly"
               type="checkbox"

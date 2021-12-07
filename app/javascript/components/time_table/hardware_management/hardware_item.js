@@ -284,7 +284,7 @@ export default function HardwareItem() {
             value={state}
             onChange={onChange}
             errors={errors.status}
-            placeholder={I18n.t('apps.hardware_devices.status')}
+            placeholder={I18n.t('apps.hardware_devices.state')}
             translatable
           />
           <h5>

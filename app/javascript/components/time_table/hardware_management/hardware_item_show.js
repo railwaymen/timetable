@@ -213,7 +213,7 @@ export default function HardwareItem() {
           />
           <ContentValue
             classNameElement="space-md"
-            placeholder={I18n.t('apps.hardware_devices.status')}
+            placeholder={I18n.t('apps.hardware_devices.state')}
             value={I18n.t(`apps.hardware_devices.${state}`)}
           />
           <h5>
@@ -234,7 +234,6 @@ function Rental({ id, onSubmit }) {
   const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
 
-  const [selectedLender, setSelectedLender] = useState(null);
   const [typeOfDocument, setTypeOfDocument] = useState('rental');
 
   const onCompanyChange = ({ target: { value } }) => {
@@ -243,14 +242,12 @@ function Rental({ id, onSubmit }) {
     setSelectedCompany(foundCompany);
   };
 
-  const onStaffChange = ({ target: { value } }) => setSelectedLender(value);
-
   const onTypeOfDocumentChange = ({ target: { value } }) => setTypeOfDocument(value);
 
   const onSubmitForm = () => {
     const searchParams = new URLSearchParams({
       type: typeOfDocument,
-      lender_id: selectedLender?.id,
+      company_id: selectedCompany?.id,
     });
 
     window.open(`/api/hardware_devices/${id}/rental_agreement?${searchParams.toString()}`, '_blank').focus();
@@ -262,7 +259,6 @@ function Rental({ id, onSubmit }) {
       .then((response) => {
         setCompanies(response.data);
         setSelectedCompany(response.data[0]);
-        setSelectedLender(response.data[0].lenders[0]);
       });
   }, []);
 
@@ -278,18 +274,6 @@ function Rental({ id, onSubmit }) {
           translatable
           options={companies}
         />
-        {selectedCompany && (
-          <Select
-            onChange={onStaffChange}
-            placeholder={I18n.t('apps.hardware.lender')}
-            name="staffUser"
-            optionName="full_name"
-            value={selectedLender}
-            innerClassName="end"
-            translatable
-            options={selectedCompany.lenders}
-          />
-        )}
         <Select
           onChange={onTypeOfDocumentChange}
           placeholder={I18n.t('common.type')}

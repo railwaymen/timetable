@@ -10,8 +10,8 @@ RSpec.describe HardwareMailer, type: :mailer do
       create(:hardware_field, hardware: hardware, name: 'Example Field', value: 'Example Value')
       create(:hardware_accessory, hardware: hardware, name: 'Example Accessory')
       company = create(:company)
-      lender = create(:lender, company: company)
-      generator = Agreements::RentalAgreementGeneratorService.new(Hardware.all, { lender_id: lender.id })
+      create(:lender, company: company)
+      generator = Agreements::RentalAgreementGeneratorService.new(Hardware.all, { company_id: company.id })
       pdf = generator.generate
       mailer = described_class.new
       title = "#{I18n.t('apps.hardware.mailer.title', action: 'Rental')} #{user}"

@@ -110,7 +110,7 @@ class CsvStaffGeneratorService
         v.vacation_type,
         v.vacation_sub_type,
         v.status,
-        ARRAY_TO_STRING(ARRAY_AGG(us_apr.last_name || ' ' || us_apr.first_name), ', ', '') AS approvers
+        ARRAY_TO_STRING(ARRAY_AGG(us_apr.last_name || ' ' || us_apr.first_name ORDER BY us_apr.id ASC), ', ', '') AS approvers
       FROM vacations AS v
       JOIN users AS u ON u.id = v.user_id
       LEFT JOIN vacation_interactions AS vi ON vi.vacation_id = v.id AND vi.action IN ('approved', 'accepted') AND v.status = 'accepted'

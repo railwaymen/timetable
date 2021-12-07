@@ -135,13 +135,15 @@ RSpec.describe Api::HardwareDevicesController do
     context 'agreement_type is equal to rental' do
       context 'with accessories' do
         it 'correctly create pdf' do
+          company = FactoryBot.create(:company)
           lender = FactoryBot.create(:lender)
+          company.lenders << lender
           user = FactoryBot.create(:user, :admin)
           hardware_device = FactoryBot.create(:hardware_device, :with_accessories, user: user)
 
           sign_in(user)
 
-          get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :rental }
+          get :rental_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :rental }
 
           expect(response.code).to eq('200')
         end
@@ -149,13 +151,15 @@ RSpec.describe Api::HardwareDevicesController do
 
       context 'without accessories' do
         it 'correctly create pdf' do
+          company = FactoryBot.create(:company)
           lender = FactoryBot.create(:lender)
+          company.lenders << lender
           user = FactoryBot.create(:user, :admin)
           hardware_device = FactoryBot.create(:hardware_device, user: user)
 
           sign_in(user)
 
-          get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :rental }
+          get :rental_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :rental }
 
           expect(response.code).to eq('200')
         end
@@ -165,13 +169,15 @@ RSpec.describe Api::HardwareDevicesController do
     context 'agreement_type is equal to return' do
       context 'with accessories' do
         it 'correctly create pdf' do
+          company = FactoryBot.create(:company)
           lender = FactoryBot.create(:lender)
+          company.lenders << lender
           user = FactoryBot.create(:user, :admin)
           hardware_device = FactoryBot.create(:hardware_device, :with_accessories, user: user)
 
           sign_in(user)
 
-          get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :return }
+          get :rental_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :return }
 
           expect(response.code).to eq('200')
         end
@@ -179,13 +185,15 @@ RSpec.describe Api::HardwareDevicesController do
 
       context 'without accessories' do
         it 'correctly create pdf' do
+          company = FactoryBot.create(:company)
           lender = FactoryBot.create(:lender)
+          company.lenders << lender
           user = FactoryBot.create(:user, :admin)
           hardware_device = FactoryBot.create(:hardware_device, user: user)
 
           sign_in(user)
 
-          get :rental_agreement, params: { id: hardware_device.id, lender_id: lender.id, type: :return }
+          get :rental_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :return }
 
           expect(response.code).to eq('200')
         end

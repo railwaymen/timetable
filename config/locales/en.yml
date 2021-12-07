@@ -69,12 +69,12 @@ en:
         lender: Lender
         referred_to_as: 'hereinafter referred to as „%{data}”'
         and: and
-        name_and_surname: 'Name i Surname: ....................'
+        name_and_surname: 'Name i Surname:'
         address: 'Address: ....................'
         id_document: 'Series and number of the document confirming the identity: ....................'
         borrower: Borrower
         additional_info: 'Additional informations:'
-        total_value: 'with a total value of: ....................<b>gross PLN</b>'
+        total_value: 'with a total value of: <b>%{price} net PLN</b>'
         lender_or_proxy: Lender or authorized person to sign the contract - Proxy
       rental_agreement:
         title: Agreement on individual material liability for entrusted property
@@ -186,7 +186,6 @@ en:
       delete_item: 'Delete item'
       add_access: 'Added access'
       assigned_user: Assigned user
-      status: 'Status'
       item_info: 'Basic Item Info'
       dates: 'Dates'
       accessories: 'Accessories'
@@ -204,6 +203,7 @@ en:
       add: 'Add device'
       assigned_person: 'Assigned person'
       state: 'State'
+      show_unassigned_only: 'Show unassigned only'
     milestones:
       progress: Progress
       add: New Milestone
