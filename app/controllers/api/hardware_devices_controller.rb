@@ -15,6 +15,7 @@ module Api
     def archived
       scope = HardwareDevice.archived.includes(user: :projects)
       scope = scope.search(params[:q]).order(search_strength: :desc) if params[:q].present?
+      scope = scope.where(user_id: nil) if params[:unassigned_only].present?
 
       @devices = scope.page(params[:page]).order(created_at: :desc)
     end
