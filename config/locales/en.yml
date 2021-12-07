@@ -181,6 +181,7 @@ en:
       category: 'Category'
       year_of_production: 'Year of production'
       year_bought: 'Year bought'
+      month_bought: 'Month bought'
       used_since: 'Used since'
       edit: 'Edit'
       delete_item: 'Delete item'

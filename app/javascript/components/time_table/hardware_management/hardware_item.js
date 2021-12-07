@@ -30,6 +30,9 @@ export default function HardwareItem() {
       makeGetRequest({
         url: `/api/hardware_devices/${id}`,
       }).then(({ data }) => {
+        data.year_of_production = new Date(data.year_of_production).getFullYear().toString();
+        data.month_bought = (new Date(data.year_bought).getMonth() + 1).toString();
+        data.year_bought = new Date(data.year_bought).getFullYear().toString();
         setHardwareDevice(new HardwareDeviceModel(data));
         setIsLoading(false);
       });
@@ -67,6 +70,9 @@ export default function HardwareItem() {
   };
 
   const onSubmit = async () => {
+    hardwareDevice.year_of_production = new Date(hardwareDevice.year_of_production);
+    hardwareDevice.year_bought = new Date(hardwareDevice.year_bought, hardwareDevice.month_bought - 1);
+    delete hardwareDevice.month_bought;
     const form = buildFormData({ device: hardwareDevice, accessories: hardwareDeviceAccessories });
 
     const validator = new Validator(hardwareDevice);
@@ -151,6 +157,19 @@ export default function HardwareItem() {
     ];
   };
 
+  const generateYears = () => {
+    const startYear = 2000;
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let i = currentYear; i >= startYear; i -= 1) {
+      years.push(i);
+    }
+
+    return years;
+  };
+
+  const generateMonths = () => Array(12).fill(0).map((_, i) => i + 1);
+
   const {
     id: hardwareDeviceId,
     state,
@@ -158,6 +177,9 @@ export default function HardwareItem() {
     user_id,
     category,
     note,
+    year_of_production,
+    year_bought,
+    month_bought,
   } = hardwareDevice;
 
   return (
@@ -225,10 +247,34 @@ export default function HardwareItem() {
             {I18n.t('apps.hardware_devices.dates')}
             :
           </h5>
+          <Select
+            onChange={onChange}
+            placeholder={I18n.t('apps.hardware_devices.year_of_production')}
+            name="year_of_production"
+            value={year_of_production}
+            options={generateYears()}
+            errors={errors.year_of_production}
+          />
+          <div>
+            <Select
+              onChange={onChange}
+              placeholder={I18n.t('apps.hardware_devices.year_bought')}
+              name="year_bought"
+              value={year_bought}
+              options={generateYears()}
+              errors={errors.year_bought}
+            />
+            <Select
+              onChange={onChange}
+              placeholder={I18n.t('apps.hardware_devices.month_bought')}
+              name="month_bought"
+              value={month_bought}
+              options={generateMonths()}
+              errors={errors.month_bought}
+            />
+          </div>
           <InputsList
             items={[
-              'year_of_production',
-              'year_bought',
               'used_since',
             ]}
             type="date"

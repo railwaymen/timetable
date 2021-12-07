@@ -27,7 +27,7 @@ export default function TableRow({ item, onRemove }) {
       <td>
         <Tag>{item.state}</Tag>
       </td>
-      <td>{item.year_of_production}</td>
+      <td>{new Date(item.year_of_production).getFullYear()}</td>
       <td>
         <div className="item-actions">
           <button className="transparent-button" type="button" onClick={toggleActions}>
