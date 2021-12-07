@@ -213,7 +213,7 @@ export default function HardwareItem() {
           />
           <ContentValue
             classNameElement="space-md"
-            placeholder={I18n.t('apps.hardware_devices.status')}
+            placeholder={I18n.t('apps.hardware_devices.state')}
             value={I18n.t(`apps.hardware_devices.${state}`)}
           />
           <h5>

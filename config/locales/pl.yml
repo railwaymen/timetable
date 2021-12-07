@@ -150,7 +150,6 @@ pl:
       delete_item: 'Usuń'
       add_access: 'Dodany dostęp'
       assigned_user: Przypisany uzytkownik
-      status: 'Status'
       item_info: 'Bazowe informacje'
       dates: 'Daty'
       accessories: 'Akcesoria'
@@ -168,6 +167,7 @@ pl:
       add: 'Dodaj urzadzenie'
       assigned_person: 'Przypisana osoba'
       state: 'Stan'
+      show_unassigned_only: 'Pokaż tylko nieprzypisane'
     header:
       login: Logowanie
       username: Użytkownik
@@ -401,6 +401,7 @@ pl:
         update_assignment: '{{user}} zaktualizował zasób {{resource}} do projektu {{project}} od {{start}} do {{end}}'
         delete_assignment: '{{user}} usunął zasób {{resource}} przypisany do projektu {{project}} od {{start}} do {{end}}'
   common:
+    action: 'Akcja'
     search: Szukaj
     tag: Tag
     back: Wróć

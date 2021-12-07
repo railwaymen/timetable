@@ -186,7 +186,6 @@ en:
       delete_item: 'Delete item'
       add_access: 'Added access'
       assigned_user: Assigned user
-      status: 'Status'
       item_info: 'Basic Item Info'
       dates: 'Dates'
       accessories: 'Accessories'
@@ -204,6 +203,7 @@ en:
       add: 'Add device'
       assigned_person: 'Assigned person'
       state: 'State'
+      show_unassigned_only: 'Show unassigned only'
     milestones:
       progress: Progress
       add: New Milestone
