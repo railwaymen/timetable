@@ -31,7 +31,7 @@ export default function HardwareItem() {
     makeGetRequest({
       url: `/api/hardware_devices/${id}`,
     }).then(({ data }) => {
-      data.year_of_production = new Date(data.year_of_production).getFullYear().toString(),
+      data.year_of_production = new Date(data.year_of_production).getFullYear().toString();
       data.month_bought = new Date(data.year_bought).getMonth() + 1;
       data.year_bought = new Date(data.year_bought).getFullYear().toString();
       setHardwareDevice(new HardwareDeviceModel(data));

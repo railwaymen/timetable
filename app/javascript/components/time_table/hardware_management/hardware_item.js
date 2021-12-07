@@ -30,7 +30,7 @@ export default function HardwareItem() {
       makeGetRequest({
         url: `/api/hardware_devices/${id}`,
       }).then(({ data }) => {
-        data.year_of_production = new Date(data.year_of_production).getFullYear().toString(),
+        data.year_of_production = new Date(data.year_of_production).getFullYear().toString();
         data.month_bought = new Date(data.year_bought).getMonth() + 1;
         data.year_bought = new Date(data.year_bought).getFullYear().toString();
         setHardwareDevice(new HardwareDeviceModel(data));
@@ -160,17 +160,15 @@ export default function HardwareItem() {
   const generateYears = () => {
     const startYear = 2000;
     const currentYear = new Date().getFullYear();
-    const years = []
-    for (let i = currentYear; i >= startYear; i--) {
+    const years = [];
+    for (let i = currentYear; i >= startYear; i -= 1) {
       years.push(i);
     }
 
     return years;
-  }
+  };
 
-  const generateMonths = () => {
-    return Array(12).fill(0).map((_, i) => i + 1);
-  }
+  const generateMonths = () => Array(12).fill(0).map((_, i) => i + 1);
 
   const {
     id: hardwareDeviceId,
@@ -181,7 +179,7 @@ export default function HardwareItem() {
     note,
     year_of_production,
     year_bought,
-    month_bought
+    month_bought,
   } = hardwareDevice;
 
   return (
