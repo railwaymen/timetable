@@ -23,7 +23,9 @@ module Agreements
       @pdf.move_down 5
       point = I18n.t('apps.hardware.return_agreement.point')
       points = (1..@hardwares.count).to_a.map { |el| "#{point} #{el}" }.join(', ')
-      @pdf.text I18n.t('apps.hardware.return_agreement.paragraph_number_2', points: points)
+      I18n.t('apps.hardware.return_agreement.paragraph_number_2', points: points, bullet: '•').split('<br>').each do |paragraph|
+        @pdf.text paragraph
+      end
       @pdf.move_down 15
     end
 
