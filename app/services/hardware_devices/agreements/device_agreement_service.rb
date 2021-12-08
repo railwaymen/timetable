@@ -53,7 +53,9 @@ module HardwareDevices
         @pdf.text "#{I18n.t('apps.hardware.physical_condition').upcase}: <b>#{I18n.t('apps.hardware_devices.' + device.state)}</b>", inline_format: true
         print_additional_hardware_info(device)
         print_hardware_accessories(device.accessories)
-        @pdf.text I18n.t('apps.hardware.agreements.total_value', price: number_to_currency(device.price, unit: '', separator: ',', delimiter: ' ')), inline_format: true
+        if @type == :rental
+          @pdf.text I18n.t('apps.hardware.agreements.total_value', price: number_to_currency(device.price, unit: '', separator: ',', delimiter: ' ')), inline_format: true
+        end
         @pdf.move_down 15
       end
 

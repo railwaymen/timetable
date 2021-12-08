@@ -70,7 +70,7 @@ pl:
         referred_to_as: 'zwanym dalej „%{data}”'
         and: a
         name_and_surname: 'Imię i Nazwisko:'
-        address: 'Adres: ....................'
+        address: 'Adres zamieszkania/zameldownia: ....................'
         id_document: 'Seria i nr dokumentu potwierdzającego tożsamość: ....................'
         borrower: Biorącym
         additional_info: 'Informacje dodatkowe:'
@@ -101,10 +101,16 @@ pl:
         paragraph_number_7: Sprawy sporne wynikłe ze stosowania umowy rozstrzygać będzie sąd właściwy dla siedziby Użyczającego.
         paragraph_number_8: Umowę sporządzono w dwóch jednobrzmiących egzemplarzach, po jednym dla każdej ze stron.
       return_agreement:
-        title: Umowa zdania sprzętu
+        title: Protokół zdania sprzętu
         point: pkt.
         paragraph_number_1: 'Zamawiający odbiera:'
-        paragraph_number_2: Zamawiający oświadcza, iż mienie wymienione w § 1 %{points} w chwili odbioru nie posiada wad.
+        paragraph_number_2: >- 
+          Zamawiający oświadcza, iż mienie wymienione w § 1 %{points} w chwili odbioru:
+          <br>%{bullet} nie posiada wad
+          <br>%{bullet} posiada wady
+          <br>.....................................................................................................................
+          <br>.....................................................................................................................
+          <br>.....................................................................................................................
         paragraph_number_3: Protokół sporządzono w dwóch jednobrzmiących egzemplarzach.
       mailer:
         body: '%{user_name} chce %{action} sprzęt/sprzęty.'
