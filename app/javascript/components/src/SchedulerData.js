@@ -891,7 +891,7 @@ export default class SchedulerData {
 
                 resourceEvents.headerItems.forEach((header, index) => {
                     let headerStart = this.localeMoment(header.start), headerEnd = this.localeMoment(header.end);
-                    if(headerEnd > eventStart && headerStart < eventEnd) {
+                    if(headerEnd > eventStart && headerStart <= eventEnd) {
                         header.count = header.count + 1;
                         if(header.count > resourceEvents.rowMaxCount) {
                             resourceEvents.rowMaxCount = header.count;
