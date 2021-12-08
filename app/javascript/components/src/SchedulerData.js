@@ -796,7 +796,7 @@ export default class SchedulerData {
             spanEnd = this.cellUnit === CellUnits.Hour ? this.localeMoment(header.time).add(this.config.minuteStep, 'minutes') 
                 : this.localeMoment(header.time).add(1, 'days');
             
-                if(spanStart < end && spanEnd > start) {
+                if(spanStart <= end && spanEnd > start) {
                     span++;
                 }
         }
