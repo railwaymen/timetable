@@ -70,17 +70,25 @@ export default function HardwareItem() {
   };
 
   const onSubmit = async () => {
-    hardwareDevice.year_of_production = new Date(hardwareDevice.year_of_production);
-    hardwareDevice.year_bought = new Date(hardwareDevice.year_bought, hardwareDevice.month_bought - 1);
+    hardwareDevice.year_of_production = new Date(hardwareDevice.year_of_production, 0, 1);
+    hardwareDevice.year_bought = new Date(hardwareDevice.year_bought, hardwareDevice.month_bought - 1, 1);
+    hardwareDevice.used_since = new Date(hardwareDevice.used_since);
 
     const form = buildFormData({ device: hardwareDevice, accessories: hardwareDeviceAccessories });
 
     const validator = new Validator(hardwareDevice);
 
     validator.validatePresenceOf('brand', 'device_type', 'model', 'serial_number', 'year_of_production', 'year_bought', 'used_since');
+    validator.validateIsGreaterOrEqual('used_since', 'year_of_production', 'year_bought');
+    validator.validateIsGreaterOrEqual('year_bought', 'year_of_production');
+
     if (!validator.isValid) {
       hardwareDevice.year_of_production = hardwareDevice.year_of_production.getFullYear().toString();
       hardwareDevice.year_bought = hardwareDevice.year_bought.getFullYear().toString();
+
+      if (!isNaN(hardwareDevice.used_since)) {
+        hardwareDevice.used_since = hardwareDevice.used_since.toISOString().split('T')[0];
+      }
 
       return setErrors(validator.errors);
     }
