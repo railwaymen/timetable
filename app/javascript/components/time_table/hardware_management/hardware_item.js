@@ -86,8 +86,8 @@ export default function HardwareItem() {
       hardwareDevice.year_of_production = hardwareDevice.year_of_production.getFullYear().toString();
       hardwareDevice.year_bought = hardwareDevice.year_bought.getFullYear().toString();
 
-      if (!isNaN(hardwareDevice.used_since)) {
-        hardwareDevice.used_since = hardwareDevice.used_since.toISOString().split('T')[0];
+      if (!Number.isNaN(hardwareDevice.used_since)) {
+        [hardwareDevice.used_since] = hardwareDevice.used_since.toISOString().split('T');
       }
 
       return setErrors(validator.errors);

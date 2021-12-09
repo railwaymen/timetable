@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function Select({
-  name, placeholder, options, value, onChange, translatable = false, optionName = 'name', innerClassName, errors=[]
+  name, placeholder, options, value, onChange, translatable = false, optionName = 'name', innerClassName, errors = [],
 }) {
   return (
     <div className="input-wrapper">
