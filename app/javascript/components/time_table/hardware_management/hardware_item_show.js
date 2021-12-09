@@ -250,7 +250,7 @@ function Rental({ id, onSubmit }) {
       company_id: selectedCompany?.id,
     });
 
-    window.open(`/api/hardware_devices/${id}/rental_agreement?${searchParams.toString()}`, '_blank').focus();
+    window.open(`/api/hardware_devices/${id}/device_agreement?${searchParams.toString()}`, '_blank').focus();
     onSubmit();
   };
 
