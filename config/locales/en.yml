@@ -110,9 +110,6 @@ en:
           The Lender and the Borrower declares that the property listed in § 1 %{points} at the time of receipt:
           <br>%{bullet}has no defects
           <br>%{bullet}has defects
-          <br>.....................................................................................................................
-          <br>.....................................................................................................................
-          <br>.....................................................................................................................
         paragraph_number_3: The protocol were made in two identical copies.
       mailer:
         body: '%{user_name} wants to %{action} hardware/hardwares.'

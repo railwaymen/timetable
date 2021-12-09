@@ -108,9 +108,6 @@ pl:
           Zamawiający oświadcza, iż mienie wymienione w § 1 %{points} w chwili odbioru:
           <br>%{bullet} nie posiada wad
           <br>%{bullet} posiada wady
-          <br>.....................................................................................................................
-          <br>.....................................................................................................................
-          <br>.....................................................................................................................
         paragraph_number_3: Protokół sporządzono w dwóch jednobrzmiących egzemplarzach.
       mailer:
         body: '%{user_name} chce %{action} sprzęt/sprzęty.'

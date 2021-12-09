@@ -57,6 +57,9 @@ module Agreements
       I18n.t("apps.hardware.#{type}_agreement.paragraph_number_2", points: points, bullet: '•').split('<br>').each do |paragraph|
         @pdf.text paragraph
       end
+      @pdf.text print_dotted_line
+      @pdf.text print_dotted_line
+      @pdf.text print_dotted_line
       @pdf.move_down 15
     end
 
@@ -93,6 +96,11 @@ module Agreements
       @pdf.text 'PESEL: ..........................', style: :bold
       @pdf.text I18n.t('apps.hardware.agreements.id_document'), style: :bold
       @pdf.text I18n.t('apps.hardware.agreements.referred_to_as', data: I18n.t('apps.hardware.agreements.borrower').upcase), style: :bold
+    end
+
+    def print_dotted_line
+      line_width = 186
+      @pdf.text '.' * line_width
     end
   end
 end
