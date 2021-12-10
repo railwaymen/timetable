@@ -13,6 +13,7 @@ import buildFormData from '../../../helpers/hardware-device/build-form-data';
 import Breadcrumb from './shared/breadcrumb';
 import Validator from '../../../validators/validator';
 import SelectFilter from './inputs/select-filter';
+import isDateValidObject from '../../../helpers/is-date-valid-object';
 
 export default function HardwareItem() {
   const [hardwareDevice, setHardwareDevice] = useState(new HardwareDeviceModel({}));
@@ -73,6 +74,9 @@ export default function HardwareItem() {
     hardwareDevice.year_of_production = new Date(hardwareDevice.year_of_production, 0, 1);
     hardwareDevice.year_bought = new Date(hardwareDevice.year_bought, hardwareDevice.month_bought - 1, 1);
     hardwareDevice.used_since = new Date(hardwareDevice.used_since);
+    if (!isDateValidObject(hardwareDevice.used_since)) {
+      hardwareDevice.used_since = null;
+    }
 
     const form = buildFormData({ device: hardwareDevice, accessories: hardwareDeviceAccessories });
 
@@ -82,13 +86,13 @@ export default function HardwareItem() {
     validator.validateIsGreaterOrEqual('used_since', 'year_of_production', 'year_bought');
     validator.validateIsGreaterOrEqual('year_bought', 'year_of_production');
 
+    if (isDateValidObject(hardwareDevice.used_since)) {
+      [hardwareDevice.used_since] = hardwareDevice.used_since.toISOString().split('T');
+    }
+
     if (!validator.isValid) {
       hardwareDevice.year_of_production = hardwareDevice.year_of_production.getFullYear().toString();
       hardwareDevice.year_bought = hardwareDevice.year_bought.getFullYear().toString();
-
-      if (!Number.isNaN(hardwareDevice.used_since)) {
-        [hardwareDevice.used_since] = hardwareDevice.used_since.toISOString().split('T');
-      }
 
       return setErrors(validator.errors);
     }
@@ -110,6 +114,7 @@ export default function HardwareItem() {
     }).then(() => {
       history.push('/hardware-devices');
     }).catch((e) => {
+      console.log(e)
       setErrors(e);
     });
   };
