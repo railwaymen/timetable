@@ -587,8 +587,10 @@ pl:
               blank: Wartość jest wymagana
         hardware:
           attributes:
-            type:
+            device_type:
               blank: Typ jest wymagany
+            brand:
+              blank: Marka jest wymagana
             manufacturer:
               blank: Producent jest wymagany
             model:
@@ -596,6 +598,14 @@ pl:
             serial_number:
               blank: Numer seryjny jest wymagany
               taken: Numer seryjny jest zajety
+            year_bought:
+              blank: Rok zakupu jest wymagany
+              greater_than_or_equal_to: Rok zakupu nie może być przed %{date}
+            year_of_production:
+              blank: Rok produkcji jest wymagany
+            used_since:
+              blank: 'Używany od jest wymagany'
+              greater_than_or_equal_to: Używany od nie może być przed %{date}
             status:
               wrong_transition: przynajmniej jednego ze sprzętów jest nieprawidłowy dla danej akcji
             physical_condition:
