@@ -131,7 +131,7 @@ RSpec.describe Api::HardwareDevicesController do
     end
   end
 
-  describe '#rental_agreement' do
+  describe '#device_agreement' do
     context 'agreement_type is equal to rental' do
       context 'with accessories' do
         it 'correctly create pdf' do
@@ -143,7 +143,7 @@ RSpec.describe Api::HardwareDevicesController do
 
           sign_in(user)
 
-          get :rental_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :rental }
+          get :device_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :rental }
 
           expect(response.code).to eq('200')
         end
@@ -159,7 +159,7 @@ RSpec.describe Api::HardwareDevicesController do
 
           sign_in(user)
 
-          get :rental_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :rental }
+          get :device_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :rental }
 
           expect(response.code).to eq('200')
         end
@@ -177,7 +177,7 @@ RSpec.describe Api::HardwareDevicesController do
 
           sign_in(user)
 
-          get :rental_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :return }
+          get :device_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :return }
 
           expect(response.code).to eq('200')
         end
@@ -193,7 +193,7 @@ RSpec.describe Api::HardwareDevicesController do
 
           sign_in(user)
 
-          get :rental_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :return }
+          get :device_agreement, params: { id: hardware_device.id, company_id: company.id, lender_id: lender.id, type: :return }
 
           expect(response.code).to eq('200')
         end

@@ -28,7 +28,7 @@ module Api
       @versions = HardwareDevice.find(params[:id]).versions
     end
 
-    def rental_agreement # rubocop:disable Metrics/MethodLength
+    def device_agreement # rubocop:disable Metrics/MethodLength
       device = HardwareDevice.active.find(params[:id])
 
       generator = HardwareDevices::Agreements::DeviceAgreementService.new(
