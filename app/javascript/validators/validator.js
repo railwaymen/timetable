@@ -19,8 +19,8 @@ export default class Validator {
           this.errors[leftOperand] = [];
         }
         this.errors[leftOperand].push(I18n.t(
-          `activerecord.errors.models.hardware.attributes.${leftOperand}.greater_than_or_equal_to`, 
-          {date: I18n.t(`apps.hardware_devices.${rightOperand}`)}
+          `activerecord.errors.models.hardware.attributes.${leftOperand}.greater_than_or_equal_to`,
+          { date: I18n.t(`apps.hardware_devices.${rightOperand}`) },
         ));
       }
     });

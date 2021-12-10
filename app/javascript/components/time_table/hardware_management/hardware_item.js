@@ -105,7 +105,7 @@ export default function HardwareItem() {
       }).then(() => {
         history.push('/hardware-devices');
       }).catch((response) => {
-        const translatedErrors = translateErrorsSnakeCase('hardware', response.errors)
+        const translatedErrors = translateErrorsSnakeCase('hardware', response.errors);
         setErrors(translatedErrors);
       });
     }
@@ -116,7 +116,7 @@ export default function HardwareItem() {
     }).then(() => {
       history.push('/hardware-devices');
     }).catch((response) => {
-      const translatedErrors = translateErrorsSnakeCase('hardware', response.errors)
+      const translatedErrors = translateErrorsSnakeCase('hardware', response.errors);
       setErrors(translatedErrors);
     });
   };
