@@ -558,7 +558,7 @@ en:
               blank: Model is required
             serial_number:
               blank: Serial Number can't be blank
-              taken: Serial Number is already in use
+              serial_number_exists: Serial Number is already in use
             year_bought:
               blank: Year bought is required
               greater_than_or_equal_to: Year bought must be greater than or equal to %{date}

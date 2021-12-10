@@ -597,7 +597,7 @@ pl:
               blank: Model jest wymagany
             serial_number:
               blank: Numer seryjny jest wymagany
-              taken: Numer seryjny jest zajety
+              serial_number_exists: Numer seryjny jest zajety
             year_bought:
               blank: Rok zakupu jest wymagany
               greater_than_or_equal_to: Rok zakupu nie może być przed %{date}

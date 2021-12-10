@@ -14,6 +14,7 @@ import Breadcrumb from './shared/breadcrumb';
 import Validator from '../../../validators/validator';
 import SelectFilter from './inputs/select-filter';
 import isDateValidObject from '../../../helpers/is-date-valid-object';
+import translateErrorsSnakeCase from '../../shared/translate_errors_snake_case';
 
 export default function HardwareItem() {
   const [hardwareDevice, setHardwareDevice] = useState(new HardwareDeviceModel({}));
@@ -103,8 +104,9 @@ export default function HardwareItem() {
         body: form,
       }).then(() => {
         history.push('/hardware-devices');
-      }).catch((e) => {
-        setErrors(e);
+      }).catch((response) => {
+        const translatedErrors = translateErrorsSnakeCase('hardware', response.errors)
+        setErrors(translatedErrors);
       });
     }
 
@@ -113,9 +115,9 @@ export default function HardwareItem() {
       body: form,
     }).then(() => {
       history.push('/hardware-devices');
-    }).catch((e) => {
-      console.log(e)
-      setErrors(e);
+    }).catch((response) => {
+      const translatedErrors = translateErrorsSnakeCase('hardware', response.errors)
+      setErrors(translatedErrors);
     });
   };
 
