@@ -40,7 +40,7 @@ module Api
 
       send_data(
         generator.generate,
-        filename: "#{device.user.first_name}_#{device.user.last_name}_rental_#{Time.zone.today}.pdf"
+        filename: "#{device.user.first_name}_#{device.user.last_name}_#{agreement_type}_#{Time.zone.today}.pdf"
       )
     end
 

@@ -70,7 +70,7 @@ en:
         referred_to_as: 'hereinafter referred to as „%{data}”'
         and: and
         name_and_surname: 'Name i Surname:'
-        address: 'Address: ....................'
+        address: 'Address of residence/registered address: ....................'
         id_document: 'Series and number of the document confirming the identity: ....................'
         borrower: Borrower
         additional_info: 'Additional informations:'
@@ -106,7 +106,10 @@ en:
         title: Hardware return protocol
         point: point
         paragraph_number_1: 'The Lender accepts the return of the equipment:'
-        paragraph_number_2: The Lender and the Borrower declares that the property listed in § 1 %{points} at the time of receipt has no defects.
+        paragraph_number_2: >- 
+          The Lender and the Borrower declares that the property listed in § 1 %{points} at the time of receipt:
+          <br>%{bullet}has no defects
+          <br>%{bullet}has defects
         paragraph_number_3: The protocol were made in two identical copies.
       mailer:
         body: '%{user_name} wants to %{action} hardware/hardwares.'
