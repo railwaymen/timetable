@@ -71,13 +71,25 @@ export default function HardwareItem() {
     }));
   };
 
-  const onSubmit = async () => {
+  const mapInputsToDates = () => {
     hardwareDevice.year_of_production = new Date(hardwareDevice.year_of_production, 0, 1);
     hardwareDevice.year_bought = new Date(hardwareDevice.year_bought, hardwareDevice.month_bought - 1, 1);
     hardwareDevice.used_since = new Date(hardwareDevice.used_since);
     if (!isDateValidObject(hardwareDevice.used_since)) {
       hardwareDevice.used_since = null;
     }
+  };
+
+  const mapDatesToInputs = () => {
+    if (isDateValidObject(hardwareDevice.used_since)) {
+      [hardwareDevice.used_since] = hardwareDevice.used_since.toISOString().split('T');
+    }
+    hardwareDevice.year_of_production = hardwareDevice.year_of_production.getFullYear().toString();
+    hardwareDevice.year_bought = hardwareDevice.year_bought.getFullYear().toString();
+  };
+
+  const onSubmit = async () => {
+    mapInputsToDates();
 
     const form = buildFormData({ device: hardwareDevice, accessories: hardwareDeviceAccessories });
 
@@ -87,13 +99,8 @@ export default function HardwareItem() {
     validator.validateIsGreaterOrEqual('used_since', 'year_of_production', 'year_bought');
     validator.validateIsGreaterOrEqual('year_bought', 'year_of_production');
 
-    if (isDateValidObject(hardwareDevice.used_since)) {
-      [hardwareDevice.used_since] = hardwareDevice.used_since.toISOString().split('T');
-    }
-
     if (!validator.isValid) {
-      hardwareDevice.year_of_production = hardwareDevice.year_of_production.getFullYear().toString();
-      hardwareDevice.year_bought = hardwareDevice.year_bought.getFullYear().toString();
+      mapDatesToInputs();
 
       return setErrors(validator.errors);
     }
@@ -105,6 +112,8 @@ export default function HardwareItem() {
       }).then(() => {
         history.push('/hardware-devices');
       }).catch((response) => {
+        mapDatesToInputs();
+
         const translatedErrors = translateErrorsSnakeCase('hardware', response.errors);
         setErrors(translatedErrors);
       });
@@ -116,6 +125,8 @@ export default function HardwareItem() {
     }).then(() => {
       history.push('/hardware-devices');
     }).catch((response) => {
+      mapDatesToInputs();
+
       const translatedErrors = translateErrorsSnakeCase('hardware', response.errors);
       setErrors(translatedErrors);
     });
