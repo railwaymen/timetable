@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function Select({
-  name, placeholder, options, value, onChange, translatable = false, optionName = 'name', innerClassName,
+  name, placeholder, options, value, onChange, translatable = false, optionName = 'name', innerClassName, errors = [],
 }) {
   return (
     <div className="input-wrapper">
@@ -19,6 +19,7 @@ export default function Select({
             )
           ))}
         </select>
+        <span className="error space-md">{errors?.join(', ')}</span>
       </div>
     </div>
   );

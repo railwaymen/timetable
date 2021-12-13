@@ -551,15 +551,25 @@ en:
               blank: Value is required
         hardware:
           attributes:
-            type:
+            device_type:
               blank: Type is required
+            brand: 
+              blank: Brand is required
             manufacturer:
               blank: Manufacturer is required
             model:
               blank: Model is required
             serial_number:
               blank: Serial Number can't be blank
-              taken: Serial Number is already in use
+              serial_number_exists: Serial Number is already in use
+            year_bought:
+              blank: Year bought is required
+              greater_than_or_equal_to: Year bought must be greater than or equal to %{date}
+            year_of_production:
+              blank: Year of production is required
+            used_since:
+              blank: 'Used since is required'
+              greater_than_or_equal_to: Year bought must be greater than or equal to %{date}
             status:
               wrong_transition: of at least one of the hardwares is wrong for this action
             physical_condition:

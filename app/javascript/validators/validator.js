@@ -7,7 +7,21 @@ export default class Validator {
   validatePresenceOf(...names) {
     names.forEach((name) => {
       if ([undefined, null, '', false].includes(this.object[name])) {
-        this.errors[name] = ['can\'t be blank'];
+        this.errors[name] = [I18n.t(`activerecord.errors.models.hardware.attributes.${name}.blank`)];
+      }
+    });
+  }
+
+  validateIsGreaterOrEqual(leftOperand, ...rightOperands) {
+    rightOperands.forEach((rightOperand) => {
+      if (this.object[leftOperand] < this.object[rightOperand]) {
+        if (!this.errors[leftOperand]) {
+          this.errors[leftOperand] = [];
+        }
+        this.errors[leftOperand].push(I18n.t(
+          `activerecord.errors.models.hardware.attributes.${leftOperand}.greater_than_or_equal_to`,
+          { date: I18n.t(`apps.hardware_devices.${rightOperand}`) },
+        ));
       }
     });
   }
