@@ -209,6 +209,7 @@ en:
       state: 'State'
       show_unassigned_only: 'Show unassigned only'
       error_unassigned_device: Cannot generate documents for unassigned device.
+      empty: 'Empty'
     milestones:
       progress: Progress
       add: New Milestone

@@ -129,7 +129,7 @@ export default function HardwareItem() {
         <p>{I18n.t('apps.hardware_devices.remove_body')}</p>
       </ConfirmModal>
       <Modal visible={isLogModal} onClose={onToggleLogs}>
-        <LogHistory list={historyList} />
+        <LogHistory users={users} list={historyList} />
       </Modal>
       <h3>{hardwareDeviceId ? I18n.t('apps.hardware_devices.edit_device') : I18n.t('apps.hardware_devices.add_new_device')}</h3>
       <div className="item-content">
@@ -312,45 +312,47 @@ const ContentsList = ({ items, object }) => (
   </>
 );
 
-function LogHistory({ list }) {
-  if (list.length > 1) {
-    const keys = Object.keys(list[0].changeset);
-
-    return (
-      <div style={{ maxHeight: '100vh', overflowY: 'scroll' }}>
-        <table>
-          <thead>
-            <tr>
-              {keys.map((key) => (
-                <th>{key}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <HistoryList list={list} keys={keys} />
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-
-  return <></>;
+function LogHistory({ list, users }) {
+  const [, ...modifications] = list;
+  return (
+    <div style={{ maxHeight: '100vh', overflowY: 'scroll', padding: '30px' }}>
+      {modifications.map((modification) => (
+        <LogHistoryRecord changeset={modification.changeset} users={users} />
+      ))}
+    </div>
+  );
 }
 
-function HistoryList({ list, keys }) {
-  return list.map(({ changeset }) => (
-    <tr>
-      {keys.map((key) => {
-        const element = changeset[key];
+function LogHistoryRecord({ changeset, users }) {
+  const { updated_at, user_id, ...attributes } = changeset;
 
-        if (!element) {
-          return <td />;
-        }
+  const dateTime = `${updated_at[1].substring(0, 10)} ${updated_at[1].substring(11, 16)}`;
 
-        return (
-          <td>{element[0] ? <b>{element[1]}</b> : element[1]}</td>
-        );
-      })}
-    </tr>
-  ));
+  if (user_id) {
+    const user1 = users.find((user) => user.id === user_id[0]);
+    const user2 = users.find((user) => user.id === user_id[1]);
+    attributes.assigned_person = [];
+    attributes.assigned_person[0] = user1 ? user1.first_name + user1.last_name : null;
+    attributes.assigned_person[1] = user2 ? user2.first_name + user2.last_name : null;
+  }
+
+  return (
+    <>
+      <p><b>{dateTime}</b></p>
+      <div>
+        {Object.keys(attributes).map((attribute) => (
+          <p>
+            {`${I18n.t(`apps.hardware_devices.${attribute}`)} : `}
+            <span style={{ color: '#d11b1b' }}>
+              {attributes[attribute][0] ? attributes[attribute][0] : I18n.t('apps.hardware_devices.empty')}
+            </span>
+            {' => '}
+            <span style={{ color: '#34c96b' }}>
+              {attributes[attribute][1]}
+            </span>
+          </p>
+        ))}
+      </div>
+    </>
+  );
 }
