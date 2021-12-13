@@ -80,14 +80,6 @@ const Navbar = () => (
     </div>
     <ul className="navbar-nav user-nav ml-auto">
       <li className="nav-item">
-        <NavLink
-          className="nav-link"
-          to="/hardware"
-        >
-          {I18n.t('common.hardware')}
-        </NavLink>
-      </li>
-      <li className="nav-item">
         <NavLink className="nav-link" to={`/users/edit/${currentUser.id}`}>
           {currentUser.fullName()}
         </NavLink>
