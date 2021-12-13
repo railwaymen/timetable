@@ -12,6 +12,7 @@ import ContentValue from './hardware-item/content-value';
 import Modal from './hardware-item/modal';
 import Breadcrumb from './shared/breadcrumb';
 import Button from './shared/button';
+import ErrorTooltip from '../../shared/error_tooltip';
 
 export default function HardwareItem() {
   const [hardwareDevice, setHardwareDevice] = useState({});
@@ -22,6 +23,7 @@ export default function HardwareItem() {
   const [isLogModal, setIsLogModal] = useState(false);
   const [deviceHistory, setDeviceHistory] = useState({ list: [], loaded: false });
   const [isRentalModalVisible, setIsRentalModalVisible] = useState(null);
+  const [generateError, setGenerateError] = useState(null);
 
   const history = useHistory();
 
@@ -79,7 +81,14 @@ export default function HardwareItem() {
     });
   };
 
-  const onToggleRentalModalVisible = () => setIsRentalModalVisible((state) => !state);
+  const onToggleRentalModalVisible = () => {
+    if (!hardwareDevice.user) {
+      setGenerateError('Cannot generate documents for unassigned device.');
+      return;
+    }
+
+    setIsRentalModalVisible((state) => !state);
+  };
 
   if (isLoading) {
     return (
@@ -202,6 +211,7 @@ export default function HardwareItem() {
               <i className="symbol fa fa-pencil" />
               {I18n.t('apps.hardware_devices.edit')}
             </Link>
+            {generateError && <ErrorTooltip errors={[generateError]} /> }
             <button type="button" className="transparent-button space-md info" onClick={onToggleRentalModalVisible}>
               {I18n.t('apps.hardware_devices.generate')}
             </button>
