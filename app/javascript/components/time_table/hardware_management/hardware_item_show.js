@@ -83,7 +83,7 @@ export default function HardwareItem() {
 
   const onToggleRentalModalVisible = () => {
     if (!hardwareDevice.user) {
-      setGenerateError('Cannot generate documents for unassigned device.');
+      setGenerateError(I18n.t('apps.hardware_devices.error_unassigned_device'));
       return;
     }
 
