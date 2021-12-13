@@ -208,6 +208,7 @@ en:
       assigned_person: 'Assigned person'
       state: 'State'
       show_unassigned_only: 'Show unassigned only'
+      error_unassigned_device: Cannot generate documents for unassigned device.
     milestones:
       progress: Progress
       add: New Milestone
