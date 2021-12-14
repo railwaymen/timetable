@@ -173,6 +173,7 @@ pl:
       state: 'Stan'
       show_unassigned_only: 'Pokaż tylko nieprzypisane'
       error_unassigned_device: Nie można wygenerować dokumentu jeśli urządzenie nie jest przypisane.
+      empty: 'Pusty'
     header:
       login: Logowanie
       username: Użytkownik
