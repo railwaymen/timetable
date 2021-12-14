@@ -32,6 +32,11 @@ export default function HardwareList() {
     });
   };
 
+  const onCheckUnassignedDevicesOnly = () => {
+    setUnassignedDevicesOnly(!unassignedDevicesOnly)
+    setSearchPhrase({ query, unassigned: !unassignedDevicesOnly });
+  }
+
   const onCancel = () => {
     setSelectedItem(null);
   };
@@ -55,7 +60,7 @@ export default function HardwareList() {
               id="unassignedDevicesOnly"
               type="checkbox"
               checked={unassignedDevicesOnly}
-              onChange={() => setUnassignedDevicesOnly(!unassignedDevicesOnly)}
+              onChange={onCheckUnassignedDevicesOnly}
             />
           </div>
           <input type="text" value={query} onChange={({ target: { value } }) => setQuery(value)} />
