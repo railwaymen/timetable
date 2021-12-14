@@ -24,10 +24,8 @@ module HardwareDevices
     def save_transaction
       proc do
         @hardware_device.images.where(id: @remove_images_ids).map(&:destroy!) if @remove_images_ids&.any?
-        if @params[:images]
-          @params[:images].each do |image| 
-            @hardware_device.images.attach(image)
-          end
+        @params[:images]&.each do |image|
+          @hardware_device.images.attach(image)
         end
         @hardware_device.save!
       rescue ActiveRecord::RecordInvalid
