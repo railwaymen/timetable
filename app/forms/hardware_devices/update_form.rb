@@ -14,7 +14,7 @@ module HardwareDevices
     end
 
     def save
-      @hardware_device.assign_attributes(@params.merge(user_id: @user_id))
+      @hardware_device.assign_attributes(@params.merge(user_id: @user_id).except(:images))
 
       ActiveRecord::Base.transaction(&save_transaction)
     end
@@ -24,6 +24,11 @@ module HardwareDevices
     def save_transaction
       proc do
         @hardware_device.images.where(id: @remove_images_ids).map(&:destroy!) if @remove_images_ids&.any?
+        if @params[:images]
+          @params[:images].each do |image| 
+            @hardware_device.images.attach(image)
+          end
+        end
         @hardware_device.save!
       rescue ActiveRecord::RecordInvalid
         raise ActiveRecord::Rollback
