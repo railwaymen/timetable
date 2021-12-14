@@ -27,7 +27,7 @@ export default function ArchivedContent({ phrase, visible, onSelectItem }) {
     const { query, unassigned } = phrase;
 
     makeGetRequest({
-      url: `/api/hardware_devices/archived?page=1&q=${query}&${unassigned ? 'unassigned_only=true' : ''}`,
+      url: `/api/hardware_devices/archived?page=${page}&q=${query}&${unassigned ? 'unassigned_only=true' : ''}`,
     }).then(({ data: { records, total_pages } }) => {
       setContent({
         list: records, isLoaded: true, page, totalPages: total_pages,
