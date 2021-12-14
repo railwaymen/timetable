@@ -33,9 +33,9 @@ export default function HardwareList() {
   };
 
   const onCheckUnassignedDevicesOnly = () => {
-    setUnassignedDevicesOnly(!unassignedDevicesOnly)
+    setUnassignedDevicesOnly(!unassignedDevicesOnly);
     setSearchPhrase({ query, unassigned: !unassignedDevicesOnly });
-  }
+  };
 
   const onCancel = () => {
     setSelectedItem(null);
