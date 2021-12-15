@@ -146,6 +146,7 @@ class Entry extends React.Component {
       if (this.lastProject && (this.state.project.lunch || this.state.project.accounting)) {
         newState.project = this.lastProject;
         newState.project_id = this.lastProject.id;
+        newState.combinedTags = newState.project.tags.concat(this.props.globalTags);
       }
       if (!this.state.project.lunch) this.lastProject = this.state.project;
       newState.errors = {};
