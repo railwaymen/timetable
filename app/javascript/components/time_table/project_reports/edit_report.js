@@ -535,15 +535,15 @@ export default class EditReport extends React.Component {
               </div>
               <div className="fields">
                 <div className="field">
-                  <label htmlFor="mergeTask">Task</label>
+                  <label htmlFor="mergeTask" style={{display: 'block'}}>Task</label>
                   <textarea onChange={this.onMergeTaskChange} value={mergeTask} name="mergeTask" />
                 </div>
                 <div className="field">
-                  <label htmlFor="mergeDescription">Description</label>
-                  <textarea onChange={this.onMergeDescriptionChange} value={mergeDescription} name="mergeDescription" />
+                  <label htmlFor="mergeDescription" style={{display: 'block'}}>Description</label>
+                  <textarea onChange={this.onMergeDescriptionChange} value={mergeDescription} name="mergeDescription" style={{width: '300px'}} />
                 </div>
                 <div className="field">
-                  <label htmlFor="mergeOwner">Owner</label>
+                  <label htmlFor="mergeOwner" style={{display: 'block'}}>Owner</label>
                   <textarea onChange={this.onMergeOwnerChange} value={mergeOwner} name="mergeOwner" />
                 </div>
                 <div>
