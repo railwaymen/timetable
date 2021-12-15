@@ -533,17 +533,22 @@ export default class EditReport extends React.Component {
               <div className="error hidden message ui">
                 <p />
               </div>
-              <div className="fields">
+              <div className="fields merge-form-fields">
                 <div className="field">
-                  <label htmlFor="mergeTask" style={{ display: 'block' }}>Task</label>
+                  <label htmlFor="mergeTask">Task</label>
                   <textarea onChange={this.onMergeTaskChange} value={mergeTask} name="mergeTask" />
                 </div>
                 <div className="field">
-                  <label htmlFor="mergeDescription" style={{ display: 'block' }}>Description</label>
-                  <textarea onChange={this.onMergeDescriptionChange} value={mergeDescription} name="mergeDescription" style={{ width: '300px' }} />
+                  <label htmlFor="mergeDescription">Description</label>
+                  <textarea
+                    onChange={this.onMergeDescriptionChange}
+                    value={mergeDescription}
+                    name="mergeDescription"
+                    className="merge-description"
+                  />
                 </div>
                 <div className="field">
-                  <label htmlFor="mergeOwner" style={{ display: 'block' }}>Owner</label>
+                  <label htmlFor="mergeOwner">Owner</label>
                   <textarea onChange={this.onMergeOwnerChange} value={mergeOwner} name="mergeOwner" />
                 </div>
                 <div>
