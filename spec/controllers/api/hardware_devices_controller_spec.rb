@@ -239,6 +239,28 @@ RSpec.describe Api::HardwareDevicesController do
           put :update, params: params
           expect(hardware.reload.serial_number).to eq('SERIAL')
         end
+
+        it 'attach image' do
+          user = create(:user, :hardware_manager)
+          hardware_device = FactoryBot.create(:hardware_device)
+          uploaded_image = fixture_file_upload('files/hardware.png', 'image/png')
+
+          sign_in user
+
+          params = {
+            format: 'json',
+            id: hardware_device.id,
+            hardware_device: {
+              images: [uploaded_image]
+            }
+          }
+
+          put :update, params: params
+
+          hardware_device.reload
+
+          expect(hardware_device.images).to be_attached
+        end
       end
 
       context 'when parameters are incorrect' do
