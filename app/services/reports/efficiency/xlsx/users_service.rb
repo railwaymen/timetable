@@ -51,7 +51,7 @@ module Reports
             current_row += 1
 
             user.projects.each do |project|
-              project_cell(project: project, current_row: current_row)
+              project_cell(user: user, project: project, current_row: current_row)
               current_row += 1
             end
           end
@@ -178,13 +178,7 @@ module Reports
           sheet.add_cell(current_row, P, user.no_vacations.sum_billable[false].full_days).set_number_format('[hh]:mm:ss.000')
         end
 
-        def user_cell(user:, current_row:) # rubocop:disable Metrics/MethodLength
-          sheet.add_cell(current_row, A, "#{user.first_name} #{user.last_name}")
-          sheet.add_cell(current_row, B, user.department)
-          sheet.add_cell(current_row, C, '')
-          sheet.add_cell(current_row, D, '')
-          sheet.add_cell(current_row, E, '')
-
+        def user_cell(user:, current_row:)
           sheet.add_cell(current_row, F, user.sum_billable[true].percentage).set_number_format('0.00%')
           sheet.add_cell(current_row, G, user.sum_billable[false].percentage).set_number_format('0.00%')
 
@@ -198,10 +192,12 @@ module Reports
           vacation_user_cell(user: user, current_row: current_row) if user.no_vacations
         end
 
-        def project_cell(project:, current_row:)
-          sheet.add_cell(current_row, B, project.name)
-          sheet.add_cell(current_row, C, project.tag)
-          sheet.add_cell(current_row, D, project.billable ? 'y' : 'n')
+        def project_cell(user:, project:, current_row:)
+          sheet.add_cell(current_row, A, "#{user.first_name} #{user.last_name}")
+          sheet.add_cell(current_row, B, user.department)
+          sheet.add_cell(current_row, C, project.name)
+          sheet.add_cell(current_row, D, project.tag)
+          sheet.add_cell(current_row, E, project.billable ? 'y' : 'n')
           sheet.add_cell(current_row, H, project.project_duration_to_days).set_number_format('[hh]:mm:ss.000')
           sheet.add_cell(current_row, I, project.percentage_part).set_number_format('0.00%')
         end
