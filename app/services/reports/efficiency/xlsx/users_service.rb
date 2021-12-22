@@ -32,7 +32,7 @@ module Reports
           @ends_at = ends_at
 
           @workbook = workbook
-          @collection_length = collection.length
+          @collection_length = collection.length + 2
 
           @sheet_index = sheet_index
           @name = generate_report_name(starts_at, ends_at, prefix: 'crew')
