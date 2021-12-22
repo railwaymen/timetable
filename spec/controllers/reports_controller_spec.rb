@@ -91,4 +91,36 @@ RSpec.describe ReportsController do
       expect(csv[5]).to eql(['Developer Total', nil, nil, nil, '05:00'])
     end
   end
+
+  describe '#remote_work' do
+    it 'autheticates user' do
+      get :remote_work, format: :csv
+
+      expect(response.code).to eql('401')
+    end
+
+    it 'forbids regular user' do
+      sign_in(user)
+
+      get :remote_work, format: :csv
+
+      expect(response.code).to eql('403')
+    end
+
+    it 'returns remote work report in csv' do
+      work_time = create(:work_time)
+
+      sign_in(manager)
+      params = {
+        user_id: work_time.user.id,
+        from: work_time.starts_at.to_date
+      }
+      get :remote_work, params: params, format: :csv
+      csv = CSV.parse(response.body)
+
+      expect(response.code).to eql('200')
+      expect(csv[0]).to eql(%w[Day Remote])
+      expect(csv[1]).to eql([work_time.starts_at.strftime('%Y-%m-%d'), 'Y'])
+    end
+  end
 end

@@ -21,6 +21,7 @@ class WorkTimeForm
            :preview,
            :user_id,
            :user,
+           :office_work,
            :project,
            :date, to: :work_time
 

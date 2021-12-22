@@ -199,7 +199,9 @@ class EntryHistory extends React.Component {
               this.totalWorkHours();
 
               const lastWorkTime = this.state.workHours.filter((workTime) => workTime.project.lunch === false && workTime.project.accounting === false)[0];
-              if (lastWorkTime) this.props.setLastProject(lastWorkTime.project);
+              if (lastWorkTime) {
+                this.props.setLastWorkTime(lastWorkTime);
+              }
             });
           });
       });
@@ -258,7 +260,7 @@ class EntryHistory extends React.Component {
           // eslint-disable-next-line
           lastWorkTime = this.state.workHours[1];
           if (lastWorkTime) {
-            this.props.setLastProject(lastWorkTime.project || {});
+            this.props.setLastWorkTime(lastWorkTime);
           }
         }
 

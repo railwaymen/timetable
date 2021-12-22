@@ -37,6 +37,7 @@ class WorkHours extends React.Component {
     this.onTagChange = this.onTagChange.bind(this);
     this.filterUsers = this.filterUsers.bind(this);
     this.updateProject = this.updateProject.bind(this);
+    this.onChangeOfficeWork = this.onChangeOfficeWork.bind(this);
 
     this.state = {
       workHours: this.props.workHours,
@@ -53,6 +54,7 @@ class WorkHours extends React.Component {
       starts_at_hours: moment(prevState.workHours.starts_at).format('HH:mm'),
       ends_at_hours: moment(prevState.workHours.ends_at).format('HH:mm'),
       date: moment(prevState.workHours.starts_at).format('DD/MM/YYYY'),
+      workHours: this.props.workHours,
     }));
   }
 
@@ -139,6 +141,21 @@ class WorkHours extends React.Component {
       workHours: {
         ...prevState.workHours,
         tag,
+      },
+    }), () => {
+      this.saveWorkHours();
+    });
+  }
+
+  onChangeOfficeWork() {
+    if (!this.state.editing) {
+      return;
+    }
+
+    this.setState((prevState) => ({
+      workHours: {
+        ...prevState.workHours,
+        office_work: !prevState.workHours.office_work,
       },
     }), () => {
       this.saveWorkHours();
@@ -324,6 +341,7 @@ class WorkHours extends React.Component {
       project_id: workHours.project.id,
       starts_at: workHours.starts_at,
       ends_at: workHours.ends_at,
+      office_work: workHours.office_work,
     };
   }
 
@@ -394,6 +412,7 @@ class WorkHours extends React.Component {
       workHours, editing, errors,
     } = this.state;
 
+    const officeWork = !!workHours.office_work;
     const selectedTag = this.combinedTags().find((t) => t.id === workHours.tag_id) || {};
     const projectsWithoutAccounting = this.props.projects.filter((p) => !p.accounting);
 
@@ -448,6 +467,10 @@ class WorkHours extends React.Component {
                     {workHours.tag}
                   </span>
                 )}
+              </div>
+              <div className="office-work-container">
+                <label htmlFor="officeWork">{I18n.t('apps.timesheet.office_work')}</label>
+                <input type="checkbox" name="officeWork" checked={officeWork} onChange={this.onChangeOfficeWork} />
               </div>
             </div>
             {editing ? (

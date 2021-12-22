@@ -14,7 +14,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
   let(:ends_at) { Time.zone.now.beginning_of_day + 4.hours }
 
   def work_time_response(work_time)
-    work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'tag_id', 'user_id')
+    work_time.attributes.slice('id', 'updated_by_admin', 'project_id', 'starts_at', 'ends_at', 'duration', 'body', 'task', 'tag_id', 'user_id', 'office_work')
              .merge(task_preview: task_preview_helper(work_time.task), editable: !work_time.project.accounting?, project_editable: work_time.task.blank? && work_time.tag.global?)
              .merge(date: work_time.starts_at.to_date,
                     tag: work_time.tag.name,
@@ -105,7 +105,7 @@ RSpec.describe Api::WorkTimesController, type: :controller do
         work_time = create(:work_time, user: user)
         version1 = work_time_response(work_time).merge(updated_by_admin: false, event: :create, created_at: work_time.created_at,
                                                        updated_by: admin.accounting_name,
-                                                       changeset: %i[id user_id project_id starts_at ends_at duration body created_at updated_at creator_id date tag_id])
+                                                       changeset: %i[id user_id project_id starts_at ends_at duration body created_at updated_at creator_id date tag_id office_work])
         work_time.update! body: 'New body'
         version2 = work_time_response(work_time).merge(updated_by_admin: false, event: :update, created_at: work_time.created_at, updated_by: admin.accounting_name, changeset: %i[body updated_at])
 

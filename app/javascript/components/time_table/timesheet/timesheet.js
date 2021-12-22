@@ -11,8 +11,9 @@ class Timesheet extends React.Component {
     this.pushEntry = this.pushEntry.bind(this);
     this.onCopy = this.onCopy.bind(this);
     this.getProjects = this.getProjects.bind(this);
-    this.setLastProject = this.setLastProject.bind(this);
+    this.setOfficeWorkStatus = this.setOfficeWorkStatus.bind(this);
     this.lockRequests = this.lockRequests.bind(this);
+    this.setLastWorkTime = this.setLastWorkTime.bind(this);
 
     this.state = {
       projects: [],
@@ -20,6 +21,7 @@ class Timesheet extends React.Component {
       tags: [],
       requestsLocked: false,
       globalTags: [],
+      lastWork: null,
     };
   }
 
@@ -41,10 +43,17 @@ class Timesheet extends React.Component {
       });
   }
 
-  setLastProject(project) {
-    if (!this.state.lastProject) {
-      this.setState({ lastProject: project });
-      this.entry.paste({ project });
+  setOfficeWorkStatus(officeWork) {
+    if (!this.state.officeWork) {
+      this.setState({ officeWork });
+      //
+    }
+  }
+
+  setLastWorkTime(lastWork) {
+    if (!this.state.lastWork) {
+      this.setState({ lastWork });
+      this.entry.paste(lastWork);
     }
   }
 
@@ -85,11 +94,12 @@ class Timesheet extends React.Component {
             ref={(entryHistory) => { this.entryHistory = entryHistory; }}
             onCopy={this.onCopy}
             projects={projects}
-            setLastProject={this.setLastProject}
+            setOfficeWorkStatus={this.setOfficeWorkStatus}
             tags={tags}
             lockRequests={this.lockRequests}
             requestsLocked={requestsLocked}
             globalTags={globalTags}
+            setLastWorkTime={this.setLastWorkTime}
           />
         </>
       );

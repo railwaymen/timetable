@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import URI from 'urijs';
+import ErrorTooltip from '@components/shared/error_tooltip';
 import Filters from './filters';
 import InteractedVacations from './interacted_vacations';
 import UnconfirmedVacations from './unconfirmed_vacations';
@@ -21,6 +22,7 @@ function Staff() {
   const [showAll, setShowAll] = useState(false);
   const [showDeclined, setShowDeclined] = useState(false);
   const [usersVacationDays, setUsersVacationDays] = useState({});
+  const [remoteWorkReportError, setRemoteWorkReportError] = useState(null);
   const {
     selectedUserId,
     startDate,
@@ -65,6 +67,19 @@ function Staff() {
         });
       });
   }
+
+  const handleGenerateRemoteWorkReport = () => {
+    if (!filters.selectedUserId) {
+      setRemoteWorkReportError(I18n.t('apps.staff.remote_work_report_error'));
+      return;
+    }
+
+    setRemoteWorkReportError(null);
+
+    const parameters = `?from=${filters.startDate}&to=${filters.endDate}&user_id=${filters.selectedUserId}`;
+    const path = `/reports/remote_work.csv/${parameters}`;
+    window.open(path, '_blank');
+  };
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -146,37 +161,52 @@ function Staff() {
         <title>{I18n.t('common.staff')}</title>
       </Helmet>
       <Filters filters={filters} setFilters={setFilters} defaultFilters={defaultFilters} />
+
       { currentUser.canManageStaff() && (
-        <div className="container-fluid vacations-container">
-          <div className="row">
-            <div className="col-md-6 pl-0">
-              <InteractedVacations
-                interactedVacations={vacations.interactedVacations}
-                showDeclined={showDeclined}
-                setShowDeclined={setShowDeclined}
-                filters={filters}
-                setFilters={setFilters}
-                getVacations={getVacations}
-                removeFromInteractedVacations={removeFromInteractedVacations}
-                addToInteractedVacations={addToInteractedVacations}
-                setUserVacationDays={setUserVacationDays}
-              />
-            </div>
-            <div className="col-md-6 pr-0">
-              <UnconfirmedVacations
-                unconfirmedVacations={vacations.unconfirmedVacations}
-                showAll={showAll}
-                setShowAll={setShowAll}
-                filters={filters}
-                setFilters={setFilters}
-                removeFromInteractedVacations={removeFromInteractedVacations}
-                addToInteractedVacations={addToInteractedVacations}
-                usersVacationDays={usersVacationDays}
-                setUserVacationDays={setUserVacationDays}
-              />
+        <>
+          <div className="reports">
+            <div className="remote-work-report">
+              {remoteWorkReportError && <ErrorTooltip errors={[remoteWorkReportError]} />}
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleGenerateRemoteWorkReport}
+              >
+                {I18n.t('apps.staff.generate_remote_work_report')}
+              </button>
             </div>
           </div>
-        </div>
+          <div className="container-fluid vacations-container">
+            <div className="row">
+              <div className="col-md-6 pl-0">
+                <InteractedVacations
+                  interactedVacations={vacations.interactedVacations}
+                  showDeclined={showDeclined}
+                  setShowDeclined={setShowDeclined}
+                  filters={filters}
+                  setFilters={setFilters}
+                  getVacations={getVacations}
+                  removeFromInteractedVacations={removeFromInteractedVacations}
+                  addToInteractedVacations={addToInteractedVacations}
+                  setUserVacationDays={setUserVacationDays}
+                />
+              </div>
+              <div className="col-md-6 pr-0">
+                <UnconfirmedVacations
+                  unconfirmedVacations={vacations.unconfirmedVacations}
+                  showAll={showAll}
+                  setShowAll={setShowAll}
+                  filters={filters}
+                  setFilters={setFilters}
+                  removeFromInteractedVacations={removeFromInteractedVacations}
+                  addToInteractedVacations={addToInteractedVacations}
+                  usersVacationDays={usersVacationDays}
+                  setUserVacationDays={setUserVacationDays}
+                />
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

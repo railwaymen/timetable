@@ -291,6 +291,7 @@ en:
       required_duration_until_end_of_day: Required work duration until end of day (only applies to full time employees)
       required_duration_until_end_of_month: Required work duration until end of month (only applies to full time employees)
       work_time: Worktime
+      office_work: Office work
       history:
         date: Date
         when: When
@@ -382,6 +383,8 @@ en:
       user: user
       ok: OK
       non_editable: Vacation is only editable when vaction is uncofirmed or approved
+      generate_remote_work_report: Generate remote work report
+      remote_work_report_error: User selection is required to generate report
     vacation_periods:
       vacation_days: Vacation days
       note: Note

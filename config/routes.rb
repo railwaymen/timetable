@@ -110,6 +110,7 @@ Rails.application.routes.draw do
 
   resources :reports, only: [] do
     get :project, on: :collection
+    get :remote_work, on: :collection
   end
 
   get '/' => 'home#index', :constraints => { format: :html }
