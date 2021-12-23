@@ -15,6 +15,11 @@ function Users() {
       });
   }
 
+  const handleExportToCsv = () => {
+    const path = `/api/users/export.csv?filter=${visibility}`;
+    window.open(path, '_blank');
+  };
+
   useEffect(() => {
     getUsers();
   }, [visibility]);
@@ -24,21 +29,28 @@ function Users() {
       <Helmet>
         <title>{I18n.t('common.people')}</title>
       </Helmet>
-      <div className="input-group mb-3 w-25">
-        <div className="input-group-prepend">
-          <NavLink className="btn btn-secondary" to="/users/new">{I18n.t('common.add')}</NavLink>
+      <div className="users-header">
+        <div className="input-group mb-3 w-25">
+          <div className="input-group-prepend">
+            <NavLink className="btn btn-secondary" to="/users/new">{I18n.t('common.add')}</NavLink>
+          </div>
+          <select
+            name="visibility"
+            id="filter"
+            className="custom-select"
+            onChange={(e) => setVisibility(e.target.value)}
+            value={visibility}
+          >
+            <option value="active">{I18n.t('common.active')}</option>
+            <option value="inactive">{I18n.t('common.inactive')}</option>
+            <option value="all">{I18n.t('common.all')}</option>
+          </select>
         </div>
-        <select
-          name="visibility"
-          id="filter"
-          className="custom-select"
-          onChange={(e) => setVisibility(e.target.value)}
-          value={visibility}
-        >
-          <option value="active">{I18n.t('common.active')}</option>
-          <option value="inactive">{I18n.t('common.inactive')}</option>
-          <option value="all">{I18n.t('common.all')}</option>
-        </select>
+        <div>
+          <button type="button" className="btn btn-secondary" onClick={handleExportToCsv}>
+            {I18n.t('apps.users.export_to_csv')}
+          </button>
+        </div>
       </div>
       <table className="table table-striped">
         <thead>

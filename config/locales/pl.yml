@@ -311,6 +311,7 @@ pl:
       email_edit_disabled: Edycja adresu email zablokowana. Adres email jest nadawany przez LDAP.
       new: Nowe konto
       department: Dział
+      export_to_csv: Eksportuj do CSV
     external_auths:
       authorized: Zewnętrzne autoryzacje
       generate_link: Wygeneruj link

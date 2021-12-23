@@ -191,4 +191,51 @@ RSpec.describe Api::UsersController do
       expect(user.reload.discarded?).to eql(true)
     end
   end
+
+  describe '#export' do
+    it 'autheticates user' do
+      get :export, format: :csv
+
+      expect(response.code).to eql('401')
+    end
+
+    it 'forbids regular user' do
+      sign_in(user)
+
+      get :export, format: :csv
+
+      expect(response.code).to eql('403')
+    end
+
+    it 'returns people in csv' do
+      user = create(:user)
+
+      sign_in(manager)
+      get :export, format: :csv
+      csv = CSV.parse(response.body)
+      I18n.locale = :pl
+
+      expect(response.code).to eql('200')
+      expect(csv[0]).to eql(
+        [
+          I18n.t('apps.users.last_name'),
+          I18n.t('apps.users.first_name'),
+          'Email',
+          I18n.t('apps.users.contract_id'),
+          I18n.t('apps.users.phone'),
+          I18n.t('apps.users.department')
+        ]
+      )
+      expect(csv[1]).to eql(
+        [
+          user.last_name,
+          user.first_name,
+          user.email,
+          user.contract_name,
+          user.phone,
+          user.department
+        ]
+      )
+    end
+  end
 end

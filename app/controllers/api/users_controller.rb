@@ -3,7 +3,8 @@
 module Api
   class UsersController < Api::BaseController
     before_action :authenticate_notself, only: [:update]
-    before_action :authenticate_admin!, except: %i[index show update]
+    before_action :authenticate_admin!, except: %i[index show update export]
+    before_action :authenticate_admin_or_manager_or_leader!, only: :export
 
     def index
       authorize User
@@ -28,6 +29,18 @@ module Api
       @user = User.find(params[:id])
       UpdateUserForm.new(permitted_attributes(@user).merge(user: @user)).save
       respond_with @user
+    end
+
+    def export
+      filter = params[:filter].presence_in(visiblity_list) || 'active'
+
+      csv_generator = CsvPeople.new(filter: filter)
+
+      respond_to do |format|
+        format.csv do
+          send_data csv_generator.generate, filename: csv_generator.filename
+        end
+      end
     end
 
     private

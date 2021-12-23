@@ -33,7 +33,9 @@ Rails.application.routes.draw do
       end
       resources :hardware_device_accessories, only: %i[index show create update destroy]
     end
-    resources :users, only: %i[index show create update]
+    resources :users, only: %i[index show create update] do
+      get :export, on: :collection
+    end
     resources :hardwares, only: %i[index create destroy update] do
       get :types, on: :collection
       resources :fields, controller: :hardware_fields, only: %i[create destroy update]
