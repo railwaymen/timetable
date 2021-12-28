@@ -313,6 +313,7 @@ en:
       email_edit_disabled: Email editing is disabled. Email is managed by LDAP.
       new: New account
       department: Department
+      export_to_csv: Export to CSV
     external_auths:
       authorized: External authorizations
       generate_link: Generate link
