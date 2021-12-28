@@ -45,22 +45,24 @@ RSpec.describe Api::VacationsController do
     end
 
     it 'returns user vacation applications' do
-      sign_in(user)
-      create(:vacation_period, user: user)
-      vacation1 = create(:vacation, user: user)
-      vacation2 = create(:vacation, user: user, start_date: Time.current + 4.days, end_date: Time.current + 10.days,
-                                    vacation_type: :others, vacation_sub_type: :parental, description: 'Parental', status: :accepted)
-      vacation3 = create(:vacation, user: user, vacation_type: :requested, status: :accepted)
-      vacations_response = [
-        vacation1.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count', 'description').merge(full_name: user.to_s),
-        vacation3.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count', 'description').merge(full_name: user.to_s),
-        vacation2.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count', 'description').merge(full_name: user.to_s)
-      ]
-      get :index, params: { year: Time.current.year }, format: :json
-      expect(response.code).to eql('200')
-      available_vacation_days = user.available_vacation_days
-      used_vacation_days = user.used_vacation_days(Vacation.all)
-      expect(response.body).to be_json_eql({ records: vacations_response, available_vacation_days: available_vacation_days, used_vacation_days: used_vacation_days }.to_json)
+      travel_to Date.new(2021, 10, 10) do
+        sign_in(user)
+        create(:vacation_period, user: user)
+        vacation1 = create(:vacation, user: user)
+        vacation2 = create(:vacation, user: user, start_date: Time.current + 4.days, end_date: Time.current + 10.days,
+                                      vacation_type: :others, vacation_sub_type: :parental, description: 'Parental', status: :accepted)
+        vacation3 = create(:vacation, user: user, vacation_type: :requested, status: :accepted)
+        vacations_response = [
+          vacation1.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count', 'description').merge(full_name: user.to_s),
+          vacation3.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count', 'description').merge(full_name: user.to_s),
+          vacation2.attributes.slice('id', 'start_date', 'end_date', 'vacation_type', 'status', 'business_days_count', 'description').merge(full_name: user.to_s)
+        ]
+        get :index, params: { year: Time.current.year }, format: :json
+        expect(response.code).to eql('200')
+        available_vacation_days = user.available_vacation_days
+        used_vacation_days = user.used_vacation_days(Vacation.all)
+        expect(response.body).to be_json_eql({ records: vacations_response, available_vacation_days: available_vacation_days, used_vacation_days: used_vacation_days }.to_json)
+      end
     end
 
     it 'filters user vacation applications by year' do
