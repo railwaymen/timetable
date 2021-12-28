@@ -4,7 +4,7 @@ module Api
   class UsersController < Api::BaseController
     before_action :authenticate_notself, only: [:update]
     before_action :authenticate_admin!, except: %i[index show update export]
-    before_action :authenticate_admin_or_manager_or_leader!, only: :export
+    before_action :authenticate_admin_or_manager!, only: :export
 
     def index
       authorize User
