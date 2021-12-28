@@ -22,7 +22,7 @@ class CsvPeople
   private
 
   def records
-    User.filter_by(@filter.to_sym).pluck(
+    User.filter_by(@filter.to_sym).order('id').pluck(
       :last_name,
       :first_name,
       :email,
