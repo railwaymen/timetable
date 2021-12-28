@@ -14,10 +14,13 @@ module Reports
 
       def length
         @length ||= begin
-          p_length = records.first&.projects&.length || 0
-          r_length = records.length
+          counter = 0
+          records.each do |record|
+            counter += 1
+            counter += record&.projects&.length || 0
+          end
 
-          p_length * r_length + r_length
+          counter
         end
       end
 
