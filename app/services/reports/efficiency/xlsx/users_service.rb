@@ -179,6 +179,9 @@ module Reports
         end
 
         def user_cell(user:, current_row:)
+          sheet.add_cell(current_row, A, "#{user.first_name} #{user.last_name}")
+          sheet.add_cell(current_row, B, user.department)
+
           sheet.add_cell(current_row, F, user.sum_billable[true].percentage).set_number_format('0.00%')
           sheet.add_cell(current_row, G, user.sum_billable[false].percentage).set_number_format('0.00%')
 
