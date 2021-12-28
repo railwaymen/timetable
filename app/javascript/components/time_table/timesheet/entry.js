@@ -32,6 +32,7 @@ class Entry extends React.Component {
     this.onTimeFocus = this.onTimeFocus.bind(this);
     this.onTimeBlur = this.onTimeBlur.bind(this);
     this.saveWorkTime = this.saveWorkTime.bind(this);
+    this.onChangeOfficeWork = this.onChangeOfficeWork.bind(this);
 
     this.state = {
       body: undefined,
@@ -45,6 +46,7 @@ class Entry extends React.Component {
       combinedTags: [],
       tag: {},
       errors: [],
+      officeWork: false,
     };
 
     this.bodyInputRef = React.createRef();
@@ -58,6 +60,12 @@ class Entry extends React.Component {
     this.setState({
       [name]: e.target.value,
     }, () => { this.removeErrorsFor(name); });
+  }
+
+  onChangeOfficeWork(e) {
+    this.setState({
+      officeWork: e.target.checked,
+    });
   }
 
   onKeyPress(e) {
@@ -113,7 +121,7 @@ class Entry extends React.Component {
   saveWorkTime(url) {
     const userId = URI(window.location.href).search(true).user_id || currentUser.id;
     const {
-      body, task, tag, project, date, starts_at, ends_at,
+      body, task, tag, project, date, starts_at, ends_at, officeWork,
     } = this.state;
 
     const entryData = {
@@ -124,6 +132,7 @@ class Entry extends React.Component {
       project_id: project.id,
       starts_at: moment(`${date} ${starts_at}`, 'DD/MM/YYYY HH:mm'),
       ends_at: moment(`${date} ${ends_at}`, 'DD/MM/YYYY HH:mm'),
+      office_work: officeWork,
     };
 
     Api.makePostRequest({
@@ -172,6 +181,7 @@ class Entry extends React.Component {
     const project = this.props.projects.find((p) => p.id === object.project.id);
     const combinedTags = (project.tags || []).concat(this.props.globalTags);
     const tag = combinedTags.find((t) => t.id === object.tag_id);
+    const officeWork = object.office_work;
     this.setState({
       body: _.unescape(object.body),
       project,
@@ -179,6 +189,7 @@ class Entry extends React.Component {
       task: object.task,
       combinedTags,
       tag: tag || this.findDefaultTag(),
+      officeWork,
     });
   }
 
@@ -291,7 +302,7 @@ class Entry extends React.Component {
 
   render() {
     const {
-      body, task, tag, starts_at, ends_at, durationHours, date, errors, project, combinedTags,
+      body, task, tag, starts_at, ends_at, durationHours, date, errors, project, combinedTags, officeWork,
     } = this.state;
     const { requestsLocked } = this.props;
 
@@ -300,7 +311,7 @@ class Entry extends React.Component {
         <div className="timer">
           <div className="card">
             <div className="row">
-              <div className="col-sm-8 col-md-6 description">
+              <div className="col-sm-8 col-md-5 description">
                 {errors.body ? <ErrorTooltip errors={errors.body} /> : null}
                 <div className="form-group">
                   {project.lunch ? (
@@ -357,6 +368,10 @@ class Entry extends React.Component {
                   />
                 </div>
               )}
+              <div className="col-sm-4 col-md-1 office-work-container">
+                <label htmlFor="officeWork">{I18n.t('apps.timesheet.office_work')}</label>
+                <input type="checkbox" name="officeWork" checked={officeWork} onChange={this.onChangeOfficeWork} />
+              </div>
               <div className="col-sm-12 col-md-3 date">
                 <div className="time">
                   <div className="form-group">

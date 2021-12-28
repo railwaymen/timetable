@@ -1,4 +1,14 @@
 .staff-container {
+  .reports {
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+    border-bottom: 1px solid $vacations-dark-gray;
+    position: relative;
+    .remote-work-report {
+      position: relative;
+    }
+  }
   .filters {
     > .row {
       display: flex;

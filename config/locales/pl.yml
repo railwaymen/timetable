@@ -289,6 +289,7 @@ pl:
       required_duration_until_end_of_day: Wymagany czas pracy do końca dnia (dotyczy tylko pracowników etatowych)
       required_duration_until_end_of_month: Wymagany czas pracy do końca miesiąca (dotyczy tylko pracowników etatowych)
       work_time: Czas pracy
+      office_work: Praca z biura
       history:
         date: Data
         when: Kiedy
@@ -381,6 +382,8 @@ pl:
       user: użytkownika
       ok: OK
       non_editable: Edycja jest możliwa tylko, gdy urlop jest niepotwierdzony lub zatwierdzony
+      generate_remote_work_report: Generuj raport pracy zdalnej
+      remote_work_report_error: Wybranie użytkownika jest wymagane do wygenerowania raportu
     vacation_periods:
       vacation_days: Dni urlopu
       note: Notatka

@@ -10,6 +10,7 @@ FactoryBot.define do
     sequence(:ends_at) { starts_at + 15.minutes }
     creator { user }
     department { user.department }
+    office_work { false }
 
     trait :with_jira_url do
       sequence(:task) { |n| "https://example.com/XX-#{n}" }

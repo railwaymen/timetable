@@ -13,7 +13,7 @@ class WorkTimePolicy < ApplicationPolicy
 
   private
 
-  def permitted_create_attributes
+  def permitted_create_attributes # rubocop:disable Metrics/MethodLength
     params = %i[
       project_id
       body
@@ -21,6 +21,7 @@ class WorkTimePolicy < ApplicationPolicy
       tag_id
       starts_at
       ends_at
+      office_work
     ]
     params = params.concat(%i[user_id]) if user.admin? || user.manager?
     params
@@ -33,6 +34,7 @@ class WorkTimePolicy < ApplicationPolicy
       tag_id
       starts_at
       ends_at
+      office_work
     ]
     params = params.concat(%i[project_id]) if record.task.blank? && record.tag.global?
     params
