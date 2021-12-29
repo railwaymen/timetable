@@ -666,6 +666,9 @@ en:
             name:
               taken: Name is already taken
               blank: Name is required
+        project_resource_assignment:
+          base:
+            presence_of_project_id_or_potential_project_name: Presence of project_id or potential_project_name is required 
   activemodel:
     errors:
       models:

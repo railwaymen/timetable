@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-json.extract! project_resource_assignment, :id, :note, :type, :resizable, :movable, :title
+json.extract! project_resource_assignment, :id, :note, :type, :resizable, :movable, :title, :potential_project_name
 json.start project_resource_assignment.starts_at.to_date
 json.end project_resource_assignment.ends_at.to_date
 json.resourceId project_resource_assignment.resource_rid

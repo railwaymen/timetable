@@ -4,7 +4,7 @@ import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import Modal from '@components/shared/modal';
 import { defaultDatePickerProps } from '../../shared/helpers';
-import Dropdown from '../../shared/dropdown';
+import CreatableDropdown from '../../shared/creatable_dropdown';
 import * as Api from '../../shared/api';
 import * as Loader from './loader';
 
@@ -17,6 +17,10 @@ class Event extends React.Component {
     this.onNoteChange = this.onNoteChange.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.onDateClick = this.onDateClick.bind(this);
+    this.onCreateOption = this.onCreateOption.bind(this);
+    this.onSelectOption = this.onSelectOption.bind(this);
+    this.getProjectsNames = this.getProjectsNames.bind(this);
+
     this.state = {
       note: '',
       selectedProject: undefined,
@@ -36,6 +40,7 @@ class Event extends React.Component {
     const params = {
       note,
       project_id: selectedProject.id,
+      potential_project_name: selectedProject.potentialProject ? selectedProject.name : null,
       starts_at: startsAt,
       ends_at: endsAt,
       resource_rid: slotId,
@@ -110,8 +115,13 @@ class Event extends React.Component {
 
   updateEditModal(event) {
     const { projects } = this.props;
+
+    const selectedProject = event.projectId
+      ? projects.filter((p) => p.id === event.projectId)[0]
+      : { potentialProject: true, name: event.potential_project_name };
+
     this.setState({
-      selectedProject: projects.filter((p) => p.id === event.projectId)[0],
+      selectedProject,
       startsAt: event.start,
       endsAt: event.end,
       note: event.note || '',
@@ -123,6 +133,23 @@ class Event extends React.Component {
     this.setState({
       selectedProject,
     });
+  }
+
+  onSelectOption(option) {
+    const selectedProject = this.props.projects.find((project) => project.name === option);
+    this.setState({ selectedProject });
+  }
+
+  onCreateOption(option) {
+    const potentialProject = {
+      potentialProject: true,
+      name: option,
+    };
+    this.setState({ selectedProject: potentialProject });
+  }
+
+  getProjectsNames() {
+    return this.props.projects.map((project) => project.name);
   }
 
   renderDate(dateName) {
@@ -171,7 +198,7 @@ class Event extends React.Component {
   }
 
   render() {
-    const { slotName, projects, eventInstance } = this.props;
+    const { slotName, eventInstance } = this.props;
     const { note, selectedProject, resizable } = this.state;
     const projectColor = selectedProject ? `#${selectedProject.color}` : 'black';
     return (
@@ -189,13 +216,10 @@ class Event extends React.Component {
                 <div className="project-field field col">
                   <label>{I18n.t('apps.projects.project')}</label>
                   {selectedProject ? (
-                    <Dropdown
-                      objects={projects}
-                      updateObject={this.updateProject}
-                      selectedObject={selectedProject}
-                      filterObjects={this.filterProjects}
-                      renderSelectedObject={this.renderSelectedProject}
-                      renderObjectsList={this.renderProjectsList}
+                    <CreatableDropdown
+                      options={this.getProjectsNames()}
+                      onSelectOption={this.onSelectOption}
+                      onCreateOption={this.onCreateOption}
                     />
                   ) : null}
                 </div>

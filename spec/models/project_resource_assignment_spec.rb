@@ -14,5 +14,4 @@ RSpec.describe ProjectResourceAssignment, type: :model do
   it { should validate_presence_of :type }
   it { should validate_presence_of :user_id }
   it { should validate_presence_of :project_resource_id }
-  it { should validate_presence_of :project_id }
 end
