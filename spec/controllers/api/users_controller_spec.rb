@@ -208,7 +208,7 @@ RSpec.describe Api::UsersController do
     end
 
     it 'returns people in csv' do
-      user = create(:user)
+      user = create(:user, contract_name: 'R/E/01')
 
       sign_in(manager)
       get :export, format: :csv
