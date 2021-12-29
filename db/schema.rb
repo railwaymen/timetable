@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_02_094808) do
+ActiveRecord::Schema.define(version: 2021_12_28_122433) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -272,7 +272,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_094808) do
   create_table "project_resource_assignments", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "project_resource_id", null: false
-    t.bigint "project_id", null: false
+    t.bigint "project_id"
     t.bigint "vacation_id"
     t.datetime "starts_at", null: false
     t.datetime "ends_at", null: false
@@ -286,6 +286,7 @@ ActiveRecord::Schema.define(version: 2021_12_02_094808) do
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.string "note"
+    t.string "potential_project_name"
     t.index ["discarded_at"], name: "index_project_resource_assignments_on_discarded_at"
     t.index ["project_id"], name: "index_project_resource_assignments_on_project_id"
     t.index ["project_resource_id"], name: "index_project_resource_assignments_on_project_resource_id"

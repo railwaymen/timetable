@@ -707,6 +707,9 @@ pl:
             name:
               taken: Ta nazwa jest już zajęta
               blank: Nazwa jest wymagana
+        project_resource_assignment:
+          base:
+            presence_of_project_id_or_potential_project_name: Obecność project_id lub potential_project_name jest wymagana
   activemodel:
     errors:
       models:

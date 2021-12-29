@@ -1,6 +1,7 @@
 .dropdown-menu.show {
   max-height: 30vh;
   overflow: auto;
+  display: 'block !important';
   .dropdown-item {
     border: 0 !important;
   }
@@ -18,4 +19,10 @@
 .project-filters,
 .months-filters {
   min-width: 140px;
+}
+
+.dropdown-new-option-label {
+  margin-left: 30px;
+  color: gray;
+  font-size: 0.8rem;
 }

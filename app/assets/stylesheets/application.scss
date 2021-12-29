@@ -438,6 +438,7 @@ table {
   }
   .dropdown {
     max-width: fit-content;
+    min-width: 90px;
   }
   .user-filter-container {
     flex-shrink: 0;
