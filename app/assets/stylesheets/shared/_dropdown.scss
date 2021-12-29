@@ -1,6 +1,7 @@
 .dropdown-menu.show {
   max-height: 30vh;
   overflow: auto;
+  display: 'block !important';
   .dropdown-item {
     border: 0 !important;
   }
