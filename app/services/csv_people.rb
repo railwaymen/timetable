@@ -22,7 +22,7 @@ class CsvPeople
   private
 
   def records
-    User.filter_by(@filter.to_sym).pluck(
+    User.order(Arel.sql('contract_name::bytea ASC')).filter_by(@filter.to_sym).pluck(
       :last_name,
       :first_name,
       :email,
