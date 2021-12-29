@@ -39,7 +39,7 @@ class Event extends React.Component {
 
     const params = {
       note,
-      project_id: selectedProject.id,
+      project_id: selectedProject.potentialProject ? null : selectedProject.id,
       potential_project_name: selectedProject.potentialProject ? selectedProject.name : null,
       starts_at: startsAt,
       ends_at: endsAt,
