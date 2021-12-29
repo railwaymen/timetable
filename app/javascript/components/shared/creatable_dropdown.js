@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-function CreatableDropdown({ options, onSelectOption, onCreateOption }) {
+function CreatableDropdown({
+  options, onSelectOption, onCreateOption, newOptionLabel,
+}) {
   const [filter, setFilter] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
   const [isExpanded, setIsExpaned] = useState(false);
@@ -31,6 +33,7 @@ function CreatableDropdown({ options, onSelectOption, onCreateOption }) {
 
     setFilter('');
     setIsExpaned(false);
+    setShowCreatableOption(false);
   };
 
   const filteredOptions = () => options.filter((option) => option.includes(filter));
@@ -108,9 +111,8 @@ function CreatableDropdown({ options, onSelectOption, onCreateOption }) {
             onClick={(e) => handleSelectOption(e, true)}
             onKeyPress={(e) => handleSelectOption(e, true)}
           >
-            New project:
-            {' '}
             {filter}
+            <span className="dropdown-new-option-label">{newOptionLabel}</span>
           </button>
           )}
         </div>

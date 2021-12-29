@@ -220,6 +220,7 @@ class Event extends React.Component {
                       options={this.getProjectsNames()}
                       onSelectOption={this.onSelectOption}
                       onCreateOption={this.onCreateOption}
+                      newOptionLabel={I18n.t('apps.projects.new')}
                     />
                   ) : null}
                 </div>
