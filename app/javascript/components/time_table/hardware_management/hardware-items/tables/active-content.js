@@ -9,6 +9,7 @@ export default function ActiveContent({ phrase, visible, onSelectItem }) {
     list: [], isLoaded: false, currentPage: 1, totalPages: 1,
   });
   const [page, setPage] = useState(1);
+  const [itemWithExpandedActions, setItemWithExpandedActions] = useState(null);
 
   useEffect(() => {
     const { query, unassigned } = phrase;
@@ -43,7 +44,13 @@ export default function ActiveContent({ phrase, visible, onSelectItem }) {
         <TableHeader />
         <tbody>
           {list.map((item) => (
-            <TableRow item={item} key={item.id} onRemove={onSelectItem} />
+            <TableRow
+              item={item}
+              key={item.id}
+              onRemove={onSelectItem}
+              setItemWithExpandedActions={setItemWithExpandedActions}
+              areActionsExpanded={item === itemWithExpandedActions}
+            />
           ))}
         </tbody>
       </table>

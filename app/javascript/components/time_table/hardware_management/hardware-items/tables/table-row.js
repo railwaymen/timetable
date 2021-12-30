@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Tag from '../../shared/tag';
 
-export default function TableRow({ item, onRemove }) {
-  const [showActions, setShowActions] = useState(false);
-
-  const toggleActions = () => {
-    setShowActions((state) => !state);
+export default function TableRow({
+  item, onRemove, areActionsExpanded, setItemWithExpandedActions,
+}) {
+  const handleShowActions = () => {
+    if (areActionsExpanded) {
+      setItemWithExpandedActions(null);
+    } else {
+      setItemWithExpandedActions(item);
+    }
   };
 
   const onRemoveItem = () => {
+    setItemWithExpandedActions(null);
     onRemove(item);
-    setShowActions(false);
   };
 
   return (
@@ -29,10 +33,10 @@ export default function TableRow({ item, onRemove }) {
       <td>{new Date(item.year_of_production).getFullYear()}</td>
       <td>
         <div className="item-actions">
-          <button className="transparent-button" type="button" onClick={toggleActions}>
+          <button className="transparent-button" type="button" onClick={handleShowActions}>
             <i className="fa fa-ellipsis-v" />
           </button>
-          {showActions && (
+          {areActionsExpanded && (
             <div className="tooltip">
               <Link to={`/hardware-devices/${item.id}/show`} className="item transparent-button">{I18n.t('apps.hardware_devices.show_details')}</Link>
               <Link to={`/hardware-devices/${item.id}/edit`} className="item transparent-button">{I18n.t('common.edit')}</Link>
