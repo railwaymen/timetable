@@ -307,7 +307,7 @@ function Rental({ id, onSubmit }) {
 const ContentsList = ({ items, object }) => (
   <>
     {items.map((item) => (
-      <ContentValue value={object[item]} placeholder={I18n.t(`apps.hardware_devices.${item}`)} />
+      <ContentValue key={item} value={object[item]} placeholder={I18n.t(`apps.hardware_devices.${item}`)} />
     ))}
   </>
 );
