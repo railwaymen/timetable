@@ -360,6 +360,7 @@ pl:
       time_period: Czas Trwania
       choose: Wybierz
       accept: Akceptuj
+      approve: Zatwierdź
       decline: Odrzuć
       undone: Cofnij
       approved_by: Zaakceptowane przez
