@@ -189,10 +189,10 @@ class Periods extends React.Component {
 
   generateYears() {
     const options = [];
-    const currentYear = parseInt(moment().format('YYYY'), 10);
-    const maxYear = currentYear + 10;
+    const previousYear = parseInt(moment().format('YYYY'), 10) - 1;
+    const maxYear = previousYear + 10;
 
-    for (let i = currentYear; i <= maxYear; i += 1) {
+    for (let i = previousYear; i <= maxYear; i += 1) {
       options.push(
         <option key={i} value={i}>{i}</option>,
       );
