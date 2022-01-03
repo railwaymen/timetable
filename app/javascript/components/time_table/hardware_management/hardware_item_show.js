@@ -82,7 +82,7 @@ export default function HardwareItem() {
   };
 
   const onToggleRentalModalVisible = () => {
-    if (!hardwareDevice.user) {
+    if (!hardwareDevice.user_id) {
       setGenerateError(I18n.t('apps.hardware_devices.error_unassigned_device'));
       return;
     }
