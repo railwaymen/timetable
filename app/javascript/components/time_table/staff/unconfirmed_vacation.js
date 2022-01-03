@@ -123,7 +123,9 @@ function UnconfirmedVacation(props) {
     return (
       <div className="vacation-buttons">
         <button className="bt-vacation accept" type="button" onClick={onAcceptClick}>
-          <span className="bt-txt">{I18n.t('apps.staff.accept')}</span>
+          <span className="bt-txt">
+            {window.currentUser.staff_manager ? I18n.t('apps.staff.accept') : I18n.t('apps.staff.approve')}
+          </span>
         </button>
         <button className="bt-vacation decline" type="button" onClick={onDeclineClick}>
           <span className="bt-txt">{I18n.t('apps.staff.decline')}</span>
