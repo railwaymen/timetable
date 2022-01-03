@@ -331,8 +331,8 @@ function LogHistoryRecord({ changeset, users }) {
     const user1 = users.find((user) => user.id === user_id[0]);
     const user2 = users.find((user) => user.id === user_id[1]);
     attributes.assigned_person = [];
-    attributes.assigned_person[0] = user1 ? user1.first_name + user1.last_name : null;
-    attributes.assigned_person[1] = user2 ? user2.first_name + user2.last_name : null;
+    attributes.assigned_person[0] = user1 ? `${user1.first_name} ${user1.last_name}` : null;
+    attributes.assigned_person[1] = user2 ? `${user2.first_name} ${user2.last_name}` : null;
   }
 
   return (
