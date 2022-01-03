@@ -315,7 +315,7 @@ const ContentsList = ({ items, object }) => (
 function LogHistory({ list, users }) {
   const [, ...modifications] = list;
   return (
-    <div style={{ maxHeight: '100vh', overflowY: 'scroll', padding: '30px' }}>
+    <div style={{ maxHeight: '90vh', overflowY: 'scroll', padding: '30px' }}>
       {modifications.map((modification) => (
         <LogHistoryRecord changeset={modification.changeset} users={users} />
       ))}
