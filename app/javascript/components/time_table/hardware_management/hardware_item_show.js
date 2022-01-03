@@ -100,7 +100,6 @@ export default function HardwareItem() {
   }
 
   const {
-    id: hardwareDeviceId,
     state,
     images = [],
     user_id,
@@ -131,7 +130,7 @@ export default function HardwareItem() {
       <Modal visible={isLogModal} onClose={onToggleLogs}>
         <LogHistory users={users} list={historyList} />
       </Modal>
-      <h3>{hardwareDeviceId ? I18n.t('apps.hardware_devices.edit_device') : I18n.t('apps.hardware_devices.add_new_device')}</h3>
+      <h3>{name}</h3>
       <div className="item-content">
         <Container>
           <h5>
@@ -307,7 +306,7 @@ function Rental({ id, onSubmit }) {
 const ContentsList = ({ items, object }) => (
   <>
     {items.map((item) => (
-      <ContentValue value={object[item]} placeholder={I18n.t(`apps.hardware_devices.${item}`)} />
+      <ContentValue key={item} value={object[item]} placeholder={I18n.t(`apps.hardware_devices.${item}`)} />
     ))}
   </>
 );

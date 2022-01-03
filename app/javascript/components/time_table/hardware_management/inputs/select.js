@@ -10,12 +10,12 @@ export default function Select({
         :
       </label>
       <div className={`value-wrapper ${innerClassName}`}>
-        <select id={name} name={name} onChange={onChange} defaultChecked={value} defaultValue={value} value={value}>
+        <select id={name} name={name} onChange={onChange} value={value}>
           {options.map((option) => (
             typeof option === 'object' ? (
-              <option value={option.id}>{option[optionName]}</option>
+              <option key={option.id} value={option.id}>{option[optionName]}</option>
             ) : (
-              <option value={option}>{translatable ? I18n.t(`apps.hardware_devices.${option}`) : option}</option>
+              <option key={option} value={option}>{translatable ? I18n.t(`apps.hardware_devices.${option}`) : option}</option>
             )
           ))}
         </select>
