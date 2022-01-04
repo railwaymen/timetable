@@ -13,6 +13,7 @@ gem 'discard'
 gem 'dotenv-rails'
 gem 'holidays'
 gem 'i18n-js'
+gem 'image_processing', '~> 1.0'
 gem 'interactor'
 gem 'jbuilder'
 gem 'jira-ruby', require: false
