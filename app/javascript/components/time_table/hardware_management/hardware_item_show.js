@@ -110,7 +110,6 @@ export default function HardwareItem() {
     archived,
   } = hardwareDevice;
   const { list: historyList } = deviceHistory;
-
   const user = users.find((u) => u.id === user_id);
 
   return (
@@ -314,10 +313,14 @@ const ContentsList = ({ items, object }) => (
 
 function LogHistory({ list, users }) {
   const [, ...modifications] = list;
+  const changesets = modifications
+    .filter((modification) => modification.object_changes)
+    .map((modification) => modification.changeset)
+
   return (
-    <div style={{ maxHeight: '100vh', overflowY: 'scroll', padding: '30px' }}>
-      {modifications.map((modification) => (
-        <LogHistoryRecord changeset={modification.changeset} users={users} />
+    <div style={{ maxHeight: '90vh', overflowY: 'scroll', padding: '30px' }}>
+      {changesets.map((changeset) => (
+        <LogHistoryRecord changeset={changeset} users={users} />
       ))}
     </div>
   );
