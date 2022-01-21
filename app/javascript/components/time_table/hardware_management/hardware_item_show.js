@@ -109,7 +109,6 @@ export default function HardwareItem() {
     category,
     archived,
   } = hardwareDevice;
-  const { list: historyList } = deviceHistory;
   const user = users.find((u) => u.id === user_id);
 
   return (
@@ -128,7 +127,7 @@ export default function HardwareItem() {
         <p>{I18n.t('apps.hardware_devices.remove_body')}</p>
       </ConfirmModal>
       <Modal visible={isLogModal} onClose={onToggleLogs}>
-        <LogHistory users={users} list={historyList} />
+        <LogHistory users={users} deviceHistory={deviceHistory} />
       </Modal>
       <h3>{hardwareDeviceId ? I18n.t('apps.hardware_devices.edit_device') : I18n.t('apps.hardware_devices.add_new_device')}</h3>
       <div className="item-content">
@@ -311,17 +310,24 @@ const ContentsList = ({ items, object }) => (
   </>
 );
 
-function LogHistory({ list, users }) {
-  const [, ...modifications] = list;
-  const changesets = modifications
-    .filter((modification) => modification.object_changes)
-    .map((modification) => modification.changeset)
+function LogHistory({ deviceHistory, users }) {
+  const [, ...updates] = deviceHistory.list;
+  const filteredUpdates = updates.filter((update) => update.object_changes)
 
   return (
     <div style={{ maxHeight: '90vh', overflowY: 'scroll', padding: '30px' }}>
-      {changesets.map((changeset) => (
-        <LogHistoryRecord changeset={changeset} users={users} />
-      ))}
+      {
+        deviceHistory.loaded && filteredUpdates.length == 0 ?
+        (
+          <div class="no-history-entries">
+            {I18n.t('apps.hardware_devices.no_entries')}
+          </div>
+        ) 
+        :
+        filteredUpdates.map((update) => (
+          <LogHistoryRecord changeset={update.changeset} users={users} key={update.id} />
+        ))
+      }
     </div>
   );
 }
@@ -343,15 +349,15 @@ function LogHistoryRecord({ changeset, users }) {
     <>
       <p><b>{dateTime}</b></p>
       <div>
-        {Object.keys(attributes).map((attribute) => (
-          <p>
+        {Object.keys(attributes).map((attribute, index) => (
+          <p key={index}>
             {`${I18n.t(`apps.hardware_devices.${attribute}`)} : `}
-            <span style={{ color: '#d11b1b' }}>
+            <span className="attribute-change-from">
               {attributes[attribute][0] ? attributes[attribute][0] : I18n.t('apps.hardware_devices.empty')}
             </span>
             {' => '}
-            <span style={{ color: '#34c96b' }}>
-              {attributes[attribute][1]}
+            <span className="attribute-change-to">
+              {attributes[attribute][1] ? attributes[attribute][1] : I18n.t('apps.hardware_devices.empty')}
             </span>
           </p>
         ))}
