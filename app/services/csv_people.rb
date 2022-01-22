@@ -8,7 +8,7 @@ class CsvPeople
   end
 
   def generate
-    CSV.generate do |csv|
+    CSV.generate(write_empty_value: nil) do |csv|
       csv << translated_headers
 
       records.each { |record| csv << record }
