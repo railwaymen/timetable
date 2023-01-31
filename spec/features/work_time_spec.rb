@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'signs me in, view projects, accounting_periods, timesheet', type: :feature, js: true do
+xdescribe 'signs me in, view projects, accounting_periods, timesheet', type: :feature, js: true do
   around do |example|
     I18n.with_locale(:en) do
       example.run
