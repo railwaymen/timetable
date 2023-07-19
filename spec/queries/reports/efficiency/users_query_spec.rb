@@ -65,5 +65,52 @@ RSpec.describe Reports::Efficiency::UsersQuery do
       )
       expect(query[3].projects.sum(&:project_duration)).to eq(user4_duration)
     end
+
+    context 'with active and inactive users' do
+      it 'lists only active user when there is no work time logged' do
+        user1 = FactoryBot.create(:user)
+        user2 = FactoryBot.create(:user, discarded_at: Time.current)
+
+        time_pivot = 2.months.ago
+        FactoryBot.create(:work_time, user: user1, starts_at: time_pivot, ends_at: time_pivot + 1.hour)
+        FactoryBot.create(:work_time, user: user2, starts_at: time_pivot, ends_at: time_pivot + 1.hour)
+
+        query = described_class.new(starts_at: Time.current - 1.month, ends_at: Time.current)
+
+        expect(query.count).to eq(1)
+        expect(query[0]).to have_attributes(
+          first_name: user1.first_name,
+          last_name: user1.last_name,
+          duration: nil
+        )
+      end
+
+      it 'lists both users if they logged work time' do
+        user1 = FactoryBot.create(:user)
+        user2 = FactoryBot.create(:user, discarded_at: Time.current)
+
+        time_pivot = 2.hours.ago
+        FactoryBot.create(:work_time, user: user1, starts_at: time_pivot, ends_at: time_pivot + 1.hour)
+        FactoryBot.create(:work_time, user: user2, starts_at: time_pivot, ends_at: time_pivot + 1.hour)
+
+        query = described_class.new(starts_at: Time.current - 1.month, ends_at: Time.current)
+
+        expect(query.count).to eq(2)
+
+        expect(query[0]).to have_attributes(
+          first_name: user1.first_name,
+          last_name: user1.last_name,
+          duration: 1.hour
+        )
+        expect(query[0].projects.sum(&:project_duration)).to eq(1.hour)
+
+        expect(query[1]).to have_attributes(
+          first_name: user2.first_name,
+          last_name: user2.last_name,
+          duration: 1.hour
+        )
+        expect(query[1].projects.sum(&:project_duration)).to eq(1.hour)
+      end
+    end
   end
 end

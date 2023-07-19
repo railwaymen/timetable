@@ -73,7 +73,7 @@ module Reports
             #{where_wrap_clause(:work_times_users_total).then { _1.present? ? "AND #{_1}" : '' }}
             GROUP BY work_times.user_id
           ) work_times_users_total ON work_times_users_total.user_id = users.id
-          WHERE users.discarded_at IS NULL
+          WHERE users.discarded_at IS NULL OR work_times_duration > 0
           GROUP BY users.id
         SQL
       end
